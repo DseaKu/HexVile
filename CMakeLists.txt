@@ -21,9 +21,10 @@ FetchContent_MakeAvailable(raylib)
 
 set(SOURCES
     src/main.cpp
+    src/HexGrid.cpp
 )
 
-add_executable(game src/main.cpp ${SOURCES})
+add_executable(game ${SOURCES})
 
 target_include_directories(game PRIVATE includes)
 

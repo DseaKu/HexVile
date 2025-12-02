@@ -10,7 +10,7 @@ private:
 
 public:
   Tiles(const char *path);
-  void DrawTile(TileID tileID, int q, int r);
+  void DrawTile(TileID tileID, int col, int row);
 
   ~Tiles();
 };

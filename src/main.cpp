@@ -20,8 +20,8 @@ int main(void) {
   {
     // Update
     //----------------------------------------------------------------------------------
-    Vector2 mousePos = GetMousePosition();
-    selectedHex = hexGrid.PixelToHex(mousePos);
+    // Vector2 mousePos = GetMousePosition();
+    // selectedHex = hexGrid.PixelToHex(mousePos);
     //----------------------------------------------------------------------------------
 
     // Draw
@@ -30,7 +30,7 @@ int main(void) {
 
     ClearBackground(RAYWHITE);
 
-    hexGrid.Draw(selectedHex);
+    // hexGrid.Draw(selectedHex);
 
     EndDrawing();
     //----------------------------------------------------------------------------------

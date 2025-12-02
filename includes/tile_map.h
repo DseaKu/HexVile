@@ -10,7 +10,7 @@ private:
 
 public:
   TileMap(const char *path);
-  void DrawTile(TileID);
+  void DrawTile(TileID tileID);
 
   ~TileMap();
 };

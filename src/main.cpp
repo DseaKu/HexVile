@@ -1,4 +1,3 @@
-#include "HexGrid.h"
 #include "raylib.h"
 
 int main(void) {
@@ -12,16 +11,11 @@ int main(void) {
   SetTargetFPS(60); // Set our game to run at 60 frames-per-second
   //--------------------------------------------------------------------------------------
 
-  HexGrid hexGrid(10, 10, 20);
-  Hex selectedHex = {-1, -1};
-
   // Main game loop
   while (!WindowShouldClose()) // Detect window close button or ESC key
   {
     // Update
     //----------------------------------------------------------------------------------
-    // Vector2 mousePos = GetMousePosition();
-    // selectedHex = hexGrid.PixelToHex(mousePos);
     //----------------------------------------------------------------------------------
 
     // Draw
@@ -29,8 +23,6 @@ int main(void) {
     BeginDrawing();
 
     ClearBackground(RAYWHITE);
-
-    // hexGrid.Draw(selectedHex);
 
     EndDrawing();
     //----------------------------------------------------------------------------------

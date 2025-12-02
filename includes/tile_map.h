@@ -4,14 +4,14 @@
 #include "enums.h"
 #include "raylib.h"
 
-class TileMap {
+class Tiles {
 private:
   Texture2D tile_map;
 
 public:
-  TileMap(const char *path);
-  void DrawTile(TileID tileID);
+  Tiles(const char *path);
+  void DrawTile(TileID tileID, int q, int r);
 
-  ~TileMap();
+  ~Tiles();
 };
 #endif // !TILE_MAP_H

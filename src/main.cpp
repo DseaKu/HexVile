@@ -11,7 +11,7 @@ int main(void) {
              "Dream of Hexagons - Interactive");
 
   SetTargetFPS(120);
-  TileMap tileMap("assets/images/Tileset1.png");
+  Tiles tiles("assets/images/Tileset1.png");
 
   // Main game loop
   while (!WindowShouldClose()) {
@@ -25,7 +25,7 @@ int main(void) {
     BeginDrawing();
 
     ClearBackground(RAYWHITE);
-    tileMap.DrawTile(DIRT);
+    tiles.DrawTile(DIRT, 0, 0);
 
     EndDrawing();
   }

@@ -21,7 +21,6 @@ FetchContent_MakeAvailable(raylib)
 
 set(SOURCES
     src/main.cpp
-    src/HexGrid.cpp
 )
 
 add_executable(game ${SOURCES})

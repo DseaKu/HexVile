@@ -1,33 +1,37 @@
 #include "raylib.h"
 
 int main(void) {
+  //----------------------------------------------------------------------------------
   // Initialization
   //--------------------------------------------------------------------------------------
-  const int screenWidth = 800;
-  const int screenHeight = 450;
+  const int screenWidth = 1400;
+  const int screenHeight = 800;
 
   InitWindow(screenWidth, screenHeight, "Dream of Hexagons - Interactive");
 
-  SetTargetFPS(60); // Set our game to run at 60 frames-per-second
+  SetTargetFPS(120);
   //--------------------------------------------------------------------------------------
 
+  Texture2D texture = LoadTexture("assets/images/Tileset1.png");
+
   // Main game loop
-  while (!WindowShouldClose()) // Detect window close button or ESC key
-  {
+  while (!WindowShouldClose()) {
+    //----------------------------------------------------------------------------------
     // Update
     //----------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------
 
+    //----------------------------------------------------------------------------------
     // Draw
     //----------------------------------------------------------------------------------
     BeginDrawing();
+    DrawTexture(texture, screenWidth / 2, screenHeight / 2, WHITE);
 
     ClearBackground(RAYWHITE);
 
     EndDrawing();
-    //----------------------------------------------------------------------------------
   }
 
+  //----------------------------------------------------------------------------------
   // De-Initialization
   //--------------------------------------------------------------------------------------
   CloseWindow(); // Close window and OpenGL context

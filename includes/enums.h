@@ -1,6 +1,7 @@
 #ifndef ENUMS_H
 #define ENUMS_H
 typedef enum {
+  VOID = -1,
   MISC = 0,
   WATER,
   GRASS,

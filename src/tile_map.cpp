@@ -9,15 +9,19 @@ void Tiles::DrawTile(TileID tileID, int q, int r) {
   Rectangle tile_rect = {(float)Config::TILE_SIZE * 0,
                          (float)Config::TILE_SIZE * tileID, Config::TILE_SIZE,
                          Config::TILE_SIZE};
+  if (tileID == VOID) {
+    return;
+  }
+
   float x_offset;
   float y_offset;
 
-  // If numbers of rows is odd
+  // Numbers of rows is odd
   if (r & 1) {
     x_offset = q * Config::SCALED_TILE_SIZE - Config::SCALED_TILE_SIZE_HALF;
     y_offset = r * Config::SCALED_TILE_SIZE - Config::SCALED_TILE_SIZE_HALF;
   }
-  // If numbers of rows is even
+  // Numbers of rows is even
   else {
     x_offset = q * Config::SCALED_TILE_SIZE;
     y_offset = r * Config::SCALED_TILE_SIZE;

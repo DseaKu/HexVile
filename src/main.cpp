@@ -27,14 +27,20 @@ int main(void) {
     ClearBackground(RAYWHITE);
     tiles.DrawTile(DIRT, 0, 0);
     tiles.DrawTile(WATER, 1, 0);
+    tiles.DrawTile(VOID, 2, 0);
     tiles.DrawTile(ICE, 3, 0);
-    tiles.DrawTile(GRASS, 1, 1);
-    tiles.DrawTile(GRASS, 0, 2);
+    tiles.DrawTile(MISC, 1, 1);
+    tiles.DrawTile(IDK, 0, 2);
     tiles.DrawTile(GRASS, 1, 2);
     tiles.DrawTile(GRASS, 0, 3);
     tiles.DrawTile(GRASS, 1, 3);
     tiles.DrawTile(GRASS, 0, 4);
     tiles.DrawTile(GRASS, 1, 4);
+    tiles.DrawTile(ICE, -3, 0);
+    tiles.DrawTile(IDK, 0, -2);
+    tiles.DrawTile(MISC, -1, -1);
+    tiles.DrawTile(MISC, 0, -1);
+    tiles.DrawTile(MISC, 1, -1);
     EndDrawing();
   }
 

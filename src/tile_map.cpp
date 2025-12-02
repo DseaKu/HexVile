@@ -14,17 +14,15 @@ void Tiles::DrawTile(TileID tileID, int q, int r) {
   }
 
   float x_offset;
-  float y_offset;
+  float y_offset = r * Config::SCALED_TILE_SIZE_HALF;
 
   // Numbers of rows is odd
   if (r & 1) {
     x_offset = q * Config::SCALED_TILE_SIZE - Config::SCALED_TILE_SIZE_HALF;
-    y_offset = r * Config::SCALED_TILE_SIZE - Config::SCALED_TILE_SIZE_HALF;
   }
   // Numbers of rows is even
   else {
     x_offset = q * Config::SCALED_TILE_SIZE;
-    y_offset = r * Config::SCALED_TILE_SIZE;
   }
   Vector2 position = {((float)Config::SCREEN_WIDTH / 2 + x_offset),
                       ((float)Config::SCREEN_HEIGHT / 2 + y_offset)};

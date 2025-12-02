@@ -9,18 +9,25 @@ void Tiles::DrawTile(TileID tileID, int q, int r) {
   Rectangle tile_rect = {(float)Config::TILE_SIZE * 0,
                          (float)Config::TILE_SIZE * tileID, Config::TILE_SIZE,
                          Config::TILE_SIZE};
-
   float x_offset;
   float y_offset;
+
+  // If numbers of rows is odd
   if (r & 1) {
-    x_offset = q * Config::TILE_SIZE - Config::TILE_SIZE_HALF;
-    y_offset = r * Config::TILE_SIZE - Config::TILE_SIZE_HALF;
-  } else {
-    x_offset = q * Config::TILE_SIZE;
-    y_offset = r * Config::TILE_SIZE;
+    x_offset = q * Config::SCALED_TILE_SIZE - Config::SCALED_TILE_SIZE_HALF;
+    y_offset = r * Config::SCALED_TILE_SIZE - Config::SCALED_TILE_SIZE_HALF;
+  }
+  // If numbers of rows is even
+  else {
+    x_offset = q * Config::SCALED_TILE_SIZE;
+    y_offset = r * Config::SCALED_TILE_SIZE;
   }
   Vector2 position = {((float)Config::SCREEN_WIDTH / 2 + x_offset),
                       ((float)Config::SCREEN_HEIGHT / 2 + y_offset)};
 
-  DrawTextureRec(tile_map, tile_rect, position, WHITE);
+  Rectangle dest_rect = {position.x, position.y, Config::SCALED_TILE_SIZE,
+                         Config::SCALED_TILE_SIZE};
+  Vector2 origin = {0.0f, 0.0f};
+
+  DrawTexturePro(tile_map, tile_rect, dest_rect, origin, 0.0f, WHITE);
 }

@@ -8,6 +8,11 @@ constexpr int SCREEN_WIDTH = 1400;
 constexpr int SCREEN_HEIGHT = 800;
 constexpr int TILE_SIZE = 32;
 constexpr int TILE_SIZE_HALF = TILE_SIZE / 2;
+
+constexpr float SCALE = 2.0;
+constexpr float SCALED_TILE_SIZE = TILE_SIZE * SCALE;
+constexpr float SCALED_TILE_SIZE_HALF = TILE_SIZE_HALF * SCALE;
+
 } // namespace Config
 
 // --- Unsigned Integer Aliases ---

@@ -22,6 +22,7 @@ FetchContent_MakeAvailable(raylib)
 set(SOURCES
     src/main.cpp
     src/tile_map.cpp
+    src/debug.cpp
 )
 
 add_executable(game ${SOURCES})

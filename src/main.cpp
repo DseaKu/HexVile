@@ -1,3 +1,4 @@
+#include "debug.h"
 #include "defines.h"
 #include "enums.h"
 #include "raylib.h"
@@ -12,6 +13,7 @@ int main(void) {
 
   SetTargetFPS(120);
   Tiles tiles("assets/images/Tileset1.png");
+  Debugger debugger(true);
 
   // Main game loop
   while (!WindowShouldClose()) {
@@ -41,6 +43,8 @@ int main(void) {
     tiles.DrawTile(GRASS, 1, 3);
     tiles.DrawTile(GRASS, 0, 4);
     tiles.DrawTile(GRASS, 1, 4);
+
+    debugger.DrawDebugInformation();
     EndDrawing();
   }
 

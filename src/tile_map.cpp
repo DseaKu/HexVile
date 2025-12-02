@@ -10,8 +10,17 @@ void Tiles::DrawTile(TileID tileID, int q, int r) {
                          (float)Config::TILE_SIZE * tileID, Config::TILE_SIZE,
                          Config::TILE_SIZE};
 
-  Vector2 position = {(int)(Config::SCREEN_WIDTH / 2),
-                      (int)(Config::SCREEN_HEIGHT / 2)};
+  float x_offset;
+  float y_offset;
+  if (r & 1) {
+    x_offset = q * Config::TILE_SIZE - Config::TILE_SIZE_HALF;
+    y_offset = r * Config::TILE_SIZE - Config::TILE_SIZE_HALF;
+  } else {
+    x_offset = q * Config::TILE_SIZE;
+    y_offset = r * Config::TILE_SIZE;
+  }
+  Vector2 position = {((float)Config::SCREEN_WIDTH / 2 + x_offset),
+                      ((float)Config::SCREEN_HEIGHT / 2 + y_offset)};
 
   DrawTextureRec(tile_map, tile_rect, position, WHITE);
 }

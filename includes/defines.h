@@ -7,6 +7,7 @@ namespace Config {
 constexpr int SCREEN_WIDTH = 1400;
 constexpr int SCREEN_HEIGHT = 800;
 constexpr int TILE_SIZE = 32;
+constexpr int TILE_SIZE_HALF = TILE_SIZE / 2;
 } // namespace Config
 
 // --- Unsigned Integer Aliases ---

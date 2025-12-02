@@ -1,18 +1,17 @@
+#include "defines.h"
+#include "enums.h"
 #include "raylib.h"
+#include "tile_map.h"
 
 int main(void) {
   //----------------------------------------------------------------------------------
   // Initialization
   //--------------------------------------------------------------------------------------
-  const int screenWidth = 1400;
-  const int screenHeight = 800;
-
-  InitWindow(screenWidth, screenHeight, "Dream of Hexagons - Interactive");
+  InitWindow(Config::SCREEN_WIDTH, Config::SCREEN_HEIGHT,
+             "Dream of Hexagons - Interactive");
 
   SetTargetFPS(120);
-  //--------------------------------------------------------------------------------------
-
-  Texture2D texture = LoadTexture("assets/images/Tileset1.png");
+  TileMap tileMap("assets/images/Tileset1.png");
 
   // Main game loop
   while (!WindowShouldClose()) {
@@ -24,9 +23,9 @@ int main(void) {
     // Draw
     //----------------------------------------------------------------------------------
     BeginDrawing();
-    DrawTexture(texture, screenWidth / 2, screenHeight / 2, WHITE);
 
     ClearBackground(RAYWHITE);
+    tileMap.DrawTile(DIRT);
 
     EndDrawing();
   }

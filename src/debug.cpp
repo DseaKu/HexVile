@@ -21,21 +21,16 @@ void Debugger::DrawDebugInformation() {
            100, 100, 10, RED);
 
   // Calculate mouse position relative to the center of the screen
-  Vector2 game_mouse_position = {
+  Vector2 scaled_mouse_position = {
       (mouse_position.x - (Config::SCREEN_WIDTH / 2.0f)) / Config::ZOOM,
       (mouse_position.y - (Config::SCREEN_HEIGHT / 2.0f)) / Config::ZOOM};
 
   DrawText(TextFormat("Scaled Mouse Position:\n  x:%.2f\n  y:%.2f",
-                      game_mouse_position.x, game_mouse_position.y),
+                      scaled_mouse_position.x, scaled_mouse_position.y),
            100, 150, 10, RED);
 
-  // Calculate hex tile coordinates
-  float current_scaled_mouse_x = game_mouse_position.x;
-  float current_scaled_mouse_y = game_mouse_position.y;
-
-  int hex_row = roundf(current_scaled_mouse_y / Config::TILE_SIZE_HALF);
-
-  float col_unadjusted = current_scaled_mouse_x / Config::TILE_SIZE;
+  int hex_row = roundf(scaled_mouse_position.y / Config::TILE_SIZE_HALF);
+  float col_unadjusted = scaled_mouse_position.x / Config::TILE_SIZE;
   int hex_col;
 
   if (hex_row & 1) { // Odd row

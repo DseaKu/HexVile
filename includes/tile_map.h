@@ -4,14 +4,20 @@
 #include "enums.h"
 #include "raylib.h"
 
-class Tiles {
+struct HexCoords {
+  int q;
+  int r;
+};
+
+class HexTiles {
 private:
   Texture2D tile_map;
 
 public:
-  Tiles(const char *path);
-  void DrawTile(TileID tileID, int col, int row);
+  HexTiles(const char *path);
+  void DrawTile(TileID tileID, int q, int r);
+  HexCoords MouseToHexCoords();
 
-  ~Tiles();
+  ~HexTiles();
 };
 #endif // !TILE_MAP_H

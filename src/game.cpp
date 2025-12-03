@@ -1,11 +1,9 @@
+#include "game.h"
 #include "debug.h"
 #include "defines.h"
 #include "enums.h"
-#include "game.h"
-#include "raylib.h"
-#include "tile_map.h"
 
-int main(void) {
+Game::Game() {
   //----------------------------------------------------------------------------------
   // Initialization
   //--------------------------------------------------------------------------------------
@@ -14,13 +12,11 @@ int main(void) {
 
   SetTargetFPS(120);
   HexTiles tiles("assets/images/Tileset1.png");
-  Debugger debugger;
-
-  Camera2D camera = {0};
   camera.target = Config::SCREEN_CENTER;
   camera.offset = Config::SCREEN_CENTER;
   camera.zoom = Config::ZOOM;
-
+}
+void Game::GameLoop() {
   // Main game loop
   while (!WindowShouldClose()) {
     //----------------------------------------------------------------------------------
@@ -56,12 +52,13 @@ int main(void) {
     debugger.DrawDebugInformation();
     EndDrawing();
   }
+}
+
+Game::~Game() {
 
   //----------------------------------------------------------------------------------
   // De-Initialization
   //--------------------------------------------------------------------------------------
   CloseWindow(); // Close window and OpenGL context
   //--------------------------------------------------------------------------------------
-
-  return 0;
 }

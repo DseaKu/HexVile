@@ -13,7 +13,7 @@ constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
 constexpr int TILE_SIZE = 32;
 constexpr int TILE_SIZE_HALF = TILE_SIZE / 2;
 
-constexpr float ZOOM = 4.0f;
+constexpr float ZOOM = 8.0f;
 
 constexpr bool DEBUGGER_FLAG = true;
 } // namespace Config

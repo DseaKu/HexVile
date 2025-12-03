@@ -11,13 +11,12 @@ Game::Game() {
              "Dream of Hexagons - Interactive");
 
   SetTargetFPS(120);
-  HexTiles tiles("assets/images/Tileset1.png");
   camera.target = Config::SCREEN_CENTER;
   camera.offset = Config::SCREEN_CENTER;
   camera.zoom = Config::ZOOM;
+  tiles.SetTileMap("assets/images/Tileset1.png");
 }
 void Game::GameLoop() {
-  // Main game loop
   while (!WindowShouldClose()) {
     //----------------------------------------------------------------------------------
     // Update

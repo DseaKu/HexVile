@@ -3,8 +3,10 @@
 #include "raylib.h"
 #include <cmath>
 
-HexTiles ::HexTiles(const char *path) { tile_map = LoadTexture(path); }
+HexTiles ::HexTiles() {}
 HexTiles ::~HexTiles() { UnloadTexture(tile_map); }
+
+void HexTiles::SetTileMap(const char *path) { tile_map = LoadTexture(path); }
 
 void HexTiles::DrawTile(TileID tileID, int q, int r) {
   Rectangle tile_rect = {(float)Config::TILE_SIZE * 0,

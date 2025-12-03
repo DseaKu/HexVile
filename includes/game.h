@@ -1,21 +1,17 @@
-#ifndef GAME_H
-#define GAME_H
+#pragma once
 
 #include "debug.h"
 #include "raylib.h"
 #include "tile_map.h"
-class Game {
-private:
-  Vector2 mouse_pos;
-  HexCoords selcted_tile;
-  Debugger debugger;
-  Camera2D camera;
-  HexTiles tiles;
 
+class Game {
 public:
   Game();
-  void GameLoop();
   ~Game();
-};
+  void GameLoop();
 
-#endif // !GAME_H
+private:
+  HexTiles tiles;
+  Camera2D camera;
+  Debugger debugger;
+};

@@ -14,7 +14,8 @@ private:
   Texture2D tile_map;
 
 public:
-  HexTiles(const char *path);
+  HexTiles();
+  void SetTileMap(const char *path);
   void DrawTile(TileID tileID, int q, int r);
   HexCoords MouseToHexCoords();
 

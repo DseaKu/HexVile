@@ -1,35 +1,51 @@
 #include "debug.h"
 #include "defines.h"
 #include "raylib.h"
-Debugger::Debugger(bool enable_flag) {
+#include <cmath>
+
+void Debugger::SetDebugger(bool enable_flag) {
   if (enable_flag) {
     is_enabled = true;
   } else {
     is_enabled = false;
   }
-}
-
-Debugger::~Debugger() {}
+};
 
 void Debugger::DrawDebugInformation() {
-  float screen_width = GetScreenWidth();
-  float screen_height = GetScreenHeight();
   Vector2 mouse_position = GetMousePosition();
 
-  // Calculate mouse position relative to the center of the screen
-  Vector2 game_mouse_position = {mouse_position.x - (screen_width / 2.0f),
-                                 mouse_position.y - (screen_height / 2.0f)};
+  DrawFPS(100, 50);
 
   DrawText(TextFormat("Real Mouse Position:\n  x:%.2f\n  y:%.2f",
                       mouse_position.x, mouse_position.y),
            100, 100, 10, RED);
+
+  // Calculate mouse position relative to the center of the screen
+  Vector2 game_mouse_position = {
+      (mouse_position.x - (Config::SCREEN_WIDTH / 2.0f)) / Config::ZOOM,
+      (mouse_position.y - (Config::SCREEN_HEIGHT / 2.0f)) / Config::ZOOM};
+
   DrawText(TextFormat("Scaled Mouse Position:\n  x:%.2f\n  y:%.2f",
-                      game_mouse_position.x * Config::SCALE,
-                      game_mouse_position.y * Config::SCALE),
+                      game_mouse_position.x, game_mouse_position.y),
            100, 150, 10, RED);
-  DrawText(TextFormat("Selected Hex-Tile:\n  x:%i\n  y:%i",
-                      game_mouse_position.x * Config::SCALE,
-                      game_mouse_position.y * Config::SCALE),
+
+  // Calculate hex tile coordinates
+  float current_scaled_mouse_x = game_mouse_position.x;
+  float current_scaled_mouse_y = game_mouse_position.y;
+
+  int hex_row = roundf(current_scaled_mouse_y / Config::TILE_SIZE_HALF);
+
+  float col_unadjusted = current_scaled_mouse_x / Config::TILE_SIZE;
+  int hex_col;
+
+  if (hex_row & 1) { // Odd row
+    hex_col = roundf(col_unadjusted + 0.5f);
+  } else { // Even row
+    hex_col = roundf(col_unadjusted);
+  }
+
+  DrawText(TextFormat("Selected Hex-Tile:\n  x:%i\n  y:%i", hex_col, hex_row),
            100, 200, 10, RED);
-  DrawCircleV((Vector2){screen_width / 2.0f, screen_height / 2.0f}, 5.0f, RED);
+
+  DrawCircleV(Config::SCREEN_CENTER, 5.0f, RED);
 }

@@ -1,18 +1,21 @@
 #ifndef DEFINES_H
 #define DEFINES_H
+#include "raylib.h"
 #include <cstdint>
 
 // namespace Config
 namespace Config {
 constexpr int SCREEN_WIDTH = 1400;
 constexpr int SCREEN_HEIGHT = 800;
+constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
+                                   (float)SCREEN_HEIGHT / 2};
+
 constexpr int TILE_SIZE = 32;
 constexpr int TILE_SIZE_HALF = TILE_SIZE / 2;
 
-constexpr float SCALE = 2.0;
-constexpr float SCALED_TILE_SIZE = TILE_SIZE * SCALE;
-constexpr float SCALED_TILE_SIZE_HALF = TILE_SIZE_HALF * SCALE;
+constexpr float ZOOM = 4.0f;
 
+constexpr bool DEBUGGER_FLAG = true;
 } // namespace Config
 
 // --- Unsigned Integer Aliases ---

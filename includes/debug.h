@@ -5,9 +5,8 @@ private:
   bool is_enabled;
 
 public:
-  Debugger(bool enable_flag);
-  ~Debugger();
   void DrawDebugInformation();
+  void SetDebugger(bool enable_flag);
 };
 
 #endif // !DEBUG_H

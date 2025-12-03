@@ -13,20 +13,27 @@ int main(void) {
 
   SetTargetFPS(120);
   Tiles tiles("assets/images/Tileset1.png");
-  Debugger debugger(true);
+  Debugger debugger;
+
+  Camera2D camera = {0};
+  camera.target = Config::SCREEN_CENTER;
+  camera.offset = Config::SCREEN_CENTER;
+  camera.zoom = Config::ZOOM;
 
   // Main game loop
   while (!WindowShouldClose()) {
     //----------------------------------------------------------------------------------
     // Update
     //----------------------------------------------------------------------------------
+    debugger.SetDebugger(Config::DEBUGGER_FLAG);
 
     //----------------------------------------------------------------------------------
     // Draw
     //----------------------------------------------------------------------------------
     BeginDrawing();
-
     ClearBackground(RAYWHITE);
+
+    BeginMode2D(camera);
     tiles.DrawTile(IDK, 0, -2);
     tiles.DrawTile(MISC, -1, -1);
     tiles.DrawTile(MISC, 0, -1);
@@ -43,6 +50,7 @@ int main(void) {
     tiles.DrawTile(GRASS, 1, 3);
     tiles.DrawTile(GRASS, 0, 4);
     tiles.DrawTile(GRASS, 1, 4);
+    EndMode2D();
 
     debugger.DrawDebugInformation();
     EndDrawing();

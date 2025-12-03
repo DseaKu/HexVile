@@ -14,21 +14,20 @@ void Tiles::DrawTile(TileID tileID, int col, int row) {
   }
 
   float x_offset;
-  float y_offset = row * Config::SCALED_TILE_SIZE_HALF;
+  float y_offset = row * Config::TILE_SIZE_HALF;
 
-  // Numbers of rows is odd
+  // If numbers of row is odd, shift hex-tile by there half of there value
   if (row & 1) {
-    x_offset = col * Config::SCALED_TILE_SIZE - Config::SCALED_TILE_SIZE_HALF;
+    x_offset = col * Config::TILE_SIZE - Config::TILE_SIZE_HALF;
+  } else {
+    x_offset = col * Config::TILE_SIZE;
   }
-  // Numbers of rows is even
-  else {
-    x_offset = col * Config::SCALED_TILE_SIZE;
-  }
+
   Vector2 position = {((float)Config::SCREEN_WIDTH / 2 + x_offset),
                       ((float)Config::SCREEN_HEIGHT / 2 + y_offset)};
 
-  Rectangle dest_rect = {position.x, position.y, Config::SCALED_TILE_SIZE,
-                         Config::SCALED_TILE_SIZE};
+  Rectangle dest_rect = {position.x, position.y, Config::TILE_SIZE,
+                         Config::TILE_SIZE};
   Vector2 origin = {0.0f, 0.0f};
 
   DrawTexturePro(tile_map, tile_rect, dest_rect, origin, 0.0f, WHITE);

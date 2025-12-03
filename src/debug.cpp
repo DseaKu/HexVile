@@ -1,7 +1,6 @@
 #include "debug.h"
 #include "defines.h"
 #include "raylib.h"
-#include <cmath>
 
 void Debugger::SetDebugger(bool enable_flag) {
   if (enable_flag) {
@@ -11,7 +10,7 @@ void Debugger::SetDebugger(bool enable_flag) {
   }
 };
 
-void Debugger::DrawDebugInformation() {
+void Debugger::DrawDebugInformation(HexCoords selected_tile) {
 
   if (!is_enabled)
     return;
@@ -32,6 +31,10 @@ void Debugger::DrawDebugInformation() {
   DrawText(TextFormat("Scaled Mouse Position:\n  x:%.2f\n  y:%.2f",
                       scaled_mouse_position.x, scaled_mouse_position.y),
            100, 150, 10, RED);
+
+  DrawText(TextFormat("Selected Tile:\n  q:%i\n  r:%i", selected_tile.q,
+                      selected_tile.r),
+           100, 200, 10, RED);
 
   DrawCircleV(Config::SCREEN_CENTER, 5.0f, RED);
 }

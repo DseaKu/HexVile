@@ -11,7 +11,8 @@ public:
   void GameLoop();
 
 private:
-  HexTiles tiles;
+  HexTiles tile_map;
   Camera2D camera;
   Debugger debugger;
+  HexCoords selected_tile;
 };

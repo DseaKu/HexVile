@@ -35,6 +35,7 @@ void HexTiles::DrawTile(TileID tileID, int q, int r) {
 
   DrawTexturePro(tile_map, tile_rect, dest_rect, origin, 0.0f, WHITE);
 }
+
 HexCoords HexTiles::MouseToHexCoords() {
   Vector2 mouse_position = GetMousePosition();
 

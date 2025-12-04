@@ -5,8 +5,8 @@
 
 // namespace Config
 namespace Config {
-constexpr int SCREEN_WIDTH = 1400;
-constexpr int SCREEN_HEIGHT = 800;
+constexpr int SCREEN_WIDTH = 2200;
+constexpr int SCREEN_HEIGHT = 1000;
 constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
                                    (float)SCREEN_HEIGHT / 2};
 

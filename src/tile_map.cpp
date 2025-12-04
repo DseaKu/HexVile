@@ -93,7 +93,7 @@ HexCoords HexTileManager::MouseToHexCoords() {
   int row = rz;
   int col = rx + (int)floor(row / 2.0f);
 
-  return {col, row};
+  return {0, 0};
 }
 
 void HexTileManager::SetHighlightedTilePointer(HexCoords *HighlightedTile) {

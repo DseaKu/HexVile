@@ -35,6 +35,7 @@ void Game::GameLoop() {
     ClearBackground(RAYWHITE);
 
     BeginMode2D(Camera);
+    TileMap.DrawTile(DIRT, 0, 0);
     TileMap.DrawTile(IDK, 0, -2);
     TileMap.DrawTile(MISC, -1, -1);
     TileMap.DrawTile(MISC, 0, -1);

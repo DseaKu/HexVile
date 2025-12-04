@@ -31,9 +31,11 @@ void HexTileManager::DrawTile(TileID tileID, int q, int r) {
     x_offset = q * Config::TILE_SIZE;
   }
 
-  Vector2 position = {((float)Config::SCREEN_WIDTH / 2 + x_offset),
-                      ((float)Config::SCREEN_HEIGHT / 2 + y_offset)};
+  // Vector2 position = {((float)Config::SCREEN_WIDTH / 2 + x_offset),
+  //                     ((float)Config::SCREEN_HEIGHT / 2 + y_offset)};
 
+  Vector2 position = {Config::SCREEN_CENTER_FOR_HEX_TILES.x + x_offset,
+                      Config::SCREEN_CENTER_FOR_HEX_TILES.y + y_offset};
   Rectangle dest_rect = {position.x, position.y, Config::TILE_SIZE,
                          Config::TILE_SIZE};
   Vector2 origin = {0.0f, 0.0f};

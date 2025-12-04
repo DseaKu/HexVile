@@ -24,6 +24,7 @@ set(SOURCES
     src/game.cpp
     src/tile_map.cpp
     src/debug.cpp
+    src/camera.cpp
 )
 
 add_executable(game ${SOURCES})

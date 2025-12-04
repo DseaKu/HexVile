@@ -13,9 +13,10 @@ Game::Game() {
   Camera.target = Config::SCREEN_CENTER;
   Camera.offset = Config::SCREEN_CENTER;
   Camera.zoom = Config::ZOOM;
+  Camera.rotation = 0.0f;
 
   TileMap.LoadTileMapAsset("assets/images/Tileset1.png");
-  // TileMap.SetHighlightedTilePointer(&HighlightedTile);
+  TileMap.SetHighlightedTilePointer(&HighlightedTile);
 }
 
 // Main Loop

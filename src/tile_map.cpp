@@ -3,7 +3,12 @@
 #include "raylib.h"
 #include <cmath>
 
-HexTileManager ::HexTileManager() {}
+// HexTileManager ::HexTileManager() {}
+// HexTileManager ::HexTileManager() { pHighlightedTile = nullptr; }
+HexTileManager ::HexTileManager() {
+  pHighlightedTile = nullptr;
+  TileMapAsset = {0};
+}
 HexTileManager ::~HexTileManager() { UnloadTexture(TileMapAsset); }
 
 void HexTileManager::LoadTileMapAsset(const char *path) {
@@ -88,6 +93,6 @@ HexCoords HexTileManager::MouseToHexCoords() {
   return {col, row};
 }
 
-// void HexTileManager::SetHighlightedTilePointer(HexCoords *HighlightedTile) {
-//   pHighlightedTile = HighlightedTile;
-// }
+void HexTileManager::SetHighlightedTilePointer(HexCoords *HighlightedTile) {
+  pHighlightedTile = HighlightedTile;
+}

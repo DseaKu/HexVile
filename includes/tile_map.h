@@ -12,13 +12,14 @@ struct HexCoords {
 class HexTileManager {
 private:
   Texture2D TileMapAsset;
-  // HexCoords *pHighlightedTile;
+  HexCoords *pHighlightedTile;
 
 public:
   HexTileManager();
+
   void LoadTileMapAsset(const char *path);
   void DrawTile(TileID tileID, int q, int r);
-  // void SetHighlightedTilePointer(HexCoords *HighlightedTile);
+  void SetHighlightedTilePointer(HexCoords *HighlightedTile);
   HexCoords MouseToHexCoords();
 
   ~HexTileManager();

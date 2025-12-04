@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GAME_H
+#define GAME_H
 
 #include "debug.h"
 #include "raylib.h"
@@ -11,8 +12,10 @@ public:
   void GameLoop();
 
 private:
-  HexTiles tile_map;
-  Camera2D camera;
-  Debugger debugger;
+  HexTiles TileMap;
+  Camera2D Camera;
+  Debugger Debugger;
   HexCoords selected_tile;
 };
+
+#endif // !GAME_H

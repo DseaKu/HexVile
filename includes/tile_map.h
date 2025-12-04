@@ -15,7 +15,7 @@ private:
 
 public:
   HexTiles();
-  void SetTileMap(const char *path);
+  void LoadTileMapAsset(const char *path);
   void DrawTile(TileID tileID, int q, int r);
   HexCoords MouseToHexCoords();
 

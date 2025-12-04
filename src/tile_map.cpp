@@ -6,7 +6,9 @@
 HexTiles ::HexTiles() {}
 HexTiles ::~HexTiles() { UnloadTexture(tile_map); }
 
-void HexTiles::SetTileMap(const char *path) { tile_map = LoadTexture(path); }
+void HexTiles::LoadTileMapAsset(const char *path) {
+  tile_map = LoadTexture(path);
+}
 
 void HexTiles::DrawTile(TileID tileID, int q, int r) {
   Rectangle tile_rect = {(float)Config::TILE_SIZE * 0,
@@ -19,7 +21,7 @@ void HexTiles::DrawTile(TileID tileID, int q, int r) {
   float x_offset;
   float y_offset = r * Config::TILE_SIZE_HALF;
 
-  // If numbers of rows is odd, shift hex-tile by there half of there value
+  // Shift tiles every second row by a half tile
   if (r & 1) {
     x_offset = q * Config::TILE_SIZE - Config::TILE_SIZE_HALF;
   } else {

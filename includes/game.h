@@ -15,7 +15,7 @@ private:
   HexTiles TileMap;
   Camera2D Camera;
   Debugger Debugger;
-  HexCoords selected_tile;
+  HexCoords HighlightedTile;
 };
 
 #endif // !GAME_H

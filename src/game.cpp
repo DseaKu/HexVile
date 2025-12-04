@@ -14,7 +14,7 @@ Game::Game() {
   Camera.target = Config::SCREEN_CENTER;
   Camera.offset = Config::SCREEN_CENTER;
   Camera.zoom = Config::ZOOM;
-  TileMap.SetTileMap("assets/images/Tileset1.png");
+  TileMap.LoadTileMapAsset("assets/images/Tileset1.png");
 }
 void Game::GameLoop() {
   while (!WindowShouldClose()) {
@@ -22,7 +22,7 @@ void Game::GameLoop() {
     // Update
     //----------------------------------------------------------------------------------
     Debugger.SetDebugger(Config::DEBUGGER_FLAG);
-    selected_tile = TileMap.MouseToHexCoords();
+    HighlightedTile = TileMap.MouseToHexCoords();
 
     //----------------------------------------------------------------------------------
     // Draw
@@ -49,7 +49,7 @@ void Game::GameLoop() {
     TileMap.DrawTile(GRASS, 1, 4);
     EndMode2D();
 
-    Debugger.DrawDebugInformation(selected_tile);
+    Debugger.DrawDebugInformation(HighlightedTile);
     EndDrawing();
   }
 }

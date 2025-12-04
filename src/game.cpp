@@ -27,7 +27,7 @@ void Game::GameLoop() {
     // Update
     //----------------------------------------------------------------------------------
     Debugger.SetDebugger(Config::DEBUGGER_FLAG);
-    HighlightedTile = TileMap.MouseToHexCoords();
+    HighlightedTile = TileMap.PosToHexCoords(GetMousePosition());
 
     // Draw
     //----------------------------------------------------------------------------------

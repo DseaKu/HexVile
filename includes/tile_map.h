@@ -20,7 +20,7 @@ public:
   void LoadTileMapAsset(const char *path);
   void DrawTile(TileID tileID, int q, int r);
   void SetHighlightedTilePointer(HexCoords *HighlightedTile);
-  HexCoords MouseToHexCoords();
+  HexCoords PosToHexCoords(Vector2 pos);
 
   ~HexTileManager();
 };

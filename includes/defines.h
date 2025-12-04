@@ -3,7 +3,6 @@
 #include "raylib.h"
 #include <cstdint>
 
-// namespace Config
 namespace Config {
 constexpr int SCREEN_WIDTH = 2200;
 constexpr int SCREEN_HEIGHT = 1000;

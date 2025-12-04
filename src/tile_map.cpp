@@ -3,14 +3,14 @@
 #include "raylib.h"
 #include <cmath>
 
-HexTiles ::HexTiles() {}
-HexTiles ::~HexTiles() { UnloadTexture(tile_map); }
+HexTileManager ::HexTileManager() {}
+HexTileManager ::~HexTileManager() { UnloadTexture(TileMapAsset); }
 
-void HexTiles::LoadTileMapAsset(const char *path) {
-  tile_map = LoadTexture(path);
+void HexTileManager::LoadTileMapAsset(const char *path) {
+  TileMapAsset = LoadTexture(path);
 }
 
-void HexTiles::DrawTile(TileID tileID, int q, int r) {
+void HexTileManager::DrawTile(TileID tileID, int q, int r) {
   Rectangle tile_rect = {(float)Config::TILE_SIZE * 0,
                          (float)Config::TILE_SIZE * tileID, Config::TILE_SIZE,
                          Config::TILE_SIZE};
@@ -35,10 +35,10 @@ void HexTiles::DrawTile(TileID tileID, int q, int r) {
                          Config::TILE_SIZE};
   Vector2 origin = {0.0f, 0.0f};
 
-  DrawTexturePro(tile_map, tile_rect, dest_rect, origin, 0.0f, WHITE);
+  DrawTexturePro(TileMapAsset, tile_rect, dest_rect, origin, 0.0f, WHITE);
 }
 
-HexCoords HexTiles::MouseToHexCoords() {
+HexCoords HexTileManager::MouseToHexCoords() {
   Vector2 mouse_position = GetMousePosition();
 
   // Calculate mouse position relative to the center of the screen
@@ -87,3 +87,7 @@ HexCoords HexTiles::MouseToHexCoords() {
 
   return {col, row};
 }
+
+// void HexTileManager::SetHighlightedTilePointer(HexCoords *HighlightedTile) {
+//   pHighlightedTile = HighlightedTile;
+// }

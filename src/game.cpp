@@ -3,28 +3,31 @@
 #include "defines.h"
 #include "enums.h"
 
+// Initialization
+//--------------------------------------------------------------------------------------
 Game::Game() {
-  //----------------------------------------------------------------------------------
-  // Initialization
-  //--------------------------------------------------------------------------------------
   InitWindow(Config::SCREEN_WIDTH, Config::SCREEN_HEIGHT,
              "Dream of Hexagons - Interactive");
-
   SetTargetFPS(120);
+
   Camera.target = Config::SCREEN_CENTER;
   Camera.offset = Config::SCREEN_CENTER;
   Camera.zoom = Config::ZOOM;
+
   TileMap.LoadTileMapAsset("assets/images/Tileset1.png");
+  // TileMap.SetHighlightedTilePointer(&HighlightedTile);
 }
+
+// Main Loop
+//--------------------------------------------------------------------------------------
 void Game::GameLoop() {
   while (!WindowShouldClose()) {
-    //----------------------------------------------------------------------------------
+
     // Update
     //----------------------------------------------------------------------------------
     Debugger.SetDebugger(Config::DEBUGGER_FLAG);
     HighlightedTile = TileMap.MouseToHexCoords();
 
-    //----------------------------------------------------------------------------------
     // Draw
     //----------------------------------------------------------------------------------
     BeginDrawing();
@@ -54,11 +57,9 @@ void Game::GameLoop() {
   }
 }
 
+// De-Initialization
+//--------------------------------------------------------------------------------------
 Game::~Game() {
 
-  //----------------------------------------------------------------------------------
-  // De-Initialization
-  //--------------------------------------------------------------------------------------
   CloseWindow(); // Close window and OpenGL context
-  //--------------------------------------------------------------------------------------
 }

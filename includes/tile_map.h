@@ -9,16 +9,18 @@ struct HexCoords {
   int r;
 };
 
-class HexTiles {
+class HexTileManager {
 private:
-  Texture2D tile_map;
+  Texture2D TileMapAsset;
+  // HexCoords *pHighlightedTile;
 
 public:
-  HexTiles();
+  HexTileManager();
   void LoadTileMapAsset(const char *path);
   void DrawTile(TileID tileID, int q, int r);
+  // void SetHighlightedTilePointer(HexCoords *HighlightedTile);
   HexCoords MouseToHexCoords();
 
-  ~HexTiles();
+  ~HexTileManager();
 };
 #endif // !TILE_MAP_H

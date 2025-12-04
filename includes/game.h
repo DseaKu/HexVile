@@ -12,7 +12,7 @@ public:
   void GameLoop();
 
 private:
-  HexTiles TileMap;
+  HexTileManager TileMap;
   Camera2D Camera;
   Debugger Debugger;
   HexCoords HighlightedTile;

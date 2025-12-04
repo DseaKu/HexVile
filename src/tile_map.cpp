@@ -3,8 +3,6 @@
 #include "raylib.h"
 #include <cmath>
 
-// HexTileManager ::HexTileManager() {}
-// HexTileManager ::HexTileManager() { pHighlightedTile = nullptr; }
 HexTileManager ::HexTileManager() {
   pHighlightedTile = nullptr;
   TileMapAsset = {0};
@@ -40,7 +38,12 @@ void HexTileManager::DrawTile(TileID tileID, int q, int r) {
                          Config::TILE_SIZE};
   Vector2 origin = {0.0f, 0.0f};
 
-  DrawTexturePro(TileMapAsset, tile_rect, dest_rect, origin, 0.0f, WHITE);
+  // Tile is highlighted, if the mouse hover tile
+  if (pHighlightedTile->q == q && pHighlightedTile->r == r) {
+    DrawTexturePro(TileMapAsset, tile_rect, dest_rect, origin, 0.0f, RED);
+  } else {
+    DrawTexturePro(TileMapAsset, tile_rect, dest_rect, origin, 0.0f, WHITE);
+  }
 }
 
 HexCoords HexTileManager::MouseToHexCoords() {

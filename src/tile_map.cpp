@@ -6,11 +6,12 @@ HexTileManager ::HexTileManager() {
   pHighlightedTile = nullptr;
   TileMapAsset = {0};
 }
-HexTileManager ::~HexTileManager() { UnloadTexture(TileMapAsset); }
+HexTileManager ::~HexTileManager() {}
 
 void HexTileManager::LoadTileMapAsset(const char *path) {
   TileMapAsset = LoadTexture(path);
 }
+void HexTileManager::UnloadTileMapAsset() { UnloadTexture(TileMapAsset); }
 
 void HexTileManager::DrawTile(TileID tileID, int q, int r) {
   Rectangle tile_rect = {(float)Config::TILE_SIZE * 0,

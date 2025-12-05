@@ -18,6 +18,7 @@ public:
   HexTileManager();
 
   void LoadTileMapAsset(const char *path);
+  void UnloadTileMapAsset();
   void DrawTile(TileID tileID, int q, int r);
   void SetHighlightedTilePointer(HexCoords *HighlightedTile);
   HexCoords PosToHexCoords(Vector2 pos);

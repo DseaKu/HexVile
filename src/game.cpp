@@ -64,4 +64,5 @@ void Game::GameLoop() {
 Game::~Game() {
 
   CloseWindow(); // Close window and OpenGL context
+  TileMap.UnloadTileMapAsset();
 }

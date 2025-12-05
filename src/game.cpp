@@ -1,5 +1,4 @@
 #include "game.h"
-#include "debug.h"
 #include "defines.h"
 #include "raylib.h"
 
@@ -57,7 +56,6 @@ void Game::GameLoop() {
 Game::~Game() {
 
   CloseWindow(); // Close window and OpenGL context
-  TileMap.UnloadTileMapAsset();
 }
 
 // Draw debug Information

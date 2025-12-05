@@ -22,7 +22,6 @@ FetchContent_MakeAvailable(raylib)
 set(SOURCES
     src/main.cpp
     src/game.cpp
-    src/tile_map.cpp
     src/camera.cpp
     src/hex_tile_grid.cpp
 )

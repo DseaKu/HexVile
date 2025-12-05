@@ -12,22 +12,24 @@ const Color COL_TEXT = {148, 163, 184, 255};
 //      HEX IMPLEMENTATION
 // =======================
 
-Hex::Hex() : q(0), r(0) {}
-Hex::Hex(int q, int r) : q(q), r(r) {}
+HexTile::HexTile() : q(0), r(0) {}
+HexTile::HexTile(int q, int r) : q(q), r(r) {}
 
-Hex Hex::Add(const Hex &other) const { return Hex(q + other.q, r + other.r); }
+HexTile HexTile::Add(const HexTile &other) const {
+  return HexTile(q + other.q, r + other.r);
+}
 
-bool Hex::Equals(const Hex &other) const {
+bool HexTile::Equals(const HexTile &other) const {
   return q == other.q && r == other.r;
 }
 
-Hex Hex::operator+(const Hex &other) const { return Add(other); }
+HexTile HexTile::operator+(const HexTile &other) const { return Add(other); }
 
-bool Hex::operator==(const Hex &other) const { return Equals(other); }
+bool HexTile::operator==(const HexTile &other) const { return Equals(other); }
 
-bool Hex::operator!=(const Hex &other) const { return !Equals(other); }
+bool HexTile::operator!=(const HexTile &other) const { return !Equals(other); }
 
-bool Hex::operator<(const Hex &other) const {
+bool HexTile::operator<(const HexTile &other) const {
   if (q != other.q)
     return q < other.q;
   return r < other.r;
@@ -39,8 +41,8 @@ bool Hex::operator<(const Hex &other) const {
 
 HexGrid::HexGrid(float radius, int mapSize, Vector2 centerPos)
     : hexRadius(radius), mapRadius(mapSize), origin(centerPos),
-      DIRECTIONS({Hex(1, 0), Hex(0, 1), Hex(-1, 1), Hex(-1, 0), Hex(0, -1),
-                  Hex(1, -1)}),
+      DIRECTIONS({HexTile(1, 0), HexTile(0, 1), HexTile(-1, 1), HexTile(-1, 0),
+                  HexTile(0, -1), HexTile(1, -1)}),
       DIR_LABELS({"E", "SE", "SW", "W", "NW", "NE"}) {
   InitGrid();
 }
@@ -51,12 +53,12 @@ void HexGrid::InitGrid() {
     int r1 = std::max(-mapRadius, -q - mapRadius);
     int r2 = std::min(mapRadius, -q + mapRadius);
     for (int r = r1; r <= r2; r++) {
-      tiles[Hex(q, r)] = {Hex(q, r), EMPTY};
+      tiles[HexTile(q, r)] = {HexTile(q, r), EMPTY};
     }
   }
 }
 
-Hex HexGrid::HexRound(FractionalHex h) const {
+HexTile HexGrid::HexRound(FractionalHex h) const {
   int q = (int)round(h.q);
   int r = (int)round(h.r);
   int s = (int)round(h.s);
@@ -69,16 +71,16 @@ Hex HexGrid::HexRound(FractionalHex h) const {
   else if (r_diff > s_diff)
     r = -q - s;
 
-  return Hex(q, r);
+  return HexTile(q, r);
 }
 
-Vector2 HexGrid::HexToPixel(Hex h) const {
+Vector2 HexGrid::HexTileToPixel(HexTile h) const {
   float x = hexRadius * (sqrt(3.0f) * h.q + sqrt(3.0f) / 2.0f * h.r);
   float y = hexRadius * (3.0f / 2.0f * h.r);
   return {x + origin.x, y + origin.y};
 }
 
-Hex HexGrid::PixelToHex(Vector2 point) const {
+HexTile HexGrid::PixelToHexTile(Vector2 point) const {
   float pt_x = (point.x - origin.x) / hexRadius;
   float pt_y = (point.y - origin.y) / hexRadius;
   double q = (sqrt(3.0) / 3.0 * pt_x - 1.0 / 3.0 * pt_y);
@@ -86,24 +88,24 @@ Hex HexGrid::PixelToHex(Vector2 point) const {
   return HexRound({q, r, -q - r});
 }
 
-Hex HexGrid::GetNeighbor(Hex h, int directionIndex) const {
+HexTile HexGrid::GetNeighbor(HexTile h, int directionIndex) const {
   return h + DIRECTIONS[directionIndex];
 }
 
-bool HexGrid::HasTile(Hex h) const { return tiles.find(h) != tiles.end(); }
+bool HexGrid::HasTile(HexTile h) const { return tiles.find(h) != tiles.end(); }
 
-void HexGrid::ToggleTile(Hex h) {
+void HexGrid::ToggleTile(HexTile h) {
   if (HasTile(h)) {
     tiles[h].type = (tiles[h].type == WALL) ? EMPTY : WALL;
   }
 }
 
-bool HexGrid::CheckSurrounded(Hex target) const {
+bool HexGrid::CheckSurrounded(HexTile target) const {
   int neighborCount = 0;
   int wallCount = 0;
 
   for (int i = 0; i < 6; i++) {
-    Hex n = GetNeighbor(target, i);
+    HexTile n = GetNeighbor(target, i);
     auto it = tiles.find(n);
 
     if (it != tiles.end()) {
@@ -117,7 +119,7 @@ bool HexGrid::CheckSurrounded(Hex target) const {
 
 void HexGrid::Draw() {
   for (auto const &[key, tile] : tiles) {
-    Vector2 pos = HexToPixel(tile.coord);
+    Vector2 pos = HexTileToPixel(tile.coord);
     Color color = (tile.type == WALL) ? COL_HEX_WALL : COL_HEX_EMPTY;
 
     if (tile.type != WALL && CheckSurrounded(tile.coord)) {
@@ -131,7 +133,7 @@ void HexGrid::Draw() {
 }
 
 void HexGrid::DrawDebugOverlay(Vector2 mousePos) {
-  Hex mouseHex = PixelToHex(mousePos);
+  HexTile mouseHex = PixelToHexTile(mousePos);
 
   // UI Bar background
   int screenH = GetScreenHeight();
@@ -143,14 +145,14 @@ void HexGrid::DrawDebugOverlay(Vector2 mousePos) {
   if (!HasTile(mouseHex))
     return;
 
-  Vector2 centerPx = HexToPixel(mouseHex);
+  Vector2 centerPx = HexTileToPixel(mouseHex);
   DrawPolyLinesEx(centerPx, 6, hexRadius, 30, 3.0f, COL_HIGHLIGHT);
 
   for (int i = 0; i < 6; i++) {
-    Hex nHex = GetNeighbor(mouseHex, i);
+    HexTile nHex = GetNeighbor(mouseHex, i);
 
     if (HasTile(nHex)) {
-      Vector2 nPx = HexToPixel(nHex);
+      Vector2 nPx = HexTileToPixel(nHex);
 
       // Connection Line
       DrawLineEx(centerPx, nPx, 2.0f, Fade(COL_HIGHLIGHT, 0.5f));

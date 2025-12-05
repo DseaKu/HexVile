@@ -6,19 +6,19 @@
 // Initialization
 //--------------------------------------------------------------------------------------
 Game::Game()
-    : hexGrid(35.0f, 5, {Config::SCREEN_CENTER.x, Config::SCREEN_CENTER.y}) {
+    : hexGrid(40.0f, Config::MAP_SIZE,
+              {Config::SCREEN_CENTER.x, Config::SCREEN_CENTER.y}) {
 
   InitWindow(Config::SCREEN_WIDTH, Config::SCREEN_HEIGHT,
              "Dream of Hexagons - Interactive");
   SetTargetFPS(120);
 
-  Camera.target = Config::SCREEN_CENTER;
-  Camera.offset = Config::SCREEN_CENTER;
-  Camera.zoom = Config::ZOOM;
-  Camera.rotation = 0.0f;
+  camera.target = Config::SCREEN_CENTER;
+  camera.offset = Config::SCREEN_CENTER;
+  camera.zoom = Config::ZOOM;
+  camera.rotation = 0.0f;
 
-  TileMap.LoadTileMapAsset("assets/images/Tileset1.png");
-  TileMap.SetHighlightedTilePointer(&HighlightedTile);
+  MousePos = (Vector2){0, 0};
 }
 
 // Main Loop
@@ -28,28 +28,26 @@ void Game::GameLoop() {
 
     // Update
     //----------------------------------------------------------------------------------
-    Debugger.SetDebugger(Config::DEBUGGER_FLAG);
-    HighlightedTile = TileMap.PosToHexCoords(GetMousePosition());
+    MousePos = GetMousePosition();
 
-    Vector2 mousePos = GetMousePosition();
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-      HexTile clickedHex = hexGrid.PixelToHexTile(mousePos);
+      HexTile clickedHex = hexGrid.PixelToHexTile(MousePos);
       hexGrid.ToggleTile(clickedHex);
     }
 
     // Draw
     //----------------------------------------------------------------------------------
     BeginDrawing();
-    ClearBackground(BLACK);
+    ClearBackground(WHITE);
 
     hexGrid.Draw();
-    hexGrid.DrawDebugOverlay(mousePos);
 
-    BeginMode2D(Camera);
+    BeginMode2D(camera);
 
     EndMode2D();
 
-    Debugger.DrawDebugInformation(HighlightedTile);
+    DrawDebugOverlay(Config::DEBUGGER_FLAG);
+
     EndDrawing();
   }
 }
@@ -61,3 +59,12 @@ Game::~Game() {
   CloseWindow(); // Close window and OpenGL context
   TileMap.UnloadTileMapAsset();
 }
+
+// Draw debug Information
+//--------------------------------------------------------------------------------------
+void Game::DrawDebugOverlay(bool is_enabled) {
+  if (!is_enabled)
+    return;
+  DrawFPS(100, 50);
+  hexGrid.DrawDebugOverlay(MousePos);
+};

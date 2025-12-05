@@ -1,5 +1,5 @@
-#ifndef HEX_GRID_H
-#define HEX_GRID_H
+#ifndef HEX_TILE_GRID_H
+#define HEX_TILE_GRID_H
 
 #include "raylib.h"
 #include <map>
@@ -32,7 +32,7 @@ public:
   HexTile operator+(const HexTile &other) const;
   bool operator==(const HexTile &other) const;
   bool operator!=(const HexTile &other) const;
-  bool operator<(const HexTile &other) const; // Required for std::map
+  bool operator<(const HexTile &other) const;
 };
 
 struct Tile {
@@ -56,7 +56,7 @@ private:
   HexTile HexRound(FractionalHex h) const;
 
 public:
-  HexGrid(float radius, int mapSize, Vector2 centerPos);
+  HexGrid(float radius, int mapSize, Vector2 CenterPos);
 
   void InitGrid();
 
@@ -75,4 +75,4 @@ public:
   void DrawDebugOverlay(Vector2 mousePos);
 };
 
-#endif // HEX_GRID_H
+#endif // HEX_TILE_GRID_H

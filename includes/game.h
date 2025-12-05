@@ -1,18 +1,18 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "debug.h"
-#include "hex_grid.h"
+#include "hex_tile_grid.h"
 #include "raylib.h"
 #include "tile_map.h"
 
 class Game {
 private:
   HexTileManager TileMap;
-  Camera2D Camera;
-  Debugger Debugger;
-  HexCoords HighlightedTile;
+  Camera2D camera;
+  HexCoords highlightedTile;
   HexGrid hexGrid;
+  void DrawDebugOverlay(bool is_enabled);
+  Vector2 MousePos;
 
 public:
   Game();

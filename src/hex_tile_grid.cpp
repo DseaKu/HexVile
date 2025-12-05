@@ -1,4 +1,4 @@
-#include "hex_grid.h"
+#include "hex_tile_grid.h"
 
 // --- INTERNAL COLORS ---
 // Defined here locally since they are implementation details of the grid
@@ -38,9 +38,8 @@ bool HexTile::operator<(const HexTile &other) const {
 // ===========================
 //    HEX GRID IMPLEMENTATION
 // ===========================
-
-HexGrid::HexGrid(float radius, int mapSize, Vector2 centerPos)
-    : hexRadius(radius), mapRadius(mapSize), origin(centerPos),
+HexGrid::HexGrid(float radius, int mapSize, Vector2 CenterPos)
+    : hexRadius(radius), mapRadius(mapSize), origin(CenterPos),
       DIRECTIONS({HexTile(1, 0), HexTile(0, 1), HexTile(-1, 1), HexTile(-1, 0),
                   HexTile(0, -1), HexTile(1, -1)}),
       DIR_LABELS({"E", "SE", "SW", "W", "NW", "NE"}) {

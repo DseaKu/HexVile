@@ -73,7 +73,7 @@ Hexagon HexGrid::HexRound(FractionalHex h) const {
   return Hexagon(q, r);
 }
 
-Vector2 HexGrid::HexagonToPixel(Hexagon h) const {
+Vector2 HexGrid::HexagonToPoint(Hexagon h) const {
   float x = hexRadius * (sqrt(3.0f) * h.q + sqrt(3.0f) / 2.0f * h.r);
   float y = hexRadius * (3.0f / 2.0f * h.r);
   return {x + origin.x, y + origin.y};
@@ -120,7 +120,7 @@ bool HexGrid::CheckSurrounded(Hexagon target) const {
 
 void HexGrid::Draw() {
   for (auto const &[key, tile] : HexTiles) {
-    Vector2 pos = HexagonToPixel(tile.coord);
+    Vector2 pos = HexagonToPoint(tile.coord);
     Color color = (tile.type == WALL) ? COL_HEX_WALL : COL_HEX_EMPTY;
 
     if (tile.type != WALL && CheckSurrounded(tile.coord)) {
@@ -146,14 +146,14 @@ void HexGrid::DrawDebugOverlay(Vector2 mousePos) {
   if (!HasTile(mouseHex))
     return;
 
-  Vector2 centerPx = HexagonToPixel(mouseHex);
+  Vector2 centerPx = HexagonToPoint(mouseHex);
   DrawPolyLinesEx(centerPx, 6, hexRadius, 30, 3.0f, COL_HIGHLIGHT);
 
   for (int i = 0; i < 6; i++) {
     Hexagon nHex = GetNeighbor(mouseHex, i);
 
     if (HasTile(nHex)) {
-      Vector2 nPx = HexagonToPixel(nHex);
+      Vector2 nPx = HexagonToPoint(nHex);
 
       // Connection Line
       DrawLineEx(centerPx, nPx, 2.0f, Fade(COL_HIGHLIGHT, 0.5f));

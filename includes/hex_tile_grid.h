@@ -61,7 +61,7 @@ public:
   void InitGrid();
 
   // Coordinate Conversions
-  Vector2 HexagonToPixel(Hexagon h) const;
+  Vector2 HexagonToPoint(Hexagon h) const;
   Hexagon PointToHexagon(Vector2 point) const;
 
   // Logic

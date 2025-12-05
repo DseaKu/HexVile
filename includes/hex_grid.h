@@ -14,10 +14,6 @@ struct FractionalHex {
 
 enum TileType { EMPTY, WALL };
 
-struct Tile {
-  Hex coord;
-  TileType type;
-};
 // --- HEX CLASS ---
 class Hex {
 public:
@@ -37,6 +33,11 @@ public:
   bool operator==(const Hex &other) const;
   bool operator!=(const Hex &other) const;
   bool operator<(const Hex &other) const; // Required for std::map
+};
+
+struct Tile {
+  Hex coord;
+  TileType type;
 };
 
 // --- HEX GRID CLASS ---

@@ -2,6 +2,7 @@
 #define ENUMS_H
 typedef enum {
   EMPTY = 0,
+  WALL,
   WATER,
   GRASS,
   DIRT,
@@ -9,6 +10,6 @@ typedef enum {
   ICE,
   IDK,
   SAND,
-} TileID;
+} TileType;
 
 #endif // !ENUMS_H

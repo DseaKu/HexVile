@@ -1,6 +1,7 @@
 #ifndef HEX_TILE_GRID_H
 #define HEX_TILE_GRID_H
 
+#include "enums.h"
 #include "raylib.h"
 #include <map>
 #include <string>
@@ -11,8 +12,6 @@
 struct FractionalHex {
   double q, r, s;
 };
-
-enum TileType { EMPTY, WALL };
 
 // --- HEXAGON ---
 class Hexagon {

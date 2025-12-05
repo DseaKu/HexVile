@@ -47,12 +47,12 @@ HexGrid::HexGrid(float radius, int mapSize, Vector2 CenterPos)
 }
 
 void HexGrid::InitGrid() {
-  tiles.clear();
+  HexTiles.clear();
   for (int q = -mapRadius; q <= mapRadius; q++) {
     int r1 = std::max(-mapRadius, -q - mapRadius);
     int r2 = std::min(mapRadius, -q + mapRadius);
     for (int r = r1; r <= r2; r++) {
-      tiles[Hexagon(q, r)] = {Hexagon(q, r), EMPTY};
+      HexTiles[Hexagon(q, r)] = {Hexagon(q, r), EMPTY};
     }
   }
 }
@@ -91,11 +91,13 @@ Hexagon HexGrid::GetNeighbor(Hexagon h, int directionIndex) const {
   return h + DIRECTIONS[directionIndex];
 }
 
-bool HexGrid::HasTile(Hexagon h) const { return tiles.find(h) != tiles.end(); }
+bool HexGrid::HasTile(Hexagon h) const {
+  return HexTiles.find(h) != HexTiles.end();
+}
 
 void HexGrid::ToggleTile(Hexagon h) {
   if (HasTile(h)) {
-    tiles[h].type = (tiles[h].type == WALL) ? EMPTY : WALL;
+    HexTiles[h].type = (HexTiles[h].type == WALL) ? EMPTY : WALL;
   }
 }
 
@@ -105,9 +107,9 @@ bool HexGrid::CheckSurrounded(Hexagon target) const {
 
   for (int i = 0; i < 6; i++) {
     Hexagon n = GetNeighbor(target, i);
-    auto it = tiles.find(n);
+    auto it = HexTiles.find(n);
 
-    if (it != tiles.end()) {
+    if (it != HexTiles.end()) {
       neighborCount++;
       if (it->second.type == WALL)
         wallCount++;
@@ -117,7 +119,7 @@ bool HexGrid::CheckSurrounded(Hexagon target) const {
 }
 
 void HexGrid::Draw() {
-  for (auto const &[key, tile] : tiles) {
+  for (auto const &[key, tile] : HexTiles) {
     Vector2 pos = HexagonToPixel(tile.coord);
     Color color = (tile.type == WALL) ? COL_HEX_WALL : COL_HEX_EMPTY;
 
@@ -162,7 +164,7 @@ void HexGrid::DrawDebugOverlay(Vector2 mousePos) {
                WHITE);
 
       // Highlight Neighbor
-      Tile nTile = tiles[nHex];
+      Tile nTile = HexTiles[nHex];
       Color nColor =
           (nTile.type == WALL) ? Fade(COL_HEX_WALL, 0.5f) : Fade(WHITE, 0.2f);
       DrawPoly(nPx, 6, hexRadius - 4, 30, nColor);

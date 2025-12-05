@@ -43,7 +43,7 @@ struct Tile {
 // --- HEX TILE GRID ---
 class HexGrid {
 private:
-  std::map<Hexagon, Tile> tiles;
+  std::map<Hexagon, Tile> HexTiles;
   float hexRadius;
   int mapRadius;
   Vector2 origin;

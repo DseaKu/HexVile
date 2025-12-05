@@ -30,7 +30,7 @@ void Game::GameLoop() {
     MousePos = GetMousePosition();
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-      HexTile clickedHex = hexGrid.PixelToHexTile(MousePos);
+      Hexagon clickedHex = hexGrid.PointToHexagon(MousePos);
       hexGrid.ToggleTile(clickedHex);
     }
 

@@ -14,46 +14,46 @@ struct FractionalHex {
 
 enum TileType { EMPTY, WALL };
 
-// --- HEX CLASS ---
-class HexTile {
+// --- HEXAGON ---
+class Hexagon {
 public:
   int q;
   int r;
 
   // Constructors
-  HexTile();
-  HexTile(int q, int r);
+  Hexagon();
+  Hexagon(int q, int r);
 
   // Logic Methods
-  HexTile Add(const HexTile &other) const;
-  bool Equals(const HexTile &other) const;
+  Hexagon Add(const Hexagon &other) const;
+  bool Equals(const Hexagon &other) const;
 
   // Operators
-  HexTile operator+(const HexTile &other) const;
-  bool operator==(const HexTile &other) const;
-  bool operator!=(const HexTile &other) const;
-  bool operator<(const HexTile &other) const;
+  Hexagon operator+(const Hexagon &other) const;
+  bool operator==(const Hexagon &other) const;
+  bool operator!=(const Hexagon &other) const;
+  bool operator<(const Hexagon &other) const;
 };
 
 struct Tile {
-  HexTile coord;
+  Hexagon coord;
   TileType type;
 };
 
-// --- HEX GRID CLASS ---
+// --- HEX TILE GRID ---
 class HexGrid {
 private:
-  std::map<HexTile, Tile> tiles;
+  std::map<Hexagon, Tile> tiles;
   float hexRadius;
   int mapRadius;
   Vector2 origin;
 
   // Lookup Tables
-  const std::vector<HexTile> DIRECTIONS;
+  const std::vector<Hexagon> DIRECTIONS;
   const std::vector<std::string> DIR_LABELS;
 
   // Internal Math Helper
-  HexTile HexRound(FractionalHex h) const;
+  Hexagon HexRound(FractionalHex h) const;
 
 public:
   HexGrid(float radius, int mapSize, Vector2 CenterPos);
@@ -61,14 +61,14 @@ public:
   void InitGrid();
 
   // Coordinate Conversions
-  Vector2 HexTileToPixel(HexTile h) const;
-  HexTile PixelToHexTile(Vector2 point) const;
+  Vector2 HexagonToPixel(Hexagon h) const;
+  Hexagon PointToHexagon(Vector2 point) const;
 
   // Logic
-  HexTile GetNeighbor(HexTile h, int directionIndex) const;
-  bool HasTile(HexTile h) const;
-  void ToggleTile(HexTile h);
-  bool CheckSurrounded(HexTile target) const;
+  Hexagon GetNeighbor(Hexagon h, int directionIndex) const;
+  bool HasTile(Hexagon h) const;
+  void ToggleTile(Hexagon h);
+  bool CheckSurrounded(Hexagon target) const;
 
   // Rendering
   void Draw();

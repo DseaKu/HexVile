@@ -5,16 +5,13 @@
 
 // Initialization
 //--------------------------------------------------------------------------------------
-Game::Game()
-    : hexGrid(12.0f, Config::MAP_SIZE,
-              {
-                  Config::SCREEN_CENTER.x,
-                  Config::SCREEN_CENTER.y,
-              }) {
-
+Game::Game() {
   InitWindow(Config::SCREEN_WIDTH, Config::SCREEN_HEIGHT,
              "Dream of HexCoords - Interactive");
   SetTargetFPS(120);
+
+  hexGrid.InitGrid(12.0f);
+  hexGrid.LoadAssets("assets/images/Tileset1.png");
 
   camera.target = Config::SCREEN_CENTER;
   camera.offset = Config::SCREEN_CENTER;
@@ -22,8 +19,6 @@ Game::Game()
   camera.rotation = 0.0f;
 
   MousePos = (Vector2){0, 0};
-
-  hexGrid.LoadAssets("assets/images/Tileset1.png");
 }
 
 // Main Loop
@@ -74,8 +69,9 @@ void Game::DrawDebugOverlay(bool is_enabled) {
 
   // Draw mouse position
   Vector2 scaled_mouse_position = {
-      (this->MousePos.x - (Config::SCREEN_WIDTH / 2.0f)) / Config::ZOOM,
-      (this->MousePos.y - (Config::SCREEN_HEIGHT / 2.0f)) / Config::ZOOM};
+      (this->MousePos.x - (Config::SCREEN_WIDTH / 2.0f)) / Config::CAMERA_ZOOM,
+      (this->MousePos.y - (Config::SCREEN_HEIGHT / 2.0f)) /
+          Config::CAMERA_ZOOM};
 
   DrawText(TextFormat("Real Mouse Position:\n  x:%.2f\n  y:%.2f",
                       this->MousePos.x, this->MousePos.y),

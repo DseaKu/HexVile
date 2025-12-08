@@ -50,15 +50,16 @@ bool HexCoord::operator<(const HexCoord &other) const {
 // ===========================
 //    HEX GRID IMPLEMENTATION
 // ===========================
-HexGrid::HexGrid(float radius, int mapSize, Vector2 CenterPos) {
+HexGrid::HexGrid() {};
+
+void HexGrid::InitGrid(float radius) {
 
   hexRadius = radius;
-  mapRadius = mapSize;
-  origin = CenterPos;
-  InitGrid();
-}
+  mapRadius = Config::MAP_SIZE;
+  origin = Config::SCREEN_CENTER;
+  tileGapX = Config::TILE_GAP_X;
+  tileGapY = Config::TILE_GAP_Y;
 
-void HexGrid::InitGrid() {
   HexTiles.clear();
   for (int q = -mapRadius; q <= mapRadius; q++) {
     int r1 = std::max(-mapRadius, -q - mapRadius);

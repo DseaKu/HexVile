@@ -58,9 +58,9 @@ private:
   HexCoord HexRound(FractionalHex h) const;
 
 public:
-  HexGrid(float radius, int mapSize, Vector2 CenterPos);
+  HexGrid();
 
-  void InitGrid();
+  void InitGrid(float radius);
   void LoadAssets(const char *pathToAssets);
 
   // Coordinate Conversions

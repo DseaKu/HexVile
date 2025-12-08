@@ -11,7 +11,7 @@ Game::Game() {
   SetTargetFPS(120);
 
   hexGrid.InitGrid(12.0f);
-  hexGrid.LoadAssets("assets/images/Tileset1.png");
+  hexGrid.LoadAssets("assets/images/Tileset2.png");
 
   camera.target = Config::SCREEN_CENTER;
   camera.offset = Config::SCREEN_CENTER;

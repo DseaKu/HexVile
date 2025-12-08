@@ -14,45 +14,45 @@ struct FractionalHex {
 };
 
 // --- HEXAGON ---
-class Hexagon {
+class HexCoord {
 public:
   int q;
   int r;
 
   // Constructors
-  Hexagon();
-  Hexagon(int q, int r);
+  HexCoord();
+  HexCoord(int q, int r);
 
   // Logic Methods
-  Hexagon Add(const Hexagon &other) const;
-  bool Equals(const Hexagon &other) const;
+  HexCoord Add(const HexCoord &other) const;
+  bool Equals(const HexCoord &other) const;
 
   // Operators
-  Hexagon operator+(const Hexagon &other) const;
-  bool operator==(const Hexagon &other) const;
-  bool operator!=(const Hexagon &other) const;
-  bool operator<(const Hexagon &other) const;
+  HexCoord operator+(const HexCoord &other) const;
+  bool operator==(const HexCoord &other) const;
+  bool operator!=(const HexCoord &other) const;
+  bool operator<(const HexCoord &other) const;
 };
 
-struct Tile {
-  Hexagon coord;
+struct MapTile {
+  HexCoord coord;
   TileType type;
 };
 
 // --- HEX TILE GRID ---
 class HexGrid {
 private:
-  std::map<Hexagon, Tile> HexTiles;
+  std::map<HexCoord, MapTile> HexTiles;
   float hexRadius;
   int mapRadius;
   Vector2 origin;
 
   // Lookup Tables
-  const std::vector<Hexagon> DIRECTIONS;
+  const std::vector<HexCoord> DIRECTIONS;
   const std::vector<std::string> DIR_LABELS;
 
   // Internal Math Helper
-  Hexagon HexRound(FractionalHex h) const;
+  HexCoord HexRound(FractionalHex h) const;
 
 public:
   HexGrid(float radius, int mapSize, Vector2 CenterPos);
@@ -60,14 +60,14 @@ public:
   void InitGrid();
 
   // Coordinate Conversions
-  Vector2 HexagonToPoint(Hexagon h) const;
-  Hexagon PointToHexagon(Vector2 point) const;
+  Vector2 HexCoordToPoint(HexCoord h) const;
+  HexCoord PointToHexCoord(Vector2 point) const;
 
   // Logic
-  Hexagon GetNeighbor(Hexagon h, int directionIndex) const;
-  bool HasTile(Hexagon h) const;
-  void ToggleTile(Hexagon h);
-  bool CheckSurrounded(Hexagon target) const;
+  HexCoord GetNeighbor(HexCoord h, int directionIndex) const;
+  bool HasTile(HexCoord h) const;
+  void ToggleTile(HexCoord h);
+  bool CheckSurrounded(HexCoord target) const;
 
   // Rendering
   void Draw();

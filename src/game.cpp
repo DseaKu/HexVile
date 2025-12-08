@@ -10,7 +10,7 @@ Game::Game()
               {Config::SCREEN_CENTER.x, Config::SCREEN_CENTER.y}) {
 
   InitWindow(Config::SCREEN_WIDTH, Config::SCREEN_HEIGHT,
-             "Dream of Hexagons - Interactive");
+             "Dream of HexCoords - Interactive");
   SetTargetFPS(120);
 
   camera.target = Config::SCREEN_CENTER;
@@ -31,7 +31,7 @@ void Game::GameLoop() {
     MousePos = GetMousePosition();
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-      Hexagon clickedHex = hexGrid.PointToHexagon(MousePos);
+      HexCoord clickedHex = hexGrid.PointToHexCoord(MousePos);
       hexGrid.ToggleTile(clickedHex);
     }
 
@@ -80,7 +80,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
                       scaled_mouse_position.x, scaled_mouse_position.y),
            100, 150, 10, RED);
 
-  Vector2 tile00 = hexGrid.HexagonToPoint((Hexagon){0, 0});
+  Vector2 tile00 = hexGrid.HexCoordToPoint((HexCoord){0, 0});
   DrawText(TextFormat("Pos of qr:0,0=%.2f %.2f", tile00.x, tile00.y), 100, 200,
            10, RED);
 };

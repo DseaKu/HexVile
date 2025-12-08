@@ -1,4 +1,7 @@
 #include "hex_tile_grid.h"
+#include "defines.h"
+#include "raylib.h"
+#include <vector>
 
 // --- INTERNAL COLORS ---
 // Defined here locally since they are implementation details of the grid
@@ -7,6 +10,13 @@ const Color COL_HEX_WALL = {34, 197, 94, 255};
 const Color COL_HEX_GOLD = {245, 158, 11, 255};
 const Color COL_HIGHLIGHT = {56, 189, 248, 255};
 const Color COL_TEXT = {148, 163, 184, 255};
+
+const std::vector<HexCoord> HexGrid::DIRECTIONS = {
+    HexCoord(1, 0),  HexCoord(0, 1),  HexCoord(-1, 1),
+    HexCoord(-1, 0), HexCoord(0, -1), HexCoord(1, -1)};
+
+const std::vector<std::string> HexGrid::DIR_LABELS = {"E", "SE", "SW",
+                                                      "W", "NW", "NE"};
 
 // =======================
 //      HEX IMPLEMENTATION
@@ -40,11 +50,11 @@ bool HexCoord::operator<(const HexCoord &other) const {
 // ===========================
 //    HEX GRID IMPLEMENTATION
 // ===========================
-HexGrid::HexGrid(float radius, int mapSize, Vector2 CenterPos)
-    : hexRadius(radius), mapRadius(mapSize), origin(CenterPos),
-      DIRECTIONS({HexCoord(1, 0), HexCoord(0, 1), HexCoord(-1, 1),
-                  HexCoord(-1, 0), HexCoord(0, -1), HexCoord(1, -1)}),
-      DIR_LABELS({"E", "SE", "SW", "W", "NW", "NE"}) {
+HexGrid::HexGrid(float radius, int mapSize, Vector2 CenterPos) {
+
+  hexRadius = radius;
+  mapRadius = mapSize;
+  origin = CenterPos;
   InitGrid();
 }
 
@@ -57,6 +67,11 @@ void HexGrid::InitGrid() {
       HexTiles[HexCoord(q, r)] = {HexCoord(q, r), EMPTY};
     }
   }
+}
+
+void HexGrid::LoadAssets(const char *pathToAssets) {
+
+  tileAssets = LoadTexture(pathToAssets);
 }
 
 HexCoord HexGrid::HexRound(FractionalHex h) const {
@@ -135,6 +150,22 @@ void HexGrid::Draw() {
   }
 }
 
+void HexGrid::Draw2() {
+  for (auto const &[key, tile] : HexTiles) {
+    Vector2 pos = HexCoordToPoint(tile.coord);
+
+    pos = (Vector2){pos.x - Config::TILE_SIZE_HALF,
+                    pos.y - Config::TILE_SIZE_HALF};
+
+    Rectangle tile_rect = {(float)Config::TILE_SIZE * 0,
+                           (float)Config::TILE_SIZE * tile.type,
+                           Config::TILE_SIZE, Config::TILE_SIZE};
+    Rectangle dest_rect = {pos.x, pos.y, Config::TILE_SIZE, Config::TILE_SIZE};
+    Vector2 origin = {0.0f, 0.0f};
+    DrawTexturePro(tileAssets, tile_rect, dest_rect, origin, 0.0f, WHITE);
+  }
+}
+
 void HexGrid::DrawDebugOverlay(Vector2 mousePos) {
   HexCoord mouseHex = PointToHexCoord(mousePos);
 
@@ -173,3 +204,5 @@ void HexGrid::DrawDebugOverlay(Vector2 mousePos) {
     }
   }
 }
+
+void HexGrid::UnloadAssets() { UnloadTexture(tileAssets); }

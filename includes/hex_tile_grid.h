@@ -44,12 +44,15 @@ class HexGrid {
 private:
   std::map<HexCoord, MapTile> HexTiles;
   float hexRadius;
+  float tileGapX;
+  float tileGapY;
   int mapRadius;
   Vector2 origin;
+  Texture2D tileAssets;
 
   // Lookup Tables
-  const std::vector<HexCoord> DIRECTIONS;
-  const std::vector<std::string> DIR_LABELS;
+  static const std::vector<HexCoord> DIRECTIONS;
+  static const std::vector<std::string> DIR_LABELS;
 
   // Internal Math Helper
   HexCoord HexRound(FractionalHex h) const;
@@ -58,6 +61,7 @@ public:
   HexGrid(float radius, int mapSize, Vector2 CenterPos);
 
   void InitGrid();
+  void LoadAssets(const char *pathToAssets);
 
   // Coordinate Conversions
   Vector2 HexCoordToPoint(HexCoord h) const;
@@ -71,7 +75,10 @@ public:
 
   // Rendering
   void Draw();
+  void Draw2();
   void DrawDebugOverlay(Vector2 mousePos);
+
+  void UnloadAssets();
 };
 
 #endif // HEX_TILE_GRID_H

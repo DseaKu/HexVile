@@ -13,11 +13,14 @@ constexpr int MAP_SIZE = 8;
 constexpr int TILE_SIZE = 32;
 constexpr int TILE_SIZE_HALF = TILE_SIZE / 2;
 
+constexpr float TILE_GAP_X = 12.0f;
+constexpr float TILE_GAP_Y = 12.0f;
+
 constexpr Vector2 SCREEN_CENTER_FOR_HEX_TILES = {
     SCREEN_CENTER.x - (float)TILE_SIZE_HALF,
     SCREEN_CENTER.y - (float)TILE_SIZE_HALF};
 
-constexpr float ZOOM = 8.0f;
+constexpr float CAMERA_ZOOM = 5.0f;
 
 constexpr bool DEBUGGER_FLAG = true;
 } // namespace Config

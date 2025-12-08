@@ -6,8 +6,11 @@
 // Initialization
 //--------------------------------------------------------------------------------------
 Game::Game()
-    : hexGrid(40.0f, Config::MAP_SIZE,
-              {Config::SCREEN_CENTER.x, Config::SCREEN_CENTER.y}) {
+    : hexGrid(12.0f, Config::MAP_SIZE,
+              {
+                  Config::SCREEN_CENTER.x,
+                  Config::SCREEN_CENTER.y,
+              }) {
 
   InitWindow(Config::SCREEN_WIDTH, Config::SCREEN_HEIGHT,
              "Dream of HexCoords - Interactive");
@@ -15,10 +18,12 @@ Game::Game()
 
   camera.target = Config::SCREEN_CENTER;
   camera.offset = Config::SCREEN_CENTER;
-  camera.zoom = Config::ZOOM;
+  camera.zoom = Config::CAMERA_ZOOM;
   camera.rotation = 0.0f;
 
   MousePos = (Vector2){0, 0};
+
+  hexGrid.LoadAssets("assets/images/Tileset1.png");
 }
 
 // Main Loop
@@ -40,10 +45,9 @@ void Game::GameLoop() {
     BeginDrawing();
     ClearBackground(WHITE);
 
-    hexGrid.Draw();
-
     BeginMode2D(camera);
 
+    hexGrid.Draw2();
     EndMode2D();
 
     DrawDebugOverlay(Config::DEBUGGER_FLAG);
@@ -56,6 +60,7 @@ void Game::GameLoop() {
 //--------------------------------------------------------------------------------------
 Game::~Game() {
 
+  hexGrid.UnloadAssets();
   CloseWindow(); // Close window and OpenGL context
 }
 
@@ -81,6 +86,6 @@ void Game::DrawDebugOverlay(bool is_enabled) {
            100, 150, 10, RED);
 
   Vector2 tile00 = hexGrid.HexCoordToPoint((HexCoord){0, 0});
-  DrawText(TextFormat("Pos of qr:0,0=%.2f %.2f", tile00.x, tile00.y), 100, 200,
-           10, RED);
+  DrawText(TextFormat("Map Tile{0,0} = %.2f %.2f", tile00.x, tile00.y), 100,
+           200, 10, RED);
 };

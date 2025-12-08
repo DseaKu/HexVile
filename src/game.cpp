@@ -42,7 +42,7 @@ void Game::GameLoop() {
 
     BeginMode2D(camera);
 
-    hexGrid.Draw2();
+    hexGrid.Draw();
     EndMode2D();
 
     DrawDebugOverlay(Config::DEBUGGER_FLAG);
@@ -81,7 +81,12 @@ void Game::DrawDebugOverlay(bool is_enabled) {
                       scaled_mouse_position.x, scaled_mouse_position.y),
            100, 150, 10, RED);
 
+  HexCoord selected_tile = hexGrid.PointToHexCoord(this->MousePos);
+  DrawText(TextFormat("Hex Coordinate :\n  x:%i\n  y:%i", selected_tile.q,
+                      selected_tile.r),
+           100, 200, 10, RED);
+
   Vector2 tile00 = hexGrid.HexCoordToPoint((HexCoord){0, 0});
   DrawText(TextFormat("Map Tile{0,0} = %.2f %.2f", tile00.x, tile00.y), 100,
-           200, 10, RED);
+           250, 10, RED);
 };

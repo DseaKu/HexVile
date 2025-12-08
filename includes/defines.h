@@ -20,7 +20,7 @@ constexpr Vector2 SCREEN_CENTER_FOR_HEX_TILES = {
     SCREEN_CENTER.x - (float)TILE_SIZE_HALF,
     SCREEN_CENTER.y - (float)TILE_SIZE_HALF};
 
-constexpr float CAMERA_ZOOM = 6.0f;
+constexpr float CAMERA_ZOOM = 4.0f;
 
 constexpr bool DEBUGGER_FLAG = true;
 } // namespace Config

@@ -43,7 +43,6 @@ struct MapTile {
 class HexGrid {
 private:
   std::map<HexCoord, MapTile> HexTiles;
-  float hexRadius;
   float tileGapX;
   float tileGapY;
   int mapRadius;
@@ -75,8 +74,6 @@ public:
 
   // Rendering
   void Draw();
-  void Draw2();
-  void DrawDebugOverlay(Vector2 mousePos);
 
   void UnloadAssets();
 };

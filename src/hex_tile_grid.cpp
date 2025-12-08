@@ -54,7 +54,6 @@ HexGrid::HexGrid() {};
 
 void HexGrid::InitGrid(float radius) {
 
-  hexRadius = radius;
   mapRadius = Config::MAP_SIZE;
   origin = Config::SCREEN_CENTER;
   tileGapX = Config::TILE_GAP_X;
@@ -98,10 +97,10 @@ Vector2 HexGrid::HexCoordToPoint(HexCoord h) const {
 }
 
 HexCoord HexGrid::PointToHexCoord(Vector2 point) const {
-  float pt_x = (point.x - origin.x) / hexRadius;
-  float pt_y = (point.y - origin.y) / hexRadius;
-  double q = (sqrt(3.0) / 3.0 * pt_x - 1.0 / 3.0 * pt_y);
-  double r = (2.0 / 3.0 * pt_y);
+  float pt_x = (point.x - origin.x) / tileGapX;
+  float pt_y = (point.y - origin.y) / tileGapY;
+  double q = (sqrt(3.0) / 3.0 * pt_x - 1.0 / 3.0 * pt_y) / Config::CAMERA_ZOOM;
+  double r = (2.0 / 3.0 * pt_y) / Config::CAMERA_ZOOM;
   return HexRound({q, r, -q - r});
 }
 
@@ -139,21 +138,6 @@ bool HexGrid::CheckSurrounded(HexCoord target) const {
 void HexGrid::Draw() {
   for (auto const &[key, tile] : HexTiles) {
     Vector2 pos = HexCoordToPoint(tile.coord);
-    Color color = (tile.type == WALL) ? COL_HEX_WALL : COL_HEX_EMPTY;
-
-    if (tile.type != WALL && CheckSurrounded(tile.coord)) {
-      color = COL_HEX_GOLD;
-    }
-
-    DrawPoly(pos, 6, hexRadius - 2, 30, color);
-    DrawText(TextFormat("%d,%d", tile.coord.q, tile.coord.r), pos.x - 12,
-             pos.y - 5, 10, COL_TEXT);
-  }
-}
-
-void HexGrid::Draw2() {
-  for (auto const &[key, tile] : HexTiles) {
-    Vector2 pos = HexCoordToPoint(tile.coord);
 
     pos = (Vector2){pos.x - Config::TILE_SIZE_HALF,
                     pos.y - Config::TILE_SIZE_HALF};
@@ -164,45 +148,6 @@ void HexGrid::Draw2() {
     Rectangle dest_rect = {pos.x, pos.y, Config::TILE_SIZE, Config::TILE_SIZE};
     Vector2 origin = {0.0f, 0.0f};
     DrawTexturePro(tileAssets, tile_rect, dest_rect, origin, 0.0f, WHITE);
-  }
-}
-
-void HexGrid::DrawDebugOverlay(Vector2 mousePos) {
-  HexCoord mouseHex = PointToHexCoord(mousePos);
-
-  // UI Bar background
-  int screenH = GetScreenHeight();
-  int screenW = GetScreenWidth();
-  DrawRectangle(0, screenH - 40, screenW, 40, Fade(BLACK, 0.8f));
-  DrawText(TextFormat("Mouse: %d, %d", mouseHex.q, mouseHex.r), 20,
-           screenH - 30, 20, WHITE);
-
-  if (!HasTile(mouseHex))
-    return;
-
-  Vector2 centerPx = HexCoordToPoint(mouseHex);
-  DrawPolyLinesEx(centerPx, 6, hexRadius, 30, 3.0f, COL_HIGHLIGHT);
-
-  for (int i = 0; i < 6; i++) {
-    HexCoord nHex = GetNeighbor(mouseHex, i);
-
-    if (HasTile(nHex)) {
-      Vector2 nPx = HexCoordToPoint(nHex);
-
-      // Connection Line
-      DrawLineEx(centerPx, nPx, 2.0f, Fade(COL_HIGHLIGHT, 0.5f));
-
-      // Label
-      Vector2 midPoint = {(centerPx.x + nPx.x) / 2, (centerPx.y + nPx.y) / 2};
-      DrawText(DIR_LABELS[i].c_str(), midPoint.x - 5, midPoint.y - 5, 10,
-               WHITE);
-
-      // Highlight Neighbor
-      MapTile nTile = HexTiles[nHex];
-      Color nColor =
-          (nTile.type == WALL) ? Fade(COL_HEX_WALL, 0.5f) : Fade(WHITE, 0.2f);
-      DrawPoly(nPx, 6, hexRadius - 4, 30, nColor);
-    }
   }
 }
 

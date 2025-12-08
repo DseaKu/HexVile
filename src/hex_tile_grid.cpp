@@ -1,5 +1,6 @@
 #include "hex_tile_grid.h"
 #include "defines.h"
+#include "enums.h"
 #include "raylib.h"
 #include <vector>
 
@@ -60,13 +61,21 @@ void HexGrid::InitGrid(float radius) {
   tileGapY = Config::TILE_GAP_Y;
 
   HexTiles.clear();
-  for (int q = -mapRadius; q <= mapRadius; q++) {
-    int r1 = std::max(-mapRadius, -q - mapRadius);
-    int r2 = std::min(mapRadius, -q + mapRadius);
-    for (int r = r1; r <= r2; r++) {
-      HexTiles[HexCoord(q, r)] = {HexCoord(q, r), EMPTY};
+  for (int r = -this->mapRadius; r <= this->mapRadius; r++) {
+    int qMin = std::max(-this->mapRadius, -r - this->mapRadius);
+    int qMax = std::min(this->mapRadius, -r + this->mapRadius);
+    for (int q = qMin; q <= qMax; q++) {
+      HexTiles[HexCoord(q, r)] = {.coord = HexCoord(q, r), .type = EMPTY};
     }
   }
+
+  // for (int q = -mapRadius; q <= mapRadius; q++) {
+  //   int r1 = std::max(-mapRadius, -q - mapRadius);
+  //   int r2 = std::min(mapRadius, -q + mapRadius);
+  //   for (int r = r1; r <= r2; r++) {
+  //     HexTiles[HexCoord(q, r)] = {HexCoord(q, r), EMPTY};
+  //   }
+  // }
 }
 
 void HexGrid::LoadAssets(const char *pathToAssets) {

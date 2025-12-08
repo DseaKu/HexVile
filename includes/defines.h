@@ -9,7 +9,7 @@ constexpr int SCREEN_HEIGHT = 1400;
 constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
                                    (float)SCREEN_HEIGHT / 2};
 
-constexpr int MAP_SIZE = 6;
+constexpr int MAP_SIZE = 4;
 constexpr int TILE_SIZE = 32;
 constexpr int TILE_SIZE_HALF = TILE_SIZE / 2;
 

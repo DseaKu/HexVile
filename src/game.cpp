@@ -11,7 +11,7 @@ Game::Game() {
   SetTargetFPS(120);
 
   hexGrid.InitGrid(12.0f);
-  hexGrid.LoadAssets("assets/images/Tileset2.png");
+  hexGrid.LoadAssets("assets/images/Tileset3.png");
 
   camera.target = Config::SCREEN_CENTER;
   camera.offset = Config::SCREEN_CENTER;
@@ -31,7 +31,7 @@ void Game::GameLoop() {
     MousePos = GetMousePosition();
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-      HexCoord clickedHex = hexGrid.PointToHexCoord(MousePos);
+      HexCoord clickedHex = hexGrid.PointToHexCoord(this->MousePos);
       hexGrid.ToggleTile(clickedHex);
     }
 

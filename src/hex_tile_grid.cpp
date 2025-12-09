@@ -68,14 +68,6 @@ void HexGrid::InitGrid(float radius) {
       HexTiles[HexCoord(q, r)] = {.coord = HexCoord(q, r), .type = EMPTY};
     }
   }
-
-  // for (int q = -mapRadius; q <= mapRadius; q++) {
-  //   int r1 = std::max(-mapRadius, -q - mapRadius);
-  //   int r2 = std::min(mapRadius, -q + mapRadius);
-  //   for (int r = r1; r <= r2; r++) {
-  //     HexTiles[HexCoord(q, r)] = {HexCoord(q, r), EMPTY};
-  //   }
-  // }
 }
 
 void HexGrid::LoadAssets(const char *pathToAssets) {

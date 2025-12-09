@@ -8,7 +8,7 @@
 Game::Game() {
   InitWindow(Config::SCREEN_WIDTH, Config::SCREEN_HEIGHT,
              "Dream of HexCoords - Interactive");
-  SetTargetFPS(120);
+  // SetTargetFPS(120);
 
   hexGrid.InitGrid(12.0f);
   hexGrid.LoadAssets("assets/images/Tileset3.png");

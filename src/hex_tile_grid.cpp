@@ -100,8 +100,8 @@ Vector2 HexGrid::HexCoordToPoint(HexCoord h) const {
 HexCoord HexGrid::PointToHexCoord(Vector2 point) const {
   float pt_x = (point.x - origin.x) / tileGapX;
   float pt_y = (point.y - origin.y) / tileGapY;
-  double q = (sqrt(3.0) / 3.0 * pt_x - 1.0 / 3.0 * pt_y) / Config::CAMERA_ZOOM;
-  double r = (2.0 / 3.0 * pt_y) / Config::CAMERA_ZOOM;
+  double q = (sqrt(3.0) / 3.0 * pt_x - 1.0 / 3.0 * pt_y);
+  double r = (2.0 / 3.0 * pt_y);
   return HexRound({q, r, -q - r});
 }
 

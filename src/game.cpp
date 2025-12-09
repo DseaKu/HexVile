@@ -30,7 +30,7 @@ void Game::GameLoop() {
 
     // Update
     //----------------------------------------------------------------------------------
-    MousePos = GetMousePosition();
+    MousePos = GetScreenToWorld2D(GetMousePosition(), camera);
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
       HexCoord clickedHex = hexGrid.PointToHexCoord(this->MousePos);
@@ -97,4 +97,9 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   DrawText(
       TextFormat("Player Position = %.2f %.2f", player_pos.x, player_pos.y),
       100, 300, 10, RED);
+
+  Vector2 screen_center = Config::SCREEN_CENTER;
+  DrawText(
+      TextFormat("SCREEN_CENTER = %.2f %.2f", screen_center.x, screen_center.y),
+      100, 350, 10, RED);
 };

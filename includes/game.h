@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "hex_tile_grid.h"
+#include "player.h"
 #include "raylib.h"
 
 class Game {
@@ -10,6 +11,7 @@ private:
   HexGrid hexGrid;
   void DrawDebugOverlay(bool is_enabled);
   Vector2 MousePos;
+  Player player;
 
 public:
   Game();

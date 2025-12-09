@@ -13,6 +13,8 @@ Game::Game() {
   hexGrid.InitGrid(12.0f);
   hexGrid.LoadAssets("assets/images/Tileset3.png");
 
+  player.Init(Config::SCREEN_CENTER);
+
   camera.target = Config::SCREEN_CENTER;
   camera.offset = Config::SCREEN_CENTER;
   camera.zoom = Config::CAMERA_ZOOM;
@@ -34,19 +36,20 @@ void Game::GameLoop() {
       HexCoord clickedHex = hexGrid.PointToHexCoord(this->MousePos);
       hexGrid.ToggleTile(clickedHex);
     }
+    player.Update();
+    camera.target = player.GetPosition();
 
     // Draw
     //----------------------------------------------------------------------------------
     BeginDrawing();
+    BeginMode2D(camera);
     ClearBackground(WHITE);
 
-    BeginMode2D(camera);
-
     hexGrid.Draw();
+    player.Draw();
+
     EndMode2D();
-
     DrawDebugOverlay(Config::DEBUGGER_FLAG);
-
     EndDrawing();
   }
 }
@@ -89,4 +92,9 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   Vector2 tile00 = hexGrid.HexCoordToPoint((HexCoord){0, 0});
   DrawText(TextFormat("Map Tile{0,0} = %.2f %.2f", tile00.x, tile00.y), 100,
            250, 10, RED);
+
+  Vector2 player_pos = player.GetPosition();
+  DrawText(
+      TextFormat("Player Position = %.2f %.2f", player_pos.x, player_pos.y),
+      100, 300, 10, RED);
 };

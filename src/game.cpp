@@ -45,7 +45,7 @@ void Game::GameLoop() {
     BeginMode2D(camera);
     ClearBackground(WHITE);
 
-    hexGrid.Draw();
+    hexGrid.Draw(camera);
     player.Draw();
 
     EndMode2D();
@@ -68,7 +68,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   if (!is_enabled)
     return;
   DrawFPS(100, 50);
-  DrawCircleV(Config::SCREEN_CENTER, 5.0f, RED);
+  // DrawCircleV(Config::SCREEN_CENTER, 5.0f, RED);
 
   // Draw mouse position
   Vector2 scaled_mouse_position = {

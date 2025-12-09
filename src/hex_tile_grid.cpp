@@ -139,19 +139,26 @@ bool HexGrid::CheckSurrounded(HexCoord target) const {
   return (neighborCount > 0 && wallCount == neighborCount);
 }
 
-void HexGrid::Draw() {
+void HexGrid::Draw(const Camera2D &camera) {
+  Vector2 topLeft = GetScreenToWorld2D(Vector2{0, 0}, camera);
+  Rectangle cameraView = {topLeft.x, topLeft.y,
+                          (float)GetScreenWidth() / camera.zoom,
+                          (float)GetScreenHeight() / camera.zoom};
+
   for (auto const &[key, tile] : HexTiles) {
     Vector2 pos = HexCoordToPoint(tile.coord);
 
     pos = (Vector2){pos.x - Config::TILE_SIZE_HALF,
                     pos.y - Config::TILE_SIZE_HALF};
 
-    Rectangle tile_rect = {(float)Config::TILE_SIZE * 0,
-                           (float)Config::TILE_SIZE * tile.type,
-                           Config::TILE_SIZE, Config::TILE_SIZE};
     Rectangle dest_rect = {pos.x, pos.y, Config::TILE_SIZE, Config::TILE_SIZE};
-    Vector2 origin = {0.0f, 0.0f};
-    DrawTexturePro(tileAssets, tile_rect, dest_rect, origin, 0.0f, WHITE);
+    if (CheckCollisionRecs(cameraView, dest_rect)) {
+      Rectangle tile_rect = {(float)Config::TILE_SIZE * 0,
+                             (float)Config::TILE_SIZE * tile.type,
+                             Config::TILE_SIZE, Config::TILE_SIZE};
+      Vector2 origin = {0.0f, 0.0f};
+      DrawTexturePro(tileAssets, tile_rect, dest_rect, origin, 0.0f, WHITE);
+    }
   }
 }
 

@@ -75,7 +75,7 @@ public:
   bool CheckSurrounded(HexCoord target) const;
 
   // Rendering
-  void Draw();
+  void Draw(const Camera2D &camera);
 
   void UnloadAssets();
 };

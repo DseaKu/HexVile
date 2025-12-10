@@ -5,8 +5,8 @@
 
 namespace Config {
 // --- SCREEN ---
-constexpr int SCREEN_WIDTH = 1200;
-constexpr int SCREEN_HEIGHT = 800;
+constexpr int SCREEN_WIDTH = 2800;
+constexpr int SCREEN_HEIGHT = 1100;
 constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
                                    (float)SCREEN_HEIGHT / 2};
 
@@ -30,6 +30,18 @@ constexpr float CAMERA_HEIGTH = (float)SCREEN_HEIGHT / CAMERA_ZOOM;
 
 // --- GAME ---
 constexpr bool DEBUG_FLAG = true;
+constexpr int DEBUG_OVERLAY_SECTION_FONT_SIZE = 20;
+constexpr int DEBUG_OVERLAY_SECTION_X_POS = 30;
+constexpr int DEBUG_OVERLAY_SECTION_Y_POS = 30;
+constexpr int DEBUG_OVERLAY_SECTION_Y_GAP = 100;
+
+constexpr int DEBUG_OVERLAY_SUBSECTION_FONT_SIZE = 15;
+constexpr int DEBUG_OVERLAY_SUBSECTION_X_GAP = 30;
+constexpr int DEBUG_OVERLAY_SUBSECTION_X_POS =
+    DEBUG_OVERLAY_SECTION_X_POS + DEBUG_OVERLAY_SUBSECTION_X_GAP;
+constexpr int DEBUG_OVERLAY_SUBSECTION_Y_GAP = 30;
+constexpr int DEBUG_OVERLAY_SUBSECTION_Y_POS =
+    DEBUG_OVERLAY_SECTION_Y_POS + DEBUG_OVERLAY_SUBSECTION_Y_GAP;
 
 // --- PLAYER ---
 constexpr float PLAYER_SPEED = 50.0f;

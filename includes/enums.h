@@ -8,9 +8,10 @@ enum class TileID {
   TILE_WATER,
 };
 
-enum class PlayerAnimationID {
-  PLAYER_ANIMATION_NULL = 0,
-  PLAYER_ANIMATION_IDLE,
+enum class PlayerStateID {
+  PLAYER_STATE_NULL = 0,
+  PLAYER_STATE_IDLE,
+  PLAYER_STATE_WALK,
 
 };
 #endif // !ENUMS_H

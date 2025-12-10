@@ -5,7 +5,12 @@
 #include "player.h"
 #include "raylib.h"
 #include "texture_handler.h"
+#include <vector>
 
+struct DebugData {
+  std::string section;
+  std::vector<std::string> subSection;
+};
 class Game {
 private:
   Camera2D camera;
@@ -15,6 +20,7 @@ private:
   Vector2 relativeCenter;
   Player player;
   TextureHandler textureHandler;
+  std::vector<DebugData> debugData;
 
 public:
   Game();

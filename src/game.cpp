@@ -111,7 +111,8 @@ void Game::DrawDebugOverlay(bool is_enabled) {
        }});
 
   // Draw section
-  // DrawCircle(playerPos.x, playerPos.y, 3.0f, RED);
+  Vector2 playerScreenPos = GetWorldToScreen2D(playerPos, camera);
+  DrawCircle(playerScreenPos.x, playerScreenPos.y, 3.0f, RED);
   for (const auto &data : debugData) {
     DrawText(data.section.c_str(), sectionPosX, currentY, sectionFontSize,
              sectionColor);

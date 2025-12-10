@@ -74,9 +74,13 @@ void Player::Draw() {
   playerPosition.x -= Config::ASSEST_RESOLUTION_HALF;
   playerPosition.y -= Config::ASSEST_RESOLUTION_HALF;
 
-  Rectangle assestRect = {(float)((int)this->animationFrame % 8) * resolution,
-                          resolution * (float)this->state, (float)resolution,
-                          resolution};
+  if (this->animationFrame > 8) {
+    this->animationFrame = 0;
+  }
+  int xOffset = (int)animationFrame % 8;
+
+  Rectangle assestRect = {xOffset * resolution, resolution * (float)this->state,
+                          (float)resolution, resolution};
 
   Rectangle destRect = {playerPosition.x, playerPosition.y, resolution,
                         resolution};

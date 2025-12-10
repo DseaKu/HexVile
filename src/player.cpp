@@ -10,53 +10,12 @@ Player::Player() {
   animationFrame = 0.0f;
   position = Config::SCREEN_CENTER;
 
-  for (int i = 0; i > PLAYER_STATE_ID_LENGTH; i++) {
-    this->animationData[i] = {.row = 0,
-                              .frameCount = 0,
-                              .speed = Config::PLAYER_ANIMATION_SPEED,
-                              .loop = true};
+  for (int i = 0; i < PLAYER_STATE_ID_LENGTH; i++) {
+    this->animationData[i] = {
+        .frameCount = 0, .speed = Config::PLAYER_ANIMATION_SPEED, .loop = true};
   }
-
-  this->animationData[PLAYER_STATE_IDLE] = {.row = PLAYER_STATE_IDLE,
-                                            .frameCount = 9};
-  this->animationData[PLAYER_STATE_WALK] = {.row = PLAYER_STATE_WALK,
-                                            .frameCount = 8};
-}
-
-void Player::GetTextureHandler(TextureHandler *textureHandler) {
-
-  this->textureHandler = textureHandler;
-}
-void Player::Idle() {
-  if (this->state != PlayerStateID::PLAYER_STATE_IDLE) {
-    this->animationFrame = 0.0f;
-    this->state = PlayerStateID::PLAYER_STATE_IDLE;
-  }
-}
-
-void Player::Walk(Vector2 direction) {
-
-  float speed = Config::PLAYER_SPEED;
-  float delta = GetFrameTime();
-
-  if (this->state != PLAYER_STATE_WALK) {
-    animationFrame = 0.0f;
-    this->state = PLAYER_STATE_WALK;
-  }
-
-  if (direction.x < 0) {
-    this->isFacingRight = true;
-  } else if (direction.x > 0) {
-    this->isFacingRight = false;
-  }
-
-  // Normalize diagonal movement
-  if (Vector2Length(direction) > 0) {
-    direction = Vector2Normalize(direction);
-  }
-
-  this->position.x += direction.x * delta * speed;
-  this->position.y += direction.y * delta * speed;
+  this->animationData[PLAYER_STATE_IDLE].frameCount = 9;
+  this->animationData[PLAYER_STATE_WALK].frameCount = 8;
 }
 
 void Player::Update() {
@@ -115,4 +74,39 @@ const char *Player::PlayerStateToString() {
   default:
     return "Unknown State";
   }
+}
+void Player::GetTextureHandler(TextureHandler *textureHandler) {
+
+  this->textureHandler = textureHandler;
+}
+void Player::Idle() {
+  if (this->state != PlayerStateID::PLAYER_STATE_IDLE) {
+    this->animationFrame = 0.0f;
+    this->state = PlayerStateID::PLAYER_STATE_IDLE;
+  }
+}
+
+void Player::Walk(Vector2 direction) {
+
+  float speed = Config::PLAYER_SPEED;
+  float delta = GetFrameTime();
+
+  if (this->state != PLAYER_STATE_WALK) {
+    animationFrame = 0.0f;
+    this->state = PLAYER_STATE_WALK;
+  }
+
+  if (direction.x < 0) {
+    this->isFacingRight = true;
+  } else if (direction.x > 0) {
+    this->isFacingRight = false;
+  }
+
+  // Normalize diagonal movement
+  if (Vector2Length(direction) > 0) {
+    direction = Vector2Normalize(direction);
+  }
+
+  this->position.x += direction.x * delta * speed;
+  this->position.y += direction.y * delta * speed;
 }

@@ -6,7 +6,6 @@
 #include "texture_handler.h"
 
 struct PlayerAnimationData {
-  int row;
   int frameCount;
   float speed;
   bool loop;

@@ -67,7 +67,7 @@ void HexGrid::InitGrid(float radius) {
     int qMax = std::min(this->mapRadius, -r + this->mapRadius);
     for (int q = qMin; q <= qMax; q++) {
       HexTiles[HexCoord(q, r)] = (MapTile){.coord = HexCoord(q, r),
-                                           .type = TILE_WATER,
+                                           .type = TILE_VOID,
                                            .isDirty = false,
                                            .isVisble = false};
     }

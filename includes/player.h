@@ -5,10 +5,13 @@
 class Player {
 private:
   Vector2 position;
+  Texture2D assets;
+  float frame;
+  int faceDir;
 
 public:
   Player();
-  void Init(Vector2 pos);
+  void Init(Vector2 pos, const char *pathToAssets);
   void Update();
   void Draw();
   Vector2 GetPosition();

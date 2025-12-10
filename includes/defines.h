@@ -6,8 +6,8 @@
 namespace Config {
 
 // --- SCREEN ---
-constexpr int SCREEN_WIDTH = 2800;
-constexpr int SCREEN_HEIGHT = 1400;
+constexpr int SCREEN_WIDTH = 1200;
+constexpr int SCREEN_HEIGHT = 800;
 constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
                                    (float)SCREEN_HEIGHT / 2};
 
@@ -22,8 +22,8 @@ constexpr Vector2 SCREEN_CENTER_FOR_HEX_TILES = {
     SCREEN_CENTER.x - (float)TILE_SIZE_HALF,
     SCREEN_CENTER.y - (float)TILE_SIZE_HALF};
 
-constexpr float PLAYER_SPEED = 30.0f;
-constexpr float CAMERA_ZOOM = 16.0f;
+constexpr float PLAYER_SPEED = 50.0f;
+constexpr float CAMERA_ZOOM = 5.0f;
 
 constexpr bool DEBUGGER_FLAG = true;
 } // namespace Config

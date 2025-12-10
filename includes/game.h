@@ -11,6 +11,7 @@ private:
   HexGrid hexGrid;
   void DrawDebugOverlay(bool is_enabled);
   Vector2 MousePos;
+  Vector2 relativeCenter;
   Player player;
 
 public:

@@ -153,8 +153,7 @@ void HexGrid::Draw(const Camera2D &camera) {
 
     Rectangle dest_rect = {pos.x, pos.y, Config::TILE_SIZE, Config::TILE_SIZE};
     if (CheckCollisionRecs(cameraView, dest_rect)) {
-      Rectangle tile_rect = {(float)Config::TILE_SIZE * 0,
-                             (float)Config::TILE_SIZE * tile.type,
+      Rectangle tile_rect = {0, (float)Config::TILE_SIZE * tile.type,
                              Config::TILE_SIZE, Config::TILE_SIZE};
       Vector2 origin = {0.0f, 0.0f};
       DrawTexturePro(tileAssets, tile_rect, dest_rect, origin, 0.0f, WHITE);

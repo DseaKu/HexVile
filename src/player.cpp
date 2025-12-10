@@ -8,6 +8,7 @@ Player::Player() {
   position = Config::SCREEN_CENTER;
   isFacingRight = true;
   animationFrame = 0.0f;
+  animationDelta = 0;
   position = Config::SCREEN_CENTER;
 
   for (int i = 0; i < PLAYER_STATE_ID_LENGTH; i++) {
@@ -15,11 +16,12 @@ Player::Player() {
         .frameCount = 0, .speed = Config::PLAYER_ANIMATION_SPEED, .loop = true};
   }
   this->animationData[PLAYER_STATE_IDLE].frameCount = 9;
+  this->animationData[PLAYER_STATE_IDLE].speed -= 5;
   this->animationData[PLAYER_STATE_WALK].frameCount = 8;
 }
 
 void Player::Update() {
-
+  animationDelta += GetFrameTime();
   Vector2 direction;
   direction.x = -IsKeyDown(KEY_A) + IsKeyDown(KEY_D);
   direction.y = -IsKeyDown(KEY_W) + IsKeyDown(KEY_S);
@@ -37,7 +39,8 @@ void Player::Update() {
   }
 
   // Calculate animation frame
-  float animationSpeed = GetFrameTime() * animationData[this->state].speed;
+  float animationSpeed =
+      this->animationDelta * animationData[this->state].speed;
   this->animationFrame =
       (int)animationSpeed % animationData[this->state].frameCount;
 }

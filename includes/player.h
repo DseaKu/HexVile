@@ -14,6 +14,7 @@ struct PlayerAnimationData {
 class Player {
 private:
   int animationFrame;
+  float animationDelta;
   bool isFacingRight;
   Vector2 position;
   TextureHandler *textureHandler;

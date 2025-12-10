@@ -69,19 +69,21 @@ void Player::Update() {
 }
 
 void Player::Draw() {
-  Vector2 pos = this->position;
-  float reso = Config::ASSEST_RESOLUTION;
-  pos.x -= Config::ASSEST_RESOLUTION_HALF;
-  pos.y -= Config::ASSEST_RESOLUTION_HALF;
+  Vector2 playerPosition = this->position;
+  float resolution = Config::ASSEST_RESOLUTION;
+  playerPosition.x -= Config::ASSEST_RESOLUTION_HALF;
+  playerPosition.y -= Config::ASSEST_RESOLUTION_HALF;
 
-  Rectangle tile_rect = {(float)((int)this->animationFrame % 8) * reso, 64,
-                         (float)reso, reso};
+  Rectangle assestRect = {(float)((int)this->animationFrame % 8) * resolution,
+                          resolution * (float)this->state, (float)resolution,
+                          resolution};
 
-  Rectangle dest_rect = {pos.x, pos.y, reso, reso};
+  Rectangle destRect = {playerPosition.x, playerPosition.y, resolution,
+                        resolution};
 
   Vector2 origin = {0.0f, 0.0f};
 
-  textureHandler->Draw(tile_rect, dest_rect, origin, 0.0f, WHITE,
+  textureHandler->Draw(assestRect, destRect, origin, 0.0f, WHITE,
                        this->isFacingRight);
 }
 
@@ -90,11 +92,11 @@ Vector2 Player::GetPosition() { return position; }
 const char *Player::PlayerStateToString() {
   switch (this->state) {
   case PlayerStateID::PLAYER_STATE_NULL:
-    return "PLAYER_STATE_NULL";
+    return "NULL";
   case PlayerStateID::PLAYER_STATE_IDLE:
-    return "PLAYER_STATE_IDLE";
+    return "IDLE";
   case PlayerStateID::PLAYER_STATE_WALK:
-    return "PLAYER_STATE_WALK";
+    return "WALK";
   default:
     return "Unknown State";
   }

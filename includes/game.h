@@ -21,6 +21,8 @@ private:
   Player player;
   TextureHandler textureHandler;
   std::vector<DebugData> debugData;
+  Rectangle cameraRect;
+  Vector2 cameraTopLeft;
 
 public:
   Game();

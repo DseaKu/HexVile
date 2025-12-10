@@ -9,7 +9,7 @@ Game::Game() {
   InitWindow(Config::SCREEN_WIDTH, Config::SCREEN_HEIGHT,
              "Dream of HexCoords - Interactive");
   // SetTargetFPS(120);
-  textureHandler.LoadAssets("assets/images/Tileset4.png");
+  textureHandler.LoadAssets("assets/texture_atlas.png");
 
   hexGrid.InitGrid(12.0f);
   hexGrid.GetTextureHandler(&textureHandler);
@@ -20,6 +20,8 @@ Game::Game() {
   camera.offset = Config::SCREEN_CENTER;
   camera.zoom = Config::CAMERA_ZOOM;
   camera.rotation = 0.0f;
+  cameraRect = {0, 0, 0, 0};
+  cameraTopLeft = {0, 0};
 
   MousePos = (Vector2){0, 0};
 }
@@ -31,6 +33,9 @@ void Game::GameLoop() {
     // --- Update ---
     this->MousePos = GetScreenToWorld2D(GetMousePosition(), camera);
     this->relativeCenter = GetScreenToWorld2D(Config::SCREEN_CENTER, camera);
+    this->cameraTopLeft = GetScreenToWorld2D(Vector2{0, 0}, camera);
+    this->cameraRect = {cameraTopLeft.x, cameraTopLeft.y, Config::CAMERA_WIDTH,
+                        Config::CAMERA_HEIGTH};
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
       HexCoord clickedHex = hexGrid.PointToHexCoord(this->MousePos);
@@ -73,67 +78,52 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   Color sectionColor = RED;
 
   int subSectionPosX = Config::DEBUG_OVERLAY_SUBSECTION_X_POS;
-  int subSectionPosY = Config::DEBUG_OVERLAY_SUBSECTION_Y_POS;
   int subSectionGapY = Config::DEBUG_OVERLAY_SUBSECTION_Y_GAP;
   int subSectionFontSize = Config::DEBUG_OVERLAY_SUBSECTION_FONT_SIZE;
   Color subSectionColor = RED;
 
+  int currentY = sectionPosY;
+
+  debugData.clear();
   debugData.push_back({"Resources",
                        {
-                           "FPS: " + std::to_string(GetFPS()),
+                           TextFormat("FPS: %i", GetFPS()),
                        }});
 
+  HexCoord mapTile = hexGrid.PointToHexCoord(this->MousePos);
   debugData.push_back(
       {"Mouse",
        {
-           "Real Mouse Position: x" + std::to_string(this->MousePos.x),
+           TextFormat("X,Y: %.1f,%.1f", this->MousePos.x, this->MousePos.y),
+           TextFormat("Hoverd Tile Q,R: %i,%i", mapTile.q, mapTile.r),
+       }});
+
+  // --- Player ---
+  Vector2 playerPos = player.GetPosition();
+  HexCoord playerTile = hexGrid.PointToHexCoord(playerPos);
+  const char *playerState = player.PlayerStateToString();
+  debugData.push_back(
+      {"Player",
+       {
+           TextFormat("X,Y: %.1f,%.1f", playerPos.x, playerPos.y),
+           TextFormat("Tile Q,R: %i,%i", playerTile.q, playerTile.r),
+           TextFormat("Player State = %s", playerState),
        }});
 
   // Draw section
+  // DrawCircle(playerPos.x, playerPos.y, 3.0f, RED);
   for (const auto &data : debugData) {
-    DrawText(data.section.c_str(), sectionPosX, sectionPosY, sectionFontSize,
+    DrawText(data.section.c_str(), sectionPosX, currentY, sectionFontSize,
              sectionColor);
-    sectionPosY += sectionGapY;
-    ;
+    currentY += sectionGapY;
+    currentY += subSectionGapY;
 
     // Draw sub-section
     for (const std::string &subSection : data.subSection) {
-      DrawText(subSection.c_str(), subSectionPosX, subSectionPosY,
-               subSectionFontSize, subSectionColor);
+      DrawText(subSection.c_str(), subSectionPosX, currentY, subSectionFontSize,
+               subSectionColor);
+      currentY += subSectionGapY;
     }
+    currentY += sectionGapY;
   }
-  // // --- Mouse ---
-  // Vector2 scaled_mouse_position = {
-  //     (this->MousePos.x - (Config::SCREEN_WIDTH / 2.0f)) /
-  //     Config::CAMERA_ZOOM, (this->MousePos.y - (Config::SCREEN_HEIGHT
-  //     / 2.0f)) /
-  //         Config::CAMERA_ZOOM};
-  //
-  // DrawText(TextFormat("Real Mouse Position:\n  x:%.2f\n  y:%.2f",
-  //                     this->MousePos.x, this->MousePos.y),
-  //          xOffset, 100, 10, RED);
-  //
-  // DrawText(TextFormat("Scaled Mouse Position:\n  x:%.2f\n  y:%.2f",
-  //                     scaled_mouse_position.x, scaled_mouse_position.y),
-  //          xOffset, 140, 10, RED);
-  //
-  // HexCoord selected_tile = hexGrid.PointToHexCoord(this->MousePos);
-  // DrawText(TextFormat("Hex Coordinate :\n  x:%i\n  y:%i", selected_tile.q,
-  //                     selected_tile.r),
-  //          xOffset, 180, 10, RED);
-  //
-  // Vector2 tile00 = hexGrid.HexCoordToPoint((HexCoord){0, 0});
-  // DrawText(TextFormat("Map Tile{0,0} = %.2f %.2f", tile00.x, tile00.y),
-  // xOffset,
-  //          250, 10, RED);
-  //
-  // // --- Player ---
-  // Vector2 player_pos = player.GetPosition();
-  // DrawText(
-  //     TextFormat("Player Position = %.2f %.2f", player_pos.x, player_pos.y),
-  //     xOffset, 300, 10, RED);
-  //
-  // const char *playerState = player.PlayerStateToString();
-  // DrawText(TextFormat("Player State = %s", playerState), xOffset, 320, 10,
-  // RED);
 };

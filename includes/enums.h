@@ -1,22 +1,16 @@
 #ifndef ENUMS_H
 #define ENUMS_H
-typedef enum {
-  EMPTY = 0,
-  WALL,
-  WATER,
-  GRASS,
-  DIRT,
-  WATER2,
-  ICE,
-  IDK,
-  SAND,
-} TileType;
-//
-// typedef enum {
-//   EMPTY = 0,
-//   WALL,
-//   PLAYER_RUN,
-//
-// } TextureAtlas;
 
+enum class TileID {
+  TILE_NULL = 0,
+  TILE_VOID,
+  TILE_GRASS,
+  TILE_WATER,
+};
+
+enum class PlayerAnimationID {
+  PLAYER_ANIMATION_NULL = 0,
+  PLAYER_ANIMATION_IDLE,
+
+};
 #endif // !ENUMS_H

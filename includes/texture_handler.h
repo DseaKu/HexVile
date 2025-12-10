@@ -5,13 +5,15 @@
 class TextureHandler {
 private:
   Texture2D textureAtlas;
+  int width;
+  int height;
 
 public:
   TextureHandler();
   int LoadAssets(const char *);
   void UnloadAssets();
   void Draw(Rectangle assetsRect, Rectangle destRect, Vector2 origin,
-            float rotation, Color color);
+            float rotation, Color color, bool flipH);
 };
 
 #endif // !TEXTURE_HANDLER_H

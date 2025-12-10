@@ -4,28 +4,35 @@
 #include <cstdint>
 
 namespace Config {
-
 // --- SCREEN ---
 constexpr int SCREEN_WIDTH = 1200;
 constexpr int SCREEN_HEIGHT = 800;
 constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
                                    (float)SCREEN_HEIGHT / 2};
 
+// --- ASSEST ---
+constexpr int ASSEST_RESOLUTION = 32;
+constexpr int ASSEST_RESOLUTION_HALF = ASSEST_RESOLUTION / 2;
+constexpr int TEXTURE_ATLAS_ANIMATION = ASSEST_RESOLUTION * 0;
+constexpr int TEXTURE_ATLAS_TILES = ASSEST_RESOLUTION * 10;
+
 // --- TILE ---
 constexpr int MAP_SIZE = 64;
-constexpr int TILE_SIZE = 32;
-constexpr int TILE_SIZE_HALF = TILE_SIZE / 2;
-
+constexpr int TILE_SIZE = ASSEST_RESOLUTION;
+constexpr int TILE_SIZE_HALF = ASSEST_RESOLUTION_HALF;
 constexpr float TILE_GAP_X = 18.4f;
 constexpr float TILE_GAP_Y = 16.0f;
-constexpr Vector2 SCREEN_CENTER_FOR_HEX_TILES = {
-    SCREEN_CENTER.x - (float)TILE_SIZE_HALF,
-    SCREEN_CENTER.y - (float)TILE_SIZE_HALF};
 
-constexpr float PLAYER_SPEED = 50.0f;
+// --- CAMERA ---
 constexpr float CAMERA_ZOOM = 5.0f;
+constexpr float CAMERA_WIDTH = (float)SCREEN_WIDTH / CAMERA_ZOOM;
+constexpr float CAMERA_HEIGTH = (float)SCREEN_HEIGHT / CAMERA_ZOOM;
 
-constexpr bool DEBUGGER_FLAG = true;
+// --- GAME ---
+constexpr bool DEBUG_FLAG = true;
+
+// --- PLAYER ---
+constexpr float PLAYER_SPEED = 50.0f;
 } // namespace Config
 
 // --- Unsigned Integer Aliases ---

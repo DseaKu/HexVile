@@ -2,6 +2,7 @@
 #include "defines.h"
 #include "enums.h"
 #include "raylib.h"
+#include <stdbool.h>
 #include <vector>
 
 // --- INTERNAL COLORS ---
@@ -66,7 +67,7 @@ void HexGrid::InitGrid(float radius) {
     int qMax = std::min(this->mapRadius, -r + this->mapRadius);
     for (int q = qMin; q <= qMax; q++) {
       HexTiles[HexCoord(q, r)] = (MapTile){.coord = HexCoord(q, r),
-                                           .type = EMPTY,
+                                           .type = TileID::TILE_WATER,
                                            .isDirty = false,
                                            .isVisble = false};
     }
@@ -118,7 +119,10 @@ bool HexGrid::HasTile(HexCoord h) const {
 
 void HexGrid::ToggleTile(HexCoord h) {
   if (HasTile(h)) {
-    HexTiles[h].type = (HexTiles[h].type == WALL) ? EMPTY : WALL;
+    // HexTiles[h].type = (HexTiles[h].type == WALL) ? EMPTY : WALL;
+    HexTiles[h].type = (HexTiles[h].type == TileID::TILE_VOID)
+                           ? TileID::TILE_VOID
+                           : TileID::TILE_GRASS;
   }
 }
 
@@ -132,7 +136,7 @@ bool HexGrid::CheckSurrounded(HexCoord target) const {
 
     if (it != HexTiles.end()) {
       neighborCount++;
-      if (it->second.type == WALL)
+      if (it->second.type == TileID::TILE_NULL)
         wallCount++;
     }
   }
@@ -141,23 +145,28 @@ bool HexGrid::CheckSurrounded(HexCoord target) const {
 
 void HexGrid::Draw(const Camera2D &camera) {
   Vector2 topLeft = GetScreenToWorld2D(Vector2{0, 0}, camera);
-  Rectangle cameraView = {topLeft.x, topLeft.y,
-                          (float)GetScreenWidth() / camera.zoom,
-                          (float)GetScreenHeight() / camera.zoom};
+  Rectangle cameraView = {topLeft.x, topLeft.y, Config::CAMERA_WIDTH,
+                          Config::CAMERA_HEIGTH};
 
   for (auto const &[key, tile] : HexTiles) {
+
+    int tileType = static_cast<int>(tile.type);
+
     Vector2 pos = HexCoordToPoint(tile.coord);
 
     pos = (Vector2){pos.x - Config::TILE_SIZE_HALF,
                     pos.y - Config::TILE_SIZE_HALF};
 
-    Rectangle dest_rect = {pos.x, pos.y, Config::TILE_SIZE, Config::TILE_SIZE};
+    Rectangle dest_rect = {pos.x, pos.y, Config::ASSEST_RESOLUTION,
+                           Config::ASSEST_RESOLUTION};
+
     if (CheckCollisionRecs(cameraView, dest_rect)) {
-      Rectangle tile_rect = {0, (float)Config::TILE_SIZE * tile.type,
-                             Config::TILE_SIZE, Config::TILE_SIZE};
+      Rectangle tile_rect = {Config::TEXTURE_ATLAS_TILES,
+                             (float)Config::ASSEST_RESOLUTION * tileType,
+                             Config::ASSEST_RESOLUTION, Config::TILE_SIZE};
       Vector2 origin = {0.0f, 0.0f};
 
-      textureHandler->Draw(tile_rect, dest_rect, origin, 0.0f, WHITE);
+      textureHandler->Draw(tile_rect, dest_rect, origin, 0.0f, WHITE, false);
     }
   }
 }

@@ -2,18 +2,20 @@
 #define PLAYER_H
 
 #include "raylib.h"
+#include "texture_handler.h"
+
 class Player {
 private:
   Vector2 position;
-  Texture2D assets;
   float frame;
-  int faceDir;
+  bool isFacingRight;
+  TextureHandler *textureHandler;
 
 public:
   Player();
-  void Init(Vector2 pos, const char *pathToAssets);
   void Update();
   void Draw();
   Vector2 GetPosition();
+  void GetTextureHandler(TextureHandler *textureHandler);
 };
 #endif // !PLAYER_H

@@ -3,18 +3,17 @@
 #include "hex_tile_grid.h"
 #include "raylib.h"
 
-// Initialization
-//--------------------------------------------------------------------------------------
+// --- Initialization ---
 Game::Game() {
   InitWindow(Config::SCREEN_WIDTH, Config::SCREEN_HEIGHT,
              "Dream of HexCoords - Interactive");
   // SetTargetFPS(120);
-  textureHandler.LoadAssets("assets/images/Tileset3.png");
+  textureHandler.LoadAssets("assets/images/Tileset4.png");
 
   hexGrid.InitGrid(12.0f);
   hexGrid.GetTextureHandler(&textureHandler);
 
-  player.Init(Config::SCREEN_CENTER, "assets/images/player/PlayerWalk.png");
+  player.GetTextureHandler(&textureHandler);
 
   camera.target = Config::SCREEN_CENTER;
   camera.offset = Config::SCREEN_CENTER;
@@ -24,13 +23,11 @@ Game::Game() {
   MousePos = (Vector2){0, 0};
 }
 
-// Main Loop
-//--------------------------------------------------------------------------------------
+// --- Main Loop ---
 void Game::GameLoop() {
   while (!WindowShouldClose()) {
 
-    // Update
-    //----------------------------------------------------------------------------------
+    // --- Update ---
     this->MousePos = GetScreenToWorld2D(GetMousePosition(), camera);
     this->relativeCenter = GetScreenToWorld2D(Config::SCREEN_CENTER, camera);
 
@@ -41,31 +38,29 @@ void Game::GameLoop() {
     player.Update();
     camera.target = player.GetPosition();
 
-    // Draw
-    //----------------------------------------------------------------------------------
+    // --- Draw ---
     BeginDrawing();
     BeginMode2D(camera);
     ClearBackground(WHITE);
 
+    // --- Camera View ---
     hexGrid.Draw(camera);
     player.Draw();
 
     EndMode2D();
-    DrawDebugOverlay(Config::DEBUGGER_FLAG);
+    DrawDebugOverlay(Config::DEBUG_FLAG);
     EndDrawing();
   }
 }
 
-// De-Initialization
-//--------------------------------------------------------------------------------------
+// --- Deinitialization ---
 Game::~Game() {
 
   textureHandler.UnloadAssets();
   CloseWindow(); // Close window and OpenGL context
 }
 
-// Draw debug Information
-//--------------------------------------------------------------------------------------
+// --- Debug overlay ---
 void Game::DrawDebugOverlay(bool is_enabled) {
   if (!is_enabled)
     return;

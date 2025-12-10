@@ -1,4 +1,5 @@
 #include "texture_handler.h"
+#include "defines.h"
 #include "raylib.h"
 #include <iostream>
 
@@ -12,11 +13,21 @@ int TextureHandler::LoadAssets(const char *pathToAssest) {
     std::cout << "Error loading texture atlas" << std::endl;
     return 1;
   }
+  this->width = this->textureAtlas.width / Config::ASSEST_RESOLUTION;
+  this->height = this->textureAtlas.height / Config::ASSEST_RESOLUTION;
   return 0;
 }
 void TextureHandler::UnloadAssets() { UnloadTexture(this->textureAtlas); }
 void TextureHandler::Draw(Rectangle assetsRect, Rectangle destRect,
-                          Vector2 origin, float rotation, Color color) {
-  DrawTexturePro(this->textureAtlas, assetsRect, destRect, origin, rotation,
-                 color);
+                          Vector2 origin, float rotation, Color color,
+                          bool flipH) {
+
+  if (flipH) {
+    assetsRect.width = -assetsRect.width;
+    DrawTexturePro(this->textureAtlas, assetsRect, destRect, origin, rotation,
+                   color);
+  } else {
+    DrawTexturePro(this->textureAtlas, assetsRect, destRect, origin, rotation,
+                   color);
+  }
 }

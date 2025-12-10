@@ -37,7 +37,7 @@ public:
 
 struct MapTile {
   HexCoord coord;
-  TileType type;
+  TileID type;
   bool isDirty;
   bool isVisble;
 };

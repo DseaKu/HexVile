@@ -67,7 +67,7 @@ void HexGrid::InitGrid(float radius) {
     int qMax = std::min(this->mapRadius, -r + this->mapRadius);
     for (int q = qMin; q <= qMax; q++) {
       HexTiles[HexCoord(q, r)] = (MapTile){.coord = HexCoord(q, r),
-                                           .type = TILE_VOID,
+                                           .type = TILE_GRASS,
                                            .isDirty = false,
                                            .isVisble = false};
     }
@@ -117,10 +117,13 @@ bool HexGrid::HasTile(HexCoord h) const {
   return HexTiles.find(h) != HexTiles.end();
 }
 
+void HexGrid::SetTile(HexCoord h, TileID ID) { this->HexTiles[h].type = ID; }
+
 void HexGrid::ToggleTile(HexCoord h) {
   if (HasTile(h)) {
     // HexTiles[h].type = (HexTiles[h].type == WALL) ? EMPTY : WALL;
-    HexTiles[h].type = (HexTiles[h].type == TILE_VOID) ? TILE_VOID : TILE_GRASS;
+    HexTiles[h].type =
+        (HexTiles[h].type == TILE_GRASS) ? TILE_GRASS : TILE_WATER;
   }
 }
 

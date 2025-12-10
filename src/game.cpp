@@ -1,5 +1,6 @@
 #include "game.h"
 #include "defines.h"
+#include "enums.h"
 #include "hex_tile_grid.h"
 #include "raylib.h"
 #include <string>
@@ -39,7 +40,11 @@ void Game::GameLoop() {
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
       HexCoord clickedHex = hexGrid.PointToHexCoord(this->MousePos);
-      hexGrid.ToggleTile(clickedHex);
+      hexGrid.SetTile(clickedHex, TILE_WATER);
+    }
+    if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
+      HexCoord clickedHex = hexGrid.PointToHexCoord(this->MousePos);
+      hexGrid.SetTile(clickedHex, TILE_VOID);
     }
     player.Update();
     camera.target = player.GetPosition();

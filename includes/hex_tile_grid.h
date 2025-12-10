@@ -72,6 +72,7 @@ public:
   // Logic
   HexCoord GetNeighbor(HexCoord h, int directionIndex) const;
   bool HasTile(HexCoord h) const;
+  void SetTile(HexCoord h, TileID ID);
   void ToggleTile(HexCoord h);
   bool CheckSurrounded(HexCoord target) const;
 

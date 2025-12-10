@@ -46,6 +46,7 @@ constexpr int DEBUG_OVERLAY_SUBSECTION_Y_POS =
 
 // --- PLAYER ---
 constexpr float PLAYER_SPEED = 50.0f;
+constexpr float PLAYER_ANIMATION_SPEED = 10.0f;
 } // namespace Config
 
 // --- Unsigned Integer Aliases ---

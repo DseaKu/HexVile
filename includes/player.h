@@ -5,13 +5,21 @@
 #include "raylib.h"
 #include "texture_handler.h"
 
+struct PlayerAnimationData {
+  int row;
+  int frameCount;
+  float speed;
+  bool loop;
+};
+
 class Player {
 private:
-  Vector2 position;
   float animationFrame;
   bool isFacingRight;
+  Vector2 position;
   TextureHandler *textureHandler;
   PlayerStateID state;
+  PlayerAnimationData animationData[(int)PlayerStateID::PLAYER_STATE_ID_LENGTH];
 
   void Idle();
   void Walk(Vector2 direction);

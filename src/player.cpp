@@ -9,6 +9,7 @@ Player::Player() {
   isFacingRight = true;
   animationFrame = 0.0f;
   position = Config::SCREEN_CENTER;
+  this->animationData[PLAYER_STATE_NULL] = {0, 0, 0, 0};
 }
 
 void Player::GetTextureHandler(TextureHandler *textureHandler) {
@@ -20,7 +21,7 @@ void Player::Idle() {
     this->animationFrame = 0.0f;
     this->state = PlayerStateID::PLAYER_STATE_IDLE;
   } else {
-    this->animationFrame += GetFrameTime();
+    this->animationFrame += GetFrameTime() * Config::PLAYER_ANIMATION_SPEED;
   }
 }
 
@@ -29,11 +30,11 @@ void Player::Walk(Vector2 direction) {
   float speed = Config::PLAYER_SPEED;
   float delta = GetFrameTime();
 
-  if (this->state != PlayerStateID::PLAYER_STATE_WALK) {
+  if (this->state != PLAYER_STATE_WALK) {
     animationFrame = 0.0f;
-    this->state = PlayerStateID::PLAYER_STATE_WALK;
+    this->state = PLAYER_STATE_WALK;
   } else {
-    this->animationFrame += delta;
+    this->animationFrame += delta * Config::PLAYER_ANIMATION_SPEED;
   }
 
   if (direction.x < 0) {
@@ -95,11 +96,11 @@ Vector2 Player::GetPosition() { return position; }
 
 const char *Player::PlayerStateToString() {
   switch (this->state) {
-  case PlayerStateID::PLAYER_STATE_NULL:
+  case PLAYER_STATE_NULL:
     return "NULL";
-  case PlayerStateID::PLAYER_STATE_IDLE:
+  case PLAYER_STATE_IDLE:
     return "IDLE";
-  case PlayerStateID::PLAYER_STATE_WALK:
+  case PLAYER_STATE_WALK:
     return "WALK";
   default:
     return "Unknown State";

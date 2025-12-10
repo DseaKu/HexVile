@@ -1,12 +1,12 @@
 #ifndef ENUMS_H
 #define ENUMS_H
 
-enum class TileID {
+typedef enum TileID {
   TILE_NULL = 0,
   TILE_VOID,
   TILE_GRASS,
   TILE_WATER,
-};
+} TileID;
 
 typedef enum PlayerStateID {
   PLAYER_STATE_NULL = 0,

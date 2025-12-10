@@ -9,7 +9,18 @@ Player::Player() {
   isFacingRight = true;
   animationFrame = 0.0f;
   position = Config::SCREEN_CENTER;
-  this->animationData[PLAYER_STATE_NULL] = {0, 0, 0, 0};
+
+  for (int i = 0; i > PLAYER_STATE_ID_LENGTH; i++) {
+    this->animationData[i] = {.row = 0,
+                              .frameCount = 0,
+                              .speed = Config::PLAYER_ANIMATION_SPEED,
+                              .loop = true};
+  }
+
+  this->animationData[PLAYER_STATE_IDLE] = {.row = PLAYER_STATE_IDLE,
+                                            .frameCount = 9};
+  this->animationData[PLAYER_STATE_WALK] = {.row = PLAYER_STATE_WALK,
+                                            .frameCount = 8};
 }
 
 void Player::GetTextureHandler(TextureHandler *textureHandler) {
@@ -20,8 +31,6 @@ void Player::Idle() {
   if (this->state != PlayerStateID::PLAYER_STATE_IDLE) {
     this->animationFrame = 0.0f;
     this->state = PlayerStateID::PLAYER_STATE_IDLE;
-  } else {
-    this->animationFrame += GetFrameTime() * Config::PLAYER_ANIMATION_SPEED;
   }
 }
 
@@ -33,8 +42,6 @@ void Player::Walk(Vector2 direction) {
   if (this->state != PLAYER_STATE_WALK) {
     animationFrame = 0.0f;
     this->state = PLAYER_STATE_WALK;
-  } else {
-    this->animationFrame += delta * Config::PLAYER_ANIMATION_SPEED;
   }
 
   if (direction.x < 0) {
@@ -61,12 +68,19 @@ void Player::Update() {
   // Player Idle
   if (direction.x == 0 && direction.y == 0) {
     Player::Idle();
+
+    // Player Walk
+  } else if (direction.x != 0 || direction.y != 0) {
+    Player::Walk(direction);
+
+  } else {
+    this->state = PLAYER_STATE_NULL;
   }
 
-  // Player Walk
-  if (direction.x != 0 || direction.y != 0) {
-    Player::Walk(direction);
-  }
+  // Calculate animation frame
+  float animationSpeed = GetFrameTime() * animationData[this->state].speed;
+  this->animationFrame =
+      (int)animationSpeed % animationData[this->state].frameCount;
 }
 
 void Player::Draw() {
@@ -75,13 +89,9 @@ void Player::Draw() {
   playerPosition.x -= Config::ASSEST_RESOLUTION_HALF;
   playerPosition.y -= Config::ASSEST_RESOLUTION_HALF;
 
-  if (this->animationFrame > 8) {
-    this->animationFrame = 0;
-  }
-  int xOffset = (int)animationFrame % 8;
-
-  Rectangle assestRect = {xOffset * resolution, resolution * (float)this->state,
-                          (float)resolution, resolution};
+  Rectangle assestRect = {this->animationFrame * resolution,
+                          resolution * (float)this->state, (float)resolution,
+                          resolution};
 
   Rectangle destRect = {playerPosition.x, playerPosition.y, resolution,
                         resolution};

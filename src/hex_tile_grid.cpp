@@ -67,7 +67,7 @@ void HexGrid::InitGrid(float radius) {
     int qMax = std::min(this->mapRadius, -r + this->mapRadius);
     for (int q = qMin; q <= qMax; q++) {
       HexTiles[HexCoord(q, r)] = (MapTile){.coord = HexCoord(q, r),
-                                           .type = TileID::TILE_WATER,
+                                           .type = TILE_WATER,
                                            .isDirty = false,
                                            .isVisble = false};
     }
@@ -120,9 +120,7 @@ bool HexGrid::HasTile(HexCoord h) const {
 void HexGrid::ToggleTile(HexCoord h) {
   if (HasTile(h)) {
     // HexTiles[h].type = (HexTiles[h].type == WALL) ? EMPTY : WALL;
-    HexTiles[h].type = (HexTiles[h].type == TileID::TILE_VOID)
-                           ? TileID::TILE_VOID
-                           : TileID::TILE_GRASS;
+    HexTiles[h].type = (HexTiles[h].type == TILE_VOID) ? TILE_VOID : TILE_GRASS;
   }
 }
 
@@ -136,7 +134,7 @@ bool HexGrid::CheckSurrounded(HexCoord target) const {
 
     if (it != HexTiles.end()) {
       neighborCount++;
-      if (it->second.type == TileID::TILE_NULL)
+      if (it->second.type == TILE_NULL)
         wallCount++;
     }
   }
@@ -150,8 +148,6 @@ void HexGrid::Draw(const Camera2D &camera) {
 
   for (auto const &[key, tile] : HexTiles) {
 
-    int tileType = static_cast<int>(tile.type);
-
     Vector2 pos = HexCoordToPoint(tile.coord);
 
     pos = (Vector2){pos.x - Config::TILE_SIZE_HALF,
@@ -162,7 +158,7 @@ void HexGrid::Draw(const Camera2D &camera) {
 
     if (CheckCollisionRecs(cameraView, dest_rect)) {
       Rectangle tile_rect = {Config::TEXTURE_ATLAS_TILES,
-                             (float)Config::ASSEST_RESOLUTION * tileType,
+                             (float)Config::ASSEST_RESOLUTION * tile.type,
                              Config::ASSEST_RESOLUTION, Config::TILE_SIZE};
       Vector2 origin = {0.0f, 0.0f};
 

@@ -73,9 +73,9 @@ void HexGrid::InitGrid(float radius) {
   }
 }
 
-void HexGrid::LoadAssets(const char *pathToAssets) {
+void HexGrid::GetTextureHandler(TextureHandler *textureHandler) {
 
-  tileAssets = LoadTexture(pathToAssets);
+  this->textureHandler = textureHandler;
 }
 
 HexCoord HexGrid::HexRound(FractionalHex h) const {
@@ -156,9 +156,8 @@ void HexGrid::Draw(const Camera2D &camera) {
       Rectangle tile_rect = {0, (float)Config::TILE_SIZE * tile.type,
                              Config::TILE_SIZE, Config::TILE_SIZE};
       Vector2 origin = {0.0f, 0.0f};
-      DrawTexturePro(tileAssets, tile_rect, dest_rect, origin, 0.0f, WHITE);
+
+      textureHandler->Draw(tile_rect, dest_rect, origin, 0.0f, WHITE);
     }
   }
 }
-
-void HexGrid::UnloadAssets() { UnloadTexture(tileAssets); }

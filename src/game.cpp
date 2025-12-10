@@ -9,9 +9,10 @@ Game::Game() {
   InitWindow(Config::SCREEN_WIDTH, Config::SCREEN_HEIGHT,
              "Dream of HexCoords - Interactive");
   // SetTargetFPS(120);
+  textureHandler.LoadAssets("assets/images/Tileset3.png");
 
   hexGrid.InitGrid(12.0f);
-  hexGrid.LoadAssets("assets/images/Tileset3.png");
+  hexGrid.GetTextureHandler(&textureHandler);
 
   player.Init(Config::SCREEN_CENTER, "assets/images/player/PlayerWalk.png");
 
@@ -59,7 +60,7 @@ void Game::GameLoop() {
 //--------------------------------------------------------------------------------------
 Game::~Game() {
 
-  hexGrid.UnloadAssets();
+  textureHandler.UnloadAssets();
   CloseWindow(); // Close window and OpenGL context
 }
 

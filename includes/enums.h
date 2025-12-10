@@ -11,5 +11,12 @@ typedef enum {
   IDK,
   SAND,
 } TileType;
+//
+// typedef enum {
+//   EMPTY = 0,
+//   WALL,
+//   PLAYER_RUN,
+//
+// } TextureAtlas;
 
 #endif // !ENUMS_H

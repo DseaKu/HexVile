@@ -3,6 +3,7 @@
 
 #include "enums.h"
 #include "raylib.h"
+#include "texture_handler.h"
 #include <map>
 #include <string>
 #include <vector>
@@ -49,7 +50,7 @@ private:
   float tileGapY;
   int mapRadius;
   Vector2 origin;
-  Texture2D tileAssets;
+  TextureHandler *textureHandler;
 
   // Lookup Tables
   static const std::vector<HexCoord> DIRECTIONS;
@@ -62,7 +63,7 @@ public:
   HexGrid();
 
   void InitGrid(float radius);
-  void LoadAssets(const char *pathToAssets);
+  void GetTextureHandler(TextureHandler *textureHandler);
 
   // Coordinate Conversions
   Vector2 HexCoordToPoint(HexCoord h) const;
@@ -76,8 +77,6 @@ public:
 
   // Rendering
   void Draw(const Camera2D &camera);
-
-  void UnloadAssets();
 };
 
 #endif // HEX_TILE_GRID_H

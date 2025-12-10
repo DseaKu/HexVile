@@ -4,6 +4,7 @@
 #include "hex_tile_grid.h"
 #include "player.h"
 #include "raylib.h"
+#include "texture_handler.h"
 
 class Game {
 private:
@@ -13,6 +14,7 @@ private:
   Vector2 MousePos;
   Vector2 relativeCenter;
   Player player;
+  TextureHandler textureHandler;
 
 public:
   Game();

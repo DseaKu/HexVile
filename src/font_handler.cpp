@@ -12,7 +12,7 @@ FontHandler::FontHandler() {
   this->fontHackRegular = {0};
 }
 
-void FontHandler::InitFonts() {
+void FontHandler::LoadFonts() {
   int fileSize = 0;
 
   // --- Hack Font Regular ---
@@ -31,7 +31,7 @@ void FontHandler::InitFonts() {
   UnloadImage(atlas);
 }
 
-void FontHandler::DeInitFonts() { UnloadFont(fontHackRegular); }
+void FontHandler::UnloadFonts() { UnloadFont(fontHackRegular); }
 Font FontHandler::GetFontHackRegular() { return this->fontHackRegular; }
 int FontHandler::GetFontSizeDefault() { return this->fontSizeDefault; }
 void FontHandler::DrawTextHackRegular(const char *text, Vector2 pos,

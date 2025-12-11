@@ -115,6 +115,8 @@ const char *Player::PlayerDirToString() {
   }
 }
 
+int Player::GetAnimationFrame() { return this->animationFrame; }
+
 void Player::GetTextureHandler(TextureHandler *textureHandler) {
 
   this->textureHandler = textureHandler;

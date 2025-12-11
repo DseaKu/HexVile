@@ -9,8 +9,8 @@ private:
 
 public:
   FontHandler();
-  void InitFonts();
-  void DeInitFonts();
+  void LoadFonts();
+  void UnloadFonts();
   Font GetFontHackRegular();
   int GetFontSizeDefault();
   void DrawTextHackRegular(const char *text, Vector2 position, Color color);

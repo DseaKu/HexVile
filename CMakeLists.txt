@@ -22,7 +22,6 @@ FetchContent_MakeAvailable(raylib)
 set(SOURCES
     src/main.cpp
     src/game.cpp
-    src/camera.cpp
     src/hex_tile_grid.cpp
     src/player.cpp
     src/texture_handler.cpp

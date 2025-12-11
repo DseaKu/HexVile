@@ -31,6 +31,7 @@ public:
   void Draw();
   Vector2 GetPosition();
   void GetTextureHandler(TextureHandler *textureHandler);
+  int GetAnimationFrame();
   const char *PlayerStateToString();
   const char *PlayerDirToString();
 };

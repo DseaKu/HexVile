@@ -60,6 +60,7 @@ void Player::Draw() {
   Vector2 playerPosition = this->position;
   playerPosition.x -= Conf::ASSEST_RESOLUTION_HALF;
   playerPosition.y -= Conf::ASSEST_RESOLUTION_HALF;
+  playerPosition.y += Conf::PLAYER_Y_OFFSET;
   float resolution = Conf::ASSEST_RESOLUTION;
   float xFrameOffset = resolution * this->animationFrame +
                        Conf::TEXTURE_ATLAS_PLAYER_ANIMATION_X_OFFSET;

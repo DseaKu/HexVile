@@ -6,7 +6,7 @@
 
 Player::Player() {
   position = Config::SCREEN_CENTER;
-  faceDir = DIR_NULL;
+  faceDir = S;
   animationFrame = 0.0f;
   animationDelta = 0;
   position = Config::SCREEN_CENTER;
@@ -20,22 +20,24 @@ void Player::Update() {
   dir.y = -IsKeyDown(KEY_W) + IsKeyDown(KEY_S);
 
   // Determine player face direction
-  if (dir.x == 0 && dir.y == -1) {
-    faceDir = N;
-  } else if (dir.x == 1 && dir.y == -1) {
-    faceDir = NE;
-  } else if (dir.x == 1 && dir.y == 0) {
-    faceDir = E;
-  } else if (dir.x == 1 && dir.y == 1) {
-    faceDir = SE;
-  } else if (dir.x == 0 && dir.y == 1) {
-    faceDir = S;
-  } else if (dir.x == -1 && dir.y == 1) {
-    faceDir = SW;
-  } else if (dir.x == -1 && dir.y == 0) {
-    faceDir = W;
-  } else if (dir.x == -1 && dir.y == -1) {
-    faceDir = NW;
+  if (dir.x != 0 || dir.y != 0) {
+    if (dir.x == 0 && dir.y == -1) {
+      faceDir = N;
+    } else if (dir.x == 1 && dir.y == -1) {
+      faceDir = NE;
+    } else if (dir.x == 1 && dir.y == 0) {
+      faceDir = E;
+    } else if (dir.x == 1 && dir.y == 1) {
+      faceDir = SE;
+    } else if (dir.x == 0 && dir.y == 1) {
+      faceDir = S;
+    } else if (dir.x == -1 && dir.y == 1) {
+      faceDir = SW;
+    } else if (dir.x == -1 && dir.y == 0) {
+      faceDir = W;
+    } else if (dir.x == -1 && dir.y == -1) {
+      faceDir = NW;
+    }
   }
   // Determine player state
   if (dir.x == 0 && dir.y == 0) {
@@ -59,7 +61,9 @@ void Player::Draw() {
   playerPosition.y -= Config::ASSEST_RESOLUTION_HALF;
   float resolution = Config::ASSEST_RESOLUTION;
   float xFrameOffset = resolution * this->animationFrame;
-  float yFrameOffset = resolution * this->state + resolution * this->faceDir;
+  float yFrameOffset =
+      resolution *
+      ((this->state - 1) * (DIR_LABELS_LENGTH - 1) + (this->faceDir));
 
   Rectangle assestRect = {xFrameOffset, yFrameOffset, resolution, resolution};
 

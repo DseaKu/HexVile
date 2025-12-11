@@ -12,8 +12,8 @@ int TextureHandler::LoadAssets(const char *pathToAssest) {
     std::cout << "Error loading texture atlas" << std::endl;
     return 1;
   }
-  this->width = this->textureAtlas.width / Config::ASSEST_RESOLUTION;
-  this->height = this->textureAtlas.height / Config::ASSEST_RESOLUTION;
+  this->width = this->textureAtlas.width / Conf::ASSEST_RESOLUTION;
+  this->height = this->textureAtlas.height / Conf::ASSEST_RESOLUTION;
   return 0;
 }
 

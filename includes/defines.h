@@ -3,7 +3,7 @@
 #include "raylib.h"
 #include <cstdint>
 
-namespace Config {
+namespace Conf {
 
 // --- Game ---
 constexpr int MAP_SIZE = 64;
@@ -13,10 +13,10 @@ constexpr const char *TEXTURE_ATLAS_PATH = "assets/images/texture_atlas.png";
 constexpr const char *FONT_HACK_REGULAR_PATH = "assets/font/hack_regular.ttf";
 
 // --- Screen ---
-// constexpr int SCREEN_WIDTH = 1400;
-// constexpr int SCREEN_HEIGHT = 900;
-constexpr int SCREEN_WIDTH = 2800;
-constexpr int SCREEN_HEIGHT = 1200;
+constexpr int SCREEN_WIDTH = 1400;
+constexpr int SCREEN_HEIGHT = 900;
+// constexpr int SCREEN_WIDTH = 2800;
+// constexpr int SCREEN_HEIGHT = 1200;
 constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
                                    (float)SCREEN_HEIGHT / 2};
 
@@ -26,9 +26,10 @@ constexpr int ASSEST_RESOLUTION_HALF = ASSEST_RESOLUTION / 2;
 constexpr int TEXTURE_ATLAS_PLAYER_ANIMATION_X_OFFSET = ASSEST_RESOLUTION * 0;
 constexpr int TEXTURE_ATLAS_PLAYER_ANIMATION_FRAME_COUNT_MAX = 12;
 constexpr int TEXTURE_ATLAS_PLAYER_ANIMATION_FRAME_COUNT_WALK = 8;
+constexpr float PLAYER_ANIMATION_SPEED = 10.0f;
+constexpr float TEXTURE_ATLAS_PLAYER_ANIMATION_SPEED_IDLE = 5.0f;
 constexpr int TEXTURE_ATLAS_TILES_X_OFFSET =
     ASSEST_RESOLUTION * TEXTURE_ATLAS_PLAYER_ANIMATION_FRAME_COUNT_MAX;
-constexpr float PLAYER_ANIMATION_SPEED = 10.0f;
 
 // --- Tile ---
 constexpr int TILE_SIZE = ASSEST_RESOLUTION;
@@ -65,7 +66,7 @@ constexpr int DEBUG_OVERLAY_SUBSECTION_Y_POS =
 
 // --- Player ---
 constexpr float PLAYER_SPEED = 50.0f;
-} // namespace Config
+} // namespace Conf
 
 // --- Unsigned Integer Aliases ---
 using u8 = std::uint8_t;

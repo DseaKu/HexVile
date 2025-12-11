@@ -5,12 +5,12 @@
 #include "raymath.h"
 
 Player::Player() {
-  this->position = Config::SCREEN_CENTER;
+  this->position = Conf::SCREEN_CENTER;
   this->faceDir = S;
   this->state = PLAYER_STATE_IDLE;
   this->animationFrame = 0.0f;
   this->animationDelta = 0;
-  this->position = Config::SCREEN_CENTER;
+  this->position = Conf::SCREEN_CENTER;
   InitAnimations();
 }
 
@@ -58,11 +58,11 @@ void Player::Update() {
 
 void Player::Draw() {
   Vector2 playerPosition = this->position;
-  playerPosition.x -= Config::ASSEST_RESOLUTION_HALF;
-  playerPosition.y -= Config::ASSEST_RESOLUTION_HALF;
-  float resolution = Config::ASSEST_RESOLUTION;
+  playerPosition.x -= Conf::ASSEST_RESOLUTION_HALF;
+  playerPosition.y -= Conf::ASSEST_RESOLUTION_HALF;
+  float resolution = Conf::ASSEST_RESOLUTION;
   float xFrameOffset = resolution * this->animationFrame +
-                       Config::TEXTURE_ATLAS_PLAYER_ANIMATION_X_OFFSET;
+                       Conf::TEXTURE_ATLAS_PLAYER_ANIMATION_X_OFFSET;
   float yFrameOffset =
       resolution *
       ((this->state - 1) * (DIR_LABELS_LENGTH - 1) + (this->faceDir));
@@ -131,7 +131,7 @@ void Player::Idle() {
 
 void Player::Walk(Vector2 direction) {
 
-  float speed = Config::PLAYER_SPEED;
+  float speed = Conf::PLAYER_SPEED;
   float delta = GetFrameTime();
 
   if (this->state != PLAYER_STATE_WALK) {
@@ -150,13 +150,17 @@ void Player::InitAnimations() {
   for (int i = 0; i < PLAYER_STATE_ID_LENGTH; i++) {
     for (int j = 0; j < DIR_LABELS_LENGTH; j++) {
       this->animationData[i][j] = {
-          .frameCount = Config::TEXTURE_ATLAS_PLAYER_ANIMATION_FRAME_COUNT_MAX,
-          .speed = Config::PLAYER_ANIMATION_SPEED,
+          .frameCount = Conf::TEXTURE_ATLAS_PLAYER_ANIMATION_FRAME_COUNT_MAX,
+          .speed = Conf::PLAYER_ANIMATION_SPEED,
           .loop = true};
     }
   }
   for (int i = 0; i < DIR_LABELS_LENGTH; i++) {
     this->animationData[PLAYER_STATE_WALK][i].frameCount =
-        Config::TEXTURE_ATLAS_PLAYER_ANIMATION_FRAME_COUNT_WALK;
+        Conf::TEXTURE_ATLAS_PLAYER_ANIMATION_FRAME_COUNT_WALK;
+  }
+  for (int i = 0; i < DIR_LABELS_LENGTH; i++) {
+    this->animationData[PLAYER_STATE_IDLE][i].speed =
+        Conf::TEXTURE_ATLAS_PLAYER_ANIMATION_SPEED_IDLE;
   }
 }

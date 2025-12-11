@@ -8,21 +8,20 @@
 
 // --- Initialization ---
 Game::Game() {
-  InitWindow(Config::SCREEN_WIDTH, Config::SCREEN_HEIGHT, Config::WINDOW_TITLE);
-  SetTargetFPS(Config::FPS_MAX);
-  this->textureHandler.LoadAssets(Config::TEXTURE_ATLAS_PATH);
+  InitWindow(Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT, Conf::WINDOW_TITLE);
+  SetTargetFPS(Conf::FPS_MAX);
+  this->textureHandler.LoadAssets(Conf::TEXTURE_ATLAS_PATH);
   int fileSize = 0;
-  this->hackFontRegular =
-      LoadFileData(Config::FONT_HACK_REGULAR_PATH, &fileSize);
+  this->hackFontRegular = LoadFileData(Conf::FONT_HACK_REGULAR_PATH, &fileSize);
 
   this->hexGrid.InitGrid(12.0f);
   this->hexGrid.GetTextureHandler(&textureHandler);
 
   this->player.GetTextureHandler(&textureHandler);
 
-  this->camera.target = Config::SCREEN_CENTER;
-  this->camera.offset = Config::SCREEN_CENTER;
-  this->camera.zoom = Config::CAMERA_ZOOM;
+  this->camera.target = Conf::SCREEN_CENTER;
+  this->camera.offset = Conf::SCREEN_CENTER;
+  this->camera.zoom = Conf::CAMERA_ZOOM;
   this->camera.rotation = 0.0f;
   this->cameraRect = {0, 0, 0, 0};
   this->cameraTopLeft = {0, 0};
@@ -38,10 +37,10 @@ void Game::GameLoop() {
 
     // --- Update ---
     this->MousePos = GetScreenToWorld2D(GetMousePosition(), camera);
-    this->relativeCenter = GetScreenToWorld2D(Config::SCREEN_CENTER, camera);
+    this->relativeCenter = GetScreenToWorld2D(Conf::SCREEN_CENTER, camera);
     this->cameraTopLeft = GetScreenToWorld2D(Vector2{0, 0}, camera);
-    this->cameraRect = {cameraTopLeft.x, cameraTopLeft.y, Config::CAMERA_WIDTH,
-                        Config::CAMERA_HEIGTH};
+    this->cameraRect = {cameraTopLeft.x, cameraTopLeft.y, Conf::CAMERA_WIDTH,
+                        Conf::CAMERA_HEIGTH};
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
       HexCoord clickedHex = hexGrid.PointToHexCoord(this->MousePos);
@@ -68,7 +67,7 @@ void Game::GameLoop() {
     // --- Camera View ---
 
     EndMode2D();
-    DrawDebugOverlay(Config::DEBUG_FLAG);
+    DrawDebugOverlay(Conf::DEBUG_FLAG);
     EndDrawing();
   }
 }
@@ -78,16 +77,16 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   if (!is_enabled)
     return;
 
-  float sectionPosX = Config::DEBUG_OVERLAY_SECTION_X_POS;
-  int sectionPosY = Config::DEBUG_OVERLAY_SECTION_Y_POS;
-  int sectionGapY = Config::DEBUG_OVERLAY_SECTION_Y_GAP;
-  int sectionFontSize = Config::DEBUG_OVERLAY_SECTION_FONT_SIZE;
-  Color sectionColor = Config::DEBUG_OVERLAY_SECTION_FONT_COLOR;
+  float sectionPosX = Conf::DEBUG_OVERLAY_SECTION_X_POS;
+  int sectionPosY = Conf::DEBUG_OVERLAY_SECTION_Y_POS;
+  int sectionGapY = Conf::DEBUG_OVERLAY_SECTION_Y_GAP;
+  int sectionFontSize = Conf::DEBUG_OVERLAY_SECTION_FONT_SIZE;
+  Color sectionColor = Conf::DEBUG_OVERLAY_SECTION_FONT_COLOR;
 
-  float subSectionPosX = Config::DEBUG_OVERLAY_SUBSECTION_X_POS;
-  int subSectionGapY = Config::DEBUG_OVERLAY_SUBSECTION_Y_GAP;
-  int subSectionFontSize = Config::DEBUG_OVERLAY_SUBSECTION_FONT_SIZE;
-  Color subSectionColor = Config::DEBUG_OVERLAY_SECTION_FONT_COLOR;
+  float subSectionPosX = Conf::DEBUG_OVERLAY_SUBSECTION_X_POS;
+  int subSectionGapY = Conf::DEBUG_OVERLAY_SUBSECTION_Y_GAP;
+  int subSectionFontSize = Conf::DEBUG_OVERLAY_SUBSECTION_FONT_SIZE;
+  Color subSectionColor = Conf::DEBUG_OVERLAY_SECTION_FONT_COLOR;
 
   float currentY = sectionPosY;
 

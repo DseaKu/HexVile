@@ -64,7 +64,7 @@ void HexGrid::InitGrid(float radius) {
   }
 }
 bool HexGrid::IsWalkable(HexCoord h) const {
-  MapTile tile = this->HexTiles.find(h);
+  // MapTile tile = this->HexTiles.find(h);
   return false;
 }
 void HexGrid::SetTextureHandler(TextureHandler *textureHandler) {

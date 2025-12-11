@@ -5,20 +5,9 @@
 #include <stdbool.h>
 #include <vector>
 
-// --- INTERNAL COLORS ---
-// Defined here locally since they are implementation details of the grid
-const Color COL_HEX_EMPTY = {30, 41, 59, 255};
-const Color COL_HEX_WALL = {34, 197, 94, 255};
-const Color COL_HEX_GOLD = {245, 158, 11, 255};
-const Color COL_HIGHLIGHT = {56, 189, 248, 255};
-const Color COL_TEXT = {148, 163, 184, 255};
-
 const std::vector<HexCoord> HexGrid::DIRECTIONS = {
     HexCoord(1, 0),  HexCoord(0, 1),  HexCoord(-1, 1),
     HexCoord(-1, 0), HexCoord(0, -1), HexCoord(1, -1)};
-
-const std::vector<std::string> HexGrid::DIR_LABELS = {"E", "SE", "SW",
-                                                      "W", "NW", "NE"};
 
 // =======================
 //      HEX IMPLEMENTATION

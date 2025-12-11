@@ -18,6 +18,7 @@ Game::Game() {
   this->hexGrid.GetTextureHandler(&textureHandler);
 
   this->player.GetTextureHandler(&textureHandler);
+  this->player.SetHexGrid(&hexGrid);
 
   this->camera.target = Conf::SCREEN_CENTER;
   this->camera.offset = Conf::SCREEN_CENTER;
@@ -101,7 +102,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
       {"Mouse",
        {
            TextFormat("X,Y: %.1f,%.1f", this->MousePos.x, this->MousePos.y),
-           TextFormat("Hoverd Tile Q,R: %i,%i", mapTile.q, mapTile.r),
+           TextFormat("Tile Q,R: %i,%i", mapTile.q, mapTile.r),
        }});
 
   // --- Player ---

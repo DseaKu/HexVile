@@ -1,6 +1,7 @@
 #include "player.h"
 #include "defines.h"
 #include "enums.h"
+#include "hex_tile_grid.h"
 #include "raylib.h"
 #include "raymath.h"
 
@@ -11,11 +12,14 @@ Player::Player() {
   this->animationFrame = 0.0f;
   this->animationDelta = 0;
   this->position = Conf::SCREEN_CENTER;
+  this->playerTile = {0, 0};
   InitAnimations();
 }
 
 void Player::Update() {
-  animationDelta += GetFrameTime();
+  this->animationDelta += GetFrameTime();
+  this->playerTile = this->hexGrid->PointToHexCoord(this->position);
+
   Vector2 dir;
   dir.x = -IsKeyDown(KEY_A) + IsKeyDown(KEY_D);
   dir.y = -IsKeyDown(KEY_W) + IsKeyDown(KEY_S);
@@ -56,11 +60,12 @@ void Player::Update() {
       (int)animationSpeed % animationData[this->state][faceDir].frameCount;
 }
 
+HexCoord Player::GetTile() { return this->playerTile; }
+
 void Player::Draw() {
   Vector2 playerPosition = this->position;
   playerPosition.x -= Conf::ASSEST_RESOLUTION_HALF;
-  playerPosition.y -= Conf::ASSEST_RESOLUTION_HALF;
-  playerPosition.y += Conf::PLAYER_Y_OFFSET;
+  playerPosition.y -= Conf::ASSEST_RESOLUTION_HALF - Conf::PLAYER_Y_OFFSET;
   float resolution = Conf::ASSEST_RESOLUTION;
   float xFrameOffset = resolution * this->animationFrame +
                        Conf::TEXTURE_ATLAS_PLAYER_ANIMATION_X_OFFSET;
@@ -130,7 +135,7 @@ void Player::Idle() {
   }
 }
 
-void Player::Walk(Vector2 direction) {
+void Player::Walk(Vector2 dir) {
 
   float speed = Conf::PLAYER_SPEED;
   float delta = GetFrameTime();
@@ -140,11 +145,13 @@ void Player::Walk(Vector2 direction) {
     this->state = PLAYER_STATE_WALK;
   }
   // Normalize diagonal movement
-  if (Vector2Length(direction) > 0) {
-    direction = Vector2Normalize(direction);
+  if (Vector2Length(dir) > 0) {
+    dir = Vector2Normalize(dir);
   }
-  this->position.x += direction.x * delta * speed;
-  this->position.y += direction.y * delta * speed;
+  Vector2 nextPos = {this->position.x + dir.x * delta * speed,
+                     this->position.y + dir.y * delta * speed};
+
+  this->position = nextPos;
 }
 
 void Player::InitAnimations() {
@@ -165,3 +172,4 @@ void Player::InitAnimations() {
         Conf::TEXTURE_ATLAS_PLAYER_ANIMATION_SPEED_IDLE;
   }
 }
+void Player::SetHexGrid(HexGrid *grid) { this->hexGrid = grid; }

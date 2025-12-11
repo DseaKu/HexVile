@@ -54,7 +54,7 @@ private:
 
   // Lookup Tables
   static const std::vector<HexCoord> DIRECTIONS;
-  static const std::vector<std::string> DIR_LABELS;
+  // static const std::vector<std::string> DIR_LABELS;
 
   // Internal Math Helper
   HexCoord HexRound(FractionalHex h) const;

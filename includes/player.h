@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include "enums.h"
+#include "hex_tile_grid.h"
 #include "raylib.h"
 #include "texture_handler.h"
 
@@ -20,18 +21,22 @@ private:
   TextureHandler *textureHandler;
   PlayerStateID state;
   PlayerAnimationData animationData[PLAYER_STATE_ID_LENGTH][DIR_LABELS_LENGTH];
+  HexGrid *hexGrid;
+  HexCoord playerTile;
 
   void Idle();
-  void Walk(Vector2 direction);
+  void Walk(Vector2 dir);
   void InitAnimations();
 
 public:
   Player();
   void Update();
   void Draw();
+  void SetHexGrid(HexGrid *grid);
   Vector2 GetPosition();
   void GetTextureHandler(TextureHandler *textureHandler);
   int GetAnimationFrame();
+  HexCoord GetTile();
   const char *PlayerStateToString();
   const char *PlayerDirToString();
 };

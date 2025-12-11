@@ -7,10 +7,9 @@
 
 // --- Initialization ---
 Game::Game() {
-  InitWindow(Config::SCREEN_WIDTH, Config::SCREEN_HEIGHT,
-             "Dream of HexCoords - Interactive");
-  // SetTargetFPS(120);
-  textureHandler.LoadAssets("assets/texture_atlas.png");
+  InitWindow(Config::SCREEN_WIDTH, Config::SCREEN_HEIGHT, Config::WINDOW_TITLE);
+  SetTargetFPS(Config::FPS_MAX);
+  textureHandler.LoadAssets(Config::TEXTURE_ATLAS_PATH);
 
   hexGrid.InitGrid(12.0f);
   hexGrid.GetTextureHandler(&textureHandler);
@@ -120,7 +119,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   // Draw section
   Vector2 playerScreenPos = GetWorldToScreen2D(playerPos, camera);
   DrawCircle(playerScreenPos.x, playerScreenPos.y, 3.0f, RED);
-  for (const auto &data : debugData) {
+  for (const DebugData &data : debugData) {
     DrawText(data.section.c_str(), sectionPosX, currentY, sectionFontSize,
              sectionColor);
     currentY += sectionGapY;

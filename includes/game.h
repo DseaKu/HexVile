@@ -13,16 +13,16 @@ struct DebugData {
 };
 class Game {
 private:
+  void DrawDebugOverlay(bool is_enabled);
   Camera2D camera;
   HexGrid hexGrid;
-  void DrawDebugOverlay(bool is_enabled);
   Vector2 MousePos;
   Vector2 relativeCenter;
+  Vector2 cameraTopLeft;
   Player player;
   TextureHandler textureHandler;
   std::vector<DebugData> debugData;
   Rectangle cameraRect;
-  Vector2 cameraTopLeft;
 
 public:
   Game();

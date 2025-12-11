@@ -5,11 +5,12 @@
 #include "raymath.h"
 
 Player::Player() {
-  position = Config::SCREEN_CENTER;
-  faceDir = S;
-  animationFrame = 0.0f;
-  animationDelta = 0;
-  position = Config::SCREEN_CENTER;
+  this->position = Config::SCREEN_CENTER;
+  this->faceDir = S;
+  this->state = PLAYER_STATE_IDLE;
+  this->animationFrame = 0.0f;
+  this->animationDelta = 0;
+  this->position = Config::SCREEN_CENTER;
   InitAnimations();
 }
 
@@ -60,7 +61,8 @@ void Player::Draw() {
   playerPosition.x -= Config::ASSEST_RESOLUTION_HALF;
   playerPosition.y -= Config::ASSEST_RESOLUTION_HALF;
   float resolution = Config::ASSEST_RESOLUTION;
-  float xFrameOffset = resolution * this->animationFrame;
+  float xFrameOffset = resolution * this->animationFrame +
+                       Config::TEXTURE_ATLAS_PLAYER_ANIMATION_X_OFFSET;
   float yFrameOffset =
       resolution *
       ((this->state - 1) * (DIR_LABELS_LENGTH - 1) + (this->faceDir));
@@ -145,9 +147,14 @@ void Player::Walk(Vector2 direction) {
 void Player::InitAnimations() {
   for (int i = 0; i < PLAYER_STATE_ID_LENGTH; i++) {
     for (int j = 0; j < DIR_LABELS_LENGTH; j++) {
-      this->animationData[i][j] = {.frameCount = 8,
-                                   .speed = Config::PLAYER_ANIMATION_SPEED,
-                                   .loop = true};
+      this->animationData[i][j] = {
+          .frameCount = Config::TEXTURE_ATLAS_PLAYER_ANIMATION_FRAME_COUNT_MAX,
+          .speed = Config::PLAYER_ANIMATION_SPEED,
+          .loop = true};
     }
+  }
+  for (int i = 0; i < DIR_LABELS_LENGTH; i++) {
+    this->animationData[PLAYER_STATE_WALK][i].frameCount =
+        Config::TEXTURE_ATLAS_PLAYER_ANIMATION_FRAME_COUNT_WALK;
   }
 }

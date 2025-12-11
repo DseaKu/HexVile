@@ -13,10 +13,10 @@ constexpr const char *TEXTURE_ATLAS_PATH = "assets/images/texture_atlas.png";
 constexpr const char *FONT_HACK_REGULAR_PATH = "assets/font/hack_regular.ttf";
 
 // --- Screen ---
-constexpr int SCREEN_WIDTH = 1400;
-constexpr int SCREEN_HEIGHT = 900;
-// constexpr int SCREEN_WIDTH = 2800;
-// constexpr int SCREEN_HEIGHT = 1200;
+// constexpr int SCREEN_WIDTH = 1400;
+// constexpr int SCREEN_HEIGHT = 900;
+constexpr int SCREEN_WIDTH = 2800;
+constexpr int SCREEN_HEIGHT = 1200;
 constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
                                    (float)SCREEN_HEIGHT / 2};
 
@@ -28,7 +28,7 @@ constexpr int TEXTURE_ATLAS_PLAYER_ANIMATION_FRAME_COUNT_MAX = 12;
 constexpr int TEXTURE_ATLAS_PLAYER_ANIMATION_FRAME_COUNT_WALK = 8;
 constexpr int TEXTURE_ATLAS_TILES_X_OFFSET =
     ASSEST_RESOLUTION * TEXTURE_ATLAS_PLAYER_ANIMATION_FRAME_COUNT_MAX;
-constexpr float PLAYER_ANIMATION_SPEED = 1.0f;
+constexpr float PLAYER_ANIMATION_SPEED = 10.0f;
 
 // --- Tile ---
 constexpr int TILE_SIZE = ASSEST_RESOLUTION;

@@ -1,6 +1,7 @@
 #include "game.h"
 #include "defines.h"
 #include "enums.h"
+#include "font_handler.h"
 #include "hex_tile_grid.h"
 #include "raylib.h"
 #include <string>
@@ -9,21 +10,26 @@
 Game::Game() {
   InitWindow(Config::SCREEN_WIDTH, Config::SCREEN_HEIGHT, Config::WINDOW_TITLE);
   SetTargetFPS(Config::FPS_MAX);
-  textureHandler.LoadAssets(Config::TEXTURE_ATLAS_PATH);
+  this->textureHandler.LoadAssets(Config::TEXTURE_ATLAS_PATH);
+  int fileSize = 0;
+  this->hackFontRegular =
+      LoadFileData(Config::FONT_HACK_REGULAR_PATH, &fileSize);
 
-  hexGrid.InitGrid(12.0f);
-  hexGrid.GetTextureHandler(&textureHandler);
+  this->hexGrid.InitGrid(12.0f);
+  this->hexGrid.GetTextureHandler(&textureHandler);
 
-  player.GetTextureHandler(&textureHandler);
+  this->player.GetTextureHandler(&textureHandler);
 
-  camera.target = Config::SCREEN_CENTER;
-  camera.offset = Config::SCREEN_CENTER;
-  camera.zoom = Config::CAMERA_ZOOM;
-  camera.rotation = 0.0f;
-  cameraRect = {0, 0, 0, 0};
-  cameraTopLeft = {0, 0};
+  this->camera.target = Config::SCREEN_CENTER;
+  this->camera.offset = Config::SCREEN_CENTER;
+  this->camera.zoom = Config::CAMERA_ZOOM;
+  this->camera.rotation = 0.0f;
+  this->cameraRect = {0, 0, 0, 0};
+  this->cameraTopLeft = {0, 0};
 
-  MousePos = (Vector2){0, 0};
+  this->MousePos = (Vector2){0, 0};
+
+  this->fontHandler.InitFonts();
 }
 
 // --- Main Loop ---
@@ -53,6 +59,8 @@ void Game::GameLoop() {
     BeginMode2D(camera);
     ClearBackground(WHITE);
 
+    // --- Test Font ---
+
     // --- Camera View ---
     hexGrid.Draw(camera);
     player.Draw();
@@ -61,13 +69,6 @@ void Game::GameLoop() {
     DrawDebugOverlay(Config::DEBUG_FLAG);
     EndDrawing();
   }
-}
-
-// --- Deinitialization ---
-Game::~Game() {
-
-  textureHandler.UnloadAssets();
-  CloseWindow(); // Close window and OpenGL context
 }
 
 // --- Debug overlay ---
@@ -134,3 +135,11 @@ void Game::DrawDebugOverlay(bool is_enabled) {
     currentY += sectionGapY;
   }
 };
+
+// --- Deinitialization ---
+Game::~Game() {
+
+  textureHandler.UnloadAssets();
+  fontHandler.DeInitFonts();
+  CloseWindow(); // Close window and OpenGL context
+}

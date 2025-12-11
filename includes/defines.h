@@ -40,13 +40,17 @@ constexpr float CAMERA_ZOOM = 5.0f;
 constexpr float CAMERA_WIDTH = (float)SCREEN_WIDTH / CAMERA_ZOOM;
 constexpr float CAMERA_HEIGTH = (float)SCREEN_HEIGHT / CAMERA_ZOOM;
 
+// --- Font ---
+constexpr int FONT_SIZE_DEFAULT = 20;
+constexpr int DEBUG_OVERLAY_SECTION_FONT_SIZE = 20;
+constexpr int DEBUG_OVERLAY_SUBSECTION_FONT_SIZE = 15;
+constexpr int HACK_REGULAR_GLYPH_COUNT = 60;
+
 // --- Debug ---
 constexpr bool DEBUG_FLAG = true;
-constexpr int DEBUG_OVERLAY_SECTION_FONT_SIZE = 20;
 constexpr int DEBUG_OVERLAY_SECTION_X_POS = 30;
 constexpr int DEBUG_OVERLAY_SECTION_Y_POS = 30;
 constexpr int DEBUG_OVERLAY_SECTION_Y_GAP = 3;
-constexpr int DEBUG_OVERLAY_SUBSECTION_FONT_SIZE = 15;
 constexpr int DEBUG_OVERLAY_SUBSECTION_X_GAP = 30;
 constexpr int DEBUG_OVERLAY_SUBSECTION_X_POS =
     DEBUG_OVERLAY_SECTION_X_POS + DEBUG_OVERLAY_SUBSECTION_X_GAP;

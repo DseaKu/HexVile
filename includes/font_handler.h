@@ -6,8 +6,6 @@ class FontHandler {
 private:
   Font fontHackRegular;
   int fontSizeDefault;
-  Font fontSDF;
-  Shader shader;
 
 public:
   FontHandler();

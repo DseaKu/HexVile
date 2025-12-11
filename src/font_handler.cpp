@@ -36,28 +36,6 @@ void FontHandler::InitFonts() {
   this->fontHackRegular.texture = LoadTextureFromImage(atlas);
   UnloadImage(atlas);
 
-  // SDF font generation from TTF f
-  this->fontSDF = {0};
-  fontSDF.baseSize = 16;
-  fontSDF.glyphCount = 95;
-  // Parameters > font size: 16, no glyphs array provided (0), glyphs count: 0
-  // (defaults to 95)
-  fontSDF.glyphs =
-      LoadFontData(fileData, fileSize, 16, 0, 0, FONT_SDF, &fontSDF.glyphCount);
-  // Parameters > glyphs count: 95, font size: 16, glyphs padding in image: 0
-  // px, pack method: 1 (Skyline algorythm)
-  atlas = GenImageFontAtlas(fontSDF.glyphs, &fontSDF.recs, 95, 16, 0, 1);
-  fontSDF.texture = LoadTextureFromImage(atlas);
-  UnloadImage(atlas);
-
-  UnloadFileData(fileData); // Free memory from loaded file
-
-  // Load SDF required shader (we use default vertex shader)
-  shader = LoadShader(
-      0, TextFormat("resources/shaders/glsl%i/sdf.fs", GLSL_VERSION));
-  SetTextureFilter(fontSDF.texture,
-                   TEXTURE_FILTER_BILINEAR); // Required for SDF font
-
   Vector2 fontPosition = {40, Config::SCREEN_HEIGHT / 2.0f - 50};
   Vector2 textSize = {0.0f, 0.0f};
   float fontSize = 16.0f;
@@ -66,9 +44,6 @@ void FontHandler::InitFonts() {
 
 void FontHandler::DeInitFonts() {
   UnloadFont(fontHackRegular); // Default font unloading
-  UnloadFont(fontSDF);         // SDF font unloading
-
-  UnloadShader(shader); // Unload SDF shader
 }
 Font FontHandler::getFontHackRegular() { return this->fontHackRegular; }
 int FontHandler::getFontSizeDefault() { return this->fontSizeDefault; }

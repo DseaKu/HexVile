@@ -78,22 +78,18 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   if (!is_enabled)
     return;
 
-  DrawTextEx(fontHandler.getFontDefault(), "This is a test j i Player",
-             (Vector2){300, 300}, fontHandler.getFontSizeDefault(), 2.0f,
-             BLACK);
-
-  int sectionPosX = Config::DEBUG_OVERLAY_SECTION_X_POS;
+  float sectionPosX = Config::DEBUG_OVERLAY_SECTION_X_POS;
   int sectionPosY = Config::DEBUG_OVERLAY_SECTION_Y_POS;
   int sectionGapY = Config::DEBUG_OVERLAY_SECTION_Y_GAP;
   int sectionFontSize = Config::DEBUG_OVERLAY_SECTION_FONT_SIZE;
   Color sectionColor = RED;
 
-  int subSectionPosX = Config::DEBUG_OVERLAY_SUBSECTION_X_POS;
+  float subSectionPosX = Config::DEBUG_OVERLAY_SUBSECTION_X_POS;
   int subSectionGapY = Config::DEBUG_OVERLAY_SUBSECTION_Y_GAP;
   int subSectionFontSize = Config::DEBUG_OVERLAY_SUBSECTION_FONT_SIZE;
   Color subSectionColor = RED;
 
-  int currentY = sectionPosY;
+  float currentY = sectionPosY;
 
   debugData.clear();
   debugData.push_back({"Resources",
@@ -119,23 +115,25 @@ void Game::DrawDebugOverlay(bool is_enabled) {
        {
            TextFormat("X,Y: %.1f,%.1f", playerPos.x, playerPos.y),
            TextFormat("Tile Q,R: %i,%i", playerTile.q, playerTile.r),
-           TextFormat("Player State = %s", playerState),
-           TextFormat("Player Face Dir = %s", playerDir),
+           TextFormat("Player State:  %s", playerState),
+           TextFormat("Player Face Dir: %s", playerDir),
        }});
 
   // Draw section
   Vector2 playerScreenPos = GetWorldToScreen2D(playerPos, camera);
   DrawCircle(playerScreenPos.x, playerScreenPos.y, 3.0f, RED);
   for (const DebugData &data : debugData) {
-    DrawText(data.section.c_str(), sectionPosX, currentY, sectionFontSize,
-             sectionColor);
+    DrawTextEx(fontHandler.getFontDefault(), data.section.c_str(),
+               (Vector2){sectionPosX, currentY},
+               fontHandler.getFontSizeDefault(), 2.0f, subSectionColor);
     currentY += sectionGapY;
     currentY += subSectionGapY;
 
     // Draw sub-section
     for (const std::string &subSection : data.subSection) {
-      DrawText(subSection.c_str(), subSectionPosX, currentY, subSectionFontSize,
-               subSectionColor);
+      DrawTextEx(fontHandler.getFontDefault(), subSection.c_str(),
+                 (Vector2){subSectionPosX, currentY},
+                 fontHandler.getFontSizeDefault(), 2.0f, subSectionColor);
       currentY += subSectionGapY;
     }
     currentY += sectionGapY;

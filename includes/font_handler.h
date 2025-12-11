@@ -4,7 +4,7 @@
 
 class FontHandler {
 private:
-  Font fontDefault;
+  Font fontHackRegular;
   int fontSizeDefault;
   Font fontSDF;
   Shader shader;
@@ -13,7 +13,7 @@ public:
   FontHandler();
   void InitFonts();
   void DeInitFonts();
-  Font getFontDefault();
+  Font getFontHackRegular();
   int getFontSizeDefault();
 };
 

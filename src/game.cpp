@@ -123,7 +123,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   Vector2 playerScreenPos = GetWorldToScreen2D(playerPos, camera);
   DrawCircle(playerScreenPos.x, playerScreenPos.y, 3.0f, RED);
   for (const DebugData &data : debugData) {
-    DrawTextEx(fontHandler.getFontDefault(), data.section.c_str(),
+    DrawTextEx(fontHandler.getFontHackRegular(), data.section.c_str(),
                (Vector2){sectionPosX, currentY},
                fontHandler.getFontSizeDefault(), 2.0f, subSectionColor);
     currentY += sectionGapY;
@@ -131,7 +131,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
 
     // Draw sub-section
     for (const std::string &subSection : data.subSection) {
-      DrawTextEx(fontHandler.getFontDefault(), subSection.c_str(),
+      DrawTextEx(fontHandler.getFontHackRegular(), subSection.c_str(),
                  (Vector2){subSectionPosX, currentY},
                  fontHandler.getFontSizeDefault(), 2.0f, subSectionColor);
       currentY += subSectionGapY;

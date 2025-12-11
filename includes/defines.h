@@ -10,7 +10,7 @@ constexpr int MAP_SIZE = 64;
 constexpr int FPS_MAX = 1000;
 constexpr const char *WINDOW_TITLE = "HexVile";
 constexpr const char *TEXTURE_ATLAS_PATH = "assets/images/texture_atlas.png";
-constexpr const char *FONT_HACK_REGULAR_PATH = "assets/font/hack_regular.ttf ";
+constexpr const char *FONT_HACK_REGULAR_PATH = "assets/font/hack_regular.ttf";
 
 // --- Screen ---
 // constexpr int SCREEN_WIDTH = 1400;
@@ -44,7 +44,7 @@ constexpr float CAMERA_HEIGTH = (float)SCREEN_HEIGHT / CAMERA_ZOOM;
 constexpr int FONT_SIZE_DEFAULT = 20;
 constexpr int DEBUG_OVERLAY_SECTION_FONT_SIZE = 20;
 constexpr int DEBUG_OVERLAY_SUBSECTION_FONT_SIZE = 15;
-constexpr int HACK_REGULAR_GLYPH_COUNT = 60;
+constexpr int HACK_REGULAR_GLYPH_COUNT = 95;
 
 // --- Debug ---
 constexpr bool DEBUG_FLAG = true;

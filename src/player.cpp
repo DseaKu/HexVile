@@ -20,24 +20,22 @@ void Player::Update() {
   dir.y = -IsKeyDown(KEY_W) + IsKeyDown(KEY_S);
 
   // Determine player face direction
-  if (dir.x == -1 && dir.y == -1) {
-    faceDir = NW;
-  } else if (dir.x == -1 && dir.y == 0) {
-    faceDir = W;
-  } else if (dir.x == -1 && dir.y == 1) {
-    faceDir = SW;
-  } else if (dir.x == 0 && dir.y == 1) {
-    faceDir = S;
-  } else if (dir.x == 1 && dir.y == 1) {
-    faceDir = SE;
+  if (dir.x == 0 && dir.y == -1) {
+    faceDir = N;
+  } else if (dir.x == 1 && dir.y == -1) {
+    faceDir = NE;
   } else if (dir.x == 1 && dir.y == 0) {
     faceDir = E;
+  } else if (dir.x == 1 && dir.y == 1) {
+    faceDir = SE;
+  } else if (dir.x == 0 && dir.y == 1) {
+    faceDir = S;
+  } else if (dir.x == -1 && dir.y == 1) {
+    faceDir = SW;
   } else if (dir.x == -1 && dir.y == 0) {
-    faceDir = NE;
-  } else if (dir.x == 0 && dir.y == -1) {
-    faceDir = N;
-  } else {
-    faceDir = DIR_NULL;
+    faceDir = W;
+  } else if (dir.x == -1 && dir.y == -1) {
+    faceDir = NW;
   }
   // Determine player state
   if (dir.x == 0 && dir.y == 0) {
@@ -91,21 +89,21 @@ const char *Player::PlayerDirToString() {
   case DIR_NULL:
     return "NULL";
   case NW:
-    return "North West";
+    return "NW";
   case W:
-    return "      West";
+    return "W";
   case SW:
-    return "South West";
+    return "SW";
   case S:
-    return "South     ";
+    return "S";
   case SE:
-    return "South East";
+    return "SE";
   case E:
-    return "      East";
+    return "E";
   case NE:
-    return "North East";
+    return "NE";
   case N:
-    return "North     ";
+    return "N";
   default:
     return "Unknown Direction";
   }

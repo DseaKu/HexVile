@@ -1,10 +1,9 @@
 #include "font_handler.h"
 #include "defines.h"
+#include "raylib.h"
 
 #if defined(PLATFORM_DESKTOP)
 #define GLSL_VERSION 330
-#else // PLATFORM_ANDROID, PLATFORM_WEB
-#define GLSL_VERSION 100
 #endif
 
 FontHandler::FontHandler() {
@@ -25,14 +24,18 @@ void FontHandler::InitFonts() {
       LoadFontData(fileData, fileSize, Config::FONT_SIZE_DEFAULT, 0,
                    Config::HACK_REGULAR_GLYPH_COUNT, FONT_DEFAULT,
                    &fontHackRegular.glyphCount);
-  // Parameters > glyphs count: 95, font size: 16, glyphs padding in image: 4
-  // px, pack method: 0 (default)
   Image atlas = GenImageFontAtlas(fontHackRegular.glyphs, &fontHackRegular.recs,
-                                  Config::HACK_REGULAR_GLYPH_COUNT, 16, 4, 0);
+                                  Config::HACK_REGULAR_GLYPH_COUNT,
+                                  this->fontHackRegular.baseSize, 0, 0);
   this->fontHackRegular.texture = LoadTextureFromImage(atlas);
   UnloadImage(atlas);
 }
 
 void FontHandler::DeInitFonts() { UnloadFont(fontHackRegular); }
-Font FontHandler::getFontHackRegular() { return this->fontHackRegular; }
-int FontHandler::getFontSizeDefault() { return this->fontSizeDefault; }
+Font FontHandler::GetFontHackRegular() { return this->fontHackRegular; }
+int FontHandler::GetFontSizeDefault() { return this->fontSizeDefault; }
+void FontHandler::DrawTextHackRegular(const char *text, Vector2 pos,
+                                      Color color) {
+  DrawTextEx(this->fontHackRegular, text, pos, Config::FONT_SIZE_DEFAULT,
+             Config::FONT_SPACING_DEFAULT, color);
+}

@@ -42,6 +42,9 @@ constexpr float CAMERA_HEIGTH = (float)SCREEN_HEIGHT / CAMERA_ZOOM;
 
 // --- Font ---
 constexpr int FONT_SIZE_DEFAULT = 20;
+constexpr int FONT_SPACING_DEFAULT = 0.0f;
+constexpr Color DEBUG_OVERLAY_SECTION_FONT_COLOR = RED;
+constexpr Color DEBUG_OVERLAY_SUBSECTION_FONT_COLOR = RED;
 constexpr int DEBUG_OVERLAY_SECTION_FONT_SIZE = 20;
 constexpr int DEBUG_OVERLAY_SUBSECTION_FONT_SIZE = 15;
 constexpr int HACK_REGULAR_GLYPH_COUNT = 95;

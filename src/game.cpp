@@ -82,12 +82,12 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   int sectionPosY = Config::DEBUG_OVERLAY_SECTION_Y_POS;
   int sectionGapY = Config::DEBUG_OVERLAY_SECTION_Y_GAP;
   int sectionFontSize = Config::DEBUG_OVERLAY_SECTION_FONT_SIZE;
-  Color sectionColor = RED;
+  Color sectionColor = Config::DEBUG_OVERLAY_SECTION_FONT_COLOR;
 
   float subSectionPosX = Config::DEBUG_OVERLAY_SUBSECTION_X_POS;
   int subSectionGapY = Config::DEBUG_OVERLAY_SUBSECTION_Y_GAP;
   int subSectionFontSize = Config::DEBUG_OVERLAY_SUBSECTION_FONT_SIZE;
-  Color subSectionColor = RED;
+  Color subSectionColor = Config::DEBUG_OVERLAY_SECTION_FONT_COLOR;
 
   float currentY = sectionPosY;
 
@@ -123,17 +123,15 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   Vector2 playerScreenPos = GetWorldToScreen2D(playerPos, camera);
   DrawCircle(playerScreenPos.x, playerScreenPos.y, 3.0f, RED);
   for (const DebugData &data : debugData) {
-    DrawTextEx(fontHandler.getFontHackRegular(), data.section.c_str(),
-               (Vector2){sectionPosX, currentY},
-               fontHandler.getFontSizeDefault(), 0.0f, subSectionColor);
+    fontHandler.DrawTextHackRegular(data.section.c_str(),
+                                    {sectionPosX, currentY}, sectionColor);
     currentY += sectionGapY;
     currentY += subSectionGapY;
 
     // Draw sub-section
     for (const std::string &subSection : data.subSection) {
-      DrawTextEx(fontHandler.getFontHackRegular(), subSection.c_str(),
-                 (Vector2){subSectionPosX, currentY},
-                 fontHandler.getFontSizeDefault(), 0.0f, subSectionColor);
+      fontHandler.DrawTextHackRegular(
+          subSection.c_str(), {subSectionPosX, currentY}, subSectionColor);
       currentY += subSectionGapY;
     }
     currentY += sectionGapY;

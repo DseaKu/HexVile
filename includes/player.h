@@ -23,6 +23,7 @@ private:
 
   void Idle();
   void Walk(Vector2 direction);
+  void InitAnimations();
 
 public:
   Player();

@@ -15,4 +15,16 @@ typedef enum PlayerStateID {
   PLAYER_STATE_ID_LENGTH,
 } PlayerStateID;
 
+typedef enum DirLabels {
+  NW = 0,
+  W,
+  SW,
+  S,
+  SE,
+  E,
+  NE,
+  N,
+  DIR_LABELS_LENGTH,
+} DirLabels;
+
 #endif // !ENUMS_H

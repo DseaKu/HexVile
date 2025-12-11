@@ -10,14 +10,7 @@ Player::Player() {
   animationFrame = 0.0f;
   animationDelta = 0;
   position = Config::SCREEN_CENTER;
-
-  for (int i = 0; i < PLAYER_STATE_ID_LENGTH; i++) {
-    this->animationData[i] = {
-        .frameCount = 0, .speed = Config::PLAYER_ANIMATION_SPEED, .loop = true};
-  }
-  this->animationData[PLAYER_STATE_IDLE].frameCount = 9;
-  this->animationData[PLAYER_STATE_IDLE].speed -= 5;
-  this->animationData[PLAYER_STATE_WALK].frameCount = 8;
+  InitAnimations();
 }
 
 void Player::Update() {
@@ -112,4 +105,13 @@ void Player::Walk(Vector2 direction) {
 
   this->position.x += direction.x * delta * speed;
   this->position.y += direction.y * delta * speed;
+}
+
+void Player::InitAnimations() {
+  for (int i = 0; i < PLAYER_STATE_ID_LENGTH; i++) {
+    this->animationData[i] = {
+        .frameCount = 0, .speed = Config::PLAYER_ANIMATION_SPEED, .loop = true};
+  }
+  this->animationData[PLAYER_STATE_IDLE].frameCount = 9;
+  this->animationData[PLAYER_STATE_WALK].frameCount = 8;
 }

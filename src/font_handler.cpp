@@ -21,10 +21,6 @@ void FontHandler::InitFonts() {
       LoadFileData(Config::FONT_HACK_REGULAR_PATH, &fileSize);
   this->fontHackRegular.baseSize = this->fontSizeDefault;
   this->fontHackRegular.glyphCount = Config::HACK_REGULAR_GLYPH_COUNT;
-
-  // Loading font data from memory data
-  // Parameters > font size: 16, no glyphs array provided (0), glyphs count: 95
-  // (autogenerate chars array)
   this->fontHackRegular.glyphs =
       LoadFontData(fileData, fileSize, Config::FONT_SIZE_DEFAULT, 0,
                    Config::HACK_REGULAR_GLYPH_COUNT, FONT_DEFAULT,
@@ -32,18 +28,11 @@ void FontHandler::InitFonts() {
   // Parameters > glyphs count: 95, font size: 16, glyphs padding in image: 4
   // px, pack method: 0 (default)
   Image atlas = GenImageFontAtlas(fontHackRegular.glyphs, &fontHackRegular.recs,
-                                  95, 16, 4, 0);
+                                  Config::HACK_REGULAR_GLYPH_COUNT, 16, 4, 0);
   this->fontHackRegular.texture = LoadTextureFromImage(atlas);
   UnloadImage(atlas);
-
-  Vector2 fontPosition = {40, Config::SCREEN_HEIGHT / 2.0f - 50};
-  Vector2 textSize = {0.0f, 0.0f};
-  float fontSize = 16.0f;
-  int currentFont = 0; // 0 - fontHackRegular, 1 - fontSDF
 }
 
-void FontHandler::DeInitFonts() {
-  UnloadFont(fontHackRegular); // Default font unloading
-}
+void FontHandler::DeInitFonts() { UnloadFont(fontHackRegular); }
 Font FontHandler::getFontHackRegular() { return this->fontHackRegular; }
 int FontHandler::getFontSizeDefault() { return this->fontSizeDefault; }

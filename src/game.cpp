@@ -125,7 +125,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   for (const DebugData &data : debugData) {
     DrawTextEx(fontHandler.getFontHackRegular(), data.section.c_str(),
                (Vector2){sectionPosX, currentY},
-               fontHandler.getFontSizeDefault(), 2.0f, subSectionColor);
+               fontHandler.getFontSizeDefault(), 0.0f, subSectionColor);
     currentY += sectionGapY;
     currentY += subSectionGapY;
 
@@ -133,7 +133,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
     for (const std::string &subSection : data.subSection) {
       DrawTextEx(fontHandler.getFontHackRegular(), subSection.c_str(),
                  (Vector2){subSectionPosX, currentY},
-                 fontHandler.getFontSizeDefault(), 2.0f, subSectionColor);
+                 fontHandler.getFontSizeDefault(), 0.0f, subSectionColor);
       currentY += subSectionGapY;
     }
     currentY += sectionGapY;

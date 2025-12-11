@@ -2,6 +2,7 @@
 #include "defines.h"
 #include "enums.h"
 #include "raylib.h"
+#include <algorithm>
 #include <stdbool.h>
 #include <vector>
 
@@ -9,9 +10,9 @@ const std::vector<HexCoord> HexGrid::DIRECTIONS = {
     HexCoord(1, 0),  HexCoord(0, 1),  HexCoord(-1, 1),
     HexCoord(-1, 0), HexCoord(0, -1), HexCoord(1, -1)};
 
-// =======================
-//      HEX IMPLEMENTATION
-// =======================
+const std::vector<TileID> HexGrid::WALKABLE_TILES = {TILE_GRASS};
+
+// --- Hex ---
 
 HexCoord::HexCoord() : q(0), r(0) {}
 HexCoord::HexCoord(int q, int r) : q(q), r(r) {}
@@ -38,9 +39,7 @@ bool HexCoord::operator<(const HexCoord &other) const {
   return r < other.r;
 }
 
-// ===========================
-//    HEX GRID IMPLEMENTATION
-// ===========================
+// --- Hex Grid ---
 HexGrid::HexGrid() {};
 
 void HexGrid::InitGrid(float radius) {
@@ -55,16 +54,20 @@ void HexGrid::InitGrid(float radius) {
     int qMin = std::max(-this->mapRadius, -r - this->mapRadius);
     int qMax = std::min(this->mapRadius, -r + this->mapRadius);
     for (int q = qMin; q <= qMax; q++) {
-      HexTiles[HexCoord(q, r)] = (MapTile){.coord = HexCoord(q, r),
-                                           .type = TILE_GRASS,
-                                           .isDirty = false,
-                                           .isVisble = false};
+      HexTiles[HexCoord(q, r)] = (MapTile){
+          .coord = HexCoord(q, r),
+          .type = TILE_GRASS,
+          .isDirty = false,
+          .isVisble = false,
+      };
     }
   }
 }
-
-void HexGrid::GetTextureHandler(TextureHandler *textureHandler) {
-
+bool HexGrid::IsWalkable(HexCoord h) const {
+  MapTile tile = this->HexTiles.find(h);
+  return false;
+}
+void HexGrid::SetTextureHandler(TextureHandler *textureHandler) {
   this->textureHandler = textureHandler;
 }
 

@@ -34,7 +34,7 @@ public:
   void Draw();
   void SetHexGrid(HexGrid *grid);
   Vector2 GetPosition();
-  void GetTextureHandler(TextureHandler *textureHandler);
+  void SetTextureHandler(TextureHandler *textureHandler);
   int GetAnimationFrame();
   HexCoord GetTile();
   const char *PlayerStateToString();

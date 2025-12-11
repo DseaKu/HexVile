@@ -15,10 +15,10 @@ Game::Game() {
   this->hackFontRegular = LoadFileData(Conf::FONT_HACK_REGULAR_PATH, &fileSize);
 
   this->hexGrid.InitGrid(12.0f);
-  this->hexGrid.GetTextureHandler(&textureHandler);
+  this->hexGrid.SetTextureHandler(&textureHandler);
 
-  this->player.GetTextureHandler(&textureHandler);
   this->player.SetHexGrid(&hexGrid);
+  this->player.SetTextureHandler(&textureHandler);
 
   this->camera.target = Conf::SCREEN_CENTER;
   this->camera.offset = Conf::SCREEN_CENTER;

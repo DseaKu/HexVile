@@ -5,7 +5,6 @@
 #include "raylib.h"
 #include "texture_handler.h"
 #include <map>
-#include <string>
 #include <vector>
 
 // --- STRUCTS & ENUMS ---
@@ -54,6 +53,7 @@ private:
 
   // Lookup Tables
   static const std::vector<HexCoord> DIRECTIONS;
+  static const std::vector<TileID> WALKABLE_TILES;
   // static const std::vector<std::string> DIR_LABELS;
 
   // Internal Math Helper
@@ -63,7 +63,7 @@ public:
   HexGrid();
 
   void InitGrid(float radius);
-  void GetTextureHandler(TextureHandler *textureHandler);
+  void SetTextureHandler(TextureHandler *textureHandler);
 
   // Coordinate Conversions
   Vector2 HexCoordToPoint(HexCoord h) const;
@@ -78,6 +78,7 @@ public:
 
   // Rendering
   void Draw(const Camera2D &camera);
+  bool IsWalkable(HexCoord h) const;
 };
 
 #endif // HEX_TILE_GRID_H

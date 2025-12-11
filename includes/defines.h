@@ -2,6 +2,7 @@
 #define DEFINES_H
 #include "raylib.h"
 #include <cstdint>
+#include <vector>
 
 namespace Conf {
 

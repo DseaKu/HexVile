@@ -13,7 +13,7 @@ public:
   int LoadAssets(const char *);
   void UnloadAssets();
   void Draw(Rectangle assetsRect, Rectangle destRect, Vector2 origin,
-            float rotation, Color color, bool flipH);
+            float rotation, Color color);
 };
 
 #endif // !TEXTURE_HANDLER_H

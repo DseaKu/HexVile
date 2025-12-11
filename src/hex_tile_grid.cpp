@@ -165,7 +165,7 @@ void HexGrid::Draw(const Camera2D &camera) {
                              Config::ASSEST_RESOLUTION, Config::TILE_SIZE};
       Vector2 origin = {0.0f, 0.0f};
 
-      textureHandler->Draw(tile_rect, dest_rect, origin, 0.0f, WHITE, false);
+      textureHandler->Draw(tile_rect, dest_rect, origin, 0.0f, WHITE);
     }
   }
 }

@@ -107,12 +107,14 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   Vector2 playerPos = player.GetPosition();
   HexCoord playerTile = hexGrid.PointToHexCoord(playerPos);
   const char *playerState = player.PlayerStateToString();
+  const char *playerDir = player.PlayerDirToString();
   debugData.push_back(
       {"Player",
        {
            TextFormat("X,Y: %.1f,%.1f", playerPos.x, playerPos.y),
            TextFormat("Tile Q,R: %i,%i", playerTile.q, playerTile.r),
            TextFormat("Player State = %s", playerState),
+           TextFormat("Player Face Dir = %s", playerDir),
        }});
 
   // Draw section

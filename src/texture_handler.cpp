@@ -7,7 +7,6 @@ TextureHandler::TextureHandler() { textureAtlas = {0, 0, 0, 0, 0}; }
 
 int TextureHandler::LoadAssets(const char *pathToAssest) {
   this->textureAtlas = LoadTexture(pathToAssest);
-
   // Catch error
   if (this->textureAtlas.id == 0) {
     std::cout << "Error loading texture atlas" << std::endl;
@@ -17,17 +16,11 @@ int TextureHandler::LoadAssets(const char *pathToAssest) {
   this->height = this->textureAtlas.height / Config::ASSEST_RESOLUTION;
   return 0;
 }
-void TextureHandler::UnloadAssets() { UnloadTexture(this->textureAtlas); }
-void TextureHandler::Draw(Rectangle assetsRect, Rectangle destRect,
-                          Vector2 origin, float rotation, Color color,
-                          bool flipH) {
 
-  if (flipH) {
-    assetsRect.width = -assetsRect.width;
-    DrawTexturePro(this->textureAtlas, assetsRect, destRect, origin, rotation,
-                   color);
-  } else {
-    DrawTexturePro(this->textureAtlas, assetsRect, destRect, origin, rotation,
-                   color);
-  }
+void TextureHandler::UnloadAssets() { UnloadTexture(this->textureAtlas); }
+
+void TextureHandler::Draw(Rectangle assetsRect, Rectangle destRect,
+                          Vector2 origin, float rotation, Color color) {
+  DrawTexturePro(this->textureAtlas, assetsRect, destRect, origin, rotation,
+                 color);
 }

@@ -69,3 +69,5 @@ void FontHandler::DeInitFonts() {
 
   UnloadShader(shader); // Unload SDF shader
 }
+Font FontHandler::getFontDefault() { return this->fontDefault; }
+int FontHandler::getFontSizeDefault() { return this->fontSizeDefault; }

@@ -13,6 +13,8 @@ public:
   FontHandler();
   void InitFonts();
   void DeInitFonts();
+  Font getFontDefault();
+  int getFontSizeDefault();
 };
 
 #endif // !FONT_HANDLER_H

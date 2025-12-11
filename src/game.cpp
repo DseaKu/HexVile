@@ -59,11 +59,13 @@ void Game::GameLoop() {
     BeginMode2D(camera);
     ClearBackground(WHITE);
 
-    // --- Test Font ---
-
     // --- Camera View ---
     hexGrid.Draw(camera);
     player.Draw();
+
+    // --- Test Font ---
+
+    // --- Camera View ---
 
     EndMode2D();
     DrawDebugOverlay(Config::DEBUG_FLAG);
@@ -75,6 +77,10 @@ void Game::GameLoop() {
 void Game::DrawDebugOverlay(bool is_enabled) {
   if (!is_enabled)
     return;
+
+  DrawTextEx(fontHandler.getFontDefault(), "This is a test j i Player",
+             (Vector2){300, 300}, fontHandler.getFontSizeDefault(), 2.0f,
+             BLACK);
 
   int sectionPosX = Config::DEBUG_OVERLAY_SECTION_X_POS;
   int sectionPosY = Config::DEBUG_OVERLAY_SECTION_Y_POS;

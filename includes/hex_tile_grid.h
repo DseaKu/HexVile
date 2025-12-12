@@ -4,26 +4,7 @@
 #include "enums.h"
 #include "raylib.h"
 #include "texture_handler.h"
-#include <map>
 #include <vector>
-
-/* SOURCE
- * Grid parts and relationships: https://www.redblobgames.com/grids/parts/
- * */
-
-struct NewTile {
-  TileID type;
-
-  // Logic Methods
-  NewTile Add(const NewTile &other) const;
-  bool Equals(const NewTile &other) const;
-
-  // Operators
-  NewTile operator+(const NewTile &other) const;
-  bool operator==(const NewTile &other) const;
-  bool operator!=(const NewTile &other) const;
-  bool operator<(const NewTile &other) const;
-};
 
 // --- HEXAGON ---
 class HexCoord {
@@ -51,42 +32,36 @@ struct FractionalHex {
   double q, r, s;
 };
 
-// --- MapTile ---
 struct MapTile {
-  HexCoord coord;
   TileID type;
   bool isDirty;
   bool isVisble;
 };
 
-// --- HEX TILE GRID ---
-/*
-//    |q  ,r-1|q+1,r-1|
-// ---------------------
-//| q-1,r |q  ,r  |q+1, r|
-// -----------------------
-//    |q-1,r+1|q ,r+1 |
-*/
+/* Grid parts and relationships: https://www.redblobgames.com/grids/parts/
+ *
+ * --- HEX TILE GRID ---
+ *   |q  ,r-1|q+1,r-1|
+ * ---------------------
+|* q-1,r |q  ,r  |q+1, r|
+ * -----------------------
+ *   |q-1,r+1|q ,r+1 |
+ */
 class HexGrid {
 private:
-  std::map<HexCoord, MapTile> HexTiles;
-  std::vector<std::vector<NewTile>> HexNewTiles;
+  std::vector<std::vector<MapTile>> tiles;
   float tileGapX;
   float tileGapY;
   int mapRadius;
-  int qMax;
-  int rMax;
   Vector2 origin;
   TextureHandler *textureHandler;
 
   // Lookup Tables
   static const std::vector<HexCoord> DIRECTIONS;
   static const std::vector<TileID> WALKABLE_TILES;
-  // static const std::vector<std::string> DIR_LABELS;
 
   // Internal Math Helper
   HexCoord HexRound(FractionalHex h) const;
-  void InitNewGrid();
 
 public:
   HexGrid();
@@ -96,10 +71,10 @@ public:
 
   // Coordinate Conversions
   Vector2 HexCoordToPoint(HexCoord h) const;
-  Vector2 HexCoordToPoint(int r, int q);
   HexCoord PointToHexCoord(Vector2 point) const;
 
   // Logic
+  bool IsInBounds(HexCoord h) const;
   HexCoord GetNeighbor(HexCoord h, int directionIndex) const;
   bool HasTile(HexCoord h) const;
   void SetTile(HexCoord h, TileID ID);

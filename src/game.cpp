@@ -14,7 +14,7 @@ Game::Game() {
   int fileSize = 0;
   this->hackFontRegular = LoadFileData(Conf::FONT_HACK_REGULAR_PATH, &fileSize);
 
-  this->hexGrid.InitGrid(12.0f);
+  this->hexGrid.InitGrid(Conf::MAP_SIZE);
   this->hexGrid.SetTextureHandler(&textureHandler);
 
   this->player.SetHexGrid(&hexGrid);

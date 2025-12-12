@@ -2,8 +2,6 @@
 #include "defines.h"
 #include "enums.h"
 #include "raylib.h"
-#include <algorithm>
-#include <stdbool.h>
 #include <vector>
 
 const std::vector<HexCoord> HexGrid::DIRECTIONS = {
@@ -13,7 +11,6 @@ const std::vector<HexCoord> HexGrid::DIRECTIONS = {
 const std::vector<TileID> HexGrid::WALKABLE_TILES = {TILE_GRASS};
 
 // --- Hex ---
-
 HexCoord::HexCoord() : q(0), r(0) {}
 HexCoord::HexCoord(int q, int r) : q(q), r(r) {}
 
@@ -40,57 +37,73 @@ bool HexCoord::operator<(const HexCoord &other) const {
 }
 
 // --- Hex Grid ---
-HexGrid::HexGrid() {
-
-  this->qMax = Conf::MAP_SIZE;
-  this->rMax = Conf::MAP_SIZE;
-  this->InitNewGrid();
-};
+HexGrid::HexGrid()
+    : tileGapX(0), tileGapY(0), mapRadius(0), textureHandler(nullptr) {}
 
 void HexGrid::InitGrid(float radius) {
-
-  mapRadius = Conf::MAP_SIZE;
+  mapRadius = static_cast<int>(radius);
   origin = Conf::SCREEN_CENTER;
   tileGapX = Conf::TILE_GAP_X;
   tileGapY = Conf::TILE_GAP_Y;
 
-  HexTiles.clear();
-  for (int r = -this->mapRadius; r <= this->mapRadius; r++) {
-    int qMin = std::max(-this->mapRadius, -r - this->mapRadius);
-    int qMax = std::min(this->mapRadius, -r + this->mapRadius);
-    for (int q = qMin; q <= qMax; q++) {
-      HexTiles[HexCoord(q, r)] = (MapTile){
-          .coord = HexCoord(q, r),
-          .type = TILE_GRASS,
-          .isDirty = false,
-          .isVisble = false,
-      };
+  int gridSize = mapRadius * 2 + 1;
+  tiles.assign(gridSize, std::vector<MapTile>(gridSize));
+
+  for (int r = -mapRadius; r <= mapRadius; r++) {
+    for (int q = -mapRadius; q <= mapRadius; q++) {
+      HexCoord h(q, r);
+      int gridR = r + mapRadius;
+      int gridQ = q + mapRadius;
+
+      if (abs(q) + abs(r) + abs(-q - r) <= mapRadius * 2) {
+        tiles[gridR][gridQ] =
+            (MapTile){.type = TILE_GRASS, .isDirty = false, .isVisble = true};
+      } else {
+        tiles[gridR][gridQ] =
+            (MapTile){.type = TILE_NULL, .isDirty = false, .isVisble = false};
+      }
     }
   }
 }
 
-void HexGrid::InitNewGrid() {
-  NewTile defaultTile = {.type = TILE_GRASS};
-  this->HexNewTiles.assign(this->rMax,
-                           std::vector<NewTile>(this->qMax, defaultTile));
-  for (int r = 0; r < rMax; r++) {
-    for (int q = 0; q < qMax; q++) {
-      HexNewTiles[r][q] = {.type = TILE_GRASS};
-    }
-  }
-}
-bool HexGrid::IsWalkable(HexCoord h) const {
-  // MapTile tile = this->HexTiles.find(h);
-  return false;
-}
 void HexGrid::SetTextureHandler(TextureHandler *textureHandler) {
   this->textureHandler = textureHandler;
 }
 
+bool HexGrid::IsInBounds(HexCoord h) const {
+  int s = -h.q - h.r;
+  return abs(h.q) <= mapRadius && abs(h.r) <= mapRadius && abs(s) <= mapRadius;
+}
+
+bool HexGrid::HasTile(HexCoord h) const {
+  if (!IsInBounds(h)) {
+    return false;
+  }
+  int gridR = h.r + mapRadius;
+  int gridQ = h.q + mapRadius;
+  return tiles[gridR][gridQ].type != TILE_NULL;
+}
+
+bool HexGrid::IsWalkable(HexCoord h) const {
+  if (!HasTile(h)) {
+    return false;
+  }
+  int gridR = h.r + mapRadius;
+  int gridQ = h.q + mapRadius;
+  TileID type = tiles[gridR][gridQ].type;
+
+  for (const auto &walkableTile : WALKABLE_TILES) {
+    if (type == walkableTile) {
+      return true;
+    }
+  }
+  return false;
+}
+
 HexCoord HexGrid::HexRound(FractionalHex h) const {
-  int q = (int)round(h.q);
-  int r = (int)round(h.r);
-  int s = (int)round(h.s);
+  int q = static_cast<int>(round(h.q));
+  int r = static_cast<int>(round(h.r));
+  int s = static_cast<int>(round(h.s));
   double q_diff = std::abs(q - h.q);
   double r_diff = std::abs(r - h.r);
   double s_diff = std::abs(s - h.s);
@@ -108,11 +121,6 @@ Vector2 HexGrid::HexCoordToPoint(HexCoord h) const {
   float y = tileGapY * (3.0f / 2.0f * h.r);
   return {x + origin.x, y + origin.y};
 }
-Vector2 HexGrid::HexCoordToPoint(int r, int q) {
-  float x = tileGapX * (sqrt(3.0f) * q + sqrt(3.0f) / 2.0f * r);
-  float y = tileGapY * (3.0f / 2.0f * r);
-  return {x + origin.x, y + origin.y};
-}
 
 HexCoord HexGrid::PointToHexCoord(Vector2 point) const {
   float pt_x = (point.x - origin.x) / tileGapX;
@@ -126,32 +134,44 @@ HexCoord HexGrid::GetNeighbor(HexCoord h, int directionIndex) const {
   return h + DIRECTIONS[directionIndex];
 }
 
-bool HexGrid::HasTile(HexCoord h) const {
-  return HexTiles.find(h) != HexTiles.end();
+void HexGrid::SetTile(HexCoord h, TileID ID) {
+  if (IsInBounds(h)) {
+    int gridR = h.r + mapRadius;
+    int gridQ = h.q + mapRadius;
+    tiles[gridR][gridQ].type = ID;
+  }
 }
-
-void HexGrid::SetTile(HexCoord h, TileID ID) { this->HexTiles[h].type = ID; }
 
 void HexGrid::ToggleTile(HexCoord h) {
   if (HasTile(h)) {
-    // HexTiles[h].type = (HexTiles[h].type == WALL) ? EMPTY : WALL;
-    HexTiles[h].type =
-        (HexTiles[h].type == TILE_GRASS) ? TILE_GRASS : TILE_WATER;
+    int gridR = h.r + mapRadius;
+    int gridQ = h.q + mapRadius;
+    if (tiles[gridR][gridQ].type == TILE_GRASS) {
+      tiles[gridR][gridQ].type = TILE_WATER;
+    } else if (tiles[gridR][gridQ].type == TILE_WATER) {
+      tiles[gridR][gridQ].type = TILE_GRASS;
+    }
   }
 }
 
 bool HexGrid::CheckSurrounded(HexCoord target) const {
+  if (!IsInBounds(target)) {
+    return false;
+  }
+
   int neighborCount = 0;
   int wallCount = 0;
 
   for (int i = 0; i < 6; i++) {
     HexCoord n = GetNeighbor(target, i);
-    auto it = HexTiles.find(n);
-
-    if (it != HexTiles.end()) {
+    if (IsInBounds(n)) {
       neighborCount++;
-      if (it->second.type == TILE_NULL)
+      int gridR = n.r + mapRadius;
+      int gridQ = n.q + mapRadius;
+      if (tiles[gridR][gridQ].type ==
+          TILE_NULL) { // Assuming TILE_NULL is a "wall"
         wallCount++;
+      }
     }
   }
   return (neighborCount > 0 && wallCount == neighborCount);
@@ -162,10 +182,16 @@ void HexGrid::Draw(const Camera2D &camera) {
   Rectangle cameraView = {topLeft.x, topLeft.y, Conf::CAMERA_WIDTH,
                           Conf::CAMERA_HEIGTH};
 
-  for (int r = 0; r < rMax; r++) {
-    for (int q = 0; q < qMax; q++) {
-      NewTile t = HexNewTiles[r][q];
-      Vector2 pos = HexCoordToPoint(r, q);
+  int gridSize = mapRadius * 2 + 1;
+  for (int r_idx = 0; r_idx < gridSize; r_idx++) {
+    for (int q_idx = 0; q_idx < gridSize; q_idx++) {
+      MapTile t = tiles[r_idx][q_idx];
+      if (t.type == TILE_NULL) {
+        continue;
+      }
+
+      HexCoord h(q_idx - mapRadius, r_idx - mapRadius);
+      Vector2 pos = HexCoordToPoint(h);
       pos.x -= Conf::TILE_SIZE_HALF;
       pos.y -= Conf::TILE_SIZE_HALF;
       Rectangle dest_rect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,

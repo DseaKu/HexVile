@@ -7,7 +7,7 @@
 namespace Conf {
 
 // --- Game ---
-constexpr int MAP_SIZE = 64;
+constexpr int MAP_SIZE = 264;
 constexpr int FPS_MAX = 1000;
 constexpr const char *WINDOW_TITLE = "HexVile";
 constexpr const char *TEXTURE_ATLAS_PATH = "assets/images/texture_atlas.png";

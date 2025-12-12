@@ -2,12 +2,11 @@
 #define DEFINES_H
 #include "raylib.h"
 #include <cstdint>
-#include <vector>
 
 namespace Conf {
 
 // --- Game ---
-constexpr int MAP_SIZE = 264;
+constexpr int MAP_SIZE = 200;
 constexpr int FPS_MAX = 1000;
 constexpr const char *WINDOW_TITLE = "HexVile";
 constexpr const char *TEXTURE_ATLAS_PATH = "assets/images/texture_atlas.png";
@@ -66,7 +65,7 @@ constexpr int DEBUG_OVERLAY_SUBSECTION_Y_POS =
     DEBUG_OVERLAY_SECTION_Y_POS + DEBUG_OVERLAY_SUBSECTION_Y_GAP;
 
 // --- Player ---
-constexpr float PLAYER_SPEED = 350.0f;
+constexpr float PLAYER_SPEED = 150.0f;
 constexpr int PLAYER_Y_OFFSET = -13;
 } // namespace Conf
 

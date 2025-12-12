@@ -151,8 +151,11 @@ void Player::Walk(Vector2 dir) {
   Vector2 nextPos = {this->position.x + dir.x * delta * speed,
                      this->position.y + dir.y * delta * speed};
 
+  float offsetX = dir.x * Conf::OFFSET_TO_OBSTACLE;
+  float offsetY = dir.y * Conf::OFFSET_TO_OBSTACLE;
+  Vector2 a = {nextPos.x + offsetX, nextPos.y + offsetY};
   // Check if destination is walkable
-  if (this->hexGrid->IsWalkable(this->hexGrid->PointToHexCoord(nextPos))) {
+  if (this->hexGrid->IsWalkable(this->hexGrid->PointToHexCoord(a))) {
     this->position = nextPos;
   } else {
     Idle();

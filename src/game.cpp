@@ -20,6 +20,9 @@ Game::Game() {
   player.SetHexGrid(&hexGrid);
   player.SetTextureHandler(&textureHandler);
 
+  uiHandler.Init();
+  uiHandler.SetTextureHandler(&textureHandler);
+
   camera.target = Conf::SCREEN_CENTER;
   camera.offset = Conf::SCREEN_CENTER;
   camera.zoom = Conf::CAMERA_ZOOM;
@@ -53,6 +56,28 @@ void Game::GameLoop() {
     }
     player.Update();
     camera.target = player.GetPosition();
+
+    // Toolbar selection
+    if (IsKeyPressed(KEY_ONE))
+      uiHandler.SetSelectedItem(0);
+    if (IsKeyPressed(KEY_TWO))
+      uiHandler.SetSelectedItem(1);
+    if (IsKeyPressed(KEY_THREE))
+      uiHandler.SetSelectedItem(2);
+    if (IsKeyPressed(KEY_FOUR))
+      uiHandler.SetSelectedItem(3);
+    if (IsKeyPressed(KEY_FIVE))
+      uiHandler.SetSelectedItem(4);
+    if (IsKeyPressed(KEY_SIX))
+      uiHandler.SetSelectedItem(5);
+    if (IsKeyPressed(KEY_SEVEN))
+      uiHandler.SetSelectedItem(6);
+    if (IsKeyPressed(KEY_EIGHT))
+      uiHandler.SetSelectedItem(7);
+    if (IsKeyPressed(KEY_NINE))
+      uiHandler.SetSelectedItem(8);
+    if (IsKeyPressed(KEY_ZERO))
+      uiHandler.SetSelectedItem(9);
 
     // --- Draw ---
     BeginDrawing();

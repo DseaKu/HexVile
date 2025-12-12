@@ -73,8 +73,8 @@ void HexGrid::InitNewGrid() {
   NewTile defaultTile = {.type = TILE_GRASS};
   this->HexNewTiles.assign(this->rMax,
                            std::vector<NewTile>(this->qMax, defaultTile));
-  for (int r = 0; r < Conf::MAP_SIZE; r++) {
-    for (int q = 0; q < Conf::MAP_SIZE; q++) {
+  for (int r = 0; r < rMax; r++) {
+    for (int q = 0; q < qMax; q++) {
       HexNewTiles[r][q] = {.type = TILE_GRASS};
     }
   }
@@ -106,6 +106,11 @@ HexCoord HexGrid::HexRound(FractionalHex h) const {
 Vector2 HexGrid::HexCoordToPoint(HexCoord h) const {
   float x = tileGapX * (sqrt(3.0f) * h.q + sqrt(3.0f) / 2.0f * h.r);
   float y = tileGapY * (3.0f / 2.0f * h.r);
+  return {x + origin.x, y + origin.y};
+}
+Vector2 HexGrid::HexCoordToPoint(int r, int q) {
+  float x = tileGapX * (sqrt(3.0f) * q + sqrt(3.0f) / 2.0f * r);
+  float y = tileGapY * (3.0f / 2.0f * r);
   return {x + origin.x, y + origin.y};
 }
 
@@ -156,23 +161,44 @@ void HexGrid::Draw(const Camera2D &camera) {
   Vector2 topLeft = GetScreenToWorld2D(Vector2{0, 0}, camera);
   Rectangle cameraView = {topLeft.x, topLeft.y, Conf::CAMERA_WIDTH,
                           Conf::CAMERA_HEIGTH};
+  //
+  // for (auto const &[key, tile] : HexTiles) {
+  //
+  //   Vector2 pos = HexCoordToPoint(tile.coord);
+  //
+  //   pos = (Vector2){pos.x - Conf::TILE_SIZE_HALF, pos.y -
+  //   Conf::TILE_SIZE_HALF};
+  //
+  //   Rectangle dest_rect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
+  //                          Conf::ASSEST_RESOLUTION};
+  //
+  //   if (CheckCollisionRecs(cameraView, dest_rect)) {
+  //     Rectangle tile_rect = {Conf::TEXTURE_ATLAS_TILES_X_OFFSET,
+  //                            (float)Conf::ASSEST_RESOLUTION * tile.type,
+  //                            Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
+  //     Vector2 origin = {0.0f, 0.0f};
+  //
+  //     textureHandler->Draw(tile_rect, dest_rect, origin, 0.0f, WHITE);
+  //   }
+  // }
+  //
+  for (int r = 0; r < rMax; r++) {
+    for (int q = 0; q < qMax; q++) {
+      NewTile t = HexNewTiles[r][q];
+      Vector2 pos = HexCoordToPoint(r, q);
+      pos.x -= Conf::TILE_SIZE_HALF;
+      pos.y -= Conf::TILE_SIZE_HALF;
+      Rectangle dest_rect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
+                             Conf::ASSEST_RESOLUTION};
 
-  for (auto const &[key, tile] : HexTiles) {
+      if (CheckCollisionRecs(cameraView, dest_rect)) {
+        Rectangle tile_rect = {Conf::TEXTURE_ATLAS_TILES_X_OFFSET,
+                               (float)Conf::ASSEST_RESOLUTION * t.type,
+                               Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
+        Vector2 origin = {0.0f, 0.0f};
 
-    Vector2 pos = HexCoordToPoint(tile.coord);
-
-    pos = (Vector2){pos.x - Conf::TILE_SIZE_HALF, pos.y - Conf::TILE_SIZE_HALF};
-
-    Rectangle dest_rect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
-                           Conf::ASSEST_RESOLUTION};
-
-    if (CheckCollisionRecs(cameraView, dest_rect)) {
-      Rectangle tile_rect = {Conf::TEXTURE_ATLAS_TILES_X_OFFSET,
-                             (float)Conf::ASSEST_RESOLUTION * tile.type,
-                             Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
-      Vector2 origin = {0.0f, 0.0f};
-
-      textureHandler->Draw(tile_rect, dest_rect, origin, 0.0f, WHITE);
+        textureHandler->Draw(tile_rect, dest_rect, origin, 0.0f, WHITE);
+      }
     }
   }
 }

@@ -96,6 +96,7 @@ public:
 
   // Coordinate Conversions
   Vector2 HexCoordToPoint(HexCoord h) const;
+  Vector2 HexCoordToPoint(int r, int q);
   HexCoord PointToHexCoord(Vector2 point) const;
 
   // Logic

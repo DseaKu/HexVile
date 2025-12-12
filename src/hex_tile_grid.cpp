@@ -37,11 +37,15 @@ bool HexCoord::operator<(const HexCoord &other) const {
 // --- Hex Grid ---
 HexGrid::HexGrid() {
 
-  this->tileGapX = Conf::TILE_GAP_X;
-  this->tileGapY = Conf::TILE_GAP_Y;
-  this->origin = Conf::SCREEN_CENTER;
-  this->mapRadius = Conf::MAP_SIZE;
+  tileGapX = Conf::TILE_GAP_X;
+  tileGapY = Conf::TILE_GAP_Y;
+  origin = Conf::SCREEN_CENTER;
+  mapRadius = Conf::MAP_SIZE;
+  tilesInUse = 0;
 }
+
+int HexGrid::getTilesInUse() { return tilesInUse; }
+int HexGrid::getMapRadius() { return mapRadius; }
 
 void HexGrid::InitGrid(float radius) {
 
@@ -57,6 +61,7 @@ void HexGrid::InitGrid(float radius) {
       if (abs(q) + abs(r) + abs(-q - r) <= mapRadius * 2) {
         tiles[gridR][gridQ] =
             (MapTile){.type = TILE_GRASS, .isDirty = false, .isVisble = true};
+        this->tilesInUse++;
       } else {
         tiles[gridR][gridQ] =
             (MapTile){.type = TILE_NULL, .isDirty = false, .isVisble = false};
@@ -69,12 +74,12 @@ void HexGrid::SetTextureHandler(TextureHandler *textureHandler) {
   this->textureHandler = textureHandler;
 }
 
-bool HexGrid::IsInBounds(HexCoord h) const {
+bool HexGrid::IsInBounds(HexCoord h) {
   int s = -h.q - h.r;
   return abs(h.q) <= mapRadius && abs(h.r) <= mapRadius && abs(s) <= mapRadius;
 }
 
-bool HexGrid::HasTile(HexCoord h) const {
+bool HexGrid::HasTile(HexCoord h) {
   if (!IsInBounds(h)) {
     return false;
   }
@@ -83,15 +88,12 @@ bool HexGrid::HasTile(HexCoord h) const {
   return tiles[gridR][gridQ].type != TILE_NULL;
 }
 
-bool HexGrid::IsWalkable(HexCoord h) const {
-
+bool HexGrid::IsWalkable(HexCoord h) {
   if (!HasTile(h)) {
     return false;
   }
-
   MapTile tile = HexCoordToTile(h);
   TileID type = tile.type;
-
   for (int i = 0; i < Conf::WALKABLE_TILES.size(); i++) {
     if (type == Conf::WALKABLE_TILES[i]) {
       return true;
@@ -100,28 +102,29 @@ bool HexGrid::IsWalkable(HexCoord h) const {
   return false;
 }
 
-HexCoord HexGrid::HexRound(FractionalHex h) const {
-  int q = static_cast<int>(round(h.q));
-  int r = static_cast<int>(round(h.r));
-  int s = static_cast<int>(round(h.s));
+// --- Conversions ---
+HexCoord HexGrid::HexRound(FractionalHex h) {
+  int q = round(h.q);
+  int r = round(h.r);
+  int s = round(h.s);
   double q_diff = std::abs(q - h.q);
   double r_diff = std::abs(r - h.r);
   double s_diff = std::abs(s - h.s);
-
   if (q_diff > r_diff && q_diff > s_diff)
     q = -r - s;
   else if (r_diff > s_diff)
     r = -q - s;
-
   return HexCoord(q, r);
 }
 
-Vector2 HexGrid::HexCoordToPoint(HexCoord h) const {
+TileID HexGrid::PointToType(Vector2 point) { return PointToTile(point).type; }
+
+Vector2 HexGrid::HexCoordToPoint(HexCoord h) {
   float x = tileGapX * (sqrt(3.0f) * h.q + sqrt(3.0f) / 2.0f * h.r);
   float y = tileGapY * (3.0f / 2.0f * h.r);
   return {x + origin.x, y + origin.y};
 }
-MapTile HexGrid::HexCoordToTile(HexCoord h) const {
+MapTile HexGrid::HexCoordToTile(HexCoord h) {
   if (!IsInBounds(h)) {
     return (MapTile){.type = TILE_NULL, .isDirty = false, .isVisble = false};
   }
@@ -130,7 +133,7 @@ MapTile HexGrid::HexCoordToTile(HexCoord h) const {
   return tiles[gridR][gridQ];
 }
 
-HexCoord HexGrid::PointToHexCoord(Vector2 point) const {
+HexCoord HexGrid::PointToHexCoord(Vector2 point) {
   float pt_x = (point.x - origin.x) / tileGapX;
   float pt_y = (point.y - origin.y) / tileGapY;
   double q = (sqrt(3.0) / 3.0 * pt_x - 1.0 / 3.0 * pt_y);
@@ -138,12 +141,27 @@ HexCoord HexGrid::PointToHexCoord(Vector2 point) const {
   return HexRound({q, r, -q - r});
 }
 
-MapTile HexGrid::PointToTile(Vector2 point) const {
+MapTile HexGrid::PointToTile(Vector2 point) {
   HexCoord h = PointToHexCoord(point);
   return HexCoordToTile(h);
 }
+const char *HexGrid::TileToString(TileID type) {
+  switch (type) {
+  case TILE_NULL:
+    return "NULL";
+  case TILE_VOID:
+    return "VOID";
+  case TILE_GRASS:
+    return "Grass";
+  case TILE_WATER:
+    return "Water";
+  default:
+    return "NULL";
+  }
+}
 
-HexCoord HexGrid::GetNeighbor(HexCoord h, int directionIndex) const {
+// --- Set/Get ---
+HexCoord HexGrid::GetNeighbor(HexCoord h, int directionIndex) {
   return h + DIRECTIONS[directionIndex];
 }
 
@@ -167,7 +185,7 @@ void HexGrid::ToggleTile(HexCoord h) {
   }
 }
 
-bool HexGrid::CheckSurrounded(HexCoord target) const {
+bool HexGrid::CheckSurrounded(HexCoord target) {
   if (!IsInBounds(target)) {
     return false;
   }

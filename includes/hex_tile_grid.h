@@ -54,6 +54,7 @@ private:
   float tileGapX;
   float tileGapY;
   int mapRadius;
+  int tilesInUse;
   Vector2 origin;
   TextureHandler *textureHandler;
 
@@ -62,7 +63,7 @@ private:
   static const std::vector<TileID> WALKABLE_TILES;
 
   // Internal Math Helper
-  HexCoord HexRound(FractionalHex h) const;
+  HexCoord HexRound(FractionalHex h);
 
 public:
   HexGrid();
@@ -71,22 +72,28 @@ public:
   void SetTextureHandler(TextureHandler *textureHandler);
 
   // Coordinate Conversions
-  Vector2 HexCoordToPoint(HexCoord h) const;
-  MapTile HexCoordToTile(HexCoord h) const;
-  HexCoord PointToHexCoord(Vector2 point) const;
-  MapTile PointToTile(Vector2 point) const;
+  Vector2 HexCoordToPoint(HexCoord h);
+  MapTile HexCoordToTile(HexCoord h);
+  HexCoord PointToHexCoord(Vector2 point);
+  MapTile PointToTile(Vector2 point);
+  TileID PointToType(Vector2 point);
+  const char *TileToString(TileID type);
 
   // Logic
-  bool IsInBounds(HexCoord h) const;
-  HexCoord GetNeighbor(HexCoord h, int directionIndex) const;
-  bool HasTile(HexCoord h) const;
+  bool IsInBounds(HexCoord h);
+  HexCoord GetNeighbor(HexCoord h, int directionIndex);
+  bool HasTile(HexCoord h);
   void SetTile(HexCoord h, TileID ID);
   void ToggleTile(HexCoord h);
-  bool CheckSurrounded(HexCoord target) const;
+  bool CheckSurrounded(HexCoord target);
 
   // Rendering
   void Draw(const Camera2D &camera);
-  bool IsWalkable(HexCoord h) const;
+  bool IsWalkable(HexCoord h);
+
+  // Set/Get
+  int getTilesInUse();
+  int getMapRadius();
 };
 
 #endif // HEX_TILE_GRID_H

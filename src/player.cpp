@@ -46,9 +46,9 @@ void Player::Update() {
   }
   // Determine player state
   if (dir.x == 0 && dir.y == 0) {
-    Player::Idle();
+    Idle();
   } else if (dir.x != 0 || dir.y != 0) {
-    Player::Walk(dir);
+    Walk(dir);
   } else {
     this->state = PLAYER_STATE_NULL;
   }
@@ -153,8 +153,9 @@ void Player::Walk(Vector2 dir) {
 
   // Check if destination is walkable
   if (this->hexGrid->IsWalkable(this->hexGrid->PointToHexCoord(nextPos))) {
-
     this->position = nextPos;
+  } else {
+    Idle();
   }
 }
 

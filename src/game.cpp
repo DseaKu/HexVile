@@ -92,17 +92,22 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   float currentY = sectionPosY;
 
   debugData.clear();
-  debugData.push_back({"Resources",
-                       {
-                           TextFormat("FPS: %i", GetFPS()),
-                       }});
+  debugData.push_back(
+      {"Resources",
+       {
+           TextFormat("FPS: %i", GetFPS()),
+           TextFormat("Used Tiles: %i", hexGrid.getTilesInUse()),
+           TextFormat("Map radius: %i", hexGrid.getMapRadius()),
+       }});
 
   HexCoord mapTile = hexGrid.PointToHexCoord(this->MousePos);
+  TileID tileType = hexGrid.PointToType(this->MousePos);
   debugData.push_back(
       {"Mouse",
        {
            TextFormat("X,Y: %.1f,%.1f", this->MousePos.x, this->MousePos.y),
            TextFormat("Tile Q,R: %i,%i", mapTile.q, mapTile.r),
+           TextFormat("Type: %s", hexGrid.TileToString(tileType)),
        }});
 
   // --- Player ---

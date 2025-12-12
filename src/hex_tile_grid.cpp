@@ -55,9 +55,14 @@ void HexGrid::InitGrid(float radius) {
       int gridR = r + mapRadius;
       int gridQ = q + mapRadius;
 
-      tiles[gridR][gridQ] =
-          (MapTile){.type = TILE_GRASS, .isDirty = false, .isVisble = true};
-      this->tilesInUse++;
+      if (abs(q) + abs(r) + abs(-q - r) <= mapRadius * 2) {
+        tiles[gridR][gridQ] =
+            (MapTile){.type = TILE_GRASS, .isDirty = false, .isVisble = true};
+        this->tilesInUse++;
+      } else {
+        tiles[gridR][gridQ] =
+            (MapTile){.type = TILE_NULL, .isDirty = false, .isVisble = false};
+      }
     }
   }
 }

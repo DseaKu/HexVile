@@ -10,26 +10,26 @@
 Game::Game() {
   InitWindow(Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT, Conf::WINDOW_TITLE);
   SetTargetFPS(Conf::FPS_MAX);
-  this->textureHandler.LoadAssets(Conf::TEXTURE_ATLAS_PATH);
+  textureHandler.LoadAssets(Conf::TEXTURE_ATLAS_PATH);
   int fileSize = 0;
-  this->hackFontRegular = LoadFileData(Conf::FONT_HACK_REGULAR_PATH, &fileSize);
+  hackFontRegular = LoadFileData(Conf::FONT_HACK_REGULAR_PATH, &fileSize);
 
-  this->hexGrid.InitGrid(Conf::MAP_SIZE);
-  this->hexGrid.SetTextureHandler(&textureHandler);
+  hexGrid.InitGrid(Conf::MAP_SIZE);
+  hexGrid.SetTextureHandler(&textureHandler);
 
-  this->player.SetHexGrid(&hexGrid);
-  this->player.SetTextureHandler(&textureHandler);
+  player.SetHexGrid(&hexGrid);
+  player.SetTextureHandler(&textureHandler);
 
-  this->camera.target = Conf::SCREEN_CENTER;
-  this->camera.offset = Conf::SCREEN_CENTER;
-  this->camera.zoom = Conf::CAMERA_ZOOM;
-  this->camera.rotation = 0.0f;
-  this->cameraRect = {0, 0, 0, 0};
-  this->cameraTopLeft = {0, 0};
+  camera.target = Conf::SCREEN_CENTER;
+  camera.offset = Conf::SCREEN_CENTER;
+  camera.zoom = Conf::CAMERA_ZOOM;
+  camera.rotation = 0.0f;
+  cameraRect = {0, 0, 0, 0};
+  cameraTopLeft = {0, 0};
 
-  this->MousePos = (Vector2){0, 0};
+  MousePos = (Vector2){0, 0};
 
-  this->fontHandler.LoadFonts();
+  fontHandler.LoadFonts();
 }
 
 // --- Main Loop ---
@@ -63,11 +63,10 @@ void Game::GameLoop() {
     hexGrid.Draw(camera);
     player.Draw();
 
-    // --- Test Font ---
+    // --- End Camera View ---
 
-    // --- Camera View ---
-
-    EndMode2D();
+    EndMode2D(); // <-- Camera mode ends here
+    uiHandler.Draw();
     DrawDebugOverlay(Conf::DEBUG_FLAG);
     EndDrawing();
   }
@@ -101,18 +100,19 @@ void Game::DrawDebugOverlay(bool is_enabled) {
        }});
 
   HexCoord mapTile = hexGrid.PointToHexCoord(this->MousePos);
-  TileID tileType = hexGrid.PointToType(this->MousePos);
+  TileID tileMouseType = hexGrid.PointToType(this->MousePos);
   debugData.push_back(
       {"Mouse",
        {
            TextFormat("X,Y: %.1f,%.1f", this->MousePos.x, this->MousePos.y),
            TextFormat("Tile Q,R: %i,%i", mapTile.q, mapTile.r),
-           TextFormat("Type: %s", hexGrid.TileToString(tileType)),
+           TextFormat("Type: %s", hexGrid.TileToString(tileMouseType)),
        }});
 
   // --- Player ---
   Vector2 playerPos = player.GetPosition();
   HexCoord playerTile = hexGrid.PointToHexCoord(playerPos);
+  TileID tilePlayerType = hexGrid.PointToType(playerPos);
   debugData.push_back(
       {"Player",
        {
@@ -121,6 +121,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
            TextFormat("State:  %s", player.PlayerStateToString()),
            TextFormat("Face Dir: %s", player.PlayerDirToString()),
            TextFormat("Frame: %i", player.GetAnimationFrame()),
+           TextFormat("Type: %s", hexGrid.TileToString(tilePlayerType)),
        }});
 
   // Draw section

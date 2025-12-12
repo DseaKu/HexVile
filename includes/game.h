@@ -6,6 +6,7 @@
 #include "player.h"
 #include "raylib.h"
 #include "texture_handler.h"
+#include "ui_handler.h"
 #include <vector>
 
 struct DebugData {
@@ -26,6 +27,7 @@ private:
   HexGrid hexGrid;
   Player player;
   FontHandler fontHandler;
+  UIHandler uiHandler;
 
 public:
   Game();

@@ -71,6 +71,13 @@ constexpr int DEBUG_OVERLAY_SUBSECTION_Y_POS =
 constexpr float PLAYER_SPEED = 70.0f;
 constexpr int PLAYER_Y_OFFSET = -13;
 constexpr float OFFSET_TO_OBSTACLE = 5;
+
+// --- UI ---
+constexpr float UI_SCALE = 0.8f;
+constexpr float UI_Y_OFFSET = 100.0f;
+constexpr float UI_X_OFFSET = 300.0f;
+constexpr float UI_WIDTH_SCALE = 2.0f;
+
 } // namespace Conf
 
 // --- Unsigned Integer Aliases ---

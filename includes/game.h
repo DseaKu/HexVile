@@ -1,6 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "enums.h"
 #include "font_handler.h"
 #include "hex_tile_grid.h"
 #include "player.h"
@@ -23,6 +24,7 @@ private:
   Vector2 cameraTopLeft;
   TextureHandler textureHandler;
   std::vector<DebugData> debugData;
+  ItemsID selectedItem;
   Rectangle cameraRect;
   HexGrid hexGrid;
   Player player;

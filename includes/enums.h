@@ -28,4 +28,11 @@ typedef enum DirLabels {
   DIR_LABELS_LENGTH,
 } DirLabels;
 
+typedef enum ItemsID {
+
+  ITEMS_NULL = 0,
+  SET_TILE_GRASS,
+  SET_TILE_WATER,
+
+} ItemsID;
 #endif // !ENUMS_H

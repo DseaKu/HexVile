@@ -8,8 +8,6 @@ const std::vector<HexCoord> HexGrid::DIRECTIONS = {
     HexCoord(1, 0),  HexCoord(0, 1),  HexCoord(-1, 1),
     HexCoord(-1, 0), HexCoord(0, -1), HexCoord(1, -1)};
 
-const std::vector<TileID> HexGrid::WALKABLE_TILES = {TILE_GRASS};
-
 // --- Hex ---
 HexCoord::HexCoord() : q(0), r(0) {}
 HexCoord::HexCoord(int q, int r) : q(q), r(r) {}
@@ -37,14 +35,15 @@ bool HexCoord::operator<(const HexCoord &other) const {
 }
 
 // --- Hex Grid ---
-HexGrid::HexGrid()
-    : tileGapX(0), tileGapY(0), mapRadius(0), textureHandler(nullptr) {}
+HexGrid::HexGrid() {
+
+  this->tileGapX = Conf::TILE_GAP_X;
+  this->tileGapY = Conf::TILE_GAP_Y;
+  this->origin = Conf::SCREEN_CENTER;
+  this->mapRadius = Conf::MAP_SIZE;
+}
 
 void HexGrid::InitGrid(float radius) {
-  mapRadius = static_cast<int>(radius);
-  origin = Conf::SCREEN_CENTER;
-  tileGapX = Conf::TILE_GAP_X;
-  tileGapY = Conf::TILE_GAP_Y;
 
   int gridSize = mapRadius * 2 + 1;
   tiles.assign(gridSize, std::vector<MapTile>(gridSize));
@@ -85,15 +84,16 @@ bool HexGrid::HasTile(HexCoord h) const {
 }
 
 bool HexGrid::IsWalkable(HexCoord h) const {
+
   if (!HasTile(h)) {
     return false;
   }
-  int gridR = h.r + mapRadius;
-  int gridQ = h.q + mapRadius;
-  TileID type = tiles[gridR][gridQ].type;
 
-  for (const auto &walkableTile : WALKABLE_TILES) {
-    if (type == walkableTile) {
+  MapTile tile = HexCoordToTile(h);
+  TileID type = tile.type;
+
+  for (int i = 0; i < Conf::WALKABLE_TILES.size(); i++) {
+    if (type == Conf::WALKABLE_TILES[i]) {
       return true;
     }
   }
@@ -121,6 +121,14 @@ Vector2 HexGrid::HexCoordToPoint(HexCoord h) const {
   float y = tileGapY * (3.0f / 2.0f * h.r);
   return {x + origin.x, y + origin.y};
 }
+MapTile HexGrid::HexCoordToTile(HexCoord h) const {
+  if (!IsInBounds(h)) {
+    return (MapTile){.type = TILE_NULL, .isDirty = false, .isVisble = false};
+  }
+  int gridR = h.r + mapRadius;
+  int gridQ = h.q + mapRadius;
+  return tiles[gridR][gridQ];
+}
 
 HexCoord HexGrid::PointToHexCoord(Vector2 point) const {
   float pt_x = (point.x - origin.x) / tileGapX;
@@ -128,6 +136,11 @@ HexCoord HexGrid::PointToHexCoord(Vector2 point) const {
   double q = (sqrt(3.0) / 3.0 * pt_x - 1.0 / 3.0 * pt_y);
   double r = (2.0 / 3.0 * pt_y);
   return HexRound({q, r, -q - r});
+}
+
+MapTile HexGrid::PointToTile(Vector2 point) const {
+  HexCoord h = PointToHexCoord(point);
+  return HexCoordToTile(h);
 }
 
 HexCoord HexGrid::GetNeighbor(HexCoord h, int directionIndex) const {
@@ -183,14 +196,14 @@ void HexGrid::Draw(const Camera2D &camera) {
                           Conf::CAMERA_HEIGTH};
 
   int gridSize = mapRadius * 2 + 1;
-  for (int r_idx = 0; r_idx < gridSize; r_idx++) {
-    for (int q_idx = 0; q_idx < gridSize; q_idx++) {
-      MapTile t = tiles[r_idx][q_idx];
+  for (int r = 0; r < gridSize; r++) {
+    for (int q = 0; q < gridSize; q++) {
+      MapTile t = tiles[r][q];
       if (t.type == TILE_NULL) {
         continue;
       }
 
-      HexCoord h(q_idx - mapRadius, r_idx - mapRadius);
+      HexCoord h(q - mapRadius, r - mapRadius);
       Vector2 pos = HexCoordToPoint(h);
       pos.x -= Conf::TILE_SIZE_HALF;
       pos.y -= Conf::TILE_SIZE_HALF;

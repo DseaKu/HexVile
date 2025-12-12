@@ -40,6 +40,7 @@ struct MapTile {
 
 /* Grid parts and relationships: https://www.redblobgames.com/grids/parts/
  *
+ *
  * --- HEX TILE GRID ---
  *   |q  ,r-1|q+1,r-1|
  * ---------------------
@@ -71,7 +72,9 @@ public:
 
   // Coordinate Conversions
   Vector2 HexCoordToPoint(HexCoord h) const;
+  MapTile HexCoordToTile(HexCoord h) const;
   HexCoord PointToHexCoord(Vector2 point) const;
+  MapTile PointToTile(Vector2 point) const;
 
   // Logic
   bool IsInBounds(HexCoord h) const;

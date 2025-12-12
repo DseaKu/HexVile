@@ -1,12 +1,14 @@
 #ifndef DEFINES_H
 #define DEFINES_H
+#include "enums.h"
 #include "raylib.h"
 #include <cstdint>
+#include <vector>
 
 namespace Conf {
 
 // --- Game ---
-constexpr int MAP_SIZE = 200;
+constexpr int MAP_SIZE = 300;
 constexpr int FPS_MAX = 1000;
 constexpr const char *WINDOW_TITLE = "HexVile";
 constexpr const char *TEXTURE_ATLAS_PATH = "assets/images/texture_atlas.png";
@@ -36,6 +38,7 @@ constexpr int TILE_SIZE = ASSEST_RESOLUTION;
 constexpr int TILE_SIZE_HALF = ASSEST_RESOLUTION_HALF;
 constexpr float TILE_GAP_X = 18.4f;
 constexpr float TILE_GAP_Y = 16.0f;
+const std::vector<TileID> WALKABLE_TILES = {TILE_GRASS};
 
 // --- Camera ---
 constexpr float CAMERA_ZOOM = 3.0f;
@@ -65,7 +68,7 @@ constexpr int DEBUG_OVERLAY_SUBSECTION_Y_POS =
     DEBUG_OVERLAY_SECTION_Y_POS + DEBUG_OVERLAY_SUBSECTION_Y_GAP;
 
 // --- Player ---
-constexpr float PLAYER_SPEED = 150.0f;
+constexpr float PLAYER_SPEED = 100.0f;
 constexpr int PLAYER_Y_OFFSET = -13;
 } // namespace Conf
 

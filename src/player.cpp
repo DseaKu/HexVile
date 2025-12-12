@@ -151,7 +151,11 @@ void Player::Walk(Vector2 dir) {
   Vector2 nextPos = {this->position.x + dir.x * delta * speed,
                      this->position.y + dir.y * delta * speed};
 
-  this->position = nextPos;
+  // Check if destination is walkable
+  if (this->hexGrid->IsWalkable(this->hexGrid->PointToHexCoord(nextPos))) {
+
+    this->position = nextPos;
+  }
 }
 
 void Player::InitAnimations() {

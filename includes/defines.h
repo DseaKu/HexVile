@@ -66,7 +66,7 @@ constexpr int DEBUG_OVERLAY_SUBSECTION_Y_POS =
     DEBUG_OVERLAY_SECTION_Y_POS + DEBUG_OVERLAY_SUBSECTION_Y_GAP;
 
 // --- Player ---
-constexpr float PLAYER_SPEED = 50.0f;
+constexpr float PLAYER_SPEED = 350.0f;
 constexpr int PLAYER_Y_OFFSET = -13;
 } // namespace Conf
 

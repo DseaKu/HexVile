@@ -161,27 +161,7 @@ void HexGrid::Draw(const Camera2D &camera) {
   Vector2 topLeft = GetScreenToWorld2D(Vector2{0, 0}, camera);
   Rectangle cameraView = {topLeft.x, topLeft.y, Conf::CAMERA_WIDTH,
                           Conf::CAMERA_HEIGTH};
-  //
-  // for (auto const &[key, tile] : HexTiles) {
-  //
-  //   Vector2 pos = HexCoordToPoint(tile.coord);
-  //
-  //   pos = (Vector2){pos.x - Conf::TILE_SIZE_HALF, pos.y -
-  //   Conf::TILE_SIZE_HALF};
-  //
-  //   Rectangle dest_rect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
-  //                          Conf::ASSEST_RESOLUTION};
-  //
-  //   if (CheckCollisionRecs(cameraView, dest_rect)) {
-  //     Rectangle tile_rect = {Conf::TEXTURE_ATLAS_TILES_X_OFFSET,
-  //                            (float)Conf::ASSEST_RESOLUTION * tile.type,
-  //                            Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
-  //     Vector2 origin = {0.0f, 0.0f};
-  //
-  //     textureHandler->Draw(tile_rect, dest_rect, origin, 0.0f, WHITE);
-  //   }
-  // }
-  //
+
   for (int r = 0; r < rMax; r++) {
     for (int q = 0; q < qMax; q++) {
       NewTile t = HexNewTiles[r][q];

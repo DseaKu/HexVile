@@ -7,12 +7,6 @@
 #include <map>
 #include <vector>
 
-// --- STRUCTS & ENUMS ---
-
-struct FractionalHex {
-  double q, r, s;
-};
-
 // --- HEXAGON ---
 class HexCoord {
 public:
@@ -34,6 +28,12 @@ public:
   bool operator<(const HexCoord &other) const;
 };
 
+// --- STRUCTS ---
+struct FractionalHex {
+  double q, r, s;
+};
+
+// --- MapTile ---
 struct MapTile {
   HexCoord coord;
   TileID type;

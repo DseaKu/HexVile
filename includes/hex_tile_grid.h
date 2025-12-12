@@ -7,6 +7,24 @@
 #include <map>
 #include <vector>
 
+/* SOURCE
+ * Grid parts and relationships: https://www.redblobgames.com/grids/parts/
+ * */
+
+struct NewTile {
+  TileID type;
+
+  // Logic Methods
+  NewTile Add(const NewTile &other) const;
+  bool Equals(const NewTile &other) const;
+
+  // Operators
+  NewTile operator+(const NewTile &other) const;
+  bool operator==(const NewTile &other) const;
+  bool operator!=(const NewTile &other) const;
+  bool operator<(const NewTile &other) const;
+};
+
 // --- HEXAGON ---
 class HexCoord {
 public:
@@ -42,12 +60,22 @@ struct MapTile {
 };
 
 // --- HEX TILE GRID ---
+/*
+//    |q  ,r-1|q+1,r-1|
+// ---------------------
+//| q-1,r |q  ,r  |q+1, r|
+// -----------------------
+//    |q-1,r+1|q ,r+1 |
+*/
 class HexGrid {
 private:
   std::map<HexCoord, MapTile> HexTiles;
+  std::vector<std::vector<NewTile>> HexNewTiles;
   float tileGapX;
   float tileGapY;
   int mapRadius;
+  int qMax;
+  int rMax;
   Vector2 origin;
   TextureHandler *textureHandler;
 
@@ -58,6 +86,7 @@ private:
 
   // Internal Math Helper
   HexCoord HexRound(FractionalHex h) const;
+  void InitNewGrid();
 
 public:
   HexGrid();

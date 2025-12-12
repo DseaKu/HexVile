@@ -40,7 +40,12 @@ bool HexCoord::operator<(const HexCoord &other) const {
 }
 
 // --- Hex Grid ---
-HexGrid::HexGrid() {};
+HexGrid::HexGrid() {
+
+  this->qMax = Conf::MAP_SIZE;
+  this->rMax = Conf::MAP_SIZE;
+  this->InitNewGrid();
+};
 
 void HexGrid::InitGrid(float radius) {
 
@@ -60,6 +65,17 @@ void HexGrid::InitGrid(float radius) {
           .isDirty = false,
           .isVisble = false,
       };
+    }
+  }
+}
+
+void HexGrid::InitNewGrid() {
+  NewTile defaultTile = {.type = TILE_GRASS};
+  this->HexNewTiles.assign(this->rMax,
+                           std::vector<NewTile>(this->qMax, defaultTile));
+  for (int r = 0; r < Conf::MAP_SIZE; r++) {
+    for (int q = 0; q < Conf::MAP_SIZE; q++) {
+      HexNewTiles[r][q] = {.type = TILE_GRASS};
     }
   }
 }

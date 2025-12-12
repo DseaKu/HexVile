@@ -44,9 +44,6 @@ HexGrid::HexGrid() {
   tilesInUse = 0;
 }
 
-int HexGrid::getTilesInUse() { return tilesInUse; }
-int HexGrid::getMapRadius() { return mapRadius; }
-
 void HexGrid::InitGrid(float radius) {
 
   int gridSize = mapRadius * 2 + 1;
@@ -58,14 +55,15 @@ void HexGrid::InitGrid(float radius) {
       int gridR = r + mapRadius;
       int gridQ = q + mapRadius;
 
-      if (abs(q) + abs(r) + abs(-q - r) <= mapRadius * 2) {
-        tiles[gridR][gridQ] =
-            (MapTile){.type = TILE_GRASS, .isDirty = false, .isVisble = true};
-        this->tilesInUse++;
-      } else {
-        tiles[gridR][gridQ] =
-            (MapTile){.type = TILE_NULL, .isDirty = false, .isVisble = false};
-      }
+      // if (abs(q) + abs(r) + abs(-q - r) <= mapRadius * 2) {
+      tiles[gridR][gridQ] =
+          (MapTile){.type = TILE_GRASS, .isDirty = false, .isVisble = true};
+      this->tilesInUse++;
+      // } else {
+      //   tiles[gridR][gridQ] =
+      //       (MapTile){.type = TILE_NULL, .isDirty = false, .isVisble =
+      //       false};
+      // }
     }
   }
 }
@@ -159,12 +157,7 @@ const char *HexGrid::TileToString(TileID type) {
     return "NULL";
   }
 }
-
-// --- Set/Get ---
-HexCoord HexGrid::GetNeighbor(HexCoord h, int directionIndex) {
-  return h + DIRECTIONS[directionIndex];
-}
-
+// --- Logic ---
 void HexGrid::SetTile(HexCoord h, TileID ID) {
   if (IsInBounds(h)) {
     int gridR = h.r + mapRadius;
@@ -238,4 +231,11 @@ void HexGrid::Draw(const Camera2D &camera) {
       }
     }
   }
+}
+
+// --- Set/Get ---
+int HexGrid::getTilesInUse() { return tilesInUse; }
+int HexGrid::getMapRadius() { return mapRadius; }
+HexCoord HexGrid::GetNeighbor(HexCoord h, int directionIndex) {
+  return h + DIRECTIONS[directionIndex];
 }

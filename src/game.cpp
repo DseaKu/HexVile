@@ -34,8 +34,6 @@ Game::Game() {
   mouseMask = MOUSE_MASK_NULL;
 
   fontHandler.LoadFonts();
-
-  io_handler.InitIOHandler(&mousePos, &uiHandler);
 }
 
 // --- Main Loop ---
@@ -43,7 +41,7 @@ void Game::GameLoop() {
   while (!WindowShouldClose()) {
 
     // --- Update ---
-    UpdateMouse();
+    ProcessInputs();
     relativeCenter = GetScreenToWorld2D(Conf::SCREEN_CENTER, camera);
     cameraTopLeft = GetScreenToWorld2D(Vector2{0, 0}, camera);
     cameraRect = {cameraTopLeft.x, cameraTopLeft.y, Conf::CAMERA_WIDTH,
@@ -59,28 +57,6 @@ void Game::GameLoop() {
     }
     player.Update();
     camera.target = player.GetPosition();
-
-    // Toolbar selection
-    if (IsKeyPressed(KEY_ONE))
-      uiHandler.SetSelectedItem(0);
-    if (IsKeyPressed(KEY_TWO))
-      uiHandler.SetSelectedItem(1);
-    if (IsKeyPressed(KEY_THREE))
-      uiHandler.SetSelectedItem(2);
-    if (IsKeyPressed(KEY_FOUR))
-      uiHandler.SetSelectedItem(3);
-    if (IsKeyPressed(KEY_FIVE))
-      uiHandler.SetSelectedItem(4);
-    if (IsKeyPressed(KEY_SIX))
-      uiHandler.SetSelectedItem(5);
-    if (IsKeyPressed(KEY_SEVEN))
-      uiHandler.SetSelectedItem(6);
-    if (IsKeyPressed(KEY_EIGHT))
-      uiHandler.SetSelectedItem(7);
-    if (IsKeyPressed(KEY_NINE))
-      uiHandler.SetSelectedItem(8);
-    if (IsKeyPressed(KEY_ZERO))
-      uiHandler.SetSelectedItem(9);
 
     // --- Draw ---
     BeginDrawing();
@@ -101,9 +77,11 @@ void Game::GameLoop() {
   }
 }
 
-void Game::UpdateMouse() {
+void Game::ProcessInputs() {
 
   mousePos = GetScreenToWorld2D(GetMousePosition(), this->camera);
+
+  // --- Mouse ---
   if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
     if (uiHandler.GetItemBarStatus() &&
         CheckCollisionPointRec(this->mousePos, uiHandler.GetItemBarRect())) {
@@ -112,7 +90,42 @@ void Game::UpdateMouse() {
       mouseMask = MOUSE_MASK_PLAY_GROUND;
     }
   }
-  return;
+
+  // --- Keyboard ---
+  // Toolbar selection
+  if (IsKeyPressed(KEY_ONE))
+    uiHandler.SetSelectedItem(0);
+  if (IsKeyPressed(KEY_TWO))
+    uiHandler.SetSelectedItem(1);
+  if (IsKeyPressed(KEY_THREE))
+    uiHandler.SetSelectedItem(2);
+  if (IsKeyPressed(KEY_FOUR))
+    uiHandler.SetSelectedItem(3);
+  if (IsKeyPressed(KEY_FIVE))
+    uiHandler.SetSelectedItem(4);
+  if (IsKeyPressed(KEY_SIX))
+    uiHandler.SetSelectedItem(5);
+  if (IsKeyPressed(KEY_SEVEN))
+    uiHandler.SetSelectedItem(6);
+  if (IsKeyPressed(KEY_EIGHT))
+    uiHandler.SetSelectedItem(7);
+  if (IsKeyPressed(KEY_NINE))
+    uiHandler.SetSelectedItem(8);
+  if (IsKeyPressed(KEY_ZERO))
+    uiHandler.SetSelectedItem(9);
+}
+
+const char *Game::MouseMaskToString(MouseMask m) {
+  switch (m) {
+  case MOUSE_MASK_NULL:
+    return "Null";
+  case MOUSE_MASK_PLAY_GROUND:
+    return "Play Ground";
+  case MOUSE_MASK_ITEM_BAR:
+    return "Item Bar";
+  default:
+    return "Undefined";
+  }
 }
 
 // --- Debug overlay ---
@@ -150,6 +163,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
            TextFormat("X,Y: %.1f,%.1f", this->mousePos.x, this->mousePos.y),
            TextFormat("Tile Q,R: %i,%i", mapTile.q, mapTile.r),
            TextFormat("Type: %s", hexGrid.TileToString(tileMouseType)),
+           TextFormat("Is on: %s", this->MouseMaskToString(this->mouseMask)),
        }});
 
   // --- Player ---

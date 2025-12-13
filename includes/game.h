@@ -4,7 +4,6 @@
 #include "enums.h"
 #include "font_handler.h"
 #include "hex_tile_grid.h"
-#include "io_handler.h"
 #include "player.h"
 #include "raylib.h"
 #include "texture_handler.h"
@@ -33,16 +32,16 @@ private:
   Player player;
   FontHandler fontHandler;
   UI_Handler uiHandler;
-  IO_Handler io_handler;
 
   // --- Methods ---
-  void UpdateMouse();
+  void ProcessInputs();
   void DrawDebugOverlay(bool is_enabled);
 
 public:
   Game();
   ~Game();
   void GameLoop();
+  const char *MouseMaskToString(MouseMask m);
 };
 
 #endif // !GAME_H

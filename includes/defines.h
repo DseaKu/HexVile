@@ -7,7 +7,7 @@
 
 namespace Conf {
 
-// --- Game ---
+// --- Core ---
 constexpr int MAP_SIZE = 8;
 constexpr int FPS_MAX = 1000;
 constexpr const char *WINDOW_TITLE = "HexVile";
@@ -21,6 +21,9 @@ constexpr int SCREEN_WIDTH = 2800;
 constexpr int SCREEN_HEIGHT = 1200;
 constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
                                    (float)SCREEN_HEIGHT / 2};
+
+// --- Game ---
+constexpr int N_ELEMENT_ITEM_BAR = 10;
 
 // --- Assest & Animation ---
 constexpr int ASSEST_RESOLUTION = 32;
@@ -73,10 +76,10 @@ constexpr int PLAYER_Y_OFFSET = -13;
 constexpr float OFFSET_TO_OBSTACLE = 5;
 
 // --- UI ---
-constexpr float UI_SCALE = 0.8f;
-constexpr float UI_Y_OFFSET = 100.0f;
-constexpr float UI_X_OFFSET = 300.0f;
-constexpr float UI_WIDTH_SCALE = 2.0f;
+constexpr float UI_SCALE = 1.0f;
+constexpr float UI_ITEM_BAR_Y_BOTTOM_MARGIN = 20.0f;
+constexpr float UI_ITEM_BAR_SLOT_SIZE = 20.0f;
+constexpr float UI_ITEM_BAR_PADDING = 15.0f;
 
 } // namespace Conf
 

@@ -30,9 +30,12 @@ Game::Game() {
   cameraRect = {0, 0, 0, 0};
   cameraTopLeft = {0, 0};
 
-  MousePos = (Vector2){0, 0};
+  mousePos = (Vector2){0, 0};
+  mouseMask = MOUSE_MASK_NULL;
 
   fontHandler.LoadFonts();
+
+  io_handler.InitIOHandler(&mousePos, &uiHandler);
 }
 
 // --- Main Loop ---
@@ -40,18 +43,18 @@ void Game::GameLoop() {
   while (!WindowShouldClose()) {
 
     // --- Update ---
-    this->MousePos = GetScreenToWorld2D(GetMousePosition(), camera);
-    this->relativeCenter = GetScreenToWorld2D(Conf::SCREEN_CENTER, camera);
-    this->cameraTopLeft = GetScreenToWorld2D(Vector2{0, 0}, camera);
-    this->cameraRect = {cameraTopLeft.x, cameraTopLeft.y, Conf::CAMERA_WIDTH,
-                        Conf::CAMERA_HEIGTH};
+    UpdateMouse();
+    relativeCenter = GetScreenToWorld2D(Conf::SCREEN_CENTER, camera);
+    cameraTopLeft = GetScreenToWorld2D(Vector2{0, 0}, camera);
+    cameraRect = {cameraTopLeft.x, cameraTopLeft.y, Conf::CAMERA_WIDTH,
+                  Conf::CAMERA_HEIGTH};
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-      HexCoord clickedHex = hexGrid.PointToHexCoord(this->MousePos);
+      HexCoord clickedHex = hexGrid.PointToHexCoord(this->mousePos);
       hexGrid.SetTile(clickedHex, TILE_WATER);
     }
     if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
-      HexCoord clickedHex = hexGrid.PointToHexCoord(this->MousePos);
+      HexCoord clickedHex = hexGrid.PointToHexCoord(this->mousePos);
       hexGrid.SetTile(clickedHex, TILE_VOID);
     }
     player.Update();
@@ -89,12 +92,27 @@ void Game::GameLoop() {
     player.Draw();
 
     // --- End Camera View ---
+    EndMode2D();
 
-    EndMode2D(); // <-- Camera mode ends here
-    uiHandler.Draw();
+    uiHandler.DrawItemBar();
     DrawDebugOverlay(Conf::DEBUG_FLAG);
+
     EndDrawing();
   }
+}
+
+void Game::UpdateMouse() {
+
+  mousePos = GetScreenToWorld2D(GetMousePosition(), this->camera);
+  if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+    if (uiHandler.GetItemBarStatus() &&
+        CheckCollisionPointRec(this->mousePos, uiHandler.GetItemBarRect())) {
+      mouseMask = MOUSE_MASK_ITEM_BAR;
+    } else {
+      mouseMask = MOUSE_MASK_PLAY_GROUND;
+    }
+  }
+  return;
 }
 
 // --- Debug overlay ---
@@ -124,12 +142,12 @@ void Game::DrawDebugOverlay(bool is_enabled) {
            TextFormat("Map radius: %i", hexGrid.getMapRadius()),
        }});
 
-  HexCoord mapTile = hexGrid.PointToHexCoord(this->MousePos);
-  TileID tileMouseType = hexGrid.PointToType(this->MousePos);
+  HexCoord mapTile = hexGrid.PointToHexCoord(this->mousePos);
+  TileID tileMouseType = hexGrid.PointToType(this->mousePos);
   debugData.push_back(
       {"Mouse",
        {
-           TextFormat("X,Y: %.1f,%.1f", this->MousePos.x, this->MousePos.y),
+           TextFormat("X,Y: %.1f,%.1f", this->mousePos.x, this->mousePos.y),
            TextFormat("Tile Q,R: %i,%i", mapTile.q, mapTile.r),
            TextFormat("Type: %s", hexGrid.TileToString(tileMouseType)),
        }});

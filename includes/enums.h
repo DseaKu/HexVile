@@ -29,10 +29,16 @@ typedef enum DirLabels {
 } DirLabels;
 
 typedef enum ItemsID {
-
   ITEMS_NULL = 0,
   SET_TILE_GRASS,
   SET_TILE_WATER,
 
 } ItemsID;
+
+typedef enum MouseMask {
+  MOUSE_MASK_NULL,
+  MOUSE_MASK_PLAY_GROUND,
+  MOUSE_MASK_ITEM_BAR,
+} MouseMask;
+
 #endif // !ENUMS_H

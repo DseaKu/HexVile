@@ -6,21 +6,26 @@
 #include "texture_handler.h"
 #include <vector>
 
-class UIHandler {
+class UI_Handler {
 private:
   float scale;
   TextureHandler *textureHandler;
   std::vector<TileID> itemBarSlots;
   int selectedItemIndex;
+  bool isItemBarActive;
+  Rectangle itemBarRect;
 
 public:
-  UIHandler();
+  UI_Handler();
   void Init();
   void SetTextureHandler(TextureHandler *th);
   void SetSelectedItem(int index);
-  void Draw();
+  void DrawItemBar();
   bool CheckClick(Vector2 mousePosition);
   TileID GetSelectedItem();
+  void SetItemBarActive(bool status);
+  bool GetItemBarStatus();
+  Rectangle GetItemBarRect();
 };
 
 #endif // UI_HANDLER_H

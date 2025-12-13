@@ -4,6 +4,7 @@
 #include "enums.h"
 #include "font_handler.h"
 #include "hex_tile_grid.h"
+#include "io_handler.h"
 #include "player.h"
 #include "raylib.h"
 #include "texture_handler.h"
@@ -16,20 +17,27 @@ struct DebugData {
 };
 class Game {
 private:
-  void DrawDebugOverlay(bool is_enabled);
   unsigned char *hackFontRegular;
   Camera2D camera;
-  Vector2 MousePos;
+  Vector2 mousePos;
+  MouseMask mouseMask;
   Vector2 relativeCenter;
   Vector2 cameraTopLeft;
-  TextureHandler textureHandler;
   std::vector<DebugData> debugData;
   ItemsID selectedItem;
   Rectangle cameraRect;
+
+  // --- Objects
+  TextureHandler textureHandler;
   HexGrid hexGrid;
   Player player;
   FontHandler fontHandler;
-  UIHandler uiHandler;
+  UI_Handler uiHandler;
+  IO_Handler io_handler;
+
+  // --- Methods ---
+  void UpdateMouse();
+  void DrawDebugOverlay(bool is_enabled);
 
 public:
   Game();

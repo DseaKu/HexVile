@@ -2,42 +2,47 @@
 #include "defines.h"
 #include "raylib.h"
 
-UIHandler::UIHandler() {
+UI_Handler::UI_Handler() {
   scale = Conf::UI_SCALE;
   textureHandler = nullptr;
   selectedItemIndex = 0; // Default to first item
 }
 
-void UIHandler::Init() {
+void UI_Handler::Init() {
   itemBarSlots.assign(10, TILE_VOID);
   itemBarSlots[0] = TILE_GRASS;
   itemBarSlots[1] = TILE_WATER;
 }
 
-void UIHandler::SetTextureHandler(TextureHandler *th) {
+void UI_Handler::SetTextureHandler(TextureHandler *th) {
   this->textureHandler = th;
 }
 
-void UIHandler::SetSelectedItem(int index) {
+void UI_Handler::SetSelectedItem(int index) {
   if (index >= 0 && index < 10) {
     selectedItemIndex = index;
   }
 }
 
-void UIHandler::Draw() {
-  const int itemCount = 10;
-  const int padding = 10;
-  const int itemSize = Conf::ASSEST_RESOLUTION;
-  const int slotSize = itemSize + padding;
+void UI_Handler::DrawItemBar() {
+  if (!isItemBarActive) {
+    return;
+  }
+  const int itemCount = Conf::N_ELEMENT_ITEM_BAR * Conf::UI_SCALE;
+  const float padding = Conf::UI_ITEM_BAR_PADDING * Conf::UI_SCALE;
+  const int itemSize = Conf::ASSEST_RESOLUTION * Conf::UI_SCALE;
+  const int slotSize = itemSize + padding * Conf::UI_SCALE;
 
-  int barWidth = (itemCount * slotSize) + padding;
-  int barHeight = itemSize + (2 * padding);
+  float barWidth = (itemCount * slotSize) + padding;
+  float barHeight = itemSize + (2 * padding);
 
   float barPosX = Conf::SCREEN_CENTER.x - (barWidth / 2.0f);
-  float barPosY = Conf::SCREEN_HEIGHT - barHeight - 20; // 20px margin from bottom
+  float barPosY =
+      Conf::SCREEN_HEIGHT - barHeight - Conf::UI_ITEM_BAR_Y_BOTTOM_MARGIN;
 
-  DrawRectangle(barPosX, barPosY, barWidth, barHeight,
-                Fade(GRAY, 0.8f)); // Background bar
+  this->itemBarRect = {barPosX, barPosY, barWidth, barHeight};
+
+  DrawRectangleRec(this->itemBarRect, Fade(GRAY, 0.8f));
 
   for (int i = 0; i < itemCount; ++i) {
     float slotPosX = barPosX + padding + (i * slotSize);
@@ -45,7 +50,8 @@ void UIHandler::Draw() {
 
     // Draw slot border
     if (i == selectedItemIndex) {
-      DrawRectangleLinesEx({slotPosX, slotPosY, (float)itemSize, (float)itemSize}, 3, YELLOW);
+      DrawRectangleLinesEx(
+          {slotPosX, slotPosY, (float)itemSize, (float)itemSize}, 3, YELLOW);
     } else {
       DrawRectangleLines(slotPosX, slotPosY, itemSize, itemSize, DARKGRAY);
     }
@@ -53,10 +59,10 @@ void UIHandler::Draw() {
     TileID currentTile = itemBarSlots[i];
     if (currentTile != TILE_VOID && currentTile != TILE_NULL) {
       if (textureHandler) {
-        Rectangle tile_rect = {
-            (float)Conf::TEXTURE_ATLAS_TILES_X_OFFSET,
-            (float)Conf::ASSEST_RESOLUTION * currentTile,
-            (float)Conf::ASSEST_RESOLUTION, (float)Conf::TILE_SIZE};
+        Rectangle tile_rect = {(float)Conf::TEXTURE_ATLAS_TILES_X_OFFSET,
+                               (float)Conf::ASSEST_RESOLUTION * currentTile,
+                               (float)Conf::ASSEST_RESOLUTION,
+                               (float)Conf::TILE_SIZE};
 
         Rectangle dest_rect = {slotPosX, slotPosY, (float)itemSize,
                                (float)itemSize};
@@ -66,3 +72,7 @@ void UIHandler::Draw() {
     }
   }
 }
+void UI_Handler::SetItemBarActive(bool status) { isItemBarActive = status; }
+
+bool UI_Handler::GetItemBarStatus() { return isItemBarActive; }
+Rectangle UI_Handler::GetItemBarRect() { return this->itemBarRect; }

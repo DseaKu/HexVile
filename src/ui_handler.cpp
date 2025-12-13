@@ -73,9 +73,37 @@ void UI_Handler::DrawItemBar() {
     }
   }
 }
-void UI_Handler::SetItemBarStatus(bool is_active) {
+void UI_Handler::SetItemBarActive(bool is_active) {
   isItemBarActive = is_active;
 }
 
 bool UI_Handler::GetItemBarStatus() { return isItemBarActive; }
 Rectangle UI_Handler::GetItemBarRect() { return this->itemBarRect; }
+
+int UI_Handler::GetItemSlotAt(Vector2 point) {
+  if (!isItemBarActive) {
+    return -1;
+  }
+
+  const int itemCount = Conf::N_ELEMENT_ITEM_BAR * Conf::UI_SCALE;
+  const float padding = Conf::UI_ITEM_BAR_PADDING * Conf::UI_SCALE;
+  const int itemSize = Conf::ASSEST_RESOLUTION * Conf::UI_SCALE;
+  const int slotSize = itemSize + padding * Conf::UI_SCALE;
+
+  float barWidth = (itemCount * slotSize) + padding;
+  float barPosX = Conf::SCREEN_CENTER.x - (barWidth / 2.0f);
+  float barHeight = itemSize + (2 * padding);
+  float barPosY =
+      Conf::SCREEN_HEIGHT - barHeight - Conf::UI_ITEM_BAR_Y_BOTTOM_MARGIN;
+
+  for (int i = 0; i < itemCount; ++i) {
+    float slotPosX = barPosX + padding + (i * slotSize);
+    float slotPosY = barPosY + padding;
+    Rectangle slotRect = {slotPosX, slotPosY, (float)itemSize, (float)itemSize};
+    if (CheckCollisionPointRec(point, slotRect)) {
+      return i;
+    }
+  }
+
+  return -1;
+}

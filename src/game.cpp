@@ -22,7 +22,7 @@ Game::Game() {
 
   uiHandler.Init();
   uiHandler.SetTextureHandler(&textureHandler);
-  uiHandler.SetItemBarStatus(true);
+  uiHandler.SetItemBarActive(true);
 
   camera.target = Conf::SCREEN_CENTER;
   camera.offset = Conf::SCREEN_CENTER;
@@ -76,10 +76,18 @@ void Game::ProcessInputs() {
 
   // --- Mouse ---
   if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+
+    // Clicked on item bar
     if (uiHandler.GetItemBarStatus() &&
         CheckCollisionPointRec(GetMousePosition(),
                                uiHandler.GetItemBarRect())) {
       mouseMask = MOUSE_MASK_ITEM_BAR;
+      int clickedSlot = uiHandler.GetItemSlotAt(GetMousePosition());
+      if (clickedSlot != -1) {
+        uiHandler.SetSelectedItem(clickedSlot);
+      }
+
+      // Clicked on ground
     } else {
       mouseMask = MOUSE_MASK_PLAY_GROUND;
       HexCoord clickedHex = hexGrid.PointToHexCoord(this->mousePos);

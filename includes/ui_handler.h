@@ -23,7 +23,7 @@ public:
   void DrawItemBar();
   bool CheckClick(Vector2 mousePosition);
   TileID GetSelectedItem();
-  void SetItemBarActive(bool status);
+  void SetItemBarStatus(bool is_active);
   bool GetItemBarStatus();
   Rectangle GetItemBarRect();
 };

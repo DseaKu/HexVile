@@ -5,7 +5,8 @@
 UI_Handler::UI_Handler() {
   scale = Conf::UI_SCALE;
   textureHandler = nullptr;
-  selectedItemIndex = 0; // Default to first item
+  selectedItemIndex = 0;
+  isItemBarActive = false;
 }
 
 void UI_Handler::Init() {
@@ -72,7 +73,9 @@ void UI_Handler::DrawItemBar() {
     }
   }
 }
-void UI_Handler::SetItemBarActive(bool status) { isItemBarActive = status; }
+void UI_Handler::SetItemBarStatus(bool is_active) {
+  isItemBarActive = is_active;
+}
 
 bool UI_Handler::GetItemBarStatus() { return isItemBarActive; }
 Rectangle UI_Handler::GetItemBarRect() { return this->itemBarRect; }

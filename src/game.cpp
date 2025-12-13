@@ -22,6 +22,7 @@ Game::Game() {
 
   uiHandler.Init();
   uiHandler.SetTextureHandler(&textureHandler);
+  uiHandler.SetItemBarStatus(true);
 
   camera.target = Conf::SCREEN_CENTER;
   camera.offset = Conf::SCREEN_CENTER;

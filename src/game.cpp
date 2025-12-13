@@ -48,14 +48,6 @@ void Game::GameLoop() {
     cameraRect = {cameraTopLeft.x, cameraTopLeft.y, Conf::CAMERA_WIDTH,
                   Conf::CAMERA_HEIGTH};
 
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-      HexCoord clickedHex = hexGrid.PointToHexCoord(this->mousePos);
-      hexGrid.SetTile(clickedHex, TILE_WATER);
-    }
-    if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
-      HexCoord clickedHex = hexGrid.PointToHexCoord(this->mousePos);
-      hexGrid.SetTile(clickedHex, TILE_VOID);
-    }
     player.Update();
     camera.target = player.GetPosition();
 
@@ -85,11 +77,19 @@ void Game::ProcessInputs() {
   // --- Mouse ---
   if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
     if (uiHandler.GetItemBarStatus() &&
-        CheckCollisionPointRec(this->mousePos, uiHandler.GetItemBarRect())) {
+        CheckCollisionPointRec(GetMousePosition(),
+                               uiHandler.GetItemBarRect())) {
       mouseMask = MOUSE_MASK_ITEM_BAR;
     } else {
       mouseMask = MOUSE_MASK_PLAY_GROUND;
+      HexCoord clickedHex = hexGrid.PointToHexCoord(this->mousePos);
+      hexGrid.SetTile(clickedHex, TILE_WATER);
     }
+  }
+
+  if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
+    HexCoord clickedHex = hexGrid.PointToHexCoord(this->mousePos);
+    hexGrid.SetTile(clickedHex, TILE_VOID);
   }
 
   // --- Keyboard ---
@@ -164,7 +164,8 @@ void Game::DrawDebugOverlay(bool is_enabled) {
            TextFormat("X,Y: %.1f,%.1f", this->mousePos.x, this->mousePos.y),
            TextFormat("Tile Q,R: %i,%i", mapTile.q, mapTile.r),
            TextFormat("Type: %s", hexGrid.TileToString(tileMouseType)),
-           TextFormat("Is on: %s", this->MouseMaskToString(this->mouseMask)),
+           TextFormat("Clicked on: %s",
+                      this->MouseMaskToString(this->mouseMask)),
        }});
 
   // --- Player ---

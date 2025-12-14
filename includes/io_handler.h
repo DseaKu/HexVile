@@ -2,15 +2,29 @@
 #define IO_HANDLER_H
 
 #include "enums.h"
+#include "raylib.h"
 class IO_Handler {
 private:
   MouseMask mouseMask;
+  Vector2 scaledMousePos;
+  Vector2 realMousePos;
 
 public:
   IO_Handler();
   void Init();
-  int GetToolBarSelction(int curToolBarSel);
+  void UpdateMousePos(Camera2D cam);
+
+  // --- Conversion ---
   const char *MouseMaskToString(MouseMask m);
+
+  // --- Get ---
+  Vector2 GetScaledMousePos();
+  Vector2 GetRealMousePos();
+  int GetToolBarSelction(int curToolBarSel);
+  MouseMask *GetMouseMaskPointer();
+
+  // --- Set ---
+  void SetMousePointer(Vector2 *mousePointer);
 };
 
 #endif // !IO_HANDLER_H

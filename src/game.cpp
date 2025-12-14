@@ -28,7 +28,7 @@ Game::Game() {
   cameraTopLeft = {0, 0};
 
   mousePos = (Vector2){0, 0};
-  mouseMask = MOUSE_MASK_NULL;
+  mouseMask = ioHandler.GetMouseMaskPointer();
 
   fontHandler.LoadFonts();
 
@@ -42,6 +42,7 @@ void Game::GameLoop() {
   while (!WindowShouldClose()) {
 
     // --- Update ---
+    ioHandler.UpdateMousePos(camera);
     ProcessInputs();
     relativeCenter = GetScreenToWorld2D(Conf::SCREEN_CENTER, camera);
     cameraTopLeft = GetScreenToWorld2D(Vector2{0, 0}, camera);
@@ -72,7 +73,7 @@ void Game::GameLoop() {
 
 void Game::ProcessInputs() {
 
-  mousePos = GetScreenToWorld2D(GetMousePosition(), this->camera);
+  mousePos = ioHandler.GetScaledMousePos();
   int toolBarSel = itemHandler.GetSelectionToolBar();
 
   // --- Mouse ---
@@ -82,12 +83,12 @@ void Game::ProcessInputs() {
     if (uiHandler.GetToolBarStatus() &&
         CheckCollisionPointRec(GetMousePosition(),
                                uiHandler.GetToolBarRect())) {
-      mouseMask = MOUSE_MASK_ITEM_BAR;
+      *mouseMask = MOUSE_MASK_ITEM_BAR;
       toolBarSel = uiHandler.GetItemSlotAt(GetMousePosition());
 
       // Clicked on ground
     } else {
-      mouseMask = MOUSE_MASK_PLAY_GROUND;
+      *mouseMask = MOUSE_MASK_PLAY_GROUND;
       HexCoord clickedHex = hexGrid.PointToHexCoord(this->mousePos);
       Item *selectedItem = itemHandler.GetToolBarItemPointer(toolBarSel);
       TileID tileToPlace = itemHandler.ConvertItemToTileID(selectedItem->id);
@@ -104,7 +105,6 @@ void Game::ProcessInputs() {
 
   toolBarSel = ioHandler.GetToolBarSelction(toolBarSel);
   // --- Keyboard ---
-  // Toolbar selection
 
   uiHandler.SetSelectedItem(toolBarSel);
   itemHandler.SetItemSelection(toolBarSel);
@@ -159,7 +159,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
            TextFormat("Tile Q,R: %i,%i", mapTile.q, mapTile.r),
            TextFormat("Type: %s", hexGrid.TileToString(tileMouseType)),
            TextFormat("Clicked on: %s",
-                      this->MouseMaskToString(this->mouseMask)),
+                      this->MouseMaskToString(*this->mouseMask)),
        }});
 
   // --- Player ---

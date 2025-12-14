@@ -21,7 +21,7 @@ private:
   unsigned char *hackFontRegular;
   Camera2D camera;
   Vector2 mousePos;
-  MouseMask mouseMask;
+  MouseMask *mouseMask;
   Vector2 relativeCenter;
   Vector2 cameraTopLeft;
   Rectangle cameraRect;

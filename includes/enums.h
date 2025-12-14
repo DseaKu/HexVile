@@ -5,6 +5,7 @@ typedef enum TileID {
   TILE_NULL = 0,
   TILE_GRASS,
   TILE_WATER,
+  TILE_DIRT,
   TILE_ID_SIZE,
 } TileID;
 
@@ -32,6 +33,7 @@ typedef enum ItemID {
   ITEM_NULL = 0,
   ITEM_SET_GRASS,
   ITEM_SET_WATER,
+  ITEM_SET_DIRT,
   ITEM_ID_SIZE,
 } ItemID;
 

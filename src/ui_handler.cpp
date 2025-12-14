@@ -6,19 +6,16 @@
 UI_Handler::UI_Handler() {
   scale = Conf::UI_SCALE;
   textureHandler = nullptr;
+  itemHandler = nullptr;
   selectedItemIndex = 0;
   isToolBarActive = false;
-}
-
-void UI_Handler::Init() {
-  toolBarSlots.assign(10, TILE_NULL);
-  toolBarSlots[0] = TILE_GRASS;
-  toolBarSlots[1] = TILE_WATER;
 }
 
 void UI_Handler::SetTextureHandler(TextureHandler *th) {
   this->textureHandler = th;
 }
+
+void UI_Handler::SetItemHandler(ItemHandler *ih) { this->itemHandler = ih; }
 
 void UI_Handler::SetSelectedItem(int index) {
   if (index >= 0 && index < 10) {
@@ -58,18 +55,20 @@ void UI_Handler::DrawToolBar() {
       DrawRectangleLines(slotPosX, slotPosY, itemSize, itemSize, DARKGRAY);
     }
 
-    TileID currentTile = toolBarSlots[i];
-    if (currentTile != TILE_NULL) {
-      if (textureHandler) {
-        Rectangle tile_rect = {(float)Conf::TA_TILE_X_OFFSET,
-                               (float)Conf::ASSEST_RESOLUTION * currentTile,
-                               (float)Conf::ASSEST_RESOLUTION,
-                               (float)Conf::TILE_SIZE};
+    if (itemHandler) {
+      ItemID currentTile = itemHandler->GetToolBarItems(i);
+      if (currentTile != ITEM_NULL) {
+        if (textureHandler) {
+          Rectangle tile_rect = {(float)Conf::TA_ITEM_X_OFFSET,
+                                 (float)Conf::ASSEST_RESOLUTION * currentTile,
+                                 (float)Conf::ASSEST_RESOLUTION,
+                                 (float)Conf::TILE_SIZE};
 
-        Rectangle dest_rect = {slotPosX, slotPosY, (float)itemSize,
-                               (float)itemSize};
+          Rectangle dest_rect = {slotPosX, slotPosY, (float)itemSize,
+                                 (float)itemSize};
 
-        textureHandler->Draw(tile_rect, dest_rect, {0, 0}, 0.0f, WHITE);
+          textureHandler->Draw(tile_rect, dest_rect, {0, 0}, 0.0f, WHITE);
+        }
       }
     }
   }
@@ -89,7 +88,8 @@ int UI_Handler::GetItemSlotAt(Vector2 point) {
 
   const int itemCount = Conf::ITEM_STACK_MAX_TOOL_BAR * Conf::UI_SCALE;
   const float padding = Conf::UI_ITEM_BAR_PADDING * Conf::UI_SCALE;
-  const int itemSize = Conf::ASSEST_RESOLUTION * Conf::UI_SCALE;
+  const int itemSize =
+      Conf::ASSEST_RESOLUTION * Conf::UI_SCALE * Conf::UI_ITEM_SIZE;
   const int slotSize = itemSize + padding * Conf::UI_SCALE;
 
   float barWidth = (itemCount * slotSize) + padding;

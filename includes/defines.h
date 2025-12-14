@@ -53,7 +53,7 @@ constexpr int TILE_SIZE = ASSEST_RESOLUTION;
 constexpr int TILE_SIZE_HALF = ASSEST_RESOLUTION_HALF;
 constexpr float TILE_GAP_X = 18.4f;
 constexpr float TILE_GAP_Y = 16.0f;
-const std::vector<TileID> WALKABLE_TILES = {TILE_GRASS};
+const std::vector<TileID> WALKABLE_TILES = {TILE_GRASS, TILE_DIRT};
 
 // --- Camera ---
 constexpr float CAMERA_ZOOM = 3.8f;
@@ -92,6 +92,7 @@ constexpr float UI_SCALE = 1.0f;
 constexpr float UI_ITEM_BAR_Y_BOTTOM_MARGIN = 20.0f;
 constexpr float UI_ITEM_BAR_SLOT_SIZE = 20.0f;
 constexpr float UI_ITEM_BAR_PADDING = 15.0f;
+constexpr float UI_ITEM_SIZE = 0.8f;
 
 } // namespace Conf
 

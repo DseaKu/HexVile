@@ -15,7 +15,7 @@ typedef struct ItemProperties {
 typedef struct Item {
   ItemID id;
   int count;
-} ItemSlot;
+} Item;
 
 struct Chest {
   // std::string name;
@@ -44,7 +44,7 @@ private:
 public:
   ItemHandler();
   void Init();
-  int GetToolBarItems(int pos);
+  ItemID GetToolBarItems(int pos);
 };
 
 #endif // !ITEM_H

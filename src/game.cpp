@@ -31,10 +31,10 @@ Game::Game() {
   mouseMask = MOUSE_MASK_NULL;
 
   fontHandler.LoadFonts();
-  uiHandler.Init();
   itemHandler.Init();
 
   uiHandler.SetTextureHandler(&textureHandler);
+  uiHandler.SetItemHandler(&itemHandler);
   uiHandler.SetToolBarActive(true);
 }
 

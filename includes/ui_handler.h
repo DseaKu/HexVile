@@ -2,23 +2,23 @@
 #define UI_HANDLER_H
 
 #include "enums.h"
+#include "item.h"
 #include "raylib.h"
 #include "texture_handler.h"
-#include <vector>
 
 class UI_Handler {
 private:
   float scale;
   TextureHandler *textureHandler;
-  std::vector<TileID> toolBarSlots;
+  ItemHandler *itemHandler;
   int selectedItemIndex;
   bool isToolBarActive;
   Rectangle toolBarRect;
 
 public:
   UI_Handler();
-  void Init();
   void SetTextureHandler(TextureHandler *th);
+  void SetItemHandler(ItemHandler *ih);
   void SetSelectedItem(int index);
   void DrawToolBar();
   bool CheckClick(Vector2 mousePosition);

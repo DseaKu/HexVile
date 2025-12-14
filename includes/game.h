@@ -4,6 +4,7 @@
 #include "enums.h"
 #include "font_handler.h"
 #include "hex_tile_grid.h"
+#include "item.h"
 #include "player.h"
 #include "raylib.h"
 #include "texture_handler.h"
@@ -22,16 +23,17 @@ private:
   MouseMask mouseMask;
   Vector2 relativeCenter;
   Vector2 cameraTopLeft;
-  std::vector<DebugData> debugData;
-  ItemsID selectedItem;
+  ItemID selectedItem;
   Rectangle cameraRect;
+  std::vector<DebugData> debugData;
 
   // --- Objects
-  TextureHandler textureHandler;
   HexGrid hexGrid;
   Player player;
+  TextureHandler textureHandler;
   FontHandler fontHandler;
   UI_Handler uiHandler;
+  ItemHandler itemHandler;
 
   // --- Methods ---
   void ProcessInputs();

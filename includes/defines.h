@@ -15,15 +15,16 @@ constexpr const char *TEXTURE_ATLAS_PATH = "assets/images/texture_atlas.png";
 constexpr const char *FONT_HACK_REGULAR_PATH = "assets/font/hack_regular.ttf";
 
 // --- Screen ---
-// constexpr int SCREEN_WIDTH = 1400;
-// constexpr int SCREEN_HEIGHT = 900;
-constexpr int SCREEN_WIDTH = 2800;
-constexpr int SCREEN_HEIGHT = 1200;
+constexpr int SCREEN_WIDTH = 1400;
+constexpr int SCREEN_HEIGHT = 900;
+// constexpr int SCREEN_WIDTH = 2800;
+// constexpr int SCREEN_HEIGHT = 1200;
 constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
                                    (float)SCREEN_HEIGHT / 2};
 
 // --- Game ---
-constexpr int N_ELEMENT_ITEM_BAR = 10;
+constexpr int ITEM_STACK_MAX_TOOL_BAR = 8;
+constexpr int ITEM_STACK_MAX_INVENTORY = 30;
 
 // --- Assest & Animation ---
 constexpr int ASSEST_RESOLUTION = 32;

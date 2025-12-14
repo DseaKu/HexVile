@@ -27,6 +27,7 @@ set(SOURCES
     src/texture_handler.cpp
     src/font_handler.cpp
     src/ui_handler.cpp
+    src/item.cpp
 )
 
 add_executable(game ${SOURCES})

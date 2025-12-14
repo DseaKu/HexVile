@@ -28,15 +28,23 @@ typedef enum DirLabels {
   DIR_LABELS_LENGTH,
 } DirLabels;
 
-typedef enum ItemsID {
-  ITEMS_NULL = 0,
-  SET_TILE_GRASS,
-  SET_TILE_WATER,
+typedef enum ItemID {
+  ITEM_NULL = 0,
+  ITEM_SET_TILE_GRASS,
+  ITEM_SET_TILE_WATER,
+  ItemsIDLength,
+} ItemID;
 
-} ItemsID;
+typedef enum ItemPosition {
+  ITEM_POSITION_NULL = 0,
+  ITEM_POSTIION_TOOL_BAR,
+  ITEM_POSTIION_INVENTORY,
+  ITEM_POSITION_CHEST,
+  ITEM_POSITION_LENGTH,
+} ItemPosition;
 
 typedef enum MouseMask {
-  MOUSE_MASK_NULL,
+  MOUSE_MASK_NULL = 0,
   MOUSE_MASK_PLAY_GROUND,
   MOUSE_MASK_ITEM_BAR,
 } MouseMask;

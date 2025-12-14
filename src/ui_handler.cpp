@@ -29,7 +29,7 @@ void UI_Handler::DrawItemBar() {
   if (!isItemBarActive) {
     return;
   }
-  const int itemCount = Conf::N_ELEMENT_ITEM_BAR * Conf::UI_SCALE;
+  const int itemCount = Conf::ITEM_STACK_MAX_TOOL_BAR;
   const float padding = Conf::UI_ITEM_BAR_PADDING * Conf::UI_SCALE;
   const int itemSize = Conf::ASSEST_RESOLUTION * Conf::UI_SCALE;
   const int slotSize = itemSize + padding * Conf::UI_SCALE;
@@ -85,7 +85,7 @@ int UI_Handler::GetItemSlotAt(Vector2 point) {
     return -1;
   }
 
-  const int itemCount = Conf::N_ELEMENT_ITEM_BAR * Conf::UI_SCALE;
+  const int itemCount = Conf::ITEM_STACK_MAX_TOOL_BAR * Conf::UI_SCALE;
   const float padding = Conf::UI_ITEM_BAR_PADDING * Conf::UI_SCALE;
   const int itemSize = Conf::ASSEST_RESOLUTION * Conf::UI_SCALE;
   const int slotSize = itemSize + padding * Conf::UI_SCALE;

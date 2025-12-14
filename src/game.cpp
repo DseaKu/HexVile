@@ -83,7 +83,10 @@ void Game::ProcessInputs() {
         CheckCollisionPointRec(GetMousePosition(),
                                uiHandler.GetToolBarRect())) {
       mouseMask = MOUSE_MASK_ITEM_BAR;
+
       int clickedSlot = uiHandler.GetItemSlotAt(GetMousePosition());
+      // Break point here test what comes back
+      // itemHandler.SetItemSelection(clickedSlot);
       if (clickedSlot != -1) {
         uiHandler.SetSelectedItem(clickedSlot);
       }
@@ -92,7 +95,15 @@ void Game::ProcessInputs() {
     } else {
       mouseMask = MOUSE_MASK_PLAY_GROUND;
       HexCoord clickedHex = hexGrid.PointToHexCoord(this->mousePos);
-      hexGrid.SetTile(clickedHex, TILE_WATER);
+      ItemID selectedItem = uiHandler.GetSelectedItem();
+      TileID tileToPlace = TILE_WATER; // Default to water
+
+      if (selectedItem == ITEM_SET_GRASS) {
+        tileToPlace = TILE_GRASS;
+      }
+      // Add other item checks here if needed in the future
+
+      hexGrid.SetTile(clickedHex, tileToPlace);
     }
   }
 
@@ -190,6 +201,14 @@ void Game::DrawDebugOverlay(bool is_enabled) {
            TextFormat("Face Dir: %s", player.PlayerDirToString()),
            TextFormat("Frame: %i", player.GetAnimationFrame()),
            TextFormat("Type: %s", hexGrid.TileToString(tilePlayerType)),
+       }});
+
+  // --- Tool Bar ---
+  debugData.push_back(
+      {"Tool Bar",
+       {
+           TextFormat("Item: %s", itemHandler.ItemToString(this->selectedItem)),
+           TextFormat("Slot: %i", itemHandler.GetSelectionToolBar()),
        }});
 
   // Draw section

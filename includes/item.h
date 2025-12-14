@@ -40,11 +40,18 @@ private:
   std::vector<Item> inventory;
   std::vector<Item> toolBar;
   ItemDataBase itemDataBase;
+  int selectionToolBar;
 
 public:
   ItemHandler();
   void Init();
   ItemID GetToolBarItems(int pos);
+  const char *ItemToString(ItemID id);
+  int GetSelectionToolBar();
+  void SetItemSelection(int pos);
+
+  Item GetItemToolBar(int pos, int amount);
+  void RemoveItemToolBar(int pos, int amount);
 };
 
 #endif // !ITEM_H

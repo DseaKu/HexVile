@@ -150,6 +150,8 @@ const char *HexGrid::TileToString(TileID type) {
     return "Grass";
   case TILE_WATER:
     return "Water";
+  case TILE_DIRT:
+    return "Dirt";
   default:
     return "Undefined";
   }

@@ -79,6 +79,7 @@ void UI_Handler::SetToolBarActive(bool is_active) {
 }
 
 bool UI_Handler::GetToolBarStatus() { return isToolBarActive; }
+
 Rectangle UI_Handler::GetToolBarRect() { return this->toolBarRect; }
 
 int UI_Handler::GetItemSlotAt(Vector2 point) {
@@ -108,4 +109,11 @@ int UI_Handler::GetItemSlotAt(Vector2 point) {
   }
 
   return -1;
+}
+
+ItemID UI_Handler::GetSelectedItem() {
+  if (itemHandler) {
+    return itemHandler->GetToolBarItems(selectedItemIndex);
+  }
+  return ITEM_NULL;
 }

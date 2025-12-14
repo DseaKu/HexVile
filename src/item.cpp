@@ -16,7 +16,7 @@ ItemProperties ItemDataBase::GetItemProperties(ItemID id) {
 }
 
 // --- Item Handler ---
-ItemHandler::ItemHandler() {}
+ItemHandler::ItemHandler() { selectionToolBar = 0; }
 
 void ItemHandler::Init() {
   Item itemNull = {.id = ITEM_NULL, .count = 0};
@@ -36,3 +36,20 @@ void ItemHandler::Init() {
 }
 
 ItemID ItemHandler::GetToolBarItems(int pos) { return toolBar[pos].id; }
+
+const char *ItemHandler::ItemToString(ItemID id) {
+  switch (id) {
+  case ITEM_NULL:
+    return "Null";
+  case ITEM_SET_GRASS:
+    return "Set Grass";
+  case ITEM_SET_WATER:
+    return "Set Water";
+  case ITEM_SET_DIRT:
+    return "Set Dirt";
+  default:
+    return "Undefined";
+  }
+}
+int ItemHandler::GetSelectionToolBar() { return selectionToolBar; }
+void ItemHandler::SetItemSelection(int pos) { selectionToolBar = pos; }

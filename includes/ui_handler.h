@@ -22,7 +22,7 @@ public:
   void SetSelectedItem(int index);
   void DrawToolBar();
   bool CheckClick(Vector2 mousePosition);
-  TileID GetSelectedItem();
+  ItemID GetSelectedItem();
   void SetToolBarActive(bool is_active);
   bool GetToolBarStatus();
   Rectangle GetToolBarRect();

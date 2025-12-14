@@ -226,7 +226,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   debugData.push_back(
       {"Tool Bar",
        {
-           TextFormat("Item: %s", itemHandler.ToolBarSelctionToItemId(
+           TextFormat("Item: %s", itemHandler.ToolBarSelctionToString(
                                       this->selectedItemSlot)),
            TextFormat("Slot: %i", itemHandler.GetSelectionToolBar()),
        }});

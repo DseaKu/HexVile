@@ -82,9 +82,9 @@ bool UI_Handler::GetToolBarStatus() { return isToolBarActive; }
 
 Rectangle UI_Handler::GetToolBarRect() { return this->toolBarRect; }
 
-ItemID UI_Handler::GetItemSlotAt(Vector2 point) {
+int UI_Handler::GetItemSlotAt(Vector2 point) {
   if (!isToolBarActive) {
-    return ITEM_NULL;
+    return -1;
   }
 
   const int itemCount = Conf::ITEM_STACK_MAX_TOOL_BAR;
@@ -100,9 +100,9 @@ ItemID UI_Handler::GetItemSlotAt(Vector2 point) {
     float slotPosY = barPosY + padding;
     Rectangle slotRect = {slotPosX, slotPosY, (float)itemSize, (float)itemSize};
     if (CheckCollisionPointRec(point, slotRect)) {
-      return ITEM_NULL;
+      return -1;
     }
   }
 
-  return ITEM_NULL;
+  return -1;
 }

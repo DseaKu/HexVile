@@ -24,7 +24,7 @@ public:
   void SetToolBarActive(bool is_active);
   bool GetToolBarStatus();
   Rectangle GetToolBarRect();
-  ItemID GetItemSlotAt(Vector2 point);
+  int GetItemSlotAt(Vector2 point);
 };
 
 #endif // UI_HANDLER_H

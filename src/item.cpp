@@ -16,7 +16,7 @@ ItemProperties ItemDataBase::GetItemProperties(ItemID id) {
 }
 
 // --- Item Handler ---
-ItemHandler::ItemHandler() { selectionToolBar = 0; }
+ItemHandler::ItemHandler() { selectedToolBarSlot = 0; }
 
 void ItemHandler::Init() {
   Item itemNull = {.id = ITEM_NULL, .count = 0};
@@ -35,35 +35,24 @@ void ItemHandler::Init() {
   toolBar[3] = grass;
 }
 
-const char *ItemHandler::ItemToString(ItemID id) {
-  switch (id) {
-  case ITEM_NULL:
-    return "Null";
-  case ITEM_SET_GRASS:
-    return "Set Grass";
-  case ITEM_SET_WATER:
-    return "Set Water";
-  case ITEM_SET_DIRT:
-    return "Set Dirt";
-  default:
-    return "Undefined";
-  }
-}
-
 // --- Conversion ---
-const char *ItemHandler::ToolBarSelctionToString(int sel) {
-  return ItemToString(ToolBarSelctionToItemId(sel));
-};
-
 ItemID ItemHandler::ToolBarSelctionToItemId(int sel) {
   return toolBar[sel].id;
 };
 
-// --- Get/Set ---
-int ItemHandler::GetSelectionToolBar() { return selectionToolBar; }
+// --- Get ---
+int ItemHandler::GetSelectionToolBar() { return selectedToolBarSlot; }
 
 Item *ItemHandler::GetToolBarItemPointer(int pos) { return &toolBar[pos]; }
 
 ItemID ItemHandler::GetToolBarItemType(int pos) { return toolBar[pos].id; }
 
-void ItemHandler::SetItemSelection(int pos) { selectionToolBar = pos; }
+const char *ItemHandler::GetSelectedItemType() {
+  ItemID id = toolBar[selectedToolBarSlot].id;
+  std::string str = itemDataBase.GetItemProperties(id).name;
+  const char *txt = str.c_str();
+  return txt;
+}
+
+// --- Set ---
+void ItemHandler::SetItemSelection(int pos) { selectedToolBarSlot = pos; }

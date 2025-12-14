@@ -76,6 +76,7 @@ void Game::GameLoop() {
 void Game::ProcessInputs() {
 
   mousePos = GetScreenToWorld2D(GetMousePosition(), this->camera);
+  int selToolBarSlot = itemHandler.GetSelectionToolBar();
 
   // --- Mouse ---
   if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -85,17 +86,13 @@ void Game::ProcessInputs() {
         CheckCollisionPointRec(GetMousePosition(),
                                uiHandler.GetToolBarRect())) {
       mouseMask = MOUSE_MASK_ITEM_BAR;
-
-      selectedItemSlot = uiHandler.GetItemSlotAt(GetMousePosition());
-      uiHandler.SetSelectedItem(this->selectedItemSlot);
-      itemHandler.SetItemSelection(this->selectedItemSlot);
+      selToolBarSlot = uiHandler.GetItemSlotAt(GetMousePosition());
 
       // Clicked on ground
     } else {
       mouseMask = MOUSE_MASK_PLAY_GROUND;
       HexCoord clickedHex = hexGrid.PointToHexCoord(this->mousePos);
-      Item *selectedItem =
-          itemHandler.GetToolBarItemPointer(this->selectedItemSlot);
+      Item *selectedItem = itemHandler.GetToolBarItemPointer(selToolBarSlot);
       TileID tileToPlace = TILE_WATER; // Default to water
 
       if (selectedItem->id == ITEM_SET_GRASS) {
@@ -114,45 +111,38 @@ void Game::ProcessInputs() {
   // --- Keyboard ---
   // Toolbar selection
   if (IsKeyPressed(KEY_ONE)) {
-    uiHandler.SetSelectedItem(0);
-    itemHandler.SetItemSelection(0);
+    selToolBarSlot = 0;
   }
   if (IsKeyPressed(KEY_TWO)) {
-    uiHandler.SetSelectedItem(1);
-    itemHandler.SetItemSelection(1);
+    selToolBarSlot = 1;
   }
   if (IsKeyPressed(KEY_THREE)) {
-    uiHandler.SetSelectedItem(2);
-    itemHandler.SetItemSelection(2);
+    selToolBarSlot = 2;
   }
   if (IsKeyPressed(KEY_FOUR)) {
-    uiHandler.SetSelectedItem(3);
-    itemHandler.SetItemSelection(3);
+    selToolBarSlot = 3;
   }
   if (IsKeyPressed(KEY_FIVE)) {
-    uiHandler.SetSelectedItem(4);
-    itemHandler.SetItemSelection(4);
+    selToolBarSlot = 4;
   }
   if (IsKeyPressed(KEY_SIX)) {
-    uiHandler.SetSelectedItem(5);
-    itemHandler.SetItemSelection(5);
+    selToolBarSlot = 5;
   }
   if (IsKeyPressed(KEY_SEVEN)) {
-    uiHandler.SetSelectedItem(6);
-    itemHandler.SetItemSelection(6);
+    selToolBarSlot = 6;
   }
   if (IsKeyPressed(KEY_EIGHT)) {
-    uiHandler.SetSelectedItem(7);
-    itemHandler.SetItemSelection(7);
+    selToolBarSlot = 7;
   }
   if (IsKeyPressed(KEY_NINE)) {
-    uiHandler.SetSelectedItem(8);
-    itemHandler.SetItemSelection(8);
+    selToolBarSlot = 8;
   }
   if (IsKeyPressed(KEY_ZERO)) {
-    uiHandler.SetSelectedItem(9);
-    itemHandler.SetItemSelection(9);
+    selToolBarSlot = 9;
   }
+
+  uiHandler.SetSelectedItem(selToolBarSlot);
+  itemHandler.SetItemSelection(selToolBarSlot);
 }
 
 const char *Game::MouseMaskToString(MouseMask m) {
@@ -226,8 +216,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   debugData.push_back(
       {"Tool Bar",
        {
-           TextFormat("Item: %s", itemHandler.ToolBarSelctionToString(
-                                      this->selectedItemSlot)),
+           // TextFormat("Item: %s", itemHandler.GetSelectedItemType()),
            TextFormat("Slot: %i", itemHandler.GetSelectionToolBar()),
        }});
 

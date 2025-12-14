@@ -100,7 +100,7 @@ int UI_Handler::GetItemSlotAt(Vector2 point) {
     float slotPosY = barPosY + padding;
     Rectangle slotRect = {slotPosX, slotPosY, (float)itemSize, (float)itemSize};
     if (CheckCollisionPointRec(point, slotRect)) {
-      return -1;
+      return i;
     }
   }
 

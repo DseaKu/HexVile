@@ -40,7 +40,7 @@ private:
   std::vector<Item> inventory;
   std::vector<Item> toolBar;
   ItemDataBase itemDataBase;
-  int selectionToolBar;
+  int selectedToolBarSlot;
 
 public:
   ItemHandler();
@@ -48,13 +48,14 @@ public:
 
   // --- Conversion ---
   ItemID ToolBarSelctionToItemId(int sel);
-  const char *ToolBarSelctionToString(int sel);
-  const char *ItemToString(ItemID id);
-  //
-  // --- Get/Set---
+
+  // --- Get ---
   Item *GetToolBarItemPointer(int pos);
-  ItemID GetToolBarItemType(int pos);
   int GetSelectionToolBar();
+  ItemID GetToolBarItemType(int pos);
+  const char *GetSelectedItemType();
+
+  // --- Set ---
   void SetItemSelection(int pos);
 };
 

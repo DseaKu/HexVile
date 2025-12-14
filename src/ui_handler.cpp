@@ -9,6 +9,7 @@ UI_Handler::UI_Handler() {
   itemHandler = nullptr;
   selectedItemIndex = 0;
   isToolBarActive = false;
+  toolBarRect = {.x = 0, .y = 0, .width = 0, .height = 0};
 }
 
 void UI_Handler::SetTextureHandler(TextureHandler *th) {

@@ -32,9 +32,6 @@ Game::Game() {
 
   fontHandler.LoadFonts();
 
-  itemHandler.Init();
-  // this->p_selectedItem = nullptr;
-
   uiHandler.SetTextureHandler(&textureHandler);
   uiHandler.SetItemHandler(&itemHandler);
   uiHandler.SetToolBarActive(true);
@@ -76,7 +73,7 @@ void Game::GameLoop() {
 void Game::ProcessInputs() {
 
   mousePos = GetScreenToWorld2D(GetMousePosition(), this->camera);
-  int selToolBarSlot = itemHandler.GetSelectionToolBar();
+  int toolBarSel = itemHandler.GetSelectionToolBar();
 
   // --- Mouse ---
   if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -86,14 +83,14 @@ void Game::ProcessInputs() {
         CheckCollisionPointRec(GetMousePosition(),
                                uiHandler.GetToolBarRect())) {
       mouseMask = MOUSE_MASK_ITEM_BAR;
-      selToolBarSlot = uiHandler.GetItemSlotAt(GetMousePosition());
+      toolBarSel = uiHandler.GetItemSlotAt(GetMousePosition());
 
       // Clicked on ground
     } else {
       mouseMask = MOUSE_MASK_PLAY_GROUND;
       HexCoord clickedHex = hexGrid.PointToHexCoord(this->mousePos);
-      Item *selectedItem = itemHandler.GetToolBarItemPointer(selToolBarSlot);
-      TileID tileToPlace = selectedItem->id; // Here I need a conversion
+      Item *selectedItem = itemHandler.GetToolBarItemPointer(toolBarSel);
+      TileID tileToPlace = itemHandler.ConvertItemToTileID(selectedItem->id);
 
       // Add other item checks here if needed in the future
       hexGrid.SetTile(clickedHex, tileToPlace);
@@ -105,41 +102,12 @@ void Game::ProcessInputs() {
     hexGrid.SetTile(clickedHex, TILE_NULL);
   }
 
+  toolBarSel = ioHandler.GetToolBarSelction(toolBarSel);
   // --- Keyboard ---
   // Toolbar selection
-  if (IsKeyPressed(KEY_ONE)) {
-    selToolBarSlot = 0;
-  }
-  if (IsKeyPressed(KEY_TWO)) {
-    selToolBarSlot = 1;
-  }
-  if (IsKeyPressed(KEY_THREE)) {
-    selToolBarSlot = 2;
-  }
-  if (IsKeyPressed(KEY_FOUR)) {
-    selToolBarSlot = 3;
-  }
-  if (IsKeyPressed(KEY_FIVE)) {
-    selToolBarSlot = 4;
-  }
-  if (IsKeyPressed(KEY_SIX)) {
-    selToolBarSlot = 5;
-  }
-  if (IsKeyPressed(KEY_SEVEN)) {
-    selToolBarSlot = 6;
-  }
-  if (IsKeyPressed(KEY_EIGHT)) {
-    selToolBarSlot = 7;
-  }
-  if (IsKeyPressed(KEY_NINE)) {
-    selToolBarSlot = 8;
-  }
-  if (IsKeyPressed(KEY_ZERO)) {
-    selToolBarSlot = 9;
-  }
 
-  uiHandler.SetSelectedItem(selToolBarSlot);
-  itemHandler.SetItemSelection(selToolBarSlot);
+  uiHandler.SetSelectedItem(toolBarSel);
+  itemHandler.SetItemSelection(toolBarSel);
 }
 
 const char *Game::MouseMaskToString(MouseMask m) {

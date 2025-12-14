@@ -1,4 +1,4 @@
-#include "item.h"
+#include "item_handler.h"
 #include "defines.h"
 #include "enums.h"
 
@@ -20,7 +20,10 @@ ItemProperties ItemDataBase::GetItemProperties(ItemID id) {
 }
 
 // --- Item Handler ---
-ItemHandler::ItemHandler() { selectedToolBarSlot = 0; }
+ItemHandler::ItemHandler() {
+  selectedToolBarSlot = 0;
+  Init();
+}
 
 void ItemHandler::Init() {
   Item itemNull = {.id = ITEM_NULL, .count = 0};
@@ -32,7 +35,7 @@ void ItemHandler::Init() {
   Item dirt = {.id = ITEM_SET_DIRT, .count = 3};
   toolBar[0] = grass;
   toolBar[1] = water;
-  toolBar[2] = dirt;
+  toolBar[0] = dirt;
   toolBar[5] = grass;
   ItemProperties a = this->itemDataBase.GetItemProperties(ITEM_SET_WATER);
   ItemProperties b = this->itemDataBase.GetItemProperties(ITEM_NULL);
@@ -43,6 +46,14 @@ void ItemHandler::Init() {
 ItemID ItemHandler::ToolBarSelctionToItemId(int sel) {
   return toolBar[sel].id;
 };
+
+TileID ItemHandler::ConvertItemToTileID(ItemID item_id) {
+  auto it = item_to_tile_map.find(item_id);
+  if (it != item_to_tile_map.end()) {
+    return it->second;
+  }
+  return TILE_NULL;
+}
 
 // --- Get ---
 int ItemHandler::GetSelectionToolBar() { return selectedToolBarSlot; }

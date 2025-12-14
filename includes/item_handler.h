@@ -1,5 +1,5 @@
-#ifndef ITEM_H
-#define ITEM_H
+#ifndef ITEM_HANDLER_H
+#define ITEM_HANDLER_H
 
 #include "enums.h"
 #include <map>
@@ -42,13 +42,14 @@ private:
   std::vector<Item> toolBar;
   ItemDataBase itemDataBase;
   int selectedToolBarSlot;
+  void Init();
 
 public:
   ItemHandler();
-  void Init();
 
   // --- Conversion ---
   ItemID ToolBarSelctionToItemId(int sel);
+  TileID ConvertItemToTileID(ItemID item_id);
 
   // --- Get ---
   Item *GetToolBarItemPointer(int pos);
@@ -60,4 +61,4 @@ public:
   void SetItemSelection(int pos);
 };
 
-#endif // !ITEM_H
+#endif // !ITEM_HANDLER_H

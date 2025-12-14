@@ -1,7 +1,7 @@
 #ifndef UI_HANDLER_H
 #define UI_HANDLER_H
 
-#include "item.h"
+#include "item_handler.h"
 #include "raylib.h"
 #include "texture_handler.h"
 

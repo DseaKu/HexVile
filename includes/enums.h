@@ -1,5 +1,6 @@
 #ifndef ENUMS_H
 #define ENUMS_H
+#include <map>
 
 typedef enum TileID {
   TILE_NULL = 0,
@@ -51,5 +52,11 @@ typedef enum MouseMask {
   MOUSE_MASK_ITEM_BAR,
   MOUSE_MASK_SIZE,
 } MouseMask;
+
+static const std::map<ItemID, TileID> item_to_tile_map = {
+    {ITEM_SET_GRASS, TILE_GRASS},
+    {ITEM_SET_WATER, TILE_WATER},
+    {ITEM_SET_DIRT, TILE_DIRT},
+};
 
 #endif // !ENUMS_H

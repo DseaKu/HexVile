@@ -4,7 +4,8 @@
 #include "enums.h"
 #include "font_handler.h"
 #include "hex_tile_grid.h"
-#include "item.h"
+#include "io_handler.h"
+#include "item_handler.h"
 #include "player.h"
 #include "raylib.h"
 #include "texture_handler.h"
@@ -33,6 +34,7 @@ private:
   FontHandler fontHandler;
   UI_Handler uiHandler;
   ItemHandler itemHandler;
+  IO_Handler ioHandler;
 
   // --- Methods ---
   void ProcessInputs();

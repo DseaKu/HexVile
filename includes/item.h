@@ -45,13 +45,17 @@ private:
 public:
   ItemHandler();
   void Init();
-  ItemID GetToolBarItems(int pos);
+
+  // --- Conversion ---
+  ItemID ToolBarSelctionToItemId(int sel);
+  const char *ToolBarSelctionToString(int sel);
   const char *ItemToString(ItemID id);
+  //
+  // --- Get/Set---
+  Item *GetToolBarItemPointer(int pos);
+  ItemID GetToolBarItemType(int pos);
   int GetSelectionToolBar();
   void SetItemSelection(int pos);
-
-  Item GetItemToolBar(int pos, int amount);
-  void RemoveItemToolBar(int pos, int amount);
 };
 
 #endif // !ITEM_H

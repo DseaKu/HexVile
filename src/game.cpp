@@ -31,7 +31,9 @@ Game::Game() {
   mouseMask = MOUSE_MASK_NULL;
 
   fontHandler.LoadFonts();
+
   itemHandler.Init();
+  // this->p_selectedItem = nullptr;
 
   uiHandler.SetTextureHandler(&textureHandler);
   uiHandler.SetItemHandler(&itemHandler);
@@ -84,26 +86,22 @@ void Game::ProcessInputs() {
                                uiHandler.GetToolBarRect())) {
       mouseMask = MOUSE_MASK_ITEM_BAR;
 
-      int clickedSlot = uiHandler.GetItemSlotAt(GetMousePosition());
-      // Break point here test what comes back
-      // itemHandler.SetItemSelection(clickedSlot);
-      if (clickedSlot != -1) {
-        uiHandler.SetSelectedItem(clickedSlot);
-        itemHandler.SetItemSelection(clickedSlot);
-      }
+      selectedItemSlot = uiHandler.GetItemSlotAt(GetMousePosition());
+      uiHandler.SetSelectedItem(this->selectedItemSlot);
+      itemHandler.SetItemSelection(this->selectedItemSlot);
 
       // Clicked on ground
     } else {
       mouseMask = MOUSE_MASK_PLAY_GROUND;
       HexCoord clickedHex = hexGrid.PointToHexCoord(this->mousePos);
-      ItemID selectedItem = uiHandler.GetSelectedItem();
+      Item *selectedItem =
+          itemHandler.GetToolBarItemPointer(this->selectedItemSlot);
       TileID tileToPlace = TILE_WATER; // Default to water
 
-      if (selectedItem == ITEM_SET_GRASS) {
+      if (selectedItem->id == ITEM_SET_GRASS) {
         tileToPlace = TILE_GRASS;
       }
       // Add other item checks here if needed in the future
-
       hexGrid.SetTile(clickedHex, tileToPlace);
     }
   }
@@ -162,9 +160,9 @@ const char *Game::MouseMaskToString(MouseMask m) {
   case MOUSE_MASK_NULL:
     return "Null";
   case MOUSE_MASK_PLAY_GROUND:
-    return "Play Ground";
+    return "Ground";
   case MOUSE_MASK_ITEM_BAR:
-    return "Item Bar";
+    return "Tool Bar";
   default:
     return "Undefined";
   }
@@ -228,7 +226,8 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   debugData.push_back(
       {"Tool Bar",
        {
-           TextFormat("Item: %s", itemHandler.ItemToString(this->selectedItem)),
+           TextFormat("Item: %s", itemHandler.ToolBarSelctionToItemId(
+                                      this->selectedItemSlot)),
            TextFormat("Slot: %i", itemHandler.GetSelectionToolBar()),
        }});
 

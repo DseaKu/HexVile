@@ -35,8 +35,6 @@ void ItemHandler::Init() {
   toolBar[3] = grass;
 }
 
-ItemID ItemHandler::GetToolBarItems(int pos) { return toolBar[pos].id; }
-
 const char *ItemHandler::ItemToString(ItemID id) {
   switch (id) {
   case ITEM_NULL:
@@ -51,5 +49,21 @@ const char *ItemHandler::ItemToString(ItemID id) {
     return "Undefined";
   }
 }
+
+// --- Conversion ---
+const char *ItemHandler::ToolBarSelctionToString(int sel) {
+  return ItemToString(ToolBarSelctionToItemId(sel));
+};
+
+ItemID ItemHandler::ToolBarSelctionToItemId(int sel) {
+  return toolBar[sel].id;
+};
+
+// --- Get/Set ---
 int ItemHandler::GetSelectionToolBar() { return selectionToolBar; }
+
+Item *ItemHandler::GetToolBarItemPointer(int pos) { return &toolBar[pos]; }
+
+ItemID ItemHandler::GetToolBarItemType(int pos) { return toolBar[pos].id; }
+
 void ItemHandler::SetItemSelection(int pos) { selectionToolBar = pos; }

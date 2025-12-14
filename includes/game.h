@@ -23,7 +23,7 @@ private:
   MouseMask mouseMask;
   Vector2 relativeCenter;
   Vector2 cameraTopLeft;
-  ItemID selectedItem;
+  int selectedItemSlot;
   Rectangle cameraRect;
   std::vector<DebugData> debugData;
 

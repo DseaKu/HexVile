@@ -56,7 +56,7 @@ void UI_Handler::DrawToolBar() {
     }
 
     if (itemHandler) {
-      ItemID currentTile = itemHandler->GetToolBarItems(i);
+      ItemID currentTile = itemHandler->GetToolBarItemType(i);
       if (currentTile != ITEM_NULL) {
         if (textureHandler) {
           Rectangle tile_rect = {(float)Conf::TA_ITEM_X_OFFSET,
@@ -82,9 +82,9 @@ bool UI_Handler::GetToolBarStatus() { return isToolBarActive; }
 
 Rectangle UI_Handler::GetToolBarRect() { return this->toolBarRect; }
 
-int UI_Handler::GetItemSlotAt(Vector2 point) {
+ItemID UI_Handler::GetItemSlotAt(Vector2 point) {
   if (!isToolBarActive) {
-    return -1;
+    return ITEM_NULL;
   }
 
   const int itemCount = Conf::ITEM_STACK_MAX_TOOL_BAR;
@@ -100,16 +100,9 @@ int UI_Handler::GetItemSlotAt(Vector2 point) {
     float slotPosY = barPosY + padding;
     Rectangle slotRect = {slotPosX, slotPosY, (float)itemSize, (float)itemSize};
     if (CheckCollisionPointRec(point, slotRect)) {
-      return i;
+      return ITEM_NULL;
     }
   }
 
-  return -1;
-}
-
-ItemID UI_Handler::GetSelectedItem() {
-  if (itemHandler) {
-    return itemHandler->GetToolBarItems(selectedItemIndex);
-  }
   return ITEM_NULL;
 }

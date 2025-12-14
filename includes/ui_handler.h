@@ -1,7 +1,6 @@
 #ifndef UI_HANDLER_H
 #define UI_HANDLER_H
 
-#include "enums.h"
 #include "item.h"
 #include "raylib.h"
 #include "texture_handler.h"
@@ -22,11 +21,10 @@ public:
   void SetSelectedItem(int index);
   void DrawToolBar();
   bool CheckClick(Vector2 mousePosition);
-  ItemID GetSelectedItem();
   void SetToolBarActive(bool is_active);
   bool GetToolBarStatus();
   Rectangle GetToolBarRect();
-  int GetItemSlotAt(Vector2 point);
+  ItemID GetItemSlotAt(Vector2 point);
 };
 
 #endif // UI_HANDLER_H

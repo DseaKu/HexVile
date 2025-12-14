@@ -20,7 +20,7 @@ private:
   Vector2 position;
   TextureHandler *textureHandler;
   PlayerStateID state;
-  PlayerAnimationData animationData[PLAYER_STATE_ID_LENGTH][DIR_LABELS_LENGTH];
+  PlayerAnimationData animationData[PLAYER_STATE_ID_SIZE][DIR_LABELS_SIZE];
   HexGrid *hexGrid;
   HexCoord playerTile;
 

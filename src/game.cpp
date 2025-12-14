@@ -20,10 +20,6 @@ Game::Game() {
   player.SetHexGrid(&hexGrid);
   player.SetTextureHandler(&textureHandler);
 
-  uiHandler.Init();
-  uiHandler.SetTextureHandler(&textureHandler);
-  uiHandler.SetItemBarActive(true);
-
   camera.target = Conf::SCREEN_CENTER;
   camera.offset = Conf::SCREEN_CENTER;
   camera.zoom = Conf::CAMERA_ZOOM;
@@ -35,6 +31,11 @@ Game::Game() {
   mouseMask = MOUSE_MASK_NULL;
 
   fontHandler.LoadFonts();
+  uiHandler.Init();
+  itemHandler.Init();
+
+  uiHandler.SetTextureHandler(&textureHandler);
+  uiHandler.SetItemBarActive(true);
 }
 
 // --- Main Loop ---

@@ -30,6 +30,7 @@ private:
   std::vector<ItemProperties> propeties;
 
 public:
+  ItemDataBase();
   ItemProperties GetItemProperties;
 };
 

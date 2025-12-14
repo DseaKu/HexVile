@@ -69,9 +69,8 @@ void Player::Draw() {
   float resolution = Conf::ASSEST_RESOLUTION;
   float xFrameOffset = resolution * this->animationFrame +
                        Conf::TEXTURE_ATLAS_PLAYER_ANIMATION_X_OFFSET;
-  float yFrameOffset =
-      resolution *
-      ((this->state - 1) * (DIR_LABELS_LENGTH - 1) + (this->faceDir));
+  float yFrameOffset = resolution * ((this->state - 1) * (DIR_LABELS_SIZE - 1) +
+                                     (this->faceDir));
 
   Rectangle assestRect = {xFrameOffset, yFrameOffset, resolution, resolution};
 
@@ -163,19 +162,19 @@ void Player::Walk(Vector2 dir) {
 }
 
 void Player::InitAnimations() {
-  for (int i = 0; i < PLAYER_STATE_ID_LENGTH; i++) {
-    for (int j = 0; j < DIR_LABELS_LENGTH; j++) {
+  for (int i = 0; i < PLAYER_STATE_ID_SIZE; i++) {
+    for (int j = 0; j < DIR_LABELS_SIZE; j++) {
       this->animationData[i][j] = {
           .frameCount = Conf::TEXTURE_ATLAS_PLAYER_ANIMATION_FRAME_COUNT_MAX,
           .speed = Conf::PLAYER_ANIMATION_SPEED,
           .loop = true};
     }
   }
-  for (int i = 0; i < DIR_LABELS_LENGTH; i++) {
+  for (int i = 0; i < DIR_LABELS_SIZE; i++) {
     this->animationData[PLAYER_STATE_WALK][i].frameCount =
         Conf::TEXTURE_ATLAS_PLAYER_ANIMATION_FRAME_COUNT_WALK;
   }
-  for (int i = 0; i < DIR_LABELS_LENGTH; i++) {
+  for (int i = 0; i < DIR_LABELS_SIZE; i++) {
     this->animationData[PLAYER_STATE_IDLE][i].speed =
         Conf::TEXTURE_ATLAS_PLAYER_ANIMATION_SPEED_IDLE;
   }

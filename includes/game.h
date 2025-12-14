@@ -20,7 +20,6 @@ class Game {
 private:
   unsigned char *hackFontRegular;
   Camera2D camera;
-  Vector2 mousePos;
   MouseMask *mouseMask;
   Vector2 relativeCenter;
   Vector2 cameraTopLeft;

@@ -27,7 +27,6 @@ Game::Game() {
   cameraRect = {0, 0, 0, 0};
   cameraTopLeft = {0, 0};
 
-  mousePos = (Vector2){0, 0};
   mouseMask = ioHandler.GetMouseMaskPointer();
 
   fontHandler.LoadFonts();
@@ -73,7 +72,7 @@ void Game::GameLoop() {
 
 void Game::ProcessInputs() {
 
-  mousePos = ioHandler.GetScaledMousePos();
+  ioHandler.GetScaledMousePos();
   int toolBarSel = itemHandler.GetSelectionToolBar();
 
   // --- Mouse ---
@@ -89,7 +88,8 @@ void Game::ProcessInputs() {
       // Clicked on ground
     } else {
       *mouseMask = MOUSE_MASK_PLAY_GROUND;
-      HexCoord clickedHex = hexGrid.PointToHexCoord(this->mousePos);
+      HexCoord clickedHex =
+          hexGrid.PointToHexCoord(ioHandler.GetScaledMousePos());
       Item *selectedItem = itemHandler.GetToolBarItemPointer(toolBarSel);
       TileID tileToPlace = itemHandler.ConvertItemToTileID(selectedItem->id);
 
@@ -99,7 +99,8 @@ void Game::ProcessInputs() {
   }
 
   if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
-    HexCoord clickedHex = hexGrid.PointToHexCoord(this->mousePos);
+    HexCoord clickedHex =
+        hexGrid.PointToHexCoord(ioHandler.GetScaledMousePos());
     hexGrid.SetTile(clickedHex, TILE_NULL);
   }
 
@@ -150,12 +151,13 @@ void Game::DrawDebugOverlay(bool is_enabled) {
            TextFormat("Map radius: %i", hexGrid.getMapRadius()),
        }});
 
-  HexCoord mapTile = hexGrid.PointToHexCoord(this->mousePos);
-  TileID tileMouseType = hexGrid.PointToType(this->mousePos);
+  HexCoord mapTile = hexGrid.PointToHexCoord(ioHandler.GetScaledMousePos());
+  TileID tileMouseType = hexGrid.PointToType(ioHandler.GetScaledMousePos());
   debugData.push_back(
       {"Mouse",
        {
-           TextFormat("X,Y: %.1f,%.1f", this->mousePos.x, this->mousePos.y),
+           TextFormat("X,Y: %.1f,%.1f", ioHandler.GetScaledMousePos().x,
+                      ioHandler.GetScaledMousePos().y),
            TextFormat("Tile Q,R: %i,%i", mapTile.q, mapTile.r),
            TextFormat("Type: %s", hexGrid.TileToString(tileMouseType)),
            TextFormat("Clicked on: %s",

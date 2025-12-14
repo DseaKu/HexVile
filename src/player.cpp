@@ -67,8 +67,8 @@ void Player::Draw() {
   playerPosition.x -= Conf::ASSEST_RESOLUTION_HALF;
   playerPosition.y -= Conf::ASSEST_RESOLUTION_HALF - Conf::PLAYER_Y_OFFSET;
   float resolution = Conf::ASSEST_RESOLUTION;
-  float xFrameOffset = resolution * this->animationFrame +
-                       Conf::TEXTURE_ATLAS_PLAYER_ANIMATION_X_OFFSET;
+  float xFrameOffset =
+      resolution * this->animationFrame + Conf::TA_PLAYER_X_OFFSET;
   float yFrameOffset = resolution * ((this->state - 1) * (DIR_LABELS_SIZE - 1) +
                                      (this->faceDir));
 
@@ -164,19 +164,18 @@ void Player::Walk(Vector2 dir) {
 void Player::InitAnimations() {
   for (int i = 0; i < PLAYER_STATE_ID_SIZE; i++) {
     for (int j = 0; j < DIR_LABELS_SIZE; j++) {
-      this->animationData[i][j] = {
-          .frameCount = Conf::TEXTURE_ATLAS_PLAYER_ANIMATION_FRAME_COUNT_MAX,
-          .speed = Conf::PLAYER_ANIMATION_SPEED,
-          .loop = true};
+      this->animationData[i][j] = {.frameCount = Conf::TA_PLAYER_X_MAX,
+                                   .speed = Conf::PLAYER_ANIMATION_SPEED,
+                                   .loop = true};
     }
   }
   for (int i = 0; i < DIR_LABELS_SIZE; i++) {
     this->animationData[PLAYER_STATE_WALK][i].frameCount =
-        Conf::TEXTURE_ATLAS_PLAYER_ANIMATION_FRAME_COUNT_WALK;
+        Conf::TA_PLAYER_X_WALK_MAX;
   }
   for (int i = 0; i < DIR_LABELS_SIZE; i++) {
     this->animationData[PLAYER_STATE_IDLE][i].speed =
-        Conf::TEXTURE_ATLAS_PLAYER_ANIMATION_SPEED_IDLE;
+        Conf::TA_PLAYER_ANIMATION_SPEED_IDLE;
   }
 }
 void Player::SetHexGrid(HexGrid *grid) { this->hexGrid = grid; }

@@ -10,6 +10,8 @@ typedef struct ItemProperties {
   std::string name;
   int maxStack;
   int value;
+  int TA_X; // TA Texture Atlas
+  int TA_Y;
 } ItemProperties;
 
 typedef struct Item {

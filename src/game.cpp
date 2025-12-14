@@ -10,7 +10,7 @@
 Game::Game() {
   InitWindow(Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT, Conf::WINDOW_TITLE);
   SetTargetFPS(Conf::FPS_MAX);
-  textureHandler.LoadAssets(Conf::TEXTURE_ATLAS_PATH);
+  textureHandler.LoadAssets(Conf::TA_PATH);
   int fileSize = 0;
   hackFontRegular = LoadFileData(Conf::FONT_HACK_REGULAR_PATH, &fileSize);
 

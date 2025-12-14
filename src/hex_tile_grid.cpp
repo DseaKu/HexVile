@@ -221,7 +221,7 @@ void HexGrid::Draw(const Camera2D &camera) {
                              Conf::ASSEST_RESOLUTION};
 
       if (CheckCollisionRecs(cameraView, dest_rect)) {
-        Rectangle tile_rect = {Conf::TEXTURE_ATLAS_TILES_X_OFFSET,
+        Rectangle tile_rect = {Conf::TA_TILE_X_OFFSET,
                                (float)Conf::ASSEST_RESOLUTION * t.type,
                                Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
         Vector2 origin = {0.0f, 0.0f};

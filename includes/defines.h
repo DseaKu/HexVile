@@ -11,7 +11,7 @@ namespace Conf {
 constexpr int MAP_SIZE = 8;
 constexpr int FPS_MAX = 1000;
 constexpr const char *WINDOW_TITLE = "HexVile";
-constexpr const char *TEXTURE_ATLAS_PATH = "assets/images/texture_atlas.png";
+constexpr const char *TA_PATH = "assets/images/texture_atlas.png";
 constexpr const char *FONT_HACK_REGULAR_PATH = "assets/font/hack_regular.ttf";
 
 // --- Screen ---
@@ -26,16 +26,27 @@ constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
 constexpr int ITEM_STACK_MAX_TOOL_BAR = 8;
 constexpr int ITEM_STACK_MAX_INVENTORY = 30;
 
-// --- Assest & Animation ---
+// --- Assest & Animation --- TA = Texture Atlas
 constexpr int ASSEST_RESOLUTION = 32;
 constexpr int ASSEST_RESOLUTION_HALF = ASSEST_RESOLUTION / 2;
-constexpr int TEXTURE_ATLAS_PLAYER_ANIMATION_X_OFFSET = ASSEST_RESOLUTION * 0;
-constexpr int TEXTURE_ATLAS_PLAYER_ANIMATION_FRAME_COUNT_MAX = 12;
-constexpr int TEXTURE_ATLAS_PLAYER_ANIMATION_FRAME_COUNT_WALK = 8;
+
+constexpr int TA_PLAYER_X_OFFSET = ASSEST_RESOLUTION * 0;
+constexpr int TA_PLAYER_X_MAX = 12;
+constexpr int TA_PLAYER_X_WALK_MAX = 8;
 constexpr float PLAYER_ANIMATION_SPEED = 10.0f;
-constexpr float TEXTURE_ATLAS_PLAYER_ANIMATION_SPEED_IDLE = 5.0f;
-constexpr int TEXTURE_ATLAS_TILES_X_OFFSET =
-    ASSEST_RESOLUTION * TEXTURE_ATLAS_PLAYER_ANIMATION_FRAME_COUNT_MAX;
+constexpr float TA_PLAYER_ANIMATION_SPEED_IDLE = 5.0f;
+constexpr int TA_PLAYER_X_END =
+    TA_PLAYER_X_OFFSET + ASSEST_RESOLUTION * TA_PLAYER_X_MAX;
+
+constexpr int TA_TILE_X_OFFSET = TA_PLAYER_X_END;
+constexpr int TA_TILES_X_MAX = 8;
+constexpr int TA_TILES_X_END =
+    TA_TILE_X_OFFSET + ASSEST_RESOLUTION * TA_TILES_X_MAX;
+
+constexpr int TA_ITEM_X_OFFSET = TA_TILES_X_END;
+constexpr int TA_ITEM_X_MAX = 8;
+constexpr int TA_ITEM_X_END =
+    TA_ITEM_X_OFFSET + ASSEST_RESOLUTION * TA_ITEM_X_MAX;
 
 // --- Tile ---
 constexpr int TILE_SIZE = ASSEST_RESOLUTION;
@@ -58,7 +69,7 @@ constexpr int DEBUG_OVERLAY_SECTION_FONT_SIZE = 20;
 constexpr int DEBUG_OVERLAY_SUBSECTION_FONT_SIZE = 15;
 constexpr int HACK_REGULAR_GLYPH_COUNT = 95;
 
-// --- Debug ---
+// --- Debug --- DO = Debug Overlay
 constexpr bool DEBUG_FLAG = true;
 constexpr int DEBUG_OVERLAY_SECTION_X_POS = 30;
 constexpr int DEBUG_OVERLAY_SECTION_Y_POS = 30;

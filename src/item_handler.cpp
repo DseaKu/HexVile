@@ -33,13 +33,12 @@ void ItemHandler::Init() {
   Item grass = {.id = ITEM_SET_GRASS, .count = 8};
   Item water = {.id = ITEM_SET_WATER, .count = 13};
   Item dirt = {.id = ITEM_SET_DIRT, .count = 8};
-  toolBar[0] = grass;
-  toolBar[1] = water;
+  Item dirt2 = {.id = ITEM_SET_DIRT, .count = 2};
   toolBar[0] = dirt;
-  toolBar[5] = grass;
-  ItemProperties a = this->itemDataBase.GetItemProperties(ITEM_SET_WATER);
-  ItemProperties b = this->itemDataBase.GetItemProperties(ITEM_NULL);
+  toolBar[1] = water;
+  toolBar[2] = dirt2;
   toolBar[3] = grass;
+  toolBar[5] = grass;
 }
 
 bool ItemHandler::TakeItemFromToolBar(Item *item, int amount) {

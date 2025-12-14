@@ -10,8 +10,6 @@ typedef struct ItemProperties {
   std::string name;
   int maxStack;
   int value;
-  int TA_X; // TA Texture Atlas
-  int TA_Y;
 } ItemProperties;
 
 typedef struct Item {
@@ -46,7 +44,7 @@ private:
 public:
   ItemHandler();
   void Init();
-  std::vector<std::pair<int, int>> GetTextureToRender();
+  int GetToolBarItems(int pos);
 };
 
 #endif // !ITEM_H

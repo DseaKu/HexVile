@@ -5,15 +5,9 @@
 // --- Item Data Base ---
 ItemDataBase::ItemDataBase() {
   propeties.resize(ITEM_ID_SIZE);
-  propeties[ITEM_NULL] = {
-      .name = "Null", .maxStack = 0, .value = 0, .TA_X = 0, .TA_Y = 0};
-  propeties[ITEM_SET_GRASS] = {.name = "Set Grass",
-                               .maxStack = 32,
-                               .value = 5,
-                               .TA_X = Conf::TA_ITEM_X_OFFSET,
-                               .TA_Y = 0};
-  propeties[ITEM_SET_WATER] = {
-      .name = "Set Water", .maxStack = 32, .value = 8, .TA_X = 0, .TA_Y = 0};
+  propeties[ITEM_NULL] = {.name = "Null", .maxStack = 0, .value = 0};
+  propeties[ITEM_SET_GRASS] = {.name = "Set Grass", .maxStack = 32, .value = 5};
+  propeties[ITEM_SET_WATER] = {.name = "Set Water", .maxStack = 32, .value = 8};
 }
 
 ItemProperties ItemDataBase::GetItemProperties(ItemID id) {
@@ -37,3 +31,5 @@ void ItemHandler::Init() {
   ItemProperties b = this->itemDataBase.GetItemProperties(ITEM_NULL);
   toolBar[3] = grass;
 }
+
+int ItemHandler::GetToolBarItems(int pos) { return toolBar[pos].id; }

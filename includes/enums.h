@@ -3,7 +3,6 @@
 
 typedef enum TileID {
   TILE_NULL = 0,
-  TILE_VOID,
   TILE_GRASS,
   TILE_WATER,
   TILE_ID_SIZE,

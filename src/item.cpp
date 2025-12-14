@@ -10,7 +10,7 @@ ItemDataBase::ItemDataBase() {
   propeties[ITEM_SET_GRASS] = {.name = "Set Grass",
                                .maxStack = 32,
                                .value = 5,
-                               .TA_X = Conf::,
+                               .TA_X = Conf::TA_ITEM_X_OFFSET,
                                .TA_Y = 0};
   propeties[ITEM_SET_WATER] = {
       .name = "Set Water", .maxStack = 32, .value = 8, .TA_X = 0, .TA_Y = 0};

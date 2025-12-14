@@ -1,5 +1,6 @@
 #include "ui_handler.h"
 #include "defines.h"
+#include "enums.h"
 #include "raylib.h"
 
 UI_Handler::UI_Handler() {
@@ -10,7 +11,7 @@ UI_Handler::UI_Handler() {
 }
 
 void UI_Handler::Init() {
-  itemBarSlots.assign(10, TILE_VOID);
+  itemBarSlots.assign(10, TILE_NULL);
   itemBarSlots[0] = TILE_GRASS;
   itemBarSlots[1] = TILE_WATER;
 }
@@ -58,9 +59,9 @@ void UI_Handler::DrawItemBar() {
     }
 
     TileID currentTile = itemBarSlots[i];
-    if (currentTile != TILE_VOID && currentTile != TILE_NULL) {
+    if (currentTile != TILE_NULL) {
       if (textureHandler) {
-        Rectangle tile_rect = {(float)Conf::TEXTURE_ATLAS_TILES_X_OFFSET,
+        Rectangle tile_rect = {(float)Conf::TA_TILE_X_OFFSET,
                                (float)Conf::ASSEST_RESOLUTION * currentTile,
                                (float)Conf::ASSEST_RESOLUTION,
                                (float)Conf::TILE_SIZE};

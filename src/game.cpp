@@ -98,7 +98,7 @@ void Game::ProcessInputs() {
 
   if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
     HexCoord clickedHex = hexGrid.PointToHexCoord(this->mousePos);
-    hexGrid.SetTile(clickedHex, TILE_VOID);
+    hexGrid.SetTile(clickedHex, TILE_NULL);
   }
 
   // --- Keyboard ---

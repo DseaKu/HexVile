@@ -146,14 +146,12 @@ const char *HexGrid::TileToString(TileID type) {
   switch (type) {
   case TILE_NULL:
     return "NULL";
-  case TILE_VOID:
-    return "VOID";
   case TILE_GRASS:
     return "Grass";
   case TILE_WATER:
     return "Water";
   default:
-    return "NULL";
+    return "Undefined";
   }
 }
 // --- Logic ---

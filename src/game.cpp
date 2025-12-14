@@ -89,6 +89,7 @@ void Game::ProcessInputs() {
       // itemHandler.SetItemSelection(clickedSlot);
       if (clickedSlot != -1) {
         uiHandler.SetSelectedItem(clickedSlot);
+        itemHandler.SetItemSelection(clickedSlot);
       }
 
       // Clicked on ground
@@ -114,26 +115,46 @@ void Game::ProcessInputs() {
 
   // --- Keyboard ---
   // Toolbar selection
-  if (IsKeyPressed(KEY_ONE))
+  if (IsKeyPressed(KEY_ONE)) {
     uiHandler.SetSelectedItem(0);
-  if (IsKeyPressed(KEY_TWO))
+    itemHandler.SetItemSelection(0);
+  }
+  if (IsKeyPressed(KEY_TWO)) {
     uiHandler.SetSelectedItem(1);
-  if (IsKeyPressed(KEY_THREE))
+    itemHandler.SetItemSelection(1);
+  }
+  if (IsKeyPressed(KEY_THREE)) {
     uiHandler.SetSelectedItem(2);
-  if (IsKeyPressed(KEY_FOUR))
+    itemHandler.SetItemSelection(2);
+  }
+  if (IsKeyPressed(KEY_FOUR)) {
     uiHandler.SetSelectedItem(3);
-  if (IsKeyPressed(KEY_FIVE))
+    itemHandler.SetItemSelection(3);
+  }
+  if (IsKeyPressed(KEY_FIVE)) {
     uiHandler.SetSelectedItem(4);
-  if (IsKeyPressed(KEY_SIX))
+    itemHandler.SetItemSelection(4);
+  }
+  if (IsKeyPressed(KEY_SIX)) {
     uiHandler.SetSelectedItem(5);
-  if (IsKeyPressed(KEY_SEVEN))
+    itemHandler.SetItemSelection(5);
+  }
+  if (IsKeyPressed(KEY_SEVEN)) {
     uiHandler.SetSelectedItem(6);
-  if (IsKeyPressed(KEY_EIGHT))
+    itemHandler.SetItemSelection(6);
+  }
+  if (IsKeyPressed(KEY_EIGHT)) {
     uiHandler.SetSelectedItem(7);
-  if (IsKeyPressed(KEY_NINE))
+    itemHandler.SetItemSelection(7);
+  }
+  if (IsKeyPressed(KEY_NINE)) {
     uiHandler.SetSelectedItem(8);
-  if (IsKeyPressed(KEY_ZERO))
+    itemHandler.SetItemSelection(8);
+  }
+  if (IsKeyPressed(KEY_ZERO)) {
     uiHandler.SetSelectedItem(9);
+    itemHandler.SetItemSelection(9);
+  }
 }
 
 const char *Game::MouseMaskToString(MouseMask m) {

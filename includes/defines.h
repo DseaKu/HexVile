@@ -89,10 +89,11 @@ constexpr float OFFSET_TO_OBSTACLE = 5;
 
 // --- UI ---
 constexpr float UI_SCALE = 1.0f;
-constexpr float UI_ITEM_BAR_Y_BOTTOM_MARGIN = 20.0f;
-constexpr float UI_ITEM_BAR_SLOT_SIZE = 20.0f;
-constexpr float UI_ITEM_BAR_PADDING = 15.0f;
-constexpr float UI_ITEM_SIZE = 0.8f;
+constexpr float UI_ITEM_BAR_Y_BOTTOM_MARGIN = 20.0f * UI_SCALE;
+constexpr float UI_ITEM_BAR_PADDING = 15.0f * UI_SCALE;
+constexpr float UI_ITEM_SIZE = 0.8f * UI_SCALE * ASSEST_RESOLUTION;
+constexpr float UI_ITEM_BAR_SLOT_SIZE =
+    (UI_ITEM_SIZE + UI_ITEM_BAR_PADDING) * 0.0f * UI_SCALE;
 
 } // namespace Conf
 

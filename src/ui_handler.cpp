@@ -28,16 +28,16 @@ void UI_Handler::DrawToolBar() {
     return;
   }
   const int itemCount = Conf::ITEM_STACK_MAX_TOOL_BAR;
-  const float padding = Conf::UI_ITEM_BAR_PADDING;
-  const int itemSize = Conf::UI_ITEM_SIZE;
-  const int slotSize = Conf::UI_ITEM_BAR_SLOT_SIZE;
+  const float padding = Conf::UI_TOOL_BAR_PADDING;
+  const int itemSize = Conf::UI_TOOL_SIZE;
+  const int slotSize = Conf::UI_TOOL_BAR_SLOT_SIZE;
 
   float barWidth = (itemCount * slotSize) + padding;
   float barHeight = itemSize + (2 * padding);
 
   float barPosX = Conf::SCREEN_CENTER.x - (barWidth / 2.0f);
   float barPosY =
-      Conf::SCREEN_HEIGHT - barHeight - Conf::UI_ITEM_BAR_Y_BOTTOM_MARGIN;
+      Conf::SCREEN_HEIGHT - barHeight - Conf::UI_TOOL_BAR_Y_BOTTOM_MARGIN;
 
   this->toolBarRect = {barPosX, barPosY, barWidth, barHeight};
 
@@ -88,9 +88,9 @@ int UI_Handler::GetItemSlotAt(Vector2 point) {
   }
 
   const int itemCount = Conf::ITEM_STACK_MAX_TOOL_BAR;
-  const float padding = Conf::UI_ITEM_BAR_PADDING;
-  const int itemSize = Conf::UI_ITEM_SIZE;
-  const int slotSize = Conf::UI_ITEM_BAR_SLOT_SIZE;
+  const float padding = Conf::UI_TOOL_BAR_PADDING;
+  const int itemSize = Conf::UI_TOOL_SIZE;
+  const int slotSize = Conf::UI_TOOL_BAR_SLOT_SIZE;
 
   float barPosX = this->toolBarRect.x;
   float barPosY = this->toolBarRect.y;

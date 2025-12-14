@@ -80,7 +80,7 @@ void Game::ProcessInputs() {
 
     // Clicked on item bar
     if (uiHandler.GetToolBarStatus() &&
-        CheckCollisionPointRec(GetMousePosition(),
+        CheckCollisionPointRec(ioHandler.GetRealMousePos(),
                                uiHandler.GetToolBarRect())) {
       *mouseMask = MOUSE_MASK_ITEM_BAR;
       toolBarSel = uiHandler.GetItemSlotAt(GetMousePosition());

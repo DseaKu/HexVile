@@ -74,6 +74,7 @@ public:
   // Coordinate Conversions
   Vector2 HexCoordToPoint(HexCoord h);
   MapTile HexCoordToTile(HexCoord h);
+  TileID HexCoordToType(HexCoord h);
   HexCoord PointToHexCoord(Vector2 point);
   MapTile PointToTile(Vector2 point);
   TileID PointToType(Vector2 point);
@@ -83,7 +84,7 @@ public:
   bool IsInBounds(HexCoord h);
   HexCoord GetNeighbor(HexCoord h, int directionIndex);
   bool HasTile(HexCoord h);
-  int SetTile(HexCoord h, TileID ID);
+  bool SetTile(HexCoord h, TileID ID);
   void ToggleTile(HexCoord h);
   bool CheckSurrounded(HexCoord target);
 

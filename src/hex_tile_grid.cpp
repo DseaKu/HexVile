@@ -121,6 +121,11 @@ Vector2 HexGrid::HexCoordToPoint(HexCoord h) {
   float y = tileGapY * (3.0f / 2.0f * h.r);
   return {x + origin.x, y + origin.y};
 }
+TileID HexGrid::HexCoordToType(HexCoord h) {
+  MapTile m = HexCoordToTile(h);
+  return m.type;
+}
+
 MapTile HexGrid::HexCoordToTile(HexCoord h) {
   if (!IsInBounds(h)) {
     return (MapTile){.type = TILE_NULL, .isDirty = false, .isVisble = false};
@@ -157,14 +162,16 @@ const char *HexGrid::TileToString(TileID type) {
   }
 }
 // --- Logic ---
-int HexGrid::SetTile(HexCoord h, TileID ID) {
-  if (IsInBounds(h)) {
+bool HexGrid::SetTile(HexCoord h, TileID id) {
+  if (!IsInBounds(h) || HexCoordToType(h) == id) {
+    return false;
+  } else {
     int gridR = h.r + mapRadius;
     int gridQ = h.q + mapRadius;
-    tiles[gridR][gridQ].type = ID;
-    return 1;
+    tiles[gridR][gridQ].type = id;
+    return true;
   }
-  return -1;
+  return false;
 }
 
 void HexGrid::ToggleTile(HexCoord h) {

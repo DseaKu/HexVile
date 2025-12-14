@@ -94,7 +94,7 @@ void Game::ProcessInputs() {
       Item *selectedItem = itemHandler.GetToolBarItemPointer(toolBarSel);
       TileID tileToPlace = itemHandler.ConvertItemToTileID(selectedItem->id);
 
-      if (hexGrid.SetTile(clickedHex, tileToPlace) != -1) {
+      if (hexGrid.SetTile(clickedHex, tileToPlace)) {
         itemHandler.TakeItemFromToolBar(selectedItem, 1);
       };
     }

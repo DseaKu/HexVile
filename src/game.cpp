@@ -93,11 +93,8 @@ void Game::ProcessInputs() {
       mouseMask = MOUSE_MASK_PLAY_GROUND;
       HexCoord clickedHex = hexGrid.PointToHexCoord(this->mousePos);
       Item *selectedItem = itemHandler.GetToolBarItemPointer(selToolBarSlot);
-      TileID tileToPlace = TILE_WATER; // Default to water
+      TileID tileToPlace = selectedItem->id; // Here I need a conversion
 
-      if (selectedItem->id == ITEM_SET_GRASS) {
-        tileToPlace = TILE_GRASS;
-      }
       // Add other item checks here if needed in the future
       hexGrid.SetTile(clickedHex, tileToPlace);
     }
@@ -216,7 +213,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   debugData.push_back(
       {"Tool Bar",
        {
-           // TextFormat("Item: %s", itemHandler.GetSelectedItemType()),
+           TextFormat("Item: %s", itemHandler.GetSelectedItemType()),
            TextFormat("Slot: %i", itemHandler.GetSelectionToolBar()),
        }});
 

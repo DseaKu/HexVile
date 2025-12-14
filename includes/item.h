@@ -10,6 +10,7 @@ typedef struct ItemProperties {
   std::string name;
   int maxStack;
   int value;
+  bool placeableTile;
 } ItemProperties;
 
 typedef struct Item {

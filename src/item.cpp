@@ -5,10 +5,14 @@
 // --- Item Data Base ---
 ItemDataBase::ItemDataBase() {
   propeties.resize(ITEM_ID_SIZE);
-  propeties[ITEM_NULL] = {.name = "Null", .maxStack = 0, .value = 0};
-  propeties[ITEM_SET_GRASS] = {.name = "Set Grass", .maxStack = 32, .value = 5};
-  propeties[ITEM_SET_WATER] = {.name = "Set Water", .maxStack = 32, .value = 8};
-  propeties[ITEM_SET_DIRT] = {.name = "Set Dirt", .maxStack = 32, .value = 8};
+  propeties[ITEM_NULL] = {
+      .name = "Null", .maxStack = 0, .value = 0, .placeableTile = false};
+  propeties[ITEM_SET_GRASS] = {
+      .name = "Set Grass", .maxStack = 32, .value = 5, .placeableTile = true};
+  propeties[ITEM_SET_WATER] = {
+      .name = "Set Water", .maxStack = 32, .value = 8, .placeableTile = true};
+  propeties[ITEM_SET_DIRT] = {
+      .name = "Set Dirt", .maxStack = 32, .value = 8, .placeableTile = true};
 }
 
 ItemProperties ItemDataBase::GetItemProperties(ItemID id) {

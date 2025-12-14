@@ -37,6 +37,7 @@ bool HexCoord::operator<(const HexCoord &other) const {
 // --- Hex Grid ---
 HexGrid::HexGrid() {
 
+  animationFrame = 0;
   tileGapX = Conf::TILE_GAP_X;
   tileGapY = Conf::TILE_GAP_Y;
   origin = Conf::SCREEN_CENTER;
@@ -221,6 +222,7 @@ void HexGrid::Draw(const Camera2D &camera) {
   Vector2 topLeft = GetScreenToWorld2D(Vector2{0, 0}, camera);
   Rectangle cameraView = {topLeft.x, topLeft.y, Conf::CAMERA_WIDTH,
                           Conf::CAMERA_HEIGTH};
+  animationFrame = (int)(Conf::TA_TILES_ANIMATION_SPEED + GetFrameTime()) % 3;
 
   int gridSize = mapRadius * 2 + 1;
   for (int r = 0; r < gridSize; r++) {
@@ -238,7 +240,9 @@ void HexGrid::Draw(const Camera2D &camera) {
                              Conf::ASSEST_RESOLUTION};
 
       if (CheckCollisionRecs(cameraView, dest_rect)) {
-        Rectangle tile_rect = {Conf::TA_TILE_X_OFFSET,
+        Rectangle tile_rect = {Conf::TA_TILE_X_OFFSET +
+                                   (float)animationFrame *
+                                       Conf::ASSEST_RESOLUTION,
                                (float)Conf::ASSEST_RESOLUTION * t.type,
                                Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
         Vector2 origin = {0.0f, 0.0f};

@@ -40,6 +40,7 @@ constexpr int TA_PLAYER_X_END =
 
 constexpr int TA_TILE_X_OFFSET = TA_PLAYER_X_END;
 constexpr int TA_TILES_X_MAX = 8;
+constexpr float TA_TILES_ANIMATION_SPEED = 2.0f;
 constexpr int TA_TILES_X_END =
     TA_TILE_X_OFFSET + ASSEST_RESOLUTION * TA_TILES_X_MAX;
 

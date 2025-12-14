@@ -54,6 +54,7 @@ private:
   std::vector<std::vector<MapTile>> tiles;
   float tileGapX;
   float tileGapY;
+  int animationFrame;
   int mapRadius;
   int tilesInUse;
   Vector2 origin;

@@ -33,6 +33,7 @@ Game::Game() {
 
   uiHandler.SetTextureHandler(&textureHandler);
   uiHandler.SetItemHandler(&itemHandler);
+  uiHandler.SetFontHandler(&fontHandler);
   uiHandler.SetToolBarActive(true);
 }
 
@@ -93,8 +94,9 @@ void Game::ProcessInputs() {
       Item *selectedItem = itemHandler.GetToolBarItemPointer(toolBarSel);
       TileID tileToPlace = itemHandler.ConvertItemToTileID(selectedItem->id);
 
-      // Add other item checks here if needed in the future
-      hexGrid.SetTile(clickedHex, tileToPlace);
+      if (hexGrid.SetTile(clickedHex, tileToPlace) != -1) {
+        itemHandler.TakeItemFromToolBar(selectedItem, 1);
+      };
     }
   }
 

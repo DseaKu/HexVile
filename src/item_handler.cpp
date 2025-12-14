@@ -30,9 +30,9 @@ void ItemHandler::Init() {
   inventory.assign(Conf::ITEM_STACK_MAX_INVENTORY, itemNull);
   toolBar.assign(Conf::ITEM_STACK_MAX_TOOL_BAR, itemNull);
 
-  Item grass = {.id = ITEM_SET_GRASS, .count = 3};
-  Item water = {.id = ITEM_SET_WATER, .count = 3};
-  Item dirt = {.id = ITEM_SET_DIRT, .count = 3};
+  Item grass = {.id = ITEM_SET_GRASS, .count = 8};
+  Item water = {.id = ITEM_SET_WATER, .count = 13};
+  Item dirt = {.id = ITEM_SET_DIRT, .count = 8};
   toolBar[0] = grass;
   toolBar[1] = water;
   toolBar[0] = dirt;
@@ -40,6 +40,17 @@ void ItemHandler::Init() {
   ItemProperties a = this->itemDataBase.GetItemProperties(ITEM_SET_WATER);
   ItemProperties b = this->itemDataBase.GetItemProperties(ITEM_NULL);
   toolBar[3] = grass;
+}
+
+bool ItemHandler::TakeItemFromToolBar(Item *item, int amount) {
+  if (item->count >= amount) {
+    item->count -= amount;
+    if (item->count == 0) {
+      item->id = ITEM_NULL;
+    }
+    return true;
+  }
+  return false;
 }
 
 // --- Conversion ---

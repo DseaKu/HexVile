@@ -83,7 +83,7 @@ public:
   bool IsInBounds(HexCoord h);
   HexCoord GetNeighbor(HexCoord h, int directionIndex);
   bool HasTile(HexCoord h);
-  void SetTile(HexCoord h, TileID ID);
+  int SetTile(HexCoord h, TileID ID);
   void ToggleTile(HexCoord h);
   bool CheckSurrounded(HexCoord target);
 

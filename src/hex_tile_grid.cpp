@@ -157,12 +157,14 @@ const char *HexGrid::TileToString(TileID type) {
   }
 }
 // --- Logic ---
-void HexGrid::SetTile(HexCoord h, TileID ID) {
+int HexGrid::SetTile(HexCoord h, TileID ID) {
   if (IsInBounds(h)) {
     int gridR = h.r + mapRadius;
     int gridQ = h.q + mapRadius;
     tiles[gridR][gridQ].type = ID;
+    return 1;
   }
+  return -1;
 }
 
 void HexGrid::ToggleTile(HexCoord h) {

@@ -4,12 +4,14 @@
 #include "item_handler.h"
 #include "raylib.h"
 #include "texture_handler.h"
+#include "font_handler.h"
 
 class UI_Handler {
 private:
   float scale;
   TextureHandler *textureHandler;
   ItemHandler *itemHandler;
+  FontHandler *fontHandler;
   int selectedItemIndex;
   bool isToolBarActive;
   Rectangle toolBarRect;
@@ -18,6 +20,7 @@ public:
   UI_Handler();
   void SetTextureHandler(TextureHandler *th);
   void SetItemHandler(ItemHandler *ih);
+  void SetFontHandler(FontHandler *fh);
   void SetSelectedItem(int index);
   void DrawToolBar();
   bool CheckClick(Vector2 mousePosition);

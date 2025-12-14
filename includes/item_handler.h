@@ -46,6 +46,7 @@ private:
 
 public:
   ItemHandler();
+  bool TakeItemFromToolBar(Item *item, int amount);
 
   // --- Conversion ---
   ItemID ToolBarSelctionToItemId(int sel);

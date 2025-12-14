@@ -2,11 +2,13 @@
 #include "defines.h"
 #include "enums.h"
 #include "raylib.h"
+#include "font_handler.h"
 
 UI_Handler::UI_Handler() {
   scale = Conf::UI_SCALE;
   textureHandler = nullptr;
   itemHandler = nullptr;
+  fontHandler = nullptr;
   selectedItemIndex = 0;
   isToolBarActive = false;
   toolBarRect = {.x = 0, .y = 0, .width = 0, .height = 0};
@@ -17,6 +19,8 @@ void UI_Handler::SetTextureHandler(TextureHandler *th) {
 }
 
 void UI_Handler::SetItemHandler(ItemHandler *ih) { this->itemHandler = ih; }
+
+void UI_Handler::SetFontHandler(FontHandler *fh) { this->fontHandler = fh; }
 
 void UI_Handler::SetSelectedItem(int index) {
   if (index >= 0 && index < 10) {
@@ -69,6 +73,13 @@ void UI_Handler::DrawToolBar() {
                                  (float)itemSize};
 
           textureHandler->Draw(tile_rect, dest_rect, {0, 0}, 0.0f, WHITE);
+
+          // Draw item count
+          if (itemHandler->GetToolBarItemPointer(i)->count > 0) {
+            char countText[5];
+            snprintf(countText, sizeof(countText), "%d", itemHandler->GetToolBarItemPointer(i)->count);
+            fontHandler->DrawTextHackRegular(countText, {slotPosX + itemSize - (float)MeasureText(countText, Conf::FONT_SIZE_DEFAULT) - 5, slotPosY + itemSize - Conf::FONT_SIZE_DEFAULT - 5}, WHITE);
+          }
         }
       }
     }

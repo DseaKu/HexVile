@@ -15,10 +15,10 @@ constexpr const char *TEXTURE_ATLAS_PATH = "assets/images/texture_atlas.png";
 constexpr const char *FONT_HACK_REGULAR_PATH = "assets/font/hack_regular.ttf";
 
 // --- Screen ---
-constexpr int SCREEN_WIDTH = 1400;
-constexpr int SCREEN_HEIGHT = 900;
-// constexpr int SCREEN_WIDTH = 2800;
-// constexpr int SCREEN_HEIGHT = 1200;
+// constexpr int SCREEN_WIDTH = 1400;
+// constexpr int SCREEN_HEIGHT = 900;
+constexpr int SCREEN_WIDTH = 2800;
+constexpr int SCREEN_HEIGHT = 1200;
 constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
                                    (float)SCREEN_HEIGHT / 2};
 
@@ -45,7 +45,7 @@ constexpr float TILE_GAP_Y = 16.0f;
 const std::vector<TileID> WALKABLE_TILES = {TILE_GRASS};
 
 // --- Camera ---
-constexpr float CAMERA_ZOOM = 4.0f;
+constexpr float CAMERA_ZOOM = 3.8f;
 constexpr float CAMERA_WIDTH = (float)SCREEN_WIDTH / CAMERA_ZOOM;
 constexpr float CAMERA_HEIGTH = (float)SCREEN_HEIGHT / CAMERA_ZOOM;
 

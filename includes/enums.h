@@ -31,9 +31,9 @@ typedef enum DirLabels {
 
 typedef enum ItemID {
   ITEM_NULL = 0,
-  ITEM_SET_TILE_GRASS,
-  ITEM_SET_TILE_WATER,
-  ITEMS_ID_SIZE,
+  ITEM_SET_GRASS,
+  ITEM_SET_WATER,
+  ITEM_ID_SIZE,
 } ItemID;
 
 typedef enum ItemPosition {

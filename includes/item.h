@@ -18,7 +18,7 @@ typedef struct Item {
 } ItemSlot;
 
 struct Chest {
-  std::string name;
+  // std::string name;
   std::vector<Item> contents;
 };
 
@@ -31,7 +31,7 @@ private:
 
 public:
   ItemDataBase();
-  ItemProperties GetItemProperties;
+  ItemProperties GetItemProperties(ItemID id);
 };
 
 // --- Item Handler ---
@@ -39,6 +39,7 @@ class ItemHandler {
 private:
   std::vector<Item> inventory;
   std::vector<Item> toolBar;
+  ItemDataBase itemDataBase;
 
 public:
   ItemHandler();

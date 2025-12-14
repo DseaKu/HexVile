@@ -7,13 +7,13 @@ UI_Handler::UI_Handler() {
   scale = Conf::UI_SCALE;
   textureHandler = nullptr;
   selectedItemIndex = 0;
-  isItemBarActive = false;
+  isToolBarActive = false;
 }
 
 void UI_Handler::Init() {
-  itemBarSlots.assign(10, TILE_NULL);
-  itemBarSlots[0] = TILE_GRASS;
-  itemBarSlots[1] = TILE_WATER;
+  toolBarSlots.assign(10, TILE_NULL);
+  toolBarSlots[0] = TILE_GRASS;
+  toolBarSlots[1] = TILE_WATER;
 }
 
 void UI_Handler::SetTextureHandler(TextureHandler *th) {
@@ -26,8 +26,8 @@ void UI_Handler::SetSelectedItem(int index) {
   }
 }
 
-void UI_Handler::DrawItemBar() {
-  if (!isItemBarActive) {
+void UI_Handler::DrawToolBar() {
+  if (!isToolBarActive) {
     return;
   }
   const int itemCount = Conf::ITEM_STACK_MAX_TOOL_BAR;
@@ -42,9 +42,9 @@ void UI_Handler::DrawItemBar() {
   float barPosY =
       Conf::SCREEN_HEIGHT - barHeight - Conf::UI_ITEM_BAR_Y_BOTTOM_MARGIN;
 
-  this->itemBarRect = {barPosX, barPosY, barWidth, barHeight};
+  this->toolBarRect = {barPosX, barPosY, barWidth, barHeight};
 
-  DrawRectangleRec(this->itemBarRect, Fade(GRAY, 0.8f));
+  DrawRectangleRec(this->toolBarRect, Fade(GRAY, 0.8f));
 
   for (int i = 0; i < itemCount; ++i) {
     float slotPosX = barPosX + padding + (i * slotSize);
@@ -58,7 +58,7 @@ void UI_Handler::DrawItemBar() {
       DrawRectangleLines(slotPosX, slotPosY, itemSize, itemSize, DARKGRAY);
     }
 
-    TileID currentTile = itemBarSlots[i];
+    TileID currentTile = toolBarSlots[i];
     if (currentTile != TILE_NULL) {
       if (textureHandler) {
         Rectangle tile_rect = {(float)Conf::TA_TILE_X_OFFSET,
@@ -74,15 +74,16 @@ void UI_Handler::DrawItemBar() {
     }
   }
 }
-void UI_Handler::SetItemBarActive(bool is_active) {
-  isItemBarActive = is_active;
+
+void UI_Handler::SetToolBarActive(bool is_active) {
+  isToolBarActive = is_active;
 }
 
-bool UI_Handler::GetItemBarStatus() { return isItemBarActive; }
-Rectangle UI_Handler::GetItemBarRect() { return this->itemBarRect; }
+bool UI_Handler::GetToolBarStatus() { return isToolBarActive; }
+Rectangle UI_Handler::GetToolBarRect() { return this->toolBarRect; }
 
 int UI_Handler::GetItemSlotAt(Vector2 point) {
-  if (!isItemBarActive) {
+  if (!isToolBarActive) {
     return -1;
   }
 

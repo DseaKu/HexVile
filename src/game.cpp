@@ -35,7 +35,7 @@ Game::Game() {
   itemHandler.Init();
 
   uiHandler.SetTextureHandler(&textureHandler);
-  uiHandler.SetItemBarActive(true);
+  uiHandler.SetToolBarActive(true);
 }
 
 // --- Main Loop ---
@@ -64,7 +64,7 @@ void Game::GameLoop() {
     // --- End Camera View ---
     EndMode2D();
 
-    uiHandler.DrawItemBar();
+    uiHandler.DrawToolBar();
     DrawDebugOverlay(Conf::DEBUG_FLAG);
 
     EndDrawing();
@@ -79,9 +79,9 @@ void Game::ProcessInputs() {
   if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 
     // Clicked on item bar
-    if (uiHandler.GetItemBarStatus() &&
+    if (uiHandler.GetToolBarStatus() &&
         CheckCollisionPointRec(GetMousePosition(),
-                               uiHandler.GetItemBarRect())) {
+                               uiHandler.GetToolBarRect())) {
       mouseMask = MOUSE_MASK_ITEM_BAR;
       int clickedSlot = uiHandler.GetItemSlotAt(GetMousePosition());
       if (clickedSlot != -1) {

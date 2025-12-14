@@ -10,22 +10,22 @@ class UI_Handler {
 private:
   float scale;
   TextureHandler *textureHandler;
-  std::vector<TileID> itemBarSlots;
+  std::vector<TileID> toolBarSlots;
   int selectedItemIndex;
-  bool isItemBarActive;
-  Rectangle itemBarRect;
+  bool isToolBarActive;
+  Rectangle toolBarRect;
 
 public:
   UI_Handler();
   void Init();
   void SetTextureHandler(TextureHandler *th);
   void SetSelectedItem(int index);
-  void DrawItemBar();
+  void DrawToolBar();
   bool CheckClick(Vector2 mousePosition);
   TileID GetSelectedItem();
-  void SetItemBarActive(bool is_active);
-  bool GetItemBarStatus();
-  Rectangle GetItemBarRect();
+  void SetToolBarActive(bool is_active);
+  bool GetToolBarStatus();
+  Rectangle GetToolBarRect();
   int GetItemSlotAt(Vector2 point);
 };
 

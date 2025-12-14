@@ -56,6 +56,14 @@ void HexGrid::InitGrid(float radius) {
       int gridQ = q + mapRadius;
 
       if (abs(q) + abs(r) + abs(-q - r) <= mapRadius * 2) {
+
+        // 'version' should be random from 0-4, the lower the number the higher
+        // the chance
+        int version = 0;
+        MapTile defaultTile = {.version = 0,
+                               .type = TILE_GRASS,
+                               .isDirty = false,
+                               .isVisble = true};
         tiles[gridR][gridQ] =
             (MapTile){.type = TILE_GRASS, .isDirty = false, .isVisble = true};
         this->tilesInUse++;

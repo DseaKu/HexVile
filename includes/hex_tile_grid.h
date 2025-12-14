@@ -33,6 +33,7 @@ struct FractionalHex {
 };
 
 struct MapTile {
+  int version;
   TileID type;
   bool isDirty;
   bool isVisble;

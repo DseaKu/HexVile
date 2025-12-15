@@ -18,6 +18,8 @@ private:
   float animationDelta;
   DirLabels faceDir;
   Vector2 position;
+  Vector2 previousPosition;
+  float speedTilesPerSecond;
   TextureHandler *textureHandler;
   PlayerStateID state;
   PlayerAnimationData animationData[PLAYER_STATE_ID_SIZE][DIR_LABELS_SIZE];
@@ -39,5 +41,6 @@ public:
   HexCoord GetTile();
   const char *PlayerStateToString();
   const char *PlayerDirToString();
+  float GetSpeedTilesPerSecond();
 };
 #endif // !PLAYER_H

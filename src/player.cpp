@@ -7,6 +7,8 @@
 
 Player::Player() {
   this->position = Conf::SCREEN_CENTER;
+  this->previousPosition = this->position;
+  this->speedTilesPerSecond = 0.0f;
   this->faceDir = S;
   this->state = PLAYER_STATE_IDLE;
   this->animationFrame = 0.0f;
@@ -52,6 +54,11 @@ void Player::Update() {
   } else {
     this->state = PLAYER_STATE_NULL;
   }
+
+  // Calculate Speed
+  float distance = Vector2Distance(this->position, this->previousPosition);
+  this->speedTilesPerSecond = distance / GetFrameTime() / Conf::TILE_SIZE;
+  this->previousPosition = this->position;
 
   // Calculate animation frame
   float animationSpeed =
@@ -121,6 +128,8 @@ const char *Player::PlayerDirToString() {
 }
 
 int Player::GetAnimationFrame() { return this->animationFrame; }
+
+float Player::GetSpeedTilesPerSecond() { return this->speedTilesPerSecond; }
 
 void Player::SetTextureHandler(TextureHandler *textureHandler) {
 

@@ -43,13 +43,16 @@ HexGrid::HexGrid() {
   origin = Conf::SCREEN_CENTER;
   mapRadius = Conf::MAP_SIZE;
   tilesInUse = 0;
+  tilesInTotal = 0;
+  camRect = nullptr;
 }
 
 void HexGrid::InitGrid(float radius) {
 
   int gridSize = mapRadius * 2 + 1;
-  tiles.assign(gridSize, std::vector<MapTile>(gridSize));
+  tileData.assign(gridSize, std::vector<MapTile>(gridSize));
 
+  // Init tile data
   for (int r = -mapRadius; r <= mapRadius; r++) {
     for (int q = -mapRadius; q <= mapRadius; q++) {
       HexCoord h(q, r);
@@ -63,14 +66,16 @@ void HexGrid::InitGrid(float radius) {
         // the chance
         int version = 0;
         MapTile defaultTile = {
-            .version = 0, .type = TILE_GRASS, .isVisble = true};
-        tiles[gridR][gridQ] = defaultTile;
+            .version = 0, .type = TILE_GRASS, .isVisble = false};
+        tileData[gridR][gridQ] = defaultTile;
         this->tilesInUse++;
       } else {
-        tiles[gridR][gridQ] = (MapTile){.type = TILE_NULL, .isVisble = false};
+        tileData[gridR][gridQ] =
+            (MapTile){.type = TILE_NULL, .isVisble = false};
       }
     }
   }
+  CalcVisibleTiles();
 }
 
 void HexGrid::SetTextureHandler(TextureHandler *textureHandler) {
@@ -88,7 +93,7 @@ bool HexGrid::HasTile(HexCoord h) {
   }
   int gridR = h.r + mapRadius;
   int gridQ = h.q + mapRadius;
-  return tiles[gridR][gridQ].type != TILE_NULL;
+  return tileData[gridR][gridQ].type != TILE_NULL;
 }
 
 bool HexGrid::IsWalkable(HexCoord h) {
@@ -140,7 +145,7 @@ MapTile HexGrid::HexCoordToTile(HexCoord h) {
   }
   int gridR = h.r + mapRadius;
   int gridQ = h.q + mapRadius;
-  return tiles[gridR][gridQ];
+  return tileData[gridR][gridQ];
 }
 
 HexCoord HexGrid::PointToHexCoord(Vector2 point) {
@@ -169,6 +174,7 @@ const char *HexGrid::TileToString(TileID type) {
     return "Undefined";
   }
 }
+
 // --- Logic ---
 bool HexGrid::SetTile(HexCoord h, TileID id) {
   if (!IsInBounds(h) || HexCoordToType(h) == id) {
@@ -176,7 +182,7 @@ bool HexGrid::SetTile(HexCoord h, TileID id) {
   } else {
     int gridR = h.r + mapRadius;
     int gridQ = h.q + mapRadius;
-    tiles[gridR][gridQ].type = id;
+    tileData[gridR][gridQ].type = id;
     return true;
   }
   return false;
@@ -186,12 +192,27 @@ void HexGrid::ToggleTile(HexCoord h) {
   if (HasTile(h)) {
     int gridR = h.r + mapRadius;
     int gridQ = h.q + mapRadius;
-    if (tiles[gridR][gridQ].type == TILE_GRASS) {
-      tiles[gridR][gridQ].type = TILE_WATER;
-    } else if (tiles[gridR][gridQ].type == TILE_WATER) {
-      tiles[gridR][gridQ].type = TILE_GRASS;
+    if (tileData[gridR][gridQ].type == TILE_GRASS) {
+      tileData[gridR][gridQ].type = TILE_WATER;
+    } else if (tileData[gridR][gridQ].type == TILE_WATER) {
+      tileData[gridR][gridQ].type = TILE_GRASS;
     }
   }
+}
+
+void HexGrid::CalcVisibleTiles() {
+  Rectangle cameraView = *camRect;
+  int gridSize = mapRadius * 2 + 1;
+  for (int r = 0; r < gridSize; r++) {
+    for (int q = 0; q < gridSize; q++) {
+      MapTile t = tileData[r][q];
+      if (t.type == TILE_NULL) {
+        t.isVisble = false;
+        continue;
+      }
+    }
+  }
+  calcVisibleTilesCounter = 0;
 }
 
 bool HexGrid::CheckSurrounded(HexCoord target) {
@@ -208,7 +229,7 @@ bool HexGrid::CheckSurrounded(HexCoord target) {
       neighborCount++;
       int gridR = n.r + mapRadius;
       int gridQ = n.q + mapRadius;
-      if (tiles[gridR][gridQ].type ==
+      if (tileData[gridR][gridQ].type ==
           TILE_NULL) { // Assuming TILE_NULL is a "wall"
         wallCount++;
       }
@@ -218,17 +239,26 @@ bool HexGrid::CheckSurrounded(HexCoord target) {
 }
 
 void HexGrid::Draw(const Camera2D &camera) {
+  calcVisibleTilesCounter++;
+
+  if (calcVisibleTilesCounter >= Conf::CALC_VISIBLE_TILE_PERIOD) {
+    CalcVisibleTiles();
+  }
+
   Vector2 topLeft = GetScreenToWorld2D(Vector2{0, 0}, camera);
   Rectangle cameraView = {topLeft.x, topLeft.y, Conf::CAMERA_WIDTH,
                           Conf::CAMERA_HEIGTH};
-  // Maybe some randomness
+  // Maybe some randomnes
   animationFrame = (int)(GetTime() * Conf::TA_TILES_ANIMATION_SPEED) %
                    Conf::TA_TILES_FRAME_COUNT;
 
   int gridSize = mapRadius * 2 + 1;
   for (int r = 0; r < gridSize; r++) {
     for (int q = 0; q < gridSize; q++) {
-      MapTile t = tiles[r][q];
+      MapTile t = tileData[r][q];
+      if (!t.isVisble) {
+        continue;
+      }
       if (t.type == TILE_NULL) {
         continue;
       }
@@ -254,10 +284,13 @@ void HexGrid::Draw(const Camera2D &camera) {
   }
 }
 
-// --- Set/Get ---
+// --- Get ---
 int HexGrid::GetTilesInUse() { return tilesInUse; }
 int HexGrid::GetTilesInTotal() { return tilesInTotal; }
 int HexGrid::GetMapRadius() { return mapRadius; }
 HexCoord HexGrid::GetNeighbor(HexCoord h, int directionIndex) {
   return h + DIRECTIONS[directionIndex];
 }
+
+// --- Set ---
+void HexGrid::SetCamRectPointer(Rectangle *camRect) { camRect = camRect; }

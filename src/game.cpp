@@ -16,6 +16,7 @@ Game::Game() {
 
   hexGrid.InitGrid(Conf::MAP_SIZE);
   hexGrid.SetTextureHandler(&textureHandler);
+  hexGrid.SetCamRectPointer(&this->cameraRect);
 
   player.SetHexGrid(&hexGrid);
   player.SetTextureHandler(&textureHandler);
@@ -181,6 +182,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
            TextFormat("Face Dir: %s", player.PlayerDirToString()),
            TextFormat("Frame: %i", player.GetAnimationFrame()),
            TextFormat("Type: %s", hexGrid.TileToString(tilePlayerType)),
+           TextFormat("Speed[1/s]: %.2f", player.GetSpeedTilesPerSecond()),
        }});
 
   // --- Tool Bar ---

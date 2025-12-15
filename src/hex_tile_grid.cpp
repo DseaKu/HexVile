@@ -314,7 +314,8 @@ void HexGrid::Draw(const Camera2D &camera) {
       if (d.detail > 0) { // Assuming detail ID > 0 is a valid detail
 
         Rectangle detailSourceRect = {
-            (float)(d.detail - 1) * Conf::ASSEST_RESOLUTION,
+            Conf::TA_DETAILS_X_OFFSET,
+            // (float)(d.detail - 1) * Conf::ASSEST_RESOLUTION,
             (float)GRASS_DETAILS_FLOWER * Conf::ASSEST_RESOLUTION,
             Conf::ASSEST_RESOLUTION, Conf::ASSEST_RESOLUTION};
 
@@ -330,16 +331,29 @@ void HexGrid::Draw(const Camera2D &camera) {
 }
 
 void HexGrid::AddGrassDetails(int amount) {
+  int detailsAdded = 0;
+  int attempts = 0;
+  // Try to add 'amount' details, with a limit on attempts to avoid
+  // infinite loops
+  while (detailsAdded < amount && attempts < amount * 10) {
+    attempts++;
+    int q_rand = GetRandomValue(0, mapRadius * 2);
+    int r_rand = GetRandomValue(0, mapRadius * 2);
 
-  for (int i = 0; i < amount; i++) {
-    int q_rand = 2;     // from 0 to 200
-    int r_rand = 2;     // from 0 to 200
-    u8 x_pos_rand = 0;  // from -16 to 16
-    u8 y_pos_rand = 0;  // from -16 to 16
-    int index_rand = 0; // from 0 to 5
-    if (i < Conf::TERRAIN_DETAIL_MAX) {
+    // Only add details to grass tiles.
+    if (tileData[r_rand][q_rand].type != TILE_GRASS) {
+      continue;
+    }
+
+    u8 x_pos_rand = GetRandomValue(-16, 16);
+    u8 y_pos_rand = GetRandomValue(-16, 16);
+    int index_rand = GetRandomValue(0, Conf::TERRAIN_DETAIL_MAX - 1);
+
+    // Only add detail if the slot is empty.
+    if (tileData[r_rand][q_rand].detail[index_rand].detail == 0) {
       tileData[r_rand][q_rand].detail[index_rand] = {
-          .x = x_pos_rand, .y = y_pos_rand, .detail = GRASS_DETAILS_FLOWER};
+          .x = x_pos_rand, .y = y_pos_rand, .detail = 1}; // detail type 1
+      detailsAdded++;
     }
   }
 }

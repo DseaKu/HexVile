@@ -8,19 +8,21 @@
 namespace Conf {
 
 // --- Core ---
-constexpr int MAP_SIZE = 150;
+constexpr int MAP_SIZE = 350;
 constexpr int FPS_MAX = 1000;
 constexpr const char *WINDOW_TITLE = "HexVile";
 constexpr const char *TA_PATH = "assets/images/texture_atlas.png";
 constexpr const char *FONT_HACK_REGULAR_PATH = "assets/font/hack_regular.ttf";
 constexpr const int TERRAIN_DETAIL_MAX = 5;
-constexpr const int CALC_VISIBLE_TILE_PERIOD = 10;
+constexpr const int CALC_VISIBLE_TILE_PERIOD = 20;
+constexpr const int RENDER_VIEW_OFFSET_XY = 3;
+constexpr const int RENDER_VIEW_OFFSET_WH = Conf::RENDER_VIEW_OFFSET_XY * 2;
 
 // --- Screen ---
-constexpr int SCREEN_WIDTH = 1400;
-constexpr int SCREEN_HEIGHT = 900;
-// constexpr int SCREEN_WIDTH = 2800;
-// constexpr int SCREEN_HEIGHT = 1200;
+// constexpr int SCREEN_WIDTH = 1400;
+// constexpr int SCREEN_HEIGHT = 900;
+constexpr int SCREEN_WIDTH = 2800;
+constexpr int SCREEN_HEIGHT = 1200;
 constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
                                    (float)SCREEN_HEIGHT / 2};
 
@@ -60,7 +62,7 @@ constexpr float TILE_GAP_Y = 16.0f;
 const std::vector<TileID> WALKABLE_TILES = {TILE_GRASS, TILE_DIRT};
 
 // --- Camera ---
-constexpr float CAMERA_ZOOM = 3.8f;
+constexpr float CAMERA_ZOOM = 8.8f;
 constexpr float CAMERA_WIDTH = (float)SCREEN_WIDTH / CAMERA_ZOOM;
 constexpr float CAMERA_HEIGTH = (float)SCREEN_HEIGHT / CAMERA_ZOOM;
 

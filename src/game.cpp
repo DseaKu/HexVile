@@ -153,6 +153,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
            TextFormat("FPS: %i", GetFPS()),
            TextFormat("Tiles Total: %i", hexGrid.GetTilesInTotal()),
            TextFormat("Tiles Used: %i", hexGrid.GetTilesInUse()),
+           TextFormat("Tiles Visible: %i", hexGrid.GetTilesVisible()),
            TextFormat("Map radius: %i", hexGrid.GetMapRadius()),
        }});
 

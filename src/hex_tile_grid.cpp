@@ -204,8 +204,14 @@ void HexGrid::CalcVisibleTiles() {
   if (camRect == nullptr) {
     return;
   }
-  Rectangle cameraView = *camRect;
+  Rectangle renderView = {.x = camRect->x - Conf::RENDER_VIEW_OFFSET_XY,
+                          .y = camRect->y - Conf::RENDER_VIEW_OFFSET_XY,
+                          .width = camRect->width + Conf::RENDER_VIEW_OFFSET_WH,
+                          .height =
+                              camRect->height + Conf::RENDER_VIEW_OFFSET_WH};
+
   int gridSize = mapRadius * 2 + 1;
+  tilesVisible = 0;
   for (int r = 0; r < gridSize; r++) {
     for (int q = 0; q < gridSize; q++) {
       if (tileData[r][q].type == TILE_NULL) {
@@ -218,8 +224,10 @@ void HexGrid::CalcVisibleTiles() {
       pos.y -= Conf::TILE_SIZE_HALF;
       Rectangle dest_rect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
                              Conf::ASSEST_RESOLUTION};
-
-      tileData[r][q].isVisble = CheckCollisionRecs(cameraView, dest_rect);
+      if (CheckCollisionRecs(renderView, dest_rect)) {
+        tileData[r][q].isVisble = true;
+        tilesVisible++;
+      }
     }
   }
   calcVisibleTilesCounter = 0;
@@ -291,6 +299,8 @@ void HexGrid::Draw(const Camera2D &camera) {
 // --- Get ---
 int HexGrid::GetTilesInUse() { return tilesInUse; }
 int HexGrid::GetTilesInTotal() { return tilesInTotal; }
+int HexGrid::GetTilesVisible() { return tilesVisible; }
+
 int HexGrid::GetMapRadius() { return mapRadius; }
 HexCoord HexGrid::GetNeighbor(HexCoord h, int directionIndex) {
   return h + DIRECTIONS[directionIndex];

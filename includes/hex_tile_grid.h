@@ -69,6 +69,7 @@ private:
   int mapRadius;
   int tilesInUse;
   int tilesInTotal;
+  int tilesVisible;
   int calcVisibleTilesCounter;
   Rectangle *camRect;
   Vector2 origin;
@@ -114,6 +115,7 @@ public:
   // --- Get ---
   int GetTilesInUse();
   int GetTilesInTotal();
+  int GetTilesVisible();
   int GetMapRadius();
   HexCoord GetNeighbor(HexCoord h, int directionIndex);
 

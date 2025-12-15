@@ -121,10 +121,11 @@ public:
   void ToggleTile(HexCoord h);
   bool CheckSurrounded(HexCoord target);
   void UpdateGrid();
+  bool IsWalkable(HexCoord h);
 
   // --- Rendering ---
   void Draw(const Camera2D &camera);
-  bool IsWalkable(HexCoord h);
+  void DrawDetails(Rectangle sourceRect, Rectangle destRect);
 
   // --- Get ---
   int GetTilesInUse();

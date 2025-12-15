@@ -295,16 +295,38 @@ void HexGrid::Draw(const Camera2D &camera) {
     Vector2 pos = HexCoordToPoint(h);
     pos.x -= Conf::TILE_SIZE_HALF;
     pos.y -= Conf::TILE_SIZE_HALF;
-    Rectangle dest_rect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
-                           Conf::ASSEST_RESOLUTION};
+    Rectangle destRect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
+                          Conf::ASSEST_RESOLUTION};
 
-    Rectangle tile_rect = {Conf::TA_TILE_X_OFFSET +
-                               (float)animationFrame * Conf::ASSEST_RESOLUTION,
-                           (float)Conf::ASSEST_RESOLUTION * tileData[r][q].type,
-                           Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
+    Rectangle sourceRect = {Conf::TA_TILE_X_OFFSET +
+                                (float)animationFrame * Conf::ASSEST_RESOLUTION,
+                            (float)Conf::ASSEST_RESOLUTION *
+                                tileData[r][q].type,
+                            Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
     Vector2 origin = {0.0f, 0.0f};
 
-    textureHandler->Draw(tile_rect, dest_rect, origin, 0.0f, WHITE);
+    textureHandler->Draw(sourceRect, destRect, origin, 0.0f, WHITE);
+  }
+
+  // Drawing terrain details
+  for (int i = 0; i < visiCache.size(); i++) {
+    int q = visiCache[i].q;
+    int r = visiCache[i].r;
+    HexCoord h(q - mapRadius, r - mapRadius);
+    Vector2 pos = HexCoordToPoint(h);
+    pos.x -= Conf::TILE_SIZE_HALF;
+    pos.y -= Conf::TILE_SIZE_HALF;
+    Rectangle destRect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
+                          Conf::ASSEST_RESOLUTION};
+
+    Rectangle sourceRect = {Conf::TA_TILE_X_OFFSET +
+                                (float)animationFrame * Conf::ASSEST_RESOLUTION,
+                            (float)Conf::ASSEST_RESOLUTION *
+                                tileData[r][q].type,
+                            Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
+    Vector2 origin = {0.0f, 0.0f};
+
+    textureHandler->Draw(sourceRect, destRect, origin, 0.0f, WHITE);
   }
 }
 

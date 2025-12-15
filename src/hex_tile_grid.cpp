@@ -205,10 +205,25 @@ void HexGrid::CalcVisibleTiles() {
   int gridSize = mapRadius * 2 + 1;
   for (int r = 0; r < gridSize; r++) {
     for (int q = 0; q < gridSize; q++) {
-      MapTile t = tileData[r][q];
-      if (t.type == TILE_NULL) {
-        t.isVisble = false;
+      if (tileData[r][q].type == TILE_NULL) {
+        tileData[r][q].isVisble = false;
         continue;
+        HexCoord h(q - mapRadius, r - mapRadius);
+        Vector2 pos = HexCoordToPoint(h);
+        pos.x -= Conf::TILE_SIZE_HALF;
+        pos.y -= Conf::TILE_SIZE_HALF;
+        Rectangle dest_rect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
+                               Conf::ASSEST_RESOLUTION};
+
+        if (CheckCollisionRecs(cameraView, dest_rect)) {
+          Rectangle tile_rect = {
+              Conf::TA_TILE_X_OFFSET +
+                  (float)animationFrame * Conf::ASSEST_RESOLUTION,
+              (float)Conf::ASSEST_RESOLUTION * tileData[r][q].type,
+              Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
+          Vector2 origin = {0.0f, 0.0f};
+          tileData[r][q].isVisble = true;
+        }
       }
     }
   }
@@ -255,11 +270,7 @@ void HexGrid::Draw(const Camera2D &camera) {
   int gridSize = mapRadius * 2 + 1;
   for (int r = 0; r < gridSize; r++) {
     for (int q = 0; q < gridSize; q++) {
-      MapTile t = tileData[r][q];
-      if (!t.isVisble) {
-        continue;
-      }
-      if (t.type == TILE_NULL) {
+      if (!tileData[r][q].isVisble) {
         continue;
       }
 
@@ -270,16 +281,14 @@ void HexGrid::Draw(const Camera2D &camera) {
       Rectangle dest_rect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
                              Conf::ASSEST_RESOLUTION};
 
-      if (CheckCollisionRecs(cameraView, dest_rect)) {
-        Rectangle tile_rect = {Conf::TA_TILE_X_OFFSET +
-                                   (float)animationFrame *
-                                       Conf::ASSEST_RESOLUTION,
-                               (float)Conf::ASSEST_RESOLUTION * t.type,
-                               Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
-        Vector2 origin = {0.0f, 0.0f};
+      Rectangle tile_rect = {
+          Conf::TA_TILE_X_OFFSET +
+              (float)animationFrame * Conf::ASSEST_RESOLUTION,
+          (float)Conf::ASSEST_RESOLUTION * tileData[r][q].type,
+          Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
+      Vector2 origin = {0.0f, 0.0f};
 
-        textureHandler->Draw(tile_rect, dest_rect, origin, 0.0f, WHITE);
-      }
+      textureHandler->Draw(tile_rect, dest_rect, origin, 0.0f, WHITE);
     }
   }
 }

@@ -8,7 +8,7 @@
 namespace Conf {
 
 // --- Core ---
-constexpr int MAP_SIZE = 8;
+constexpr int MAP_SIZE = 100;
 constexpr int FPS_MAX = 1000;
 constexpr const char *WINDOW_TITLE = "HexVile";
 constexpr const char *TA_PATH = "assets/images/texture_atlas.png";
@@ -40,7 +40,8 @@ constexpr int TA_PLAYER_X_END =
 
 constexpr int TA_TILE_X_OFFSET = TA_PLAYER_X_END;
 constexpr int TA_TILES_X_MAX = 8;
-constexpr float TA_TILES_ANIMATION_SPEED = 2.0f;
+constexpr int TA_TILES_FRAME_COUNT = 1;
+constexpr float TA_TILES_ANIMATION_SPEED = 0.3f;
 constexpr int TA_TILES_X_END =
     TA_TILE_X_OFFSET + ASSEST_RESOLUTION * TA_TILES_X_MAX;
 

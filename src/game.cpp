@@ -150,8 +150,9 @@ void Game::DrawDebugOverlay(bool is_enabled) {
       {"Resources",
        {
            TextFormat("FPS: %i", GetFPS()),
-           TextFormat("Used Tiles: %i", hexGrid.getTilesInUse()),
-           TextFormat("Map radius: %i", hexGrid.getMapRadius()),
+           TextFormat("Tiles Total: %i", hexGrid.GetTilesInTotal()),
+           TextFormat("Tiles Used: %i", hexGrid.GetTilesInUse()),
+           TextFormat("Map radius: %i", hexGrid.GetMapRadius()),
        }});
 
   HexCoord mapTile = hexGrid.PointToHexCoord(ioHandler.GetScaledMousePos());
@@ -192,7 +193,9 @@ void Game::DrawDebugOverlay(bool is_enabled) {
 
   // Draw section
   Vector2 playerScreenPos = GetWorldToScreen2D(playerPos, camera);
-  DrawCircle(playerScreenPos.x, playerScreenPos.y, 3.0f, RED);
+  DrawCircleV(GetWorldToScreen2D(hexGrid.CoordToPoint(0, 0), camera), 3.0f,
+              RED);
+  DrawCircleV(playerScreenPos, 3.0f, RED);
   for (const DebugData &data : debugData) {
     fontHandler.DrawTextHackRegular(data.section.c_str(),
                                     {sectionPosX, currentY}, sectionColor);

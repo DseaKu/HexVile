@@ -4,6 +4,7 @@
 #include "enums.h"
 #include "raylib.h"
 #include "texture_handler.h"
+#include <utility>
 #include <vector>
 
 // --- HEXAGON ---
@@ -35,8 +36,8 @@ struct FractionalHex {
 struct MapTile {
   int version;
   TileID type;
-  bool isDirty;
   bool isVisble;
+  std::vector<std::pair<float, float>> terrainDetail;
 };
 
 /* Grid parts and relationships: https://www.redblobgames.com/grids/parts/
@@ -57,6 +58,7 @@ private:
   int animationFrame;
   int mapRadius;
   int tilesInUse;
+  int tilesInTotal;
   Vector2 origin;
   TextureHandler *textureHandler;
 
@@ -75,6 +77,7 @@ public:
 
   // Coordinate Conversions
   Vector2 HexCoordToPoint(HexCoord h);
+  Vector2 CoordToPoint(int r, int q);
   MapTile HexCoordToTile(HexCoord h);
   TileID HexCoordToType(HexCoord h);
   HexCoord PointToHexCoord(Vector2 point);
@@ -84,7 +87,6 @@ public:
 
   // Logic
   bool IsInBounds(HexCoord h);
-  HexCoord GetNeighbor(HexCoord h, int directionIndex);
   bool HasTile(HexCoord h);
   bool SetTile(HexCoord h, TileID ID);
   void ToggleTile(HexCoord h);
@@ -95,8 +97,10 @@ public:
   bool IsWalkable(HexCoord h);
 
   // Set/Get
-  int getTilesInUse();
-  int getMapRadius();
+  int GetTilesInUse();
+  int GetTilesInTotal();
+  int GetMapRadius();
+  HexCoord GetNeighbor(HexCoord h, int directionIndex);
 };
 
 #endif // HEX_TILE_GRID_H

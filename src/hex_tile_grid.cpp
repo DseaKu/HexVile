@@ -55,22 +55,19 @@ void HexGrid::InitGrid(float radius) {
       HexCoord h(q, r);
       int gridR = r + mapRadius;
       int gridQ = q + mapRadius;
+      this->tilesInTotal++;
 
       if (abs(q) + abs(r) + abs(-q - r) <= mapRadius * 2) {
 
         // 'version' should be random from 0-4, the lower the number the higher
         // the chance
         int version = 0;
-        MapTile defaultTile = {.version = 0,
-                               .type = TILE_GRASS,
-                               .isDirty = false,
-                               .isVisble = true};
-        tiles[gridR][gridQ] =
-            (MapTile){.type = TILE_GRASS, .isDirty = false, .isVisble = true};
+        MapTile defaultTile = {
+            .version = 0, .type = TILE_GRASS, .isVisble = true};
+        tiles[gridR][gridQ] = defaultTile;
         this->tilesInUse++;
       } else {
-        tiles[gridR][gridQ] =
-            (MapTile){.type = TILE_NULL, .isDirty = false, .isVisble = false};
+        tiles[gridR][gridQ] = (MapTile){.type = TILE_NULL, .isVisble = false};
       }
     }
   }
@@ -125,11 +122,13 @@ HexCoord HexGrid::HexRound(FractionalHex h) {
 
 TileID HexGrid::PointToType(Vector2 point) { return PointToTile(point).type; }
 
-Vector2 HexGrid::HexCoordToPoint(HexCoord h) {
-  float x = tileGapX * (sqrt(3.0f) * h.q + sqrt(3.0f) / 2.0f * h.r);
-  float y = tileGapY * (3.0f / 2.0f * h.r);
+Vector2 HexGrid::CoordToPoint(int r, int q) {
+  float x = tileGapX * (sqrt(3.0f) * q + sqrt(3.0f) / 2.0f * r);
+  float y = tileGapY * (3.0f / 2.0f * r);
   return {x + origin.x, y + origin.y};
 }
+Vector2 HexGrid::HexCoordToPoint(HexCoord h) { return CoordToPoint(h.r, h.q); }
+
 TileID HexGrid::HexCoordToType(HexCoord h) {
   MapTile m = HexCoordToTile(h);
   return m.type;
@@ -137,7 +136,7 @@ TileID HexGrid::HexCoordToType(HexCoord h) {
 
 MapTile HexGrid::HexCoordToTile(HexCoord h) {
   if (!IsInBounds(h)) {
-    return (MapTile){.type = TILE_NULL, .isDirty = false, .isVisble = false};
+    return (MapTile){.type = TILE_NULL, .isVisble = false};
   }
   int gridR = h.r + mapRadius;
   int gridQ = h.q + mapRadius;
@@ -222,7 +221,9 @@ void HexGrid::Draw(const Camera2D &camera) {
   Vector2 topLeft = GetScreenToWorld2D(Vector2{0, 0}, camera);
   Rectangle cameraView = {topLeft.x, topLeft.y, Conf::CAMERA_WIDTH,
                           Conf::CAMERA_HEIGTH};
-  animationFrame = (int)(Conf::TA_TILES_ANIMATION_SPEED + GetFrameTime()) % 3;
+  // Maybe some randomness
+  animationFrame = (int)(GetTime() * Conf::TA_TILES_ANIMATION_SPEED) %
+                   Conf::TA_TILES_FRAME_COUNT;
 
   int gridSize = mapRadius * 2 + 1;
   for (int r = 0; r < gridSize; r++) {
@@ -254,8 +255,9 @@ void HexGrid::Draw(const Camera2D &camera) {
 }
 
 // --- Set/Get ---
-int HexGrid::getTilesInUse() { return tilesInUse; }
-int HexGrid::getMapRadius() { return mapRadius; }
+int HexGrid::GetTilesInUse() { return tilesInUse; }
+int HexGrid::GetTilesInTotal() { return tilesInTotal; }
+int HexGrid::GetMapRadius() { return mapRadius; }
 HexCoord HexGrid::GetNeighbor(HexCoord h, int directionIndex) {
   return h + DIRECTIONS[directionIndex];
 }

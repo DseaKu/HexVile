@@ -66,7 +66,7 @@ constexpr int TA_DETAILS_X_END =
 constexpr int TILE_SIZE = ASSEST_RESOLUTION;
 constexpr int TILE_SIZE_HALF = ASSEST_RESOLUTION_HALF;
 constexpr float TILE_GAP_X = 18.4f;
-constexpr float TILE_GAP_Y = 16.0f;
+constexpr float TILE_GAP_Y = 15.95f;
 const std::vector<TileID> WALKABLE_TILES = {TILE_GRASS, TILE_DIRT};
 
 // --- Camera ---

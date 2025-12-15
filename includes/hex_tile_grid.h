@@ -5,6 +5,8 @@
 #include "enums.h"
 #include "raylib.h"
 #include "texture_handler.h"
+#include <future>
+#include <mutex>
 #include <vector>
 
 // --- HEXAGON ---
@@ -47,6 +49,7 @@ struct MapTile {
   int version;
   TileID type;
   TerrainDetail detail[Conf::TERRAIN_DETAIL_MAX];
+  float x, y, a;
 };
 
 // --- Visibilty Cache ---
@@ -68,14 +71,22 @@ struct VisibiltyData {
 class HexGrid {
 private:
   std::vector<std::vector<MapTile>> tileData;
-  std::vector<VisibiltyData> visiCache;
+  std::vector<VisibiltyData>
+      visiCache; // Stores currently visible tiles for rendering.
+  std::vector<VisibiltyData>
+      visiCacheNext; // Back buffer for visible tiles calculated asynchronously.
+  std::mutex visiCacheMutex; // Mutex to protect access to visiCache and
+                             // visiCacheNext during swaps.
+  std::future<void>
+      visiCalcFuture;  // Manages the asynchronous calculation of visible tiles.
+  bool visiCacheReady; // Flag indicating if visiCacheNext has new data ready to
+                       // be swapped.
   float tileGapX;
   float tileGapY;
   int animationFrame;
   int mapRadius;
   int tilesInUse;
   int tilesInTotal;
-  int calcVisibleTilesCounter;
   Rectangle *camRect;
   Vector2 origin;
   TextureHandler *textureHandler;

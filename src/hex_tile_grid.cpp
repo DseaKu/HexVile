@@ -45,9 +45,11 @@ HexGrid::HexGrid() {
   tilesInUse = 0;
   tilesInTotal = 0;
   camRect = nullptr;
+  visiCacheReady = false;
 
   size_t estimated_hits = Conf::VISIBILTY_ESTIMATED_UPPER_BOUND;
   visiCache.reserve(estimated_hits);
+  visiCacheNext.reserve(estimated_hits);
 }
 
 void HexGrid::InitGrid(float radius) {
@@ -201,10 +203,14 @@ void HexGrid::ToggleTile(HexCoord h) {
   }
 }
 
+// This function calculates which tiles are currently visible on the screen.
+// It's designed to run asynchronously to avoid blocking the main rendering
+// thread.
 void HexGrid::CalcVisibleTiles() {
   if (camRect == nullptr) {
     return;
   }
+  // Define the rendering view rectangle, expanded by an offset for culling.
   Rectangle renderView = {.x = camRect->x - Conf::RENDER_VIEW_OFFSET_XY,
                           .y = camRect->y - Conf::RENDER_VIEW_OFFSET_XY,
                           .width = camRect->width + Conf::RENDER_VIEW_OFFSET_WH,
@@ -212,25 +218,41 @@ void HexGrid::CalcVisibleTiles() {
                               camRect->height + Conf::RENDER_VIEW_OFFSET_WH};
 
   int gridSize = mapRadius * 2 + 1;
-  visiCache.clear();
+  // Use a local vector to store newly calculated visible tiles.
+  // This avoids modifying the main visiCache while it might be in use by the
+  // Draw function.
+  std::vector<VisibiltyData> newVisiCache;
+  newVisiCache.reserve(
+      Conf::VISIBILTY_ESTIMATED_UPPER_BOUND); // Pre-allocate memory for
+                                              // efficiency.
+
+  // Iterate over all tiles in the grid.
   for (u32 r = 0; r < gridSize; r++) {
     for (u32 q = 0; q < gridSize; q++) {
+      // Skip null tiles as they are not rendered.
       if (tileData[r][q].type == TILE_NULL) {
-        // tileData[r][q].isVisble = false;
         continue;
       }
+      // Convert grid coordinates to HexCoord and then to screen coordinates.
       HexCoord h(q - mapRadius, r - mapRadius);
       Vector2 pos = HexCoordToPoint(h);
       pos.x -= Conf::TILE_SIZE_HALF;
       pos.y -= Conf::TILE_SIZE_HALF;
       Rectangle dest_rect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
                              Conf::ASSEST_RESOLUTION};
+      // Check if the tile's bounding box intersects with the render view.
       if (CheckCollisionRecs(renderView, dest_rect)) {
-        visiCache.push_back((VisibiltyData){.r = r, .q = q});
+        newVisiCache.push_back((VisibiltyData){.r = r, .q = q});
       }
     }
   }
-  calcVisibleTilesCounter = 0;
+  // Lock the mutex to safely swap the newly calculated visible tiles into the
+  // visiCacheNext. std::lock_guard ensures the mutex is unlocked when exiting
+  // this scope.
+  std::lock_guard<std::mutex> lock(visiCacheMutex);
+  visiCacheNext =
+      std::move(newVisiCache); // Move the new data to the back buffer.
+  visiCacheReady = true; // Signal that new data is ready for the main thread.
 }
 
 bool HexGrid::CheckSurrounded(HexCoord target) {
@@ -257,16 +279,33 @@ bool HexGrid::CheckSurrounded(HexCoord target) {
 }
 
 void HexGrid::Draw(const Camera2D &camera) {
-  calcVisibleTilesCounter++;
-
-  if (calcVisibleTilesCounter >= Conf::CALC_VISIBLE_TILE_PERIOD) {
-    CalcVisibleTiles();
+  // Check if the asynchronous calculation of visible tiles is complete and new
+  // data is ready.
+  if (visiCacheReady) {
+    // Lock the mutex to safely swap the current rendering cache with the newly
+    // calculated one.
+    std::lock_guard<std::mutex> lock(visiCacheMutex);
+    visiCache.swap(visiCacheNext); // Atomically swap the buffers.
+    visiCacheNext.clear();         // Clear the now-empty back buffer.
+    visiCacheReady = false;        // Reset the flag.
   }
 
-  // Maybe some randomnes
+  // Check if a previous asynchronous calculation is still running.
+  // If not valid (first run) or finished, launch a new one.
+  if (!visiCalcFuture.valid() || visiCalcFuture.wait_for(std::chrono::seconds(
+                                     0)) == std::future_status::ready) {
+    // Launch CalcVisibleTiles asynchronously in a separate thread.
+    // std::launch::async ensures it runs on a new thread immediately.
+    visiCalcFuture =
+        std::async(std::launch::async, &HexGrid::CalcVisibleTiles, this);
+  }
+
+  // Update animation frame based on game time for animated tiles.
   animationFrame = (int)(GetTime() * Conf::TA_TILES_ANIMATION_SPEED) %
                    Conf::TA_TILES_FRAME_COUNT;
 
+  // Iterate over the currently visible tiles (from visiCache) and draw them.
+  // This uses the most recently available complete visibility data.
   for (int i = 0; i < visiCache.size(); i++) {
     int q = visiCache[i].q;
     int r = visiCache[i].r;

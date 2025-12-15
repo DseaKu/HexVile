@@ -8,7 +8,7 @@
 namespace Conf {
 
 // --- Core ---
-constexpr int MAP_SIZE = 350;
+constexpr int MAP_SIZE = 850;
 constexpr int FPS_MAX = 1000;
 constexpr const char *WINDOW_TITLE = "HexVile";
 constexpr const char *TA_PATH = "assets/images/texture_atlas.png";
@@ -18,7 +18,7 @@ constexpr const int CALC_VISIBLE_TILE_PERIOD = 20;
 constexpr const int RENDER_VIEW_OFFSET_XY = 5;
 constexpr const int RENDER_VIEW_OFFSET_WH = Conf::RENDER_VIEW_OFFSET_XY * 2;
 
-constexpr const int VISIBILTY_ESTIMATED_UPPER_BOUND = 2000;
+constexpr const int VISIBILTY_ESTIMATED_UPPER_BOUND = 3000;
 
 // --- Screen ---
 // constexpr int SCREEN_WIDTH = 1400;

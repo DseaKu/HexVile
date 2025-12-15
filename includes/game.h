@@ -18,6 +18,8 @@ struct DebugData {
 };
 class Game {
 private:
+  float timer;
+  float updateGridTreshold;
   unsigned char *hackFontRegular;
   Camera2D camera;
   MouseMask *mouseMask;

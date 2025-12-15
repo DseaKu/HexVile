@@ -119,6 +119,7 @@ public:
   bool SetTile(HexCoord h, TileID ID);
   void ToggleTile(HexCoord h);
   bool CheckSurrounded(HexCoord target);
+  void UpdateGrid();
 
   // --- Rendering ---
   void Draw(const Camera2D &camera);

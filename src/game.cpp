@@ -11,6 +11,9 @@ Game::Game() {
   InitWindow(Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT, Conf::WINDOW_TITLE);
   SetTargetFPS(Conf::FPS_MAX);
   textureHandler.LoadAssets(Conf::TA_PATH);
+
+  timer = 0.0f;
+  updateGridTreshold = Conf::TRIGGER_UPDATE_GRID;
   int fileSize = 0;
   hackFontRegular = LoadFileData(Conf::FONT_HACK_REGULAR_PATH, &fileSize);
 
@@ -43,6 +46,12 @@ void Game::GameLoop() {
   while (!WindowShouldClose()) {
 
     // --- Update ---
+    timer += GetTime();
+
+    if (timer <= updateGridTreshold) {
+      // hexGrid.UpdateGrid();
+      updateGridTreshold += Conf::TRIGGER_UPDATE_GRID;
+    }
     ioHandler.UpdateMousePos(camera);
     ProcessInputs();
     relativeCenter = GetScreenToWorld2D(Conf::SCREEN_CENTER, camera);

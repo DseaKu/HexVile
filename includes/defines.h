@@ -8,8 +8,8 @@
 namespace Conf {
 
 // --- Core ---
-constexpr int MAP_SIZE = 850;
-constexpr int FPS_MAX = 1000;
+constexpr int MAP_SIZE = 50;
+constexpr int FPS_MAX = 8000;
 constexpr const char *WINDOW_TITLE = "HexVile";
 constexpr const char *TA_PATH = "assets/images/texture_atlas.png";
 constexpr const char *FONT_HACK_REGULAR_PATH = "assets/font/hack_regular.ttf";
@@ -31,6 +31,7 @@ constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
 // --- Game ---
 constexpr int ITEM_STACK_MAX_TOOL_BAR = 8;
 constexpr int ITEM_STACK_MAX_INVENTORY = 30;
+constexpr float TRIGGER_UPDATE_GRID = 3.0f;
 
 // --- Assest & Animation --- TA = Texture Atlas
 constexpr int ASSEST_RESOLUTION = 32;

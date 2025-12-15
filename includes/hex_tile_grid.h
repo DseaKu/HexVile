@@ -126,6 +126,8 @@ public:
   // --- Rendering ---
   void Draw(const Camera2D &camera);
   void DrawDetails(Rectangle sourceRect, Rectangle destRect);
+  void DrawTile(Vector2 point);
+  void DrawTile(HexCoord h);
 
   // --- Get ---
   int GetTilesInUse();

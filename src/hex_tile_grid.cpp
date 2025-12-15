@@ -261,6 +261,29 @@ bool HexGrid::CheckSurrounded(HexCoord target) {
   return (neighborCount > 0 && wallCount == neighborCount);
 }
 
+void HexGrid::DrawTile(Vector2 point) { DrawTile(PointToHexCoord(point)); }
+
+void HexGrid::DrawTile(HexCoord h) {
+  int q = h.q;
+  int r = h.r;
+  h.q -= mapRadius;
+  h.r -= mapRadius;
+
+  Vector2 pos = HexCoordToPoint(h);
+  pos.x -= Conf::TILE_SIZE_HALF;
+  pos.y -= Conf::TILE_SIZE_HALF;
+  Rectangle destRect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
+                        Conf::ASSEST_RESOLUTION};
+
+  Rectangle sourceRect = {Conf::TA_TILE_X_OFFSET +
+                              (float)animationFrame * Conf::ASSEST_RESOLUTION,
+                          (float)Conf::ASSEST_RESOLUTION * tileData[r][q].type,
+                          Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
+  Vector2 origin = {0.0f, 0.0f};
+
+  textureHandler->Draw(sourceRect, destRect, origin, 0.0f, RED);
+}
+
 void HexGrid::Draw(const Camera2D &camera) {
   // Check if the asynchronous calculation of visible tiles is complete and new
   // data is ready.

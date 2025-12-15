@@ -208,13 +208,18 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   DrawCircleV(GetWorldToScreen2D(hexGrid.CoordToPoint(0, 0), camera), 3.0f,
               RED);
   DrawCircleV(playerScreenPos, 3.0f, RED);
+
+  // Highlight selected tile
+  hexGrid.DrawTile((HexCoord){mapTile.q, mapTile.r});
+
+  // Draw text
   for (const DebugData &data : debugData) {
     fontHandler.DrawTextHackRegular(data.section.c_str(),
                                     {sectionPosX, currentY}, sectionColor);
     currentY += sectionGapY;
     currentY += subSectionGapY;
 
-    // Draw sub-section
+    // Draw sub-section text
     for (const std::string &subSection : data.subSection) {
       fontHandler.DrawTextHackRegular(
           subSection.c_str(), {subSectionPosX, currentY}, subSectionColor);

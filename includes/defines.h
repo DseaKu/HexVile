@@ -18,6 +18,8 @@ constexpr const int CALC_VISIBLE_TILE_PERIOD = 20;
 constexpr const int RENDER_VIEW_OFFSET_XY = 3;
 constexpr const int RENDER_VIEW_OFFSET_WH = Conf::RENDER_VIEW_OFFSET_XY * 2;
 
+constexpr const int VISIBILTY_ESTIMATED_UPPER_BOUND = 2000;
+
 // --- Screen ---
 // constexpr int SCREEN_WIDTH = 1400;
 // constexpr int SCREEN_HEIGHT = 900;

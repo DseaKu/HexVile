@@ -46,9 +46,7 @@ HexGrid::HexGrid() {
   tilesInTotal = 0;
   camRect = nullptr;
 
-  // 1. Estimate size to prevent re-allocations
-  // If you don't know the exact size, guess a "safe upper bound"
-  size_t estimated_hits = 1000;
+  size_t estimated_hits = Conf::VISIBILTY_ESTIMATED_UPPER_BOUND;
   visiCache.reserve(estimated_hits);
 }
 
@@ -214,7 +212,6 @@ void HexGrid::CalcVisibleTiles() {
                               camRect->height + Conf::RENDER_VIEW_OFFSET_WH};
 
   int gridSize = mapRadius * 2 + 1;
-  tilesVisible = 0;
   visiCache.clear();
   for (u32 r = 0; r < gridSize; r++) {
     for (u32 q = 0; q < gridSize; q++) {
@@ -230,8 +227,6 @@ void HexGrid::CalcVisibleTiles() {
                              Conf::ASSEST_RESOLUTION};
       if (CheckCollisionRecs(renderView, dest_rect)) {
         visiCache.push_back((VisibiltyData){.r = r, .q = q});
-        // tileData[r][q].isVisble = true;
-        tilesVisible++;
       }
     }
   }
@@ -295,7 +290,7 @@ void HexGrid::Draw(const Camera2D &camera) {
 // --- Get ---
 int HexGrid::GetTilesInUse() { return tilesInUse; }
 int HexGrid::GetTilesInTotal() { return tilesInTotal; }
-int HexGrid::GetTilesVisible() { return tilesVisible; }
+int HexGrid::GetTilesVisible() { return visiCache.size(); }
 
 int HexGrid::GetMapRadius() { return mapRadius; }
 HexCoord HexGrid::GetNeighbor(HexCoord h, int directionIndex) {

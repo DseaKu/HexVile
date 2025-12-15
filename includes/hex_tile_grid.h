@@ -46,7 +46,6 @@ typedef u16 TerrainDetail;
 struct MapTile {
   int version;
   TileID type;
-  // bool isVisble;
   TerrainDetail detail[Conf::TERRAIN_DETAIL_MAX];
 };
 
@@ -76,7 +75,6 @@ private:
   int mapRadius;
   int tilesInUse;
   int tilesInTotal;
-  int tilesVisible;
   int calcVisibleTilesCounter;
   Rectangle *camRect;
   Vector2 origin;

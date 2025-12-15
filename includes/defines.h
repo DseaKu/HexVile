@@ -62,7 +62,7 @@ constexpr float TILE_GAP_Y = 16.0f;
 const std::vector<TileID> WALKABLE_TILES = {TILE_GRASS, TILE_DIRT};
 
 // --- Camera ---
-constexpr float CAMERA_ZOOM = 8.8f;
+constexpr float CAMERA_ZOOM = 3.8f;
 constexpr float CAMERA_WIDTH = (float)SCREEN_WIDTH / CAMERA_ZOOM;
 constexpr float CAMERA_HEIGTH = (float)SCREEN_HEIGHT / CAMERA_ZOOM;
 

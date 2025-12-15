@@ -45,6 +45,11 @@ HexGrid::HexGrid() {
   tilesInUse = 0;
   tilesInTotal = 0;
   camRect = nullptr;
+
+  // 1. Estimate size to prevent re-allocations
+  // If you don't know the exact size, guess a "safe upper bound"
+  size_t estimated_hits = 1000;
+  visiCache.reserve(estimated_hits);
 }
 
 void HexGrid::InitGrid(float radius) {
@@ -65,13 +70,11 @@ void HexGrid::InitGrid(float radius) {
         // 'version' should be random from 0-4, the lower the number the higher
         // the chance
         int version = 0;
-        MapTile defaultTile = {
-            .version = 0, .type = TILE_GRASS, .isVisble = false};
+        MapTile defaultTile = {.version = 0, .type = TILE_GRASS};
         tileData[gridR][gridQ] = defaultTile;
         this->tilesInUse++;
       } else {
-        tileData[gridR][gridQ] =
-            (MapTile){.type = TILE_NULL, .isVisble = false};
+        tileData[gridR][gridQ] = (MapTile){.type = TILE_NULL};
       }
     }
   }
@@ -141,7 +144,7 @@ TileID HexGrid::HexCoordToType(HexCoord h) {
 
 MapTile HexGrid::HexCoordToTile(HexCoord h) {
   if (!IsInBounds(h)) {
-    return (MapTile){.type = TILE_NULL, .isVisble = false};
+    return (MapTile){.type = TILE_NULL};
   }
   int gridR = h.r + mapRadius;
   int gridQ = h.q + mapRadius;
@@ -212,10 +215,11 @@ void HexGrid::CalcVisibleTiles() {
 
   int gridSize = mapRadius * 2 + 1;
   tilesVisible = 0;
-  for (int r = 0; r < gridSize; r++) {
-    for (int q = 0; q < gridSize; q++) {
+  visiCache.clear();
+  for (u32 r = 0; r < gridSize; r++) {
+    for (u32 q = 0; q < gridSize; q++) {
       if (tileData[r][q].type == TILE_NULL) {
-        tileData[r][q].isVisble = false;
+        // tileData[r][q].isVisble = false;
         continue;
       }
       HexCoord h(q - mapRadius, r - mapRadius);
@@ -225,7 +229,8 @@ void HexGrid::CalcVisibleTiles() {
       Rectangle dest_rect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
                              Conf::ASSEST_RESOLUTION};
       if (CheckCollisionRecs(renderView, dest_rect)) {
-        tileData[r][q].isVisble = true;
+        visiCache.push_back((VisibiltyData){.r = r, .q = q});
+        // tileData[r][q].isVisble = true;
         tilesVisible++;
       }
     }
@@ -263,36 +268,27 @@ void HexGrid::Draw(const Camera2D &camera) {
     CalcVisibleTiles();
   }
 
-  Vector2 topLeft = GetScreenToWorld2D(Vector2{0, 0}, camera);
-  Rectangle cameraView = {topLeft.x, topLeft.y, Conf::CAMERA_WIDTH,
-                          Conf::CAMERA_HEIGTH};
   // Maybe some randomnes
   animationFrame = (int)(GetTime() * Conf::TA_TILES_ANIMATION_SPEED) %
                    Conf::TA_TILES_FRAME_COUNT;
 
-  int gridSize = mapRadius * 2 + 1;
-  for (int r = 0; r < gridSize; r++) {
-    for (int q = 0; q < gridSize; q++) {
-      if (!tileData[r][q].isVisble) {
-        continue;
-      }
+  for (int i = 0; i < visiCache.size(); i++) {
+    int q = visiCache[i].q;
+    int r = visiCache[i].r;
+    HexCoord h(q - mapRadius, r - mapRadius);
+    Vector2 pos = HexCoordToPoint(h);
+    pos.x -= Conf::TILE_SIZE_HALF;
+    pos.y -= Conf::TILE_SIZE_HALF;
+    Rectangle dest_rect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
+                           Conf::ASSEST_RESOLUTION};
 
-      HexCoord h(q - mapRadius, r - mapRadius);
-      Vector2 pos = HexCoordToPoint(h);
-      pos.x -= Conf::TILE_SIZE_HALF;
-      pos.y -= Conf::TILE_SIZE_HALF;
-      Rectangle dest_rect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
-                             Conf::ASSEST_RESOLUTION};
+    Rectangle tile_rect = {Conf::TA_TILE_X_OFFSET +
+                               (float)animationFrame * Conf::ASSEST_RESOLUTION,
+                           (float)Conf::ASSEST_RESOLUTION * tileData[r][q].type,
+                           Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
+    Vector2 origin = {0.0f, 0.0f};
 
-      Rectangle tile_rect = {
-          Conf::TA_TILE_X_OFFSET +
-              (float)animationFrame * Conf::ASSEST_RESOLUTION,
-          (float)Conf::ASSEST_RESOLUTION * tileData[r][q].type,
-          Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
-      Vector2 origin = {0.0f, 0.0f};
-
-      textureHandler->Draw(tile_rect, dest_rect, origin, 0.0f, WHITE);
-    }
+    textureHandler->Draw(tile_rect, dest_rect, origin, 0.0f, WHITE);
   }
 }
 

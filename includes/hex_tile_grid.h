@@ -46,8 +46,14 @@ typedef u16 TerrainDetail;
 struct MapTile {
   int version;
   TileID type;
-  bool isVisble;
+  // bool isVisble;
   TerrainDetail detail[Conf::TERRAIN_DETAIL_MAX];
+};
+
+// --- Visibilty Cache ---
+struct VisibiltyData {
+  u32 r;
+  u32 q;
 };
 
 /* Grid parts and relationships: https://www.redblobgames.com/grids/parts/
@@ -63,6 +69,7 @@ struct MapTile {
 class HexGrid {
 private:
   std::vector<std::vector<MapTile>> tileData;
+  std::vector<VisibiltyData> visiCache;
   float tileGapX;
   float tileGapY;
   int animationFrame;

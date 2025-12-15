@@ -201,6 +201,9 @@ void HexGrid::ToggleTile(HexCoord h) {
 }
 
 void HexGrid::CalcVisibleTiles() {
+  if (camRect == nullptr) {
+    return;
+  }
   Rectangle cameraView = *camRect;
   int gridSize = mapRadius * 2 + 1;
   for (int r = 0; r < gridSize; r++) {
@@ -208,23 +211,15 @@ void HexGrid::CalcVisibleTiles() {
       if (tileData[r][q].type == TILE_NULL) {
         tileData[r][q].isVisble = false;
         continue;
-        HexCoord h(q - mapRadius, r - mapRadius);
-        Vector2 pos = HexCoordToPoint(h);
-        pos.x -= Conf::TILE_SIZE_HALF;
-        pos.y -= Conf::TILE_SIZE_HALF;
-        Rectangle dest_rect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
-                               Conf::ASSEST_RESOLUTION};
-
-        if (CheckCollisionRecs(cameraView, dest_rect)) {
-          Rectangle tile_rect = {
-              Conf::TA_TILE_X_OFFSET +
-                  (float)animationFrame * Conf::ASSEST_RESOLUTION,
-              (float)Conf::ASSEST_RESOLUTION * tileData[r][q].type,
-              Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
-          Vector2 origin = {0.0f, 0.0f};
-          tileData[r][q].isVisble = true;
-        }
       }
+      HexCoord h(q - mapRadius, r - mapRadius);
+      Vector2 pos = HexCoordToPoint(h);
+      pos.x -= Conf::TILE_SIZE_HALF;
+      pos.y -= Conf::TILE_SIZE_HALF;
+      Rectangle dest_rect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
+                             Conf::ASSEST_RESOLUTION};
+
+      tileData[r][q].isVisble = CheckCollisionRecs(cameraView, dest_rect);
     }
   }
   calcVisibleTilesCounter = 0;
@@ -302,4 +297,4 @@ HexCoord HexGrid::GetNeighbor(HexCoord h, int directionIndex) {
 }
 
 // --- Set ---
-void HexGrid::SetCamRectPointer(Rectangle *camRect) { camRect = camRect; }
+void HexGrid::SetCamRectPointer(Rectangle *camRect) { this->camRect = camRect; }

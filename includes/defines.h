@@ -15,7 +15,7 @@ constexpr const char *TA_PATH = "assets/images/texture_atlas.png";
 constexpr const char *FONT_HACK_REGULAR_PATH = "assets/font/hack_regular.ttf";
 constexpr const int TERRAIN_DETAIL_MAX = 5;
 constexpr const int CALC_VISIBLE_TILE_PERIOD = 20;
-constexpr const int RENDER_VIEW_OFFSET_XY = 3;
+constexpr const int RENDER_VIEW_OFFSET_XY = 5;
 constexpr const int RENDER_VIEW_OFFSET_WH = Conf::RENDER_VIEW_OFFSET_XY * 2;
 
 constexpr const int VISIBILTY_ESTIMATED_UPPER_BOUND = 2000;

@@ -306,27 +306,26 @@ void HexGrid::Draw(const Camera2D &camera) {
     Vector2 origin = {0.0f, 0.0f};
 
     textureHandler->Draw(sourceRect, destRect, origin, 0.0f, WHITE);
-  }
 
-  // Drawing terrain details
-  for (int i = 0; i < visiCache.size(); i++) {
-    int q = visiCache[i].q;
-    int r = visiCache[i].r;
-    HexCoord h(q - mapRadius, r - mapRadius);
-    Vector2 pos = HexCoordToPoint(h);
-    pos.x -= Conf::TILE_SIZE_HALF;
-    pos.y -= Conf::TILE_SIZE_HALF;
-    Rectangle destRect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
-                          Conf::ASSEST_RESOLUTION};
+    // Draw details for this tile
+    const MapTile &currentTile = tileData[r][q];
+    for (int j = 0; j < Conf::TERRAIN_DETAIL_MAX; j++) {
+      const TerrainDetail &d = currentTile.detail[j];
+      if (d.detail > 0) { // Assuming detail ID > 0 is a valid detail
 
-    Rectangle sourceRect = {Conf::TA_TILE_X_OFFSET +
-                                (float)animationFrame * Conf::ASSEST_RESOLUTION,
-                            (float)Conf::ASSEST_RESOLUTION *
-                                tileData[r][q].type,
-                            Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
-    Vector2 origin = {0.0f, 0.0f};
+        Rectangle detailSourceRect = {
+            (float)(d.detail - 1) * Conf::ASSEST_RESOLUTION,
+            (float)GRASS_DETAILS_FLOWER * Conf::ASSEST_RESOLUTION,
+            Conf::ASSEST_RESOLUTION, Conf::ASSEST_RESOLUTION};
 
-    textureHandler->Draw(sourceRect, destRect, origin, 0.0f, WHITE);
+        Rectangle detailDestRect = {pos.x + d.x, pos.y + d.y,
+                                    Conf::ASSEST_RESOLUTION,
+                                    Conf::ASSEST_RESOLUTION};
+
+        textureHandler->Draw(detailSourceRect, detailDestRect, origin, 0.0f,
+                             WHITE);
+      }
+    }
   }
 }
 
@@ -340,12 +339,12 @@ void HexGrid::AddGrassDetails(int amount) {
     int index_rand = 0; // from 0 to 5
     if (i < Conf::TERRAIN_DETAIL_MAX) {
       tileData[r_rand][q_rand].detail[index_rand] = {
-          .x = x_pos_rand, .y = y_pos_rand, .detail = 1};
+          .x = x_pos_rand, .y = y_pos_rand, .detail = GRASS_DETAILS_FLOWER};
     }
   }
 }
 
-void HexGrid::UpdateGrid() { AddGrassDetails(10); }
+void HexGrid::UpdateGrid() { AddGrassDetails(200); }
 
 // --- Get ---
 int HexGrid::GetTilesInUse() { return tilesInUse; }

@@ -63,6 +63,7 @@ typedef enum GrassTerainDetailsID {
   GRASS_DETAILS_NULL = 0,
   GRASS_DETAILS_BLADE,
   GRASS_DETAILS_FLOWER,
+  GRASS_DETAILS_MOSS,
   GRASS_DETAILS_SIZE,
 } GrassTerainDetailsID;
 #endif // !ENUMS_H

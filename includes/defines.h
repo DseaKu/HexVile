@@ -8,12 +8,12 @@
 namespace Conf {
 
 // --- Core ---
-constexpr int MAP_SIZE = 10;
+constexpr int MAP_SIZE = 800;
 constexpr int FPS_MAX = 8000;
 constexpr const char *WINDOW_TITLE = "HexVile";
 constexpr const char *TA_PATH = "assets/images/texture_atlas.png";
 constexpr const char *FONT_HACK_REGULAR_PATH = "assets/font/hack_regular.ttf";
-constexpr const int TERRAIN_DETAIL_MAX = 5;
+constexpr const int TERRAIN_DETAIL_MAX = 2;
 constexpr const int CALC_VISIBLE_TILE_PERIOD = 20;
 constexpr const int RENDER_VIEW_OFFSET_XY = 5;
 constexpr const int RENDER_VIEW_OFFSET_WH = Conf::RENDER_VIEW_OFFSET_XY * 2;
@@ -46,14 +46,14 @@ constexpr int TA_PLAYER_X_END =
     TA_PLAYER_X_OFFSET + ASSEST_RESOLUTION * TA_PLAYER_X_MAX;
 
 constexpr int TA_TILE_X_OFFSET = TA_PLAYER_X_END;
-constexpr int TA_TILES_X_MAX = 1;
+constexpr int TA_TILES_X_MAX = 8;
 constexpr int TA_TILES_FRAME_COUNT = 1;
 constexpr float TA_TILES_ANIMATION_SPEED = 0.3f;
 constexpr int TA_TILES_X_END =
     TA_TILE_X_OFFSET + ASSEST_RESOLUTION * TA_TILES_X_MAX;
 
 constexpr int TA_ITEM_X_OFFSET = TA_TILES_X_END;
-constexpr int TA_ITEM_X_MAX = 8;
+constexpr int TA_ITEM_X_MAX = 1;
 constexpr int TA_ITEM_X_END =
     TA_ITEM_X_OFFSET + ASSEST_RESOLUTION * TA_ITEM_X_MAX;
 

@@ -314,9 +314,9 @@ void HexGrid::Draw(const Camera2D &camera) {
       if (d.detail > 0) { // Assuming detail ID > 0 is a valid detail
 
         Rectangle detailSourceRect = {
-            Conf::TA_DETAILS_X_OFFSET,
-            // (float)(d.detail - 1) * Conf::ASSEST_RESOLUTION,
-            (float)GRASS_DETAILS_FLOWER * Conf::ASSEST_RESOLUTION,
+            Conf::TA_DETAILS_X_OFFSET +
+                ((float)d.detail - 1) * Conf::ASSEST_RESOLUTION,
+            (float)ITEM_SET_GRASS * Conf::ASSEST_RESOLUTION,
             Conf::ASSEST_RESOLUTION, Conf::ASSEST_RESOLUTION};
 
         Rectangle detailDestRect = {pos.x + d.x, pos.y + d.y,
@@ -345,14 +345,19 @@ void HexGrid::AddGrassDetails(int amount) {
       continue;
     }
 
-    u8 x_pos_rand = GetRandomValue(-16, 16);
-    u8 y_pos_rand = GetRandomValue(-16, 16);
+    // Generate smaller, positive-only offsets to keep details within tile
+    // bounds. The previous range of [-16, 16] was causing issues with the `u8`
+    // type and placing details far outside the tile. This range is a guess;
+    // you may need to adjust it based on your asset sizes.
+    int x_pos_rand = GetRandomValue(1, 15);
+    int y_pos_rand = GetRandomValue(1, 15);
     int index_rand = GetRandomValue(0, Conf::TERRAIN_DETAIL_MAX - 1);
+    int detailRand = GetRandomValue(GRASS_DETAILS_BLADE, GRASS_DETAILS_MOSS);
 
     // Only add detail if the slot is empty.
     if (tileData[r_rand][q_rand].detail[index_rand].detail == 0) {
       tileData[r_rand][q_rand].detail[index_rand] = {
-          .x = x_pos_rand, .y = y_pos_rand, .detail = 1}; // detail type 1
+          .x = (u8)x_pos_rand, .y = (u8)y_pos_rand, .detail = detailRand};
       detailsAdded++;
     }
   }
@@ -380,6 +385,9 @@ bool HexGrid::SetTile(HexCoord h, TileID id) {
     int gridR = h.r + mapRadius;
     int gridQ = h.q + mapRadius;
     tileData[gridR][gridQ].type = id;
+    for (int i = 0; i < Conf::TERRAIN_DETAIL_MAX; i++) {
+      tileData[gridR][gridQ].detail[i] = {0};
+    }
     return true;
   }
   return false;

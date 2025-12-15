@@ -30,10 +30,10 @@ void ItemHandler::Init() {
   inventory.assign(Conf::ITEM_STACK_MAX_INVENTORY, itemNull);
   toolBar.assign(Conf::ITEM_STACK_MAX_TOOL_BAR, itemNull);
 
-  Item grass = {.id = ITEM_SET_GRASS, .count = 8};
-  Item water = {.id = ITEM_SET_WATER, .count = 13};
+  Item grass = {.id = ITEM_SET_GRASS, .count = 32};
+  Item water = {.id = ITEM_SET_WATER, .count = 51};
   Item dirt = {.id = ITEM_SET_DIRT, .count = 8};
-  Item dirt2 = {.id = ITEM_SET_DIRT, .count = 2};
+  Item dirt2 = {.id = ITEM_SET_DIRT, .count = 24};
   toolBar[0] = dirt;
   toolBar[1] = water;
   toolBar[2] = dirt2;

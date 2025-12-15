@@ -163,6 +163,7 @@ MapTile HexGrid::PointToTile(Vector2 point) {
   HexCoord h = PointToHexCoord(point);
   return HexCoordToTile(h);
 }
+
 const char *HexGrid::TileToString(TileID type) {
   switch (type) {
   case TILE_NULL:
@@ -179,18 +180,6 @@ const char *HexGrid::TileToString(TileID type) {
 }
 
 // --- Logic ---
-bool HexGrid::SetTile(HexCoord h, TileID id) {
-  if (!IsInBounds(h) || HexCoordToType(h) == id) {
-    return false;
-  } else {
-    int gridR = h.r + mapRadius;
-    int gridQ = h.q + mapRadius;
-    tileData[gridR][gridQ].type = id;
-    return true;
-  }
-  return false;
-}
-
 void HexGrid::ToggleTile(HexCoord h) {
   if (HasTile(h)) {
     int gridR = h.r + mapRadius;
@@ -319,6 +308,23 @@ void HexGrid::Draw(const Camera2D &camera) {
   }
 }
 
+void HexGrid::AddGrassDetails(int amount) {
+
+  for (int i = 0; i < amount; i++) {
+    int q_rand = 2;     // from 0 to 200
+    int r_rand = 2;     // from 0 to 200
+    u8 x_pos_rand = 0;  // from -16 to 16
+    u8 y_pos_rand = 0;  // from -16 to 16
+    int index_rand = 0; // from 0 to 5
+    if (i < Conf::TERRAIN_DETAIL_MAX) {
+      tileData[r_rand][q_rand].detail[index_rand] = {
+          .x = x_pos_rand, .y = y_pos_rand, .detail = 1};
+    }
+  }
+}
+
+void HexGrid::UpdateGrid() { AddGrassDetails(10); }
+
 // --- Get ---
 int HexGrid::GetTilesInUse() { return tilesInUse; }
 int HexGrid::GetTilesInTotal() { return tilesInTotal; }
@@ -331,3 +337,15 @@ HexCoord HexGrid::GetNeighbor(HexCoord h, int directionIndex) {
 
 // --- Set ---
 void HexGrid::SetCamRectPointer(Rectangle *camRect) { this->camRect = camRect; }
+
+bool HexGrid::SetTile(HexCoord h, TileID id) {
+  if (!IsInBounds(h) || HexCoordToType(h) == id) {
+    return false;
+  } else {
+    int gridR = h.r + mapRadius;
+    int gridQ = h.q + mapRadius;
+    tileData[gridR][gridQ].type = id;
+    return true;
+  }
+  return false;
+}

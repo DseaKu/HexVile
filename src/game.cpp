@@ -49,7 +49,7 @@ void Game::GameLoop() {
     timer += GetTime();
 
     if (timer <= updateGridTreshold) {
-      // hexGrid.UpdateGrid();
+      hexGrid.UpdateGrid();
       updateGridTreshold += Conf::TRIGGER_UPDATE_GRID;
     }
     ioHandler.UpdateMousePos(camera);

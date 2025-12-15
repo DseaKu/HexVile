@@ -36,9 +36,9 @@ struct FractionalHex {
 
 // --- Terrain Detail --- TD = Terrain Detail
 struct TerrainDetail {
-  u16 x;
-  u16 y;
-  TerainDetailsID detail;
+  u8 x;
+  u8 y;
+  int detail;
 };
 
 // --- Map Tile ---
@@ -96,6 +96,7 @@ private:
 
   // --- Logic ---
   void CalcVisibleTiles();
+  void AddGrassDetails(int amount);
 
 public:
   HexGrid();

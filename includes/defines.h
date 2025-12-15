@@ -8,7 +8,7 @@
 namespace Conf {
 
 // --- Core ---
-constexpr int MAP_SIZE = 50;
+constexpr int MAP_SIZE = 10;
 constexpr int FPS_MAX = 8000;
 constexpr const char *WINDOW_TITLE = "HexVile";
 constexpr const char *TA_PATH = "assets/images/texture_atlas.png";
@@ -56,6 +56,11 @@ constexpr int TA_ITEM_X_OFFSET = TA_TILES_X_END;
 constexpr int TA_ITEM_X_MAX = 8;
 constexpr int TA_ITEM_X_END =
     TA_ITEM_X_OFFSET + ASSEST_RESOLUTION * TA_ITEM_X_MAX;
+
+constexpr int TA_DETAILS_X_OFFSET = TA_ITEM_X_END;
+constexpr int TA_DETAILS_X_MAX = 4;
+constexpr int TA_DETAILS_X_END =
+    TA_DETAILS_X_OFFSET + ASSEST_RESOLUTION * TA_DETAILS_X_MAX;
 
 // --- Tile ---
 constexpr int TILE_SIZE = ASSEST_RESOLUTION;

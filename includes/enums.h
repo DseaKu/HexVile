@@ -59,8 +59,10 @@ static const std::map<ItemID, TileID> item_to_tile_map = {
     {ITEM_SET_DIRT, TILE_DIRT},
 };
 
-typedef enum TerainDetailsID {
-  TERAIN_DETAILS_NULL = 0,
-  TERAIN_DETAILS_SIZE,
-} TerainDetailsID;
+typedef enum GrassTerainDetailsID {
+  GRASS_DETAILS_NULL = 0,
+  GRASS_DETAILS_BLADE,
+  GRASS_DETAILS_FLOWER,
+  GRASS_DETAILS_SIZE,
+} GrassTerainDetailsID;
 #endif // !ENUMS_H

@@ -203,9 +203,6 @@ void HexGrid::ToggleTile(HexCoord h) {
   }
 }
 
-// This function calculates which tiles are currently visible on the screen.
-// It's designed to run asynchronously to avoid blocking the main rendering
-// thread.
 void HexGrid::CalcVisibleTiles() {
   if (camRect == nullptr) {
     return;
@@ -218,9 +215,7 @@ void HexGrid::CalcVisibleTiles() {
                               camRect->height + Conf::RENDER_VIEW_OFFSET_WH};
 
   int gridSize = mapRadius * 2 + 1;
-  // Use a local vector to store newly calculated visible tiles.
-  // This avoids modifying the main visiCache while it might be in use by the
-  // Draw function.
+
   std::vector<VisibiltyData> newVisiCache;
   newVisiCache.reserve(
       Conf::VISIBILTY_ESTIMATED_UPPER_BOUND); // Pre-allocate memory for
@@ -229,7 +224,7 @@ void HexGrid::CalcVisibleTiles() {
   // Iterate over all tiles in the grid.
   for (u32 r = 0; r < gridSize; r++) {
     for (u32 q = 0; q < gridSize; q++) {
-      // Skip null tiles as they are not rendered.
+
       if (tileData[r][q].type == TILE_NULL) {
         continue;
       }
@@ -269,8 +264,7 @@ bool HexGrid::CheckSurrounded(HexCoord target) {
       neighborCount++;
       int gridR = n.r + mapRadius;
       int gridQ = n.q + mapRadius;
-      if (tileData[gridR][gridQ].type ==
-          TILE_NULL) { // Assuming TILE_NULL is a "wall"
+      if (tileData[gridR][gridQ].type == TILE_NULL) {
         wallCount++;
       }
     }
@@ -304,8 +298,7 @@ void HexGrid::Draw(const Camera2D &camera) {
   animationFrame = (int)(GetTime() * Conf::TA_TILES_ANIMATION_SPEED) %
                    Conf::TA_TILES_FRAME_COUNT;
 
-  // Iterate over the currently visible tiles (from visiCache) and draw them.
-  // This uses the most recently available complete visibility data.
+  // Draw chached visible tiles
   for (int i = 0; i < visiCache.size(); i++) {
     int q = visiCache[i].q;
     int r = visiCache[i].r;

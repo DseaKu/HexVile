@@ -35,21 +35,17 @@ struct FractionalHex {
 };
 
 // --- Terrain Detail --- TD = Terrain Detail
-typedef u16 TerrainDetail;
-#define TD_SHIFT_TYPE 0u
-#define TD_SHIFT_X 8u
-#define TD_SHIFT_Y 12u
-
-#define TD_MASK_TYPE 0x8
-#define TD_MASK_X 0x4
-#define TD_MASK_Y 0x4
+struct TerrainDetail {
+  u16 x;
+  u16 y;
+  TerainDetailsID detail;
+};
 
 // --- Map Tile ---
 struct MapTile {
   int version;
   TileID type;
   TerrainDetail detail[Conf::TERRAIN_DETAIL_MAX];
-  float x, y, a;
 };
 
 // --- Visibilty Cache ---

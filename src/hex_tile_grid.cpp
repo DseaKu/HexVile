@@ -94,9 +94,7 @@ bool HexGrid::HasTile(HexCoord h) {
   if (!IsInBounds(h)) {
     return false;
   }
-  int gridR = h.r + mapRadius;
-  int gridQ = h.q + mapRadius;
-  return tileData[gridR][gridQ].type != TILE_NULL;
+  return GetTile(h).type != TILE_NULL;
 }
 
 bool HexGrid::IsWalkable(HexCoord h) {
@@ -111,6 +109,14 @@ bool HexGrid::IsWalkable(HexCoord h) {
     }
   }
   return false;
+}
+
+const MapTile &HexGrid::GetTile(HexCoord h) const {
+  return tileData[h.r + mapRadius][h.q + mapRadius];
+}
+
+MapTile &HexGrid::GetTile(HexCoord h) {
+  return tileData[h.r + mapRadius][h.q + mapRadius];
 }
 
 // --- Conversions ---
@@ -147,9 +153,7 @@ MapTile HexGrid::HexCoordToTile(HexCoord h) {
   if (!IsInBounds(h)) {
     return (MapTile){.type = TILE_NULL};
   }
-  int gridR = h.r + mapRadius;
-  int gridQ = h.q + mapRadius;
-  return tileData[gridR][gridQ];
+  return GetTile(h);
 }
 
 MapTile HexGrid::PointToTile(Vector2 point) {
@@ -188,12 +192,11 @@ const char *HexGrid::TileToString(TileID type) {
 // --- Logic ---
 void HexGrid::ToggleTile(HexCoord h) {
   if (HasTile(h)) {
-    int gridR = h.r + mapRadius;
-    int gridQ = h.q + mapRadius;
-    if (tileData[gridR][gridQ].type == TILE_GRASS) {
-      tileData[gridR][gridQ].type = TILE_WATER;
-    } else if (tileData[gridR][gridQ].type == TILE_WATER) {
-      tileData[gridR][gridQ].type = TILE_GRASS;
+    MapTile &tile = GetTile(h);
+    if (tile.type == TILE_GRASS) {
+      tile.type = TILE_WATER;
+    } else if (tile.type == TILE_WATER) {
+      tile.type = TILE_GRASS;
     }
   }
 }
@@ -259,9 +262,7 @@ bool HexGrid::CheckSurrounded(HexCoord target) {
     HexCoord n = GetNeighbor(target, i);
     if (IsInBounds(n)) {
       neighborCount++;
-      int gridR = n.r + mapRadius;
-      int gridQ = n.q + mapRadius;
-      if (tileData[gridR][gridQ].type == TILE_NULL) {
+      if (GetTile(n).type == TILE_NULL) {
         wallCount++;
       }
     }
@@ -272,21 +273,20 @@ bool HexGrid::CheckSurrounded(HexCoord target) {
 void HexGrid::DrawTile(Vector2 point) { DrawTile(PointToHexCoord(point)); }
 
 void HexGrid::DrawTile(HexCoord h) {
-  int q = h.q;
-  int r = h.r;
-  h.q -= mapRadius;
-  h.r -= mapRadius;
-
+  if (!HasTile(h)) {
+    return;
+  }
   Vector2 pos = HexCoordToPoint(h);
   pos.x -= Conf::TILE_SIZE_HALF;
   pos.y -= Conf::TILE_SIZE_HALF;
   Rectangle destRect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
                         Conf::ASSEST_RESOLUTION};
 
-  Rectangle sourceRect = {Conf::TA_TILE_X_OFFSET +
-                              (float)animationFrame * Conf::ASSEST_RESOLUTION,
-                          (float)Conf::ASSEST_RESOLUTION * tileData[r][q].type,
-                          Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
+  const MapTile &tile = GetTile(h);
+  Rectangle sourceRect = {
+      Conf::TA_TILE_X_OFFSET + (float)animationFrame * Conf::ASSEST_RESOLUTION,
+      (float)Conf::ASSEST_RESOLUTION * tile.type, Conf::ASSEST_RESOLUTION,
+      Conf::TILE_SIZE};
   Vector2 origin = {0.0f, 0.0f};
 
   textureHandler->Draw(sourceRect, destRect, origin, 0.0f, RED);
@@ -321,25 +321,23 @@ void HexGrid::Draw(const Camera2D &camera) {
   // Draw chached visible tiles
   for (int i = 0; i < visiCache.size(); i++) {
     HexCoord h = visiCache[i];
-    int q = h.q + mapRadius;
-    int r = h.r + mapRadius;
     Vector2 pos = HexCoordToPoint(h);
     pos.x -= Conf::TILE_SIZE_HALF;
     pos.y -= Conf::TILE_SIZE_HALF;
     Rectangle destRect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
                           Conf::ASSEST_RESOLUTION};
 
+    const MapTile &tile = GetTile(h);
     Rectangle sourceRect = {Conf::TA_TILE_X_OFFSET +
                                 (float)animationFrame * Conf::ASSEST_RESOLUTION,
-                            (float)Conf::ASSEST_RESOLUTION *
-                                tileData[r][q].type,
+                            (float)Conf::ASSEST_RESOLUTION * tile.type,
                             Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
     Vector2 origin = {0.0f, 0.0f};
 
     textureHandler->Draw(sourceRect, destRect, origin, 0.0f, WHITE);
 
     // Draw details for this tile
-    const MapTile &currentTile = tileData[r][q];
+    const MapTile &currentTile = tile;
     for (int j = 0; j < Conf::TERRAIN_DETAIL_MAX; j++) {
       const TerrainDetail &d = currentTile.detail[j];
       if (d.detail > 0) { // Assuming detail ID > 0 is a valid detail
@@ -413,11 +411,10 @@ bool HexGrid::SetTile(HexCoord h, TileID id) {
   if (!IsInBounds(h) || HexCoordToType(h) == id) {
     return false;
   } else {
-    int gridR = h.r + mapRadius;
-    int gridQ = h.q + mapRadius;
-    tileData[gridR][gridQ].type = id;
+    MapTile &tile = GetTile(h);
+    tile.type = id;
     for (int i = 0; i < Conf::TERRAIN_DETAIL_MAX; i++) {
-      tileData[gridR][gridQ].detail[i] = {0};
+      tile.detail[i] = {0};
     }
     return true;
   }

@@ -89,6 +89,10 @@ private:
   // Internal Math Helper
   HexCoord HexRound(FractionalHex h);
 
+  // Tile data access
+  const MapTile &GetTile(HexCoord h) const;
+  MapTile &GetTile(HexCoord h);
+
   // --- Logic ---
   void CalcRenderRect();
   void AddGrassDetails(int amount);

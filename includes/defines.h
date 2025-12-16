@@ -87,6 +87,7 @@ namespace TA {
 constexpr int ASSEST_RESOLUTION = Conf::TILE_SIZE;
 constexpr int ASSEST_RESOLUTION_HALF = ASSEST_RESOLUTION / 2;
 
+// --- Player ---
 constexpr int PLAYER_X_OFFSET_TILE = ASSEST_RESOLUTION * 0;
 constexpr int PLAYER_X_OFFSET_PIXEL = PLAYER_X_OFFSET_TILE * ASSEST_RESOLUTION;
 constexpr int PLAYER_X_MAX = 12;
@@ -96,6 +97,7 @@ constexpr float PLAYER_ANIMATION_SPEED_IDLE = 5.0f;
 constexpr int PLAYER_X_END =
     PLAYER_X_OFFSET_TILE + ASSEST_RESOLUTION * PLAYER_X_MAX;
 
+// --- Tile ---
 constexpr int TILE_X_OFFSET_TILE = PLAYER_X_END;
 constexpr int TILE_X_OFFSET_PIXEL = TILE_X_OFFSET_TILE * ASSEST_RESOLUTION;
 constexpr int TILES_X_MAX = 8;
@@ -104,18 +106,26 @@ constexpr float TILES_ANIMATION_SPEED = 0.3f;
 constexpr int TILES_X_END =
     TILE_X_OFFSET_TILE + ASSEST_RESOLUTION * TILES_X_MAX;
 
+// --- Item ---
 constexpr int ITEM_X_OFFSET_TILE = TILES_X_END;
 constexpr int ITEM_X_OFFSET_PIXEL = ITEM_X_OFFSET_TILE * ASSEST_RESOLUTION;
 constexpr int ITEM_X_MAX = 1;
 constexpr int ITEM_X_END = ITEM_X_OFFSET_TILE + ASSEST_RESOLUTION * ITEM_X_MAX;
 
+// --- Details ---
 constexpr int DETAILS_X_OFFSET_TILE = ITEM_X_END;
 constexpr int DETAILS_X_OFFSET_PIXEL =
     DETAILS_X_OFFSET_TILE * ASSEST_RESOLUTION;
-constexpr int DETAILS_X_MAX = 4;
+constexpr int DETAILS_X_MAX = 8;
 constexpr int DETAILS_X_END =
     DETAILS_X_OFFSET_TILE + ASSEST_RESOLUTION * DETAILS_X_MAX;
 
+// --- UI ---
+
+constexpr int UI_X_OFFSET_TILE = DETAILS_X_END;
+constexpr int UI_X_OFFSET_PIXEL = UI_X_OFFSET_TILE * ASSEST_RESOLUTION;
+constexpr int UI_X_MAX = 4;
+constexpr int UI_X_END = UI_X_OFFSET_TILE + ASSEST_RESOLUTION * UI_X_MAX;
 } // namespace TA
 // --- Unsigned Integer Aliases ---
 using u8 = std::uint8_t;

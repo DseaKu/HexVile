@@ -16,6 +16,11 @@ UI_Handler::UI_Handler() {
   barPosY = Conf::SCREEN_HEIGHT - barHeight - Conf::UI_TOOL_BAR_Y_BOTTOM_MARGIN;
   this->toolBarRect = {barPosX, barPosY, barWidth, barHeight};
 
+  itemBackground =
+      Rectangle{.x = TA::UI_X_OFFSET_TILE + 1 * TA::ASSEST_RESOLUTION,
+                .y = 1 * TA::ASSEST_RESOLUTION,
+                .width = TA::ASSEST_RESOLUTION,
+                .height = TA::ASSEST_RESOLUTION};
   scale = Conf::UI_SCALE;
   textureHandler = nullptr;
   itemHandler = nullptr;
@@ -56,30 +61,35 @@ void UI_Handler::DrawToolBarItems() {
     float slotPosY = barPosY + padding;
 
     ItemID currentTile = itemHandler->GetToolBarItemType(i);
+
+    Rectangle dstRect = {slotPosX, slotPosY, (float)itemSize, (float)itemSize};
+
+    // Load Item Background
+    textureHandler->LoadDrawData(DRAW_MASK_UI, dstRect.y, this->itemBackground,
+                                 dstRect, WHITE);
+
     if (currentTile != ITEM_NULL) {
+      // Load Item
       Rectangle srcRect = {(float)TA::ITEM_X_OFFSET_TILE,
                            (float)TA::ASSEST_RESOLUTION * currentTile,
                            (float)TA::ASSEST_RESOLUTION,
                            (float)Conf::TILE_SIZE};
 
-      Rectangle dstRect = {slotPosX, slotPosY, (float)itemSize,
-                           (float)itemSize};
-
       textureHandler->LoadDrawData(DRAW_MASK_UI, dstRect.y, srcRect, dstRect,
                                    WHITE);
 
       // Draw item count
-      if (itemHandler->GetToolBarItemPointer(i)->count > 0) {
-        char countText[5];
-        snprintf(countText, sizeof(countText), "%d",
-                 itemHandler->GetToolBarItemPointer(i)->count);
-        fontHandler->DrawTextHackRegular(
-            countText,
-            {slotPosX + itemSize -
-                 (float)MeasureText(countText, Conf::FONT_SIZE_DEFAULT) - 5,
-             slotPosY + itemSize - Conf::FONT_SIZE_DEFAULT - 5},
-            WHITE);
-      }
+      // if (itemHandler->GetToolBarItemPointer(i)->count > 0) {
+      //   char countText[5];
+      //   snprintf(countText, sizeof(countText), "%d",
+      //            itemHandler->GetToolBarItemPointer(i)->count);
+      //   fontHandler->DrawTextHackRegular(
+      //       countText,
+      //       {slotPosX + itemSize -
+      //            (float)MeasureText(countText, Conf::FONT_SIZE_DEFAULT) - 5,
+      //        slotPosY + itemSize - Conf::FONT_SIZE_DEFAULT - 5},
+      //       WHITE);
+      // }
     }
   }
 }

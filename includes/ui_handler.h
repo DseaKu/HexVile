@@ -17,6 +17,7 @@ private:
   float barWidth;
   float barHeight;
   Rectangle toolBarRect;
+  Rectangle itemBackground;
 
   float scale;
   TextureHandler *textureHandler;

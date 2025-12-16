@@ -206,7 +206,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
 
   // Draw section
   Vector2 playerScreenPos = GetWorldToScreen2D(playerPos, camera);
-  DrawCircleV(GetWorldToScreen2D(hexGrid.CoordToPoint(0, 0), camera), 3.0f,
+  DrawCircleV(GetWorldToScreen2D(hexGrid.HexCoordToPoint(HexCoord(0, 0)), camera), 3.0f,
               RED);
   DrawCircleV(playerScreenPos, 3.0f, RED);
 

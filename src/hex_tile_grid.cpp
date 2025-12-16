@@ -78,26 +78,26 @@ void HexGrid::InitGrid(float radius) {
       }
     }
   }
-  CalcRenderRect();
+  CalcVisibleTiles();
 }
 
 void HexGrid::SetTextureHandler(TextureHandler *textureHandler) {
   this->textureHandler = textureHandler;
 }
 
-bool HexGrid::IsInBounds(HexCoord h) {
+bool HexGrid::IsInBounds(HexCoord h) const {
   int s = -h.q - h.r;
   return abs(h.q) <= mapRadius && abs(h.r) <= mapRadius && abs(s) <= mapRadius;
 }
 
-bool HexGrid::HasTile(HexCoord h) {
+bool HexGrid::HasTile(HexCoord h) const {
   if (!IsInBounds(h)) {
     return false;
   }
   return GetTile(h).type != TILE_NULL;
 }
 
-bool HexGrid::IsWalkable(HexCoord h) {
+bool HexGrid::IsWalkable(HexCoord h) const {
   if (!HasTile(h)) {
     return false;
   }
@@ -120,7 +120,7 @@ MapTile &HexGrid::GetTile(HexCoord h) {
 }
 
 // --- Conversions ---
-HexCoord HexGrid::HexRound(FractionalHex h) {
+HexCoord HexGrid::HexRound(FractionalHex h) const {
   int q = round(h.q);
   int r = round(h.r);
   int s = round(h.s);
@@ -134,39 +134,37 @@ HexCoord HexGrid::HexRound(FractionalHex h) {
   return HexCoord(q, r);
 }
 
-Vector2 HexGrid::CoordToPoint(int r, int q) {
+Vector2 HexGrid::HexCoordToPoint(HexCoord h) const {
+  return HexCoordToPoint(h.r, h.q);
+}
+Vector2 HexGrid::HexCoordToPoint(int q, int r) const {
   float x = tileGapX * (sqrt(3.0f) * q + sqrt(3.0f) / 2.0f * r);
   float y = tileGapY * (3.0f / 2.0f * r);
   return {x + origin.x, y + origin.y};
 }
 
-Vector2 HexGrid::HexCoordToPoint(HexCoord h) { return CoordToPoint(h.r, h.q); }
+TileID HexGrid::PointToType(Vector2 point) const {
+  return PointToTile(point).type;
+}
 
-TileID HexGrid::PointToType(Vector2 point) { return PointToTile(point).type; }
-
-TileID HexGrid::HexCoordToType(HexCoord h) {
+TileID HexGrid::HexCoordToType(HexCoord h) const {
   MapTile m = HexCoordToTile(h);
   return m.type;
 }
 
-MapTile HexGrid::HexCoordToTile(HexCoord h) {
+MapTile HexGrid::HexCoordToTile(HexCoord h) const {
   if (!IsInBounds(h)) {
     return (MapTile){.type = TILE_NULL};
   }
   return GetTile(h);
 }
 
-MapTile HexGrid::PointToTile(Vector2 point) {
+MapTile HexGrid::PointToTile(Vector2 point) const {
   HexCoord h = PointToHexCoord(point);
   return HexCoordToTile(h);
 }
 
-MapTile *HexGrid::PointToTilePointer(Vector2 point) {
-  HexCoord h = PointToHexCoord(point);
-  return &tileData[h.r][h.q];
-}
-
-HexCoord HexGrid::PointToHexCoord(Vector2 point) {
+HexCoord HexGrid::PointToHexCoord(Vector2 point) const {
   float pt_x = (point.x - origin.x) / tileGapX;
   float pt_y = (point.y - origin.y) / tileGapY;
   double q = (sqrt(3.0) / 3.0 * pt_x - 1.0 / 3.0 * pt_y);
@@ -174,7 +172,7 @@ HexCoord HexGrid::PointToHexCoord(Vector2 point) {
   return HexRound({q, r, -q - r});
 }
 
-const char *HexGrid::TileToString(TileID type) {
+const char *HexGrid::TileToString(TileID type) const {
   switch (type) {
   case TILE_NULL:
     return "NULL";
@@ -201,7 +199,7 @@ void HexGrid::ToggleTile(HexCoord h) {
   }
 }
 
-void HexGrid::CalcRenderRect() {
+void HexGrid::CalcVisibleTiles() {
   if (camRect == nullptr) {
     return;
   }
@@ -250,7 +248,7 @@ void HexGrid::CalcRenderRect() {
   calcRenderRectTimer = GetTime() - startTime;
 }
 
-bool HexGrid::CheckSurrounded(HexCoord target) {
+bool HexGrid::CheckSurrounded(HexCoord target) const {
   if (!IsInBounds(target)) {
     return false;
   }
@@ -283,41 +281,16 @@ void HexGrid::DrawTile(HexCoord h) {
                         Conf::ASSEST_RESOLUTION};
 
   const MapTile &tile = GetTile(h);
-  Rectangle sourceRect = {
-      Conf::TA_TILE_X_OFFSET + (float)animationFrame * Conf::ASSEST_RESOLUTION,
-      (float)Conf::ASSEST_RESOLUTION * tile.type, Conf::ASSEST_RESOLUTION,
-      Conf::TILE_SIZE};
+  Rectangle sourceRect = {Conf::TA_TILE_X_OFFSET +
+                              (float)animationFrame * Conf::ASSEST_RESOLUTION,
+                          (float)Conf::ASSEST_RESOLUTION * tile.type,
+                          Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
   Vector2 origin = {0.0f, 0.0f};
 
   textureHandler->Draw(sourceRect, destRect, origin, 0.0f, RED);
 }
 
-void HexGrid::Draw(const Camera2D &camera) {
-  // Check if the asynchronous calculation of visible tiles is complete and new
-  // data is ready.
-  if (visiCacheReady) {
-    // Lock the mutex to safely swap the current rendering cache with the newly
-    // calculated one.
-    std::lock_guard<std::mutex> lock(visiCacheMutex);
-    visiCache.swap(visiCacheNext); // Atomically swap the buffers.
-    visiCacheNext.clear();         // Clear the now-empty back buffer.
-    visiCacheReady = false;        // Reset the flag.
-  }
-
-  // Check if a previous asynchronous calculation is still running.
-  // If not valid (first run) or finished, launch a new one.
-  if (!visiCalcFuture.valid() || visiCalcFuture.wait_for(std::chrono::seconds(
-                                     0)) == std::future_status::ready) {
-    // Launch CalcVisibleTiles asynchronously in a separate thread.
-    // std::launch::async ensures it runs on a new thread immediately.
-    visiCalcFuture =
-        std::async(std::launch::async, &HexGrid::CalcRenderRect, this);
-  }
-
-  // Update animation frame based on game time for animated tiles.
-  animationFrame = (int)(GetTime() * Conf::TA_TILES_ANIMATION_SPEED) %
-                   Conf::TA_TILES_FRAME_COUNT;
-
+void HexGrid::DrawVisibleTiles() {
   // Draw chached visible tiles
   for (int i = 0; i < visiCache.size(); i++) {
     HexCoord h = visiCache[i];
@@ -359,6 +332,35 @@ void HexGrid::Draw(const Camera2D &camera) {
   }
 }
 
+void HexGrid::Draw(const Camera2D &camera) {
+  // Check if the asynchronous calculation of visible tiles is complete and new
+  // data is ready.
+  if (visiCacheReady) {
+    // Lock the mutex to safely swap the current rendering cache with the newly
+    // calculated one.
+    std::lock_guard<std::mutex> lock(visiCacheMutex);
+    visiCache.swap(visiCacheNext); // Atomically swap the buffers.
+    visiCacheNext.clear();         // Clear the now-empty back buffer.
+    visiCacheReady = false;        // Reset the flag.
+  }
+
+  // Check if a previous asynchronous calculation is still running.
+  // If not valid (first run) or finished, launch a new one.
+  if (!visiCalcFuture.valid() || visiCalcFuture.wait_for(std::chrono::seconds(
+                                     0)) == std::future_status::ready) {
+    // Launch CalcVisibleTiles asynchronously in a separate thread.
+    // std::launch::async ensures it runs on a new thread immediately.
+    visiCalcFuture =
+        std::async(std::launch::async, &HexGrid::CalcVisibleTiles, this);
+  }
+
+  // Update animation frame based on game time for animated tiles.
+  animationFrame = (int)(GetTime() * Conf::TA_TILES_ANIMATION_SPEED) %
+                   Conf::TA_TILES_FRAME_COUNT;
+
+  DrawVisibleTiles();
+}
+
 void HexGrid::AddGrassDetails(int amount) {
   int detailsAdded = 0;
   int attempts = 0;
@@ -395,12 +397,14 @@ void HexGrid::AddGrassDetails(int amount) {
 void HexGrid::UpdateGrid() { AddGrassDetails(200); }
 
 // --- Get ---
-int HexGrid::GetTilesInUse() { return tilesInUse; }
-int HexGrid::GetTilesInTotal() { return tilesInTotal; }
-int HexGrid::GetTilesVisible() { return visiCache.size(); }
-int HexGrid::GetMapRadius() { return mapRadius; }
-float HexGrid::GetRenderRectTimer() { return calcRenderRectTimer; }
-HexCoord HexGrid::GetNeighbor(HexCoord h, int directionIndex) {
+int HexGrid::GetTilesInUse() const { return tilesInUse; }
+int HexGrid::GetTilesInTotal() const { return tilesInTotal; }
+int HexGrid::GetTilesVisible() const { return visiCache.size(); }
+
+int HexGrid::GetMapRadius() const { return mapRadius; }
+
+float HexGrid::GetRenderRectTimer() const { return calcRenderRectTimer; }
+HexCoord HexGrid::GetNeighbor(HexCoord h, int directionIndex) const {
   return h + DIRECTIONS[directionIndex];
 }
 

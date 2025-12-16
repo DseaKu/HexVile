@@ -86,59 +86,54 @@ private:
   static const std::vector<HexCoord> DIRECTIONS;
   static const std::vector<TileID> WALKABLE_TILES;
 
-  // Internal Math Helper
-  HexCoord HexRound(FractionalHex h);
-
-  // Tile data access
+  // --- Internal Helpers ---
+  HexCoord HexRound(FractionalHex h) const;
   const MapTile &GetTile(HexCoord h) const;
   MapTile &GetTile(HexCoord h);
-
-  // --- Logic ---
   void CalcRenderRect();
+  void CalcVisibleTiles();
   void AddGrassDetails(int amount);
+  void DrawVisibleTiles();
 
 public:
   HexGrid();
 
+  // --- Core Lifecycle ---
   void InitGrid(float radius);
+  void UpdateGrid();
+  void Draw(const Camera2D &camera);
+
+  // --- Setters ---
   void SetTextureHandler(TextureHandler *textureHandler);
-
-  // --- Conversions ---
-  HexCoord PointToHexCoord(Vector2 point);
-  Vector2 HexCoordToPoint(HexCoord h);
-  Vector2 CoordToPoint(int r, int q);
-  MapTile HexCoordToTile(HexCoord h);
-  MapTile PointToTile(Vector2 point);
-  MapTile *PointToTilePointer(Vector2 point);
-  TileID PointToType(Vector2 point);
-  TileID HexCoordToType(HexCoord h);
-  const char *TileToString(TileID type);
-
-  // --- Logic ---
-  bool IsInBounds(HexCoord h);
-  bool HasTile(HexCoord h);
+  void SetCamRectPointer(Rectangle *camRect);
   bool SetTile(HexCoord h, TileID ID);
   void ToggleTile(HexCoord h);
-  bool CheckSurrounded(HexCoord target);
-  void UpdateGrid();
-  bool IsWalkable(HexCoord h);
 
-  // --- Rendering ---
-  void Draw(const Camera2D &camera);
-  void DrawDetails(Rectangle sourceRect, Rectangle destRect);
+  // --- Getters & State Checks ---
+  int GetTilesInUse() const;
+  int GetTilesInTotal() const;
+  int GetTilesVisible() const;
+  int GetMapRadius() const;
+  float GetRenderRectTimer() const;
+  bool IsInBounds(HexCoord h) const;
+  bool HasTile(HexCoord h) const;
+  bool IsWalkable(HexCoord h) const;
+  bool CheckSurrounded(HexCoord target) const;
+
+  // --- Conversions & Helpers ---
+  HexCoord PointToHexCoord(Vector2 point) const;
+  Vector2 HexCoordToPoint(HexCoord h) const;
+  Vector2 HexCoordToPoint(int q, int r) const;
+  MapTile HexCoordToTile(HexCoord h) const;
+  MapTile PointToTile(Vector2 point) const;
+  TileID PointToType(Vector2 point) const;
+  TileID HexCoordToType(HexCoord h) const;
+  const char *TileToString(TileID type) const;
+  HexCoord GetNeighbor(HexCoord h, int directionIndex) const;
+
+  // --- Direct Drawing (for debugging/special cases) ---
   void DrawTile(Vector2 point);
   void DrawTile(HexCoord h);
-
-  // --- Get ---
-  int GetTilesInUse();
-  int GetTilesInTotal();
-  int GetTilesVisible();
-  int GetMapRadius();
-  float GetRenderRectTimer();
-  HexCoord GetNeighbor(HexCoord h, int directionIndex);
-
-  // --- Set ---
-  void SetCamRectPointer(Rectangle *camRect);
 };
 
 #endif // HEX_TILE_GRID_H

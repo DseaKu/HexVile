@@ -2,6 +2,8 @@
 #define UI_HANDLER_H
 
 #include "font_handler.h"
+#include "hex_tile_grid.h"
+#include "io_handler.h"
 #include "item_handler.h"
 #include "raylib.h"
 #include "texture_handler.h"
@@ -17,13 +19,16 @@ private:
   float barPosX;
   float barWidth;
   float barHeight;
-  Rectangle toolBarRect;
-  Rectangle itemBackground;
+  Rectangle toolBarRec;
+  Rectangle itemBG_Rec;
+  Rectangle tileHighlightRec;
 
   float scale;
   TextureHandler *textureHandler;
   ItemHandler *itemHandler;
   FontHandler *fontHandler;
+  IO_Handler *io_Handler;
+  HexGrid *hexGrid;
   int selectedItemIndex;
   bool isToolBarActive;
   void GenerateDrawData();
@@ -34,12 +39,14 @@ private:
 public:
   UI_Handler();
   void Update();
-  void SetTextureHandler(TextureHandler *th);
-  void SetItemHandler(ItemHandler *ih);
-  void SetFontHandler(FontHandler *fh);
+  void SetTextureHandler(TextureHandler *p);
+  void SetItemHandler(ItemHandler *p);
+  void SetFontHandler(FontHandler *p);
+  void SetIO_Handler(IO_Handler *p);
+  void SetHexGrid(HexGrid *p);
   void SetSelectedItem(int index);
-  bool CheckClick(Vector2 mousePosition);
   void SetToolBarActive(bool is_active);
+  bool CheckClick(Vector2 mousePosition);
   bool GetToolBarStatus();
   Rectangle GetToolBarRect();
   int GetItemSlotAt(Vector2 point);

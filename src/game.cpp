@@ -38,6 +38,8 @@ Game::Game() {
   uiHandler.SetTextureHandler(&textureHandler);
   uiHandler.SetItemHandler(&itemHandler);
   uiHandler.SetFontHandler(&fontHandler);
+  uiHandler.SetIO_Handler(&ioHandler);
+  uiHandler.SetHexGrid(&hexGrid);
   uiHandler.SetToolBarActive(true);
 }
 
@@ -65,22 +67,22 @@ void Game::GameLoop() {
     BeginDrawing();
     ClearBackground(WHITE);
 
-    if (Conf::DEBUG_FLAG) {
-      HexCoord mapTile = hexGrid.PointToHexCoord(ioHandler.GetScaledMousePos());
-      hexGrid.DrawTile(mapTile);
-    }
     // --- Camera View ---
     BeginMode2D(camera);
+
+    // if (Conf::DEBUG_FLAG) {
+    //   HexCoord mapTile =
+    //   hexGrid.PointToHexCoord(ioHandler.GetScaledMousePos());
+    //   hexGrid.DrawTile(mapTile);
+    // }
 
     textureHandler.RenderDrawData(DRAW_MASK_GROUND0);
     textureHandler.RenderDrawData(DRAW_MASK_GROUND1);
     textureHandler.RenderDrawData(DRAW_MASK_SHADOW);
     textureHandler.RenderDrawData(DRAW_MASK_ON_GROUND);
 
-    EndMode2D();
     // --- End Camera View ---
-
-    // uiHandler.DrawToolBar();
+    EndMode2D();
     textureHandler.RenderDrawData(DRAW_MASK_UI);
 
     DrawDebugOverlay(Conf::DEBUG_FLAG);

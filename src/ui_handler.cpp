@@ -2,6 +2,8 @@
 #include "defines.h"
 #include "enums.h"
 #include "font_handler.h"
+#include "hex_tile_grid.h"
+#include "io_handler.h"
 #include "raylib.h"
 
 UI_Handler::UI_Handler() {
@@ -14,12 +16,16 @@ UI_Handler::UI_Handler() {
   barHeight = itemSize + (2 * padding);
   barPosX = Conf::SCREEN_CENTER.x - (barWidth / 2.0f);
   barPosY = Conf::SCREEN_HEIGHT - barHeight - Conf::UI_TOOL_BAR_Y_BOTTOM_MARGIN;
-  this->toolBarRect = {barPosX, barPosY, barWidth, barHeight};
+  this->toolBarRec = {barPosX, barPosY, barWidth, barHeight};
   toolBarItemSize = Conf::UI_TOOL_BAR_ITEM_SIZE;
 
-  itemBackground =
+  itemBG_Rec = Rectangle{.x = TA::UI_X_OFFSET_TILE,
+                         .y = UI_ID_ITEM_BAR_BACKGROUND * TA::ASSEST_RESOLUTION,
+                         .width = TA::ASSEST_RESOLUTION,
+                         .height = TA::ASSEST_RESOLUTION};
+  tileHighlightRec =
       Rectangle{.x = TA::UI_X_OFFSET_TILE,
-                .y = UI_ID_ITEM_BAR_BACKGROUND * TA::ASSEST_RESOLUTION,
+                .y = UI_ID_HIGHLIGHTED_TILE * TA::ASSEST_RESOLUTION,
                 .width = TA::ASSEST_RESOLUTION,
                 .height = TA::ASSEST_RESOLUTION};
 
@@ -29,16 +35,16 @@ UI_Handler::UI_Handler() {
   fontHandler = nullptr;
   selectedItemIndex = 0;
   isToolBarActive = false;
-  toolBarRect = {.x = 0, .y = 0, .width = 0, .height = 0};
+  toolBarRec = {.x = 0, .y = 0, .width = 0, .height = 0};
 }
 
-void UI_Handler::SetTextureHandler(TextureHandler *th) {
-  this->textureHandler = th;
+void UI_Handler::SetTextureHandler(TextureHandler *p) {
+  this->textureHandler = p;
 }
-
-void UI_Handler::SetItemHandler(ItemHandler *ih) { this->itemHandler = ih; }
-
-void UI_Handler::SetFontHandler(FontHandler *fh) { this->fontHandler = fh; }
+void UI_Handler::SetItemHandler(ItemHandler *p) { this->itemHandler = p; }
+void UI_Handler::SetFontHandler(FontHandler *p) { this->fontHandler = p; }
+void UI_Handler::SetIO_Handler(IO_Handler *p) { this->io_Handler = p; }
+void UI_Handler::SetHexGrid(HexGrid *p) { this->hexGrid = p; }
 
 void UI_Handler::SetSelectedItem(int index) {
   if (index >= 0 && index < 10) {
@@ -49,7 +55,7 @@ void UI_Handler::SetSelectedItem(int index) {
 void UI_Handler::Update() { GenerateDrawData(); }
 void UI_Handler::GenerateDrawData() {
 
-  // DrawToolBar();
+  DrawToolBar();
   DrawToolBarItems();
   DrawTileHighlight();
 }
@@ -68,7 +74,7 @@ void UI_Handler::DrawToolBarItems() {
     Rectangle dstRec = {slotPosX, slotPosY, (float)itemSize, (float)itemSize};
 
     // Load Item Background
-    textureHandler->LoadDrawData(DRAW_MASK_UI, dstRec.y, this->itemBackground,
+    textureHandler->LoadDrawData(DRAW_MASK_UI, dstRec.y, this->itemBG_Rec,
                                  dstRec, WHITE);
 
     // Load Item
@@ -96,9 +102,13 @@ void UI_Handler::DrawToolBar() {
   if (!isToolBarActive) {
     return;
   }
-  DrawRectangleRec(this->toolBarRect, Fade(GRAY, 0.8f));
+  DrawRectangleRec(this->toolBarRec, Fade(GRAY, 0.8f));
 }
-void UI_Handler::DrawTileHighlight() {}
+void UI_Handler::DrawTileHighlight() {
+  Vector2 mousePos = io_Handler->GetScaledMousePos();
+  HexCoord coord = hexGrid->PointToHexCoord(mousePos);
+  hexGrid->DrawTile(coord, tileHighlightRec, DRAW_MASK_GROUND1);
+}
 
 void UI_Handler::SetToolBarActive(bool is_active) {
   isToolBarActive = is_active;
@@ -106,7 +116,7 @@ void UI_Handler::SetToolBarActive(bool is_active) {
 
 bool UI_Handler::GetToolBarStatus() { return isToolBarActive; }
 
-Rectangle UI_Handler::GetToolBarRect() { return this->toolBarRect; }
+Rectangle UI_Handler::GetToolBarRect() { return this->toolBarRec; }
 
 int UI_Handler::GetItemSlotAt(Vector2 point) {
   if (!isToolBarActive) {
@@ -118,8 +128,8 @@ int UI_Handler::GetItemSlotAt(Vector2 point) {
   const int itemSize = Conf::UI_TOOL_SIZE;
   const int slotSize = Conf::UI_TOOL_BAR_SLOT_SIZE;
 
-  float barPosX = this->toolBarRect.x;
-  float barPosY = this->toolBarRect.y;
+  float barPosX = this->toolBarRec.x;
+  float barPosY = this->toolBarRec.y;
 
   for (int i = 0; i < itemCount; ++i) {
     float slotPosX = barPosX + padding + (i * slotSize);

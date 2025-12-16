@@ -269,9 +269,7 @@ bool HexGrid::CheckSurrounded(HexCoord target) const {
   return (neighborCount > 0 && wallCount == neighborCount);
 }
 
-void HexGrid::DrawTile(Vector2 point) { DrawTile(PointToHexCoord(point)); }
-
-void HexGrid::DrawTile(HexCoord h) {
+void HexGrid::DrawTile(HexCoord h, Rectangle srcRec, DrawMaskID layer) {
   if (!HasTile(h)) {
     return;
   }
@@ -282,14 +280,9 @@ void HexGrid::DrawTile(HexCoord h) {
                         TA::ASSEST_RESOLUTION};
 
   const MapTile &tile = GetTile(h);
-  Rectangle sourceRect = {TA::TILE_X_OFFSET_TILE +
-                              (float)animationFrame * TA::ASSEST_RESOLUTION,
-                          (float)TA::ASSEST_RESOLUTION * tile.type,
-                          TA::ASSEST_RESOLUTION, Conf::TILE_SIZE};
   Vector2 origin = {0.0f, 0.0f};
 
-  textureHandler->LoadDrawData(DRAW_MASK_ON_GROUND, destRect.y, sourceRect,
-                               destRect, RED);
+  textureHandler->LoadDrawData(layer, destRect.y, srcRec, destRect, WHITE);
 }
 
 void HexGrid::DrawVisibleTiles() {

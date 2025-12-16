@@ -128,14 +128,15 @@ HexCoord HexGrid::HexRound(FractionalHex h) {
   return HexCoord(q, r);
 }
 
-TileID HexGrid::PointToType(Vector2 point) { return PointToTile(point).type; }
-
 Vector2 HexGrid::CoordToPoint(int r, int q) {
   float x = tileGapX * (sqrt(3.0f) * q + sqrt(3.0f) / 2.0f * r);
   float y = tileGapY * (3.0f / 2.0f * r);
   return {x + origin.x, y + origin.y};
 }
+
 Vector2 HexGrid::HexCoordToPoint(HexCoord h) { return CoordToPoint(h.r, h.q); }
+
+TileID HexGrid::PointToType(Vector2 point) { return PointToTile(point).type; }
 
 TileID HexGrid::HexCoordToType(HexCoord h) {
   MapTile m = HexCoordToTile(h);
@@ -151,17 +152,22 @@ MapTile HexGrid::HexCoordToTile(HexCoord h) {
   return tileData[gridR][gridQ];
 }
 
+MapTile HexGrid::PointToTile(Vector2 point) {
+  HexCoord h = PointToHexCoord(point);
+  return HexCoordToTile(h);
+}
+
+MapTile *HexGrid::PointToTilePointer(Vector2 point) {
+  HexCoord h = PointToHexCoord(point);
+  return &tileData[h.r][h.q];
+}
+
 HexCoord HexGrid::PointToHexCoord(Vector2 point) {
   float pt_x = (point.x - origin.x) / tileGapX;
   float pt_y = (point.y - origin.y) / tileGapY;
   double q = (sqrt(3.0) / 3.0 * pt_x - 1.0 / 3.0 * pt_y);
   double r = (2.0 / 3.0 * pt_y);
   return HexRound({q, r, -q - r});
-}
-
-MapTile HexGrid::PointToTile(Vector2 point) {
-  HexCoord h = PointToHexCoord(point);
-  return HexCoordToTile(h);
 }
 
 const char *HexGrid::TileToString(TileID type) {
@@ -205,7 +211,7 @@ void HexGrid::CalcVisibleTiles() {
 
   int gridSize = mapRadius * 2 + 1;
 
-  std::vector<VisibiltyData> newVisiCache;
+  std::vector<CoordsQR> newVisiCache;
   newVisiCache.reserve(
       Conf::VISIBILTY_ESTIMATED_UPPER_BOUND); // Pre-allocate memory for
                                               // efficiency.
@@ -226,7 +232,7 @@ void HexGrid::CalcVisibleTiles() {
                              Conf::ASSEST_RESOLUTION};
       // Check if the tile's bounding box intersects with the render view.
       if (CheckCollisionRecs(renderView, dest_rect)) {
-        newVisiCache.push_back((VisibiltyData){.r = r, .q = q});
+        newVisiCache.push_back((CoordsQR){.q = q, .r = r});
       }
     }
   }
@@ -375,7 +381,7 @@ void HexGrid::AddGrassDetails(int amount) {
     int x_pos_rand = GetRandomValue(1, 15);
     int y_pos_rand = GetRandomValue(1, 15);
     int index_rand = GetRandomValue(0, Conf::TERRAIN_DETAIL_MAX - 1);
-    int detailRand = GetRandomValue(GRASS_DETAILS_BLADE, GRASS_DETAILS_MOSS);
+    int detailRand = GetRandomValue(GRASS_DETAILS_FLOWER, GRASS_DETAILS_SIZE);
 
     // Only add detail if the slot is empty.
     if (tileData[r_rand][q_rand].detail[index_rand].detail == 0) {

@@ -61,9 +61,12 @@ static const std::map<ItemID, TileID> item_to_tile_map = {
 
 typedef enum GrassTerainDetailsID {
   GRASS_DETAILS_NULL = 0,
-  GRASS_DETAILS_BLADE,
   GRASS_DETAILS_FLOWER,
-  GRASS_DETAILS_MOSS,
+  GRASS_DETAILS_BLADE0,
+  GRASS_DETAILS_BLADE1,
+  GRASS_DETAILS_BLADE2,
+  GRASS_DETAILS_BLADE3,
+  GRASS_DETAILS_SHIT,
   GRASS_DETAILS_SIZE,
 } GrassTerainDetailsID;
 #endif // !ENUMS_H

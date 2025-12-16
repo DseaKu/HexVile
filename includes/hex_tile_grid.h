@@ -49,9 +49,9 @@ struct MapTile {
 };
 
 // --- Visibilty Cache ---
-struct VisibiltyData {
-  u32 r;
+struct CoordsQR {
   u32 q;
+  u32 r;
 };
 
 /* Grid parts and relationships: https://www.redblobgames.com/grids/parts/
@@ -67,9 +67,9 @@ struct VisibiltyData {
 class HexGrid {
 private:
   std::vector<std::vector<MapTile>> tileData;
-  std::vector<VisibiltyData>
+  std::vector<CoordsQR>
       visiCache; // Stores currently visible tiles for rendering.
-  std::vector<VisibiltyData>
+  std::vector<CoordsQR>
       visiCacheNext; // Back buffer for visible tiles calculated asynchronously.
   std::mutex visiCacheMutex; // Mutex to protect access to visiCache and
                              // visiCacheNext during swaps.
@@ -105,13 +105,14 @@ public:
   void SetTextureHandler(TextureHandler *textureHandler);
 
   // --- Conversions ---
+  HexCoord PointToHexCoord(Vector2 point);
   Vector2 HexCoordToPoint(HexCoord h);
   Vector2 CoordToPoint(int r, int q);
   MapTile HexCoordToTile(HexCoord h);
-  TileID HexCoordToType(HexCoord h);
-  HexCoord PointToHexCoord(Vector2 point);
   MapTile PointToTile(Vector2 point);
+  MapTile *PointToTilePointer(Vector2 point);
   TileID PointToType(Vector2 point);
+  TileID HexCoordToType(HexCoord h);
   const char *TileToString(TileID type);
 
   // --- Logic ---

@@ -48,12 +48,6 @@ struct MapTile {
   TerrainDetail detail[Conf::TERRAIN_DETAIL_MAX];
 };
 
-// --- Visibilty Cache ---
-struct CoordsQR {
-  u32 q;
-  u32 r;
-};
-
 /* Grid parts and relationships: https://www.redblobgames.com/grids/parts/
  *
  *
@@ -67,9 +61,9 @@ struct CoordsQR {
 class HexGrid {
 private:
   std::vector<std::vector<MapTile>> tileData;
-  std::vector<CoordsQR>
+  std::vector<HexCoord>
       visiCache; // Stores currently visible tiles for rendering.
-  std::vector<CoordsQR>
+  std::vector<HexCoord>
       visiCacheNext; // Back buffer for visible tiles calculated asynchronously.
   std::mutex visiCacheMutex; // Mutex to protect access to visiCache and
                              // visiCacheNext during swaps.
@@ -79,6 +73,7 @@ private:
                        // be swapped.
   float tileGapX;
   float tileGapY;
+  float calcRenderRectTimer;
   int animationFrame;
   int mapRadius;
   int tilesInUse;
@@ -95,7 +90,7 @@ private:
   HexCoord HexRound(FractionalHex h);
 
   // --- Logic ---
-  void CalcVisibleTiles();
+  void CalcRenderRect();
   void AddGrassDetails(int amount);
 
 public:
@@ -135,6 +130,7 @@ public:
   int GetTilesInTotal();
   int GetTilesVisible();
   int GetMapRadius();
+  float GetRenderRectTimer();
   HexCoord GetNeighbor(HexCoord h, int directionIndex);
 
   // --- Set ---

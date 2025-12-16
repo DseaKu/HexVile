@@ -1,8 +1,8 @@
 #include "ui_handler.h"
 #include "defines.h"
 #include "enums.h"
-#include "raylib.h"
 #include "font_handler.h"
+#include "raylib.h"
 
 UI_Handler::UI_Handler() {
   scale = Conf::UI_SCALE;
@@ -64,9 +64,9 @@ void UI_Handler::DrawToolBar() {
       ItemID currentTile = itemHandler->GetToolBarItemType(i);
       if (currentTile != ITEM_NULL) {
         if (textureHandler) {
-          Rectangle tile_rect = {(float)Conf::TA_ITEM_X_OFFSET,
-                                 (float)Conf::ASSEST_RESOLUTION * currentTile,
-                                 (float)Conf::ASSEST_RESOLUTION,
+          Rectangle tile_rect = {(float)TA::ITEM_X_OFFSET_TILE,
+                                 (float)TA::ASSEST_RESOLUTION * currentTile,
+                                 (float)TA::ASSEST_RESOLUTION,
                                  (float)Conf::TILE_SIZE};
 
           Rectangle dest_rect = {slotPosX, slotPosY, (float)itemSize,
@@ -77,8 +77,14 @@ void UI_Handler::DrawToolBar() {
           // Draw item count
           if (itemHandler->GetToolBarItemPointer(i)->count > 0) {
             char countText[5];
-            snprintf(countText, sizeof(countText), "%d", itemHandler->GetToolBarItemPointer(i)->count);
-            fontHandler->DrawTextHackRegular(countText, {slotPosX + itemSize - (float)MeasureText(countText, Conf::FONT_SIZE_DEFAULT) - 5, slotPosY + itemSize - Conf::FONT_SIZE_DEFAULT - 5}, WHITE);
+            snprintf(countText, sizeof(countText), "%d",
+                     itemHandler->GetToolBarItemPointer(i)->count);
+            fontHandler->DrawTextHackRegular(
+                countText,
+                {slotPosX + itemSize -
+                     (float)MeasureText(countText, Conf::FONT_SIZE_DEFAULT) - 5,
+                 slotPosY + itemSize - Conf::FONT_SIZE_DEFAULT - 5},
+                WHITE);
           }
         }
       }

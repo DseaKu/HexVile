@@ -33,38 +33,9 @@ constexpr int ITEM_STACK_MAX_TOOL_BAR = 8;
 constexpr int ITEM_STACK_MAX_INVENTORY = 30;
 constexpr float TRIGGER_UPDATE_GRID = 3.0f;
 
-// --- Assest & Animation --- TA = Texture Atlas
-constexpr int ASSEST_RESOLUTION = 32;
-constexpr int ASSEST_RESOLUTION_HALF = ASSEST_RESOLUTION / 2;
-
-constexpr int TA_PLAYER_X_OFFSET = ASSEST_RESOLUTION * 0;
-constexpr int TA_PLAYER_X_MAX = 12;
-constexpr int TA_PLAYER_X_WALK_MAX = 8;
-constexpr float PLAYER_ANIMATION_SPEED = 10.0f;
-constexpr float TA_PLAYER_ANIMATION_SPEED_IDLE = 5.0f;
-constexpr int TA_PLAYER_X_END =
-    TA_PLAYER_X_OFFSET + ASSEST_RESOLUTION * TA_PLAYER_X_MAX;
-
-constexpr int TA_TILE_X_OFFSET = TA_PLAYER_X_END;
-constexpr int TA_TILES_X_MAX = 8;
-constexpr int TA_TILES_FRAME_COUNT = 1;
-constexpr float TA_TILES_ANIMATION_SPEED = 0.3f;
-constexpr int TA_TILES_X_END =
-    TA_TILE_X_OFFSET + ASSEST_RESOLUTION * TA_TILES_X_MAX;
-
-constexpr int TA_ITEM_X_OFFSET = TA_TILES_X_END;
-constexpr int TA_ITEM_X_MAX = 1;
-constexpr int TA_ITEM_X_END =
-    TA_ITEM_X_OFFSET + ASSEST_RESOLUTION * TA_ITEM_X_MAX;
-
-constexpr int TA_DETAILS_X_OFFSET = TA_ITEM_X_END;
-constexpr int TA_DETAILS_X_MAX = 4;
-constexpr int TA_DETAILS_X_END =
-    TA_DETAILS_X_OFFSET + ASSEST_RESOLUTION * TA_DETAILS_X_MAX;
-
 // --- Tile ---
-constexpr int TILE_SIZE = ASSEST_RESOLUTION;
-constexpr int TILE_SIZE_HALF = ASSEST_RESOLUTION_HALF;
+constexpr int TILE_SIZE = 32;
+constexpr int TILE_SIZE_HALF = TILE_SIZE / 2;
 constexpr float TILE_GAP_X = 18.30f;
 constexpr float TILE_GAP_Y = 15.95f;
 const std::vector<TileID> WALKABLE_TILES = {TILE_GRASS, TILE_DIRT};
@@ -105,12 +76,47 @@ constexpr float OFFSET_TO_OBSTACLE = 5;
 constexpr float UI_SCALE = 1.0f;
 constexpr float UI_TOOL_BAR_Y_BOTTOM_MARGIN = 20.0f * UI_SCALE;
 constexpr float UI_TOOL_BAR_PADDING = 15.0f * UI_SCALE;
-constexpr float UI_TOOL_SIZE = 1.8f * UI_SCALE * ASSEST_RESOLUTION;
+constexpr float UI_TOOL_SIZE = 1.8f * UI_SCALE * TILE_SIZE;
 constexpr float UI_TOOL_BAR_SLOT_SIZE =
     (UI_TOOL_SIZE + UI_TOOL_BAR_PADDING) * UI_SCALE * 1.0f;
 
 } // namespace Conf
 
+// --- Assest & Animation --- TA = Texture Atlas
+namespace TA {
+constexpr int ASSEST_RESOLUTION = Conf::TILE_SIZE;
+constexpr int ASSEST_RESOLUTION_HALF = ASSEST_RESOLUTION / 2;
+
+constexpr int PLAYER_X_OFFSET_TILE = ASSEST_RESOLUTION * 0;
+constexpr int PLAYER_X_OFFSET_PIXEL = PLAYER_X_OFFSET_TILE * ASSEST_RESOLUTION;
+constexpr int PLAYER_X_MAX = 12;
+constexpr int PLAYER_X_WALK_MAX = 8;
+constexpr float PLAYER_ANIMATION_SPEED = 10.0f;
+constexpr float PLAYER_ANIMATION_SPEED_IDLE = 5.0f;
+constexpr int PLAYER_X_END =
+    PLAYER_X_OFFSET_TILE + ASSEST_RESOLUTION * PLAYER_X_MAX;
+
+constexpr int TILE_X_OFFSET_TILE = PLAYER_X_END;
+constexpr int TILE_X_OFFSET_PIXEL = TILE_X_OFFSET_TILE * ASSEST_RESOLUTION;
+constexpr int TILES_X_MAX = 8;
+constexpr int TILES_FRAME_COUNT = 1;
+constexpr float TILES_ANIMATION_SPEED = 0.3f;
+constexpr int TILES_X_END =
+    TILE_X_OFFSET_TILE + ASSEST_RESOLUTION * TILES_X_MAX;
+
+constexpr int ITEM_X_OFFSET_TILE = TILES_X_END;
+constexpr int ITEM_X_OFFSET_PIXEL = ITEM_X_OFFSET_TILE * ASSEST_RESOLUTION;
+constexpr int ITEM_X_MAX = 1;
+constexpr int ITEM_X_END = ITEM_X_OFFSET_TILE + ASSEST_RESOLUTION * ITEM_X_MAX;
+
+constexpr int DETAILS_X_OFFSET_TILE = ITEM_X_END;
+constexpr int DETAILS_X_OFFSET_PIXEL =
+    DETAILS_X_OFFSET_TILE * ASSEST_RESOLUTION;
+constexpr int DETAILS_X_MAX = 4;
+constexpr int DETAILS_X_END =
+    DETAILS_X_OFFSET_TILE + ASSEST_RESOLUTION * DETAILS_X_MAX;
+
+} // namespace TA
 // --- Unsigned Integer Aliases ---
 using u8 = std::uint8_t;
 using u16 = std::uint16_t;

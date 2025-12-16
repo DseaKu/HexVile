@@ -231,8 +231,8 @@ void HexGrid::CalcVisibleTiles() {
       Vector2 pos = HexCoordToPoint(h);
       pos.x -= Conf::TILE_SIZE_HALF;
       pos.y -= Conf::TILE_SIZE_HALF;
-      Rectangle dest_rect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
-                             Conf::ASSEST_RESOLUTION};
+      Rectangle dest_rect = {pos.x, pos.y, TA::ASSEST_RESOLUTION,
+                             TA::ASSEST_RESOLUTION};
       // Check if the tile's bounding box intersects with the render view.
       if (CheckCollisionRecs(renderView, dest_rect)) {
         newVisiCache.push_back(h);
@@ -278,14 +278,14 @@ void HexGrid::DrawTile(HexCoord h) {
   Vector2 pos = HexCoordToPoint(h);
   pos.x -= Conf::TILE_SIZE_HALF;
   pos.y -= Conf::TILE_SIZE_HALF;
-  Rectangle destRect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
-                        Conf::ASSEST_RESOLUTION};
+  Rectangle destRect = {pos.x, pos.y, TA::ASSEST_RESOLUTION,
+                        TA::ASSEST_RESOLUTION};
 
   const MapTile &tile = GetTile(h);
-  Rectangle sourceRect = {Conf::TA_TILE_X_OFFSET +
-                              (float)animationFrame * Conf::ASSEST_RESOLUTION,
-                          (float)Conf::ASSEST_RESOLUTION * tile.type,
-                          Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
+  Rectangle sourceRect = {TA::TILE_X_OFFSET_TILE +
+                              (float)animationFrame * TA::ASSEST_RESOLUTION,
+                          (float)TA::ASSEST_RESOLUTION * tile.type,
+                          TA::ASSEST_RESOLUTION, Conf::TILE_SIZE};
   Vector2 origin = {0.0f, 0.0f};
 
   textureHandler->Draw(sourceRect, destRect, origin, 0.0f, RED);
@@ -298,14 +298,14 @@ void HexGrid::DrawVisibleTiles() {
     Vector2 pos = HexCoordToPoint(h);
     pos.x -= Conf::TILE_SIZE_HALF;
     pos.y -= Conf::TILE_SIZE_HALF;
-    Rectangle destRect = {pos.x, pos.y, Conf::ASSEST_RESOLUTION,
-                          Conf::ASSEST_RESOLUTION};
+    Rectangle destRect = {pos.x, pos.y, TA::ASSEST_RESOLUTION,
+                          TA::ASSEST_RESOLUTION};
 
     const MapTile &tile = GetTile(h);
-    Rectangle sourceRect = {Conf::TA_TILE_X_OFFSET +
-                                (float)animationFrame * Conf::ASSEST_RESOLUTION,
-                            (float)Conf::ASSEST_RESOLUTION * tile.type,
-                            Conf::ASSEST_RESOLUTION, Conf::TILE_SIZE};
+    Rectangle sourceRect = {TA::TILE_X_OFFSET_TILE +
+                                (float)animationFrame * TA::ASSEST_RESOLUTION,
+                            (float)TA::ASSEST_RESOLUTION * tile.type,
+                            TA::ASSEST_RESOLUTION, Conf::TILE_SIZE};
     Vector2 origin = {0.0f, 0.0f};
 
     textureHandler->Draw(sourceRect, destRect, origin, 0.0f, WHITE);
@@ -317,14 +317,14 @@ void HexGrid::DrawVisibleTiles() {
       if (d.detail > 0) { // Assuming detail ID > 0 is a valid detail
 
         Rectangle detailSourceRect = {
-            Conf::TA_DETAILS_X_OFFSET +
-                ((float)d.detail - 1) * Conf::ASSEST_RESOLUTION,
-            (float)ITEM_SET_GRASS * Conf::ASSEST_RESOLUTION,
-            Conf::ASSEST_RESOLUTION, Conf::ASSEST_RESOLUTION};
+            TA::DETAILS_X_OFFSET_TILE +
+                ((float)d.detail - 1) * TA::ASSEST_RESOLUTION,
+            (float)ITEM_SET_GRASS * TA::ASSEST_RESOLUTION,
+            TA::ASSEST_RESOLUTION, TA::ASSEST_RESOLUTION};
 
         Rectangle detailDestRect = {pos.x + d.x, pos.y + d.y,
-                                    Conf::ASSEST_RESOLUTION,
-                                    Conf::ASSEST_RESOLUTION};
+                                    TA::ASSEST_RESOLUTION,
+                                    TA::ASSEST_RESOLUTION};
 
         textureHandler->Draw(detailSourceRect, detailDestRect, origin, 0.0f,
                              WHITE);
@@ -356,8 +356,8 @@ void HexGrid::Draw(const Camera2D &camera) {
   }
 
   // Update animation frame based on game time for animated tiles.
-  animationFrame = (int)(GetTime() * Conf::TA_TILES_ANIMATION_SPEED) %
-                   Conf::TA_TILES_FRAME_COUNT;
+  animationFrame =
+      (int)(GetTime() * TA::TILES_ANIMATION_SPEED) % TA::TILES_FRAME_COUNT;
 
   DrawVisibleTiles();
 }

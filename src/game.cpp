@@ -69,8 +69,13 @@ void Game::GameLoop() {
 
     // --- Camera View ---
     hexGrid.Draw(camera);
-    player.Draw();
+    if (Conf::DEBUG_FLAG) {
+      HexCoord mapTile = hexGrid.PointToHexCoord(ioHandler.GetScaledMousePos());
+      hexGrid.DrawTile(mapTile);
+    }
 
+    player.Draw();
+    textureHandler.RenderDrawData();
     // --- End Camera View ---
     EndMode2D();
 
@@ -206,12 +211,10 @@ void Game::DrawDebugOverlay(bool is_enabled) {
 
   // Draw section
   Vector2 playerScreenPos = GetWorldToScreen2D(playerPos, camera);
-  DrawCircleV(GetWorldToScreen2D(hexGrid.HexCoordToPoint(HexCoord(0, 0)), camera), 3.0f,
-              RED);
+  DrawCircleV(
+      GetWorldToScreen2D(hexGrid.HexCoordToPoint(HexCoord(0, 0)), camera), 3.0f,
+      RED);
   DrawCircleV(playerScreenPos, 3.0f, RED);
-
-  // Highlight selected tile
-  hexGrid.DrawTile((HexCoord){mapTile.q, mapTile.r});
 
   // Draw text
   for (const DebugData &data : debugData) {

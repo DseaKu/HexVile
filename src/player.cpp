@@ -71,20 +71,22 @@ HexCoord Player::GetTile() { return this->playerTile; }
 
 void Player::Draw() {
   Vector2 playerPosition = this->position;
-  playerPosition.x -= Conf::ASSEST_RESOLUTION_HALF;
-  playerPosition.y -= Conf::ASSEST_RESOLUTION_HALF - Conf::PLAYER_Y_OFFSET;
-  float resolution = Conf::ASSEST_RESOLUTION;
+  playerPosition.x -= TA::ASSEST_RESOLUTION_HALF;
+  playerPosition.y -= TA::ASSEST_RESOLUTION_HALF - Conf::PLAYER_Y_OFFSET;
+  float resolution = TA::ASSEST_RESOLUTION;
   float xFrameOffset =
-      resolution * this->animationFrame + Conf::TA_PLAYER_X_OFFSET;
+      resolution * this->animationFrame + TA::PLAYER_X_OFFSET_TILE;
   float yFrameOffset = resolution * ((this->state - 1) * (DIR_LABELS_SIZE - 1) +
                                      (this->faceDir));
 
-  Rectangle assestRect = {xFrameOffset, yFrameOffset, resolution, resolution};
+  Rectangle srcRect = {xFrameOffset, yFrameOffset, resolution, resolution};
 
-  Rectangle destRect = {playerPosition.x, playerPosition.y, resolution,
-                        resolution};
+  Rectangle dstRect = {playerPosition.x, playerPosition.y, resolution,
+                       resolution};
 
-  textureHandler->Draw(assestRect, destRect, {0.0f, 0.0f}, 0.0f, WHITE);
+  // textureHandler->Draw(assestRect, destRect, {0.0f, 0.0f}, 0.0f, WHITE);
+  textureHandler->LoadDrawData(DRAW_MASK_ON_GROUND, playerPosition.y, srcRect,
+                               dstRect, WHITE);
 }
 
 Vector2 Player::GetPosition() { return position; }
@@ -173,18 +175,18 @@ void Player::Walk(Vector2 dir) {
 void Player::InitAnimations() {
   for (int i = 0; i < PLAYER_STATE_ID_SIZE; i++) {
     for (int j = 0; j < DIR_LABELS_SIZE; j++) {
-      this->animationData[i][j] = {.frameCount = Conf::TA_PLAYER_X_MAX,
-                                   .speed = Conf::PLAYER_ANIMATION_SPEED,
+      this->animationData[i][j] = {.frameCount = TA::PLAYER_X_MAX,
+                                   .speed = TA::PLAYER_ANIMATION_SPEED,
                                    .loop = true};
     }
   }
   for (int i = 0; i < DIR_LABELS_SIZE; i++) {
     this->animationData[PLAYER_STATE_WALK][i].frameCount =
-        Conf::TA_PLAYER_X_WALK_MAX;
+        TA::PLAYER_X_WALK_MAX;
   }
   for (int i = 0; i < DIR_LABELS_SIZE; i++) {
     this->animationData[PLAYER_STATE_IDLE][i].speed =
-        Conf::TA_PLAYER_ANIMATION_SPEED_IDLE;
+        TA::PLAYER_ANIMATION_SPEED_IDLE;
   }
 }
 void Player::SetHexGrid(HexGrid *grid) { this->hexGrid = grid; }

@@ -123,7 +123,7 @@ public:
   // --- Conversions & Helpers ---
   HexCoord PointToHexCoord(Vector2 point) const;
   Vector2 HexCoordToPoint(HexCoord h) const;
-  Vector2 HexCoordToPoint(int q, int r) const;
+  Vector2 CoordToPoint(int q, int r) const;
   MapTile HexCoordToTile(HexCoord h) const;
   MapTile PointToTile(Vector2 point) const;
   TileID PointToType(Vector2 point) const;

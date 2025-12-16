@@ -211,7 +211,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   DrawCircleV(playerScreenPos, 3.0f, RED);
 
   // Highlight selected tile
-  // hexGrid.DrawTile((HexCoord){mapTile.q, mapTile.r});
+  hexGrid.DrawTile((HexCoord){mapTile.q, mapTile.r});
 
   // Draw text
   for (const DebugData &data : debugData) {

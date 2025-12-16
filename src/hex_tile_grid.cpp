@@ -135,9 +135,10 @@ HexCoord HexGrid::HexRound(FractionalHex h) const {
 }
 
 Vector2 HexGrid::HexCoordToPoint(HexCoord h) const {
-  return HexCoordToPoint(h.r, h.q);
+  return CoordToPoint(h.q, h.r);
 }
-Vector2 HexGrid::HexCoordToPoint(int q, int r) const {
+
+Vector2 HexGrid::CoordToPoint(int q, int r) const {
   float x = tileGapX * (sqrt(3.0f) * q + sqrt(3.0f) / 2.0f * r);
   float y = tileGapY * (3.0f / 2.0f * r);
   return {x + origin.x, y + origin.y};

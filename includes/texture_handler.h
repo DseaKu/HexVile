@@ -29,7 +29,7 @@ public:
 
   void LoadDrawData(DrawMaskID maskID, float y, Rectangle srcRec,
                     Rectangle dstRect, Color Color);
-  void RenderDrawData();
+  void RenderDrawData(DrawMaskID maskID);
 };
 
 #endif // !TEXTURE_HANDLER_H

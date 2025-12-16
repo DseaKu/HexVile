@@ -65,11 +65,13 @@ void Player::Update() {
       this->animationDelta * animationData[this->state][faceDir].speed;
   this->animationFrame =
       (int)animationSpeed % animationData[this->state][faceDir].frameCount;
+
+  GenerateDrawData();
 }
 
 HexCoord Player::GetTile() { return this->playerTile; }
 
-void Player::Draw() {
+void Player::GenerateDrawData() {
   Vector2 playerPosition = this->position;
   playerPosition.x -= TA::ASSEST_RESOLUTION_HALF;
   playerPosition.y -= TA::ASSEST_RESOLUTION_HALF - Conf::PLAYER_Y_OFFSET;
@@ -84,7 +86,6 @@ void Player::Draw() {
   Rectangle dstRect = {playerPosition.x, playerPosition.y, resolution,
                        resolution};
 
-  // textureHandler->Draw(assestRect, destRect, {0.0f, 0.0f}, 0.0f, WHITE);
   textureHandler->LoadDrawData(DRAW_MASK_ON_GROUND, playerPosition.y, srcRect,
                                dstRect, WHITE);
 }

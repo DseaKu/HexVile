@@ -48,10 +48,6 @@ void Game::GameLoop() {
     // --- Update ---
     timer += GetTime();
 
-    if (timer <= updateGridTreshold) {
-      hexGrid.UpdateGrid();
-      updateGridTreshold += Conf::TRIGGER_UPDATE_GRID;
-    }
     ioHandler.UpdateMousePos(camera);
     ProcessInputs();
     relativeCenter = GetScreenToWorld2D(Conf::SCREEN_CENTER, camera);
@@ -59,27 +55,33 @@ void Game::GameLoop() {
     cameraRect = {cameraTopLeft.x, cameraTopLeft.y, Conf::CAMERA_WIDTH,
                   Conf::CAMERA_HEIGTH};
 
-    player.Update();
     camera.target = player.GetPosition();
+
+    player.Update();
+    hexGrid.Update(camera);
+    uiHandler.Update();
 
     // --- Draw ---
     BeginDrawing();
-    BeginMode2D(camera);
     ClearBackground(WHITE);
 
-    // --- Camera View ---
-    hexGrid.Draw(camera);
     if (Conf::DEBUG_FLAG) {
       HexCoord mapTile = hexGrid.PointToHexCoord(ioHandler.GetScaledMousePos());
       hexGrid.DrawTile(mapTile);
     }
+    // --- Camera View ---
+    BeginMode2D(camera);
 
-    player.Draw();
-    textureHandler.RenderDrawData();
-    // --- End Camera View ---
+    textureHandler.RenderDrawData(DRAW_MASK_GROUND);
+    textureHandler.RenderDrawData(DRAW_MASK_SHADOW);
+    textureHandler.RenderDrawData(DRAW_MASK_ON_GROUND);
+
     EndMode2D();
+    // --- End Camera View ---
 
     uiHandler.DrawToolBar();
+    textureHandler.RenderDrawData(DRAW_MASK_UI);
+
     DrawDebugOverlay(Conf::DEBUG_FLAG);
 
     EndDrawing();

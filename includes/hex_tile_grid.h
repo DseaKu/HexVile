@@ -95,13 +95,15 @@ private:
   void AddGrassDetails(int amount);
   void DrawVisibleTiles();
 
+  // --- Core Lifecycle ---
+  void UpdateTilesProperties();
+
 public:
   HexGrid();
 
   // --- Core Lifecycle ---
   void InitGrid(float radius);
-  void UpdateGrid();
-  void Draw(const Camera2D &camera);
+  void Update(const Camera2D &camera);
 
   // --- Setters ---
   void SetTextureHandler(TextureHandler *textureHandler);

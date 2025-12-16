@@ -36,13 +36,12 @@ void TextureHandler::LoadDrawData(DrawMaskID maskID, float y, Rectangle srcRec,
       y, DrawProperties{srcRec, dstRect, col});
 }
 
-void TextureHandler::RenderDrawData() {
-  for (auto &layer : DrawData) {
-    for (auto &item : layer) {
-      DrawProperties &props = item.second;
-      DrawTexturePro(textureAtlas, props.srcRec, props.dstRect, Vector2{0, 0},
-                     0.0f, props.color);
-    }
-    layer.clear();
+void TextureHandler::RenderDrawData(DrawMaskID maskID) {
+  auto &layer = DrawData[static_cast<int>(maskID)];
+  for (auto &item : layer) {
+    DrawProperties &props = item.second;
+    DrawTexturePro(textureAtlas, props.srcRec, props.dstRect, Vector2{0, 0},
+                   0.0f, props.color);
   }
+  layer.clear();
 }

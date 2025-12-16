@@ -29,11 +29,11 @@ private:
   void Idle();
   void Walk(Vector2 dir);
   void InitAnimations();
+  void GenerateDrawData();
 
 public:
   Player();
   void Update();
-  void Draw();
   void SetHexGrid(HexGrid *grid);
   Vector2 GetPosition();
   void SetTextureHandler(TextureHandler *textureHandler);

@@ -288,7 +288,8 @@ void HexGrid::DrawTile(HexCoord h) {
                           TA::ASSEST_RESOLUTION, Conf::TILE_SIZE};
   Vector2 origin = {0.0f, 0.0f};
 
-  textureHandler->Draw(sourceRect, destRect, origin, 0.0f, RED);
+  textureHandler->LoadDrawData(DRAW_MASK_ON_GROUND, destRect.y, sourceRect,
+                               destRect, RED);
 }
 
 void HexGrid::DrawVisibleTiles() {
@@ -308,7 +309,8 @@ void HexGrid::DrawVisibleTiles() {
                             TA::ASSEST_RESOLUTION, Conf::TILE_SIZE};
     Vector2 origin = {0.0f, 0.0f};
 
-    textureHandler->Draw(sourceRect, destRect, origin, 0.0f, WHITE);
+    textureHandler->LoadDrawData(DRAW_MASK_GROUND, destRect.y, sourceRect,
+                                 destRect, WHITE);
 
     // Draw details for this tile
     const MapTile &currentTile = tile;
@@ -326,14 +328,14 @@ void HexGrid::DrawVisibleTiles() {
                                     TA::ASSEST_RESOLUTION,
                                     TA::ASSEST_RESOLUTION};
 
-        textureHandler->Draw(detailSourceRect, detailDestRect, origin, 0.0f,
-                             WHITE);
+        textureHandler->LoadDrawData(DRAW_MASK_ON_GROUND, detailDestRect.y,
+                                     detailSourceRect, detailDestRect, WHITE);
       }
     }
   }
 }
 
-void HexGrid::Draw(const Camera2D &camera) {
+void HexGrid::Update(const Camera2D &camera) {
   // Check if the asynchronous calculation of visible tiles is complete and new
   // data is ready.
   if (visiCacheReady) {
@@ -395,7 +397,7 @@ void HexGrid::AddGrassDetails(int amount) {
   }
 }
 
-void HexGrid::UpdateGrid() { AddGrassDetails(200); }
+// void HexGrid::UpdateGrid() { AddGrassDetails(200); }
 
 // --- Get ---
 int HexGrid::GetTilesInUse() const { return tilesInUse; }

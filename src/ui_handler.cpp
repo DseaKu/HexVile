@@ -15,12 +15,14 @@ UI_Handler::UI_Handler() {
   barPosX = Conf::SCREEN_CENTER.x - (barWidth / 2.0f);
   barPosY = Conf::SCREEN_HEIGHT - barHeight - Conf::UI_TOOL_BAR_Y_BOTTOM_MARGIN;
   this->toolBarRect = {barPosX, barPosY, barWidth, barHeight};
+  toolBarItemSize = Conf::UI_TOOL_BAR_ITEM_SIZE;
 
   itemBackground =
-      Rectangle{.x = TA::UI_X_OFFSET_TILE + 1 * TA::ASSEST_RESOLUTION,
-                .y = 1 * TA::ASSEST_RESOLUTION,
+      Rectangle{.x = TA::UI_X_OFFSET_TILE,
+                .y = UI_ID_ITEM_BAR_BACKGROUND * TA::ASSEST_RESOLUTION,
                 .width = TA::ASSEST_RESOLUTION,
                 .height = TA::ASSEST_RESOLUTION};
+
   scale = Conf::UI_SCALE;
   textureHandler = nullptr;
   itemHandler = nullptr;
@@ -49,6 +51,7 @@ void UI_Handler::GenerateDrawData() {
 
   // DrawToolBar();
   DrawToolBarItems();
+  DrawTileHighlight();
 }
 
 void UI_Handler::DrawToolBarItems() {
@@ -62,34 +65,30 @@ void UI_Handler::DrawToolBarItems() {
 
     ItemID currentTile = itemHandler->GetToolBarItemType(i);
 
-    Rectangle dstRect = {slotPosX, slotPosY, (float)itemSize, (float)itemSize};
+    Rectangle dstRec = {slotPosX, slotPosY, (float)itemSize, (float)itemSize};
 
     // Load Item Background
-    textureHandler->LoadDrawData(DRAW_MASK_UI, dstRect.y, this->itemBackground,
-                                 dstRect, WHITE);
+    textureHandler->LoadDrawData(DRAW_MASK_UI, dstRec.y, this->itemBackground,
+                                 dstRec, WHITE);
 
+    // Load Item
     if (currentTile != ITEM_NULL) {
-      // Load Item
-      Rectangle srcRect = {(float)TA::ITEM_X_OFFSET_TILE,
-                           (float)TA::ASSEST_RESOLUTION * currentTile,
-                           (float)TA::ASSEST_RESOLUTION,
-                           (float)Conf::TILE_SIZE};
+      Rectangle srcRec = {(float)TA::ITEM_X_OFFSET_TILE,
+                          (float)TA::ASSEST_RESOLUTION * currentTile,
+                          (float)TA::ASSEST_RESOLUTION, (float)Conf::TILE_SIZE};
 
-      textureHandler->LoadDrawData(DRAW_MASK_UI, dstRect.y, srcRect, dstRect,
+      // Shrink item
+      float newWidth = dstRec.width * toolBarItemSize;
+      float newHeight = dstRec.height * toolBarItemSize;
+      float offsetX = (dstRec.width - newWidth) / 2.0f;
+      float offsetY = (dstRec.height - newHeight) / 2.0f;
+
+      dstRec = Rectangle{.x = dstRec.x + offsetX,
+                         .y = dstRec.y + offsetY,
+                         .width = newWidth,
+                         .height = newHeight};
+      textureHandler->LoadDrawData(DRAW_MASK_UI, dstRec.y, srcRec, dstRec,
                                    WHITE);
-
-      // Draw item count
-      // if (itemHandler->GetToolBarItemPointer(i)->count > 0) {
-      //   char countText[5];
-      //   snprintf(countText, sizeof(countText), "%d",
-      //            itemHandler->GetToolBarItemPointer(i)->count);
-      //   fontHandler->DrawTextHackRegular(
-      //       countText,
-      //       {slotPosX + itemSize -
-      //            (float)MeasureText(countText, Conf::FONT_SIZE_DEFAULT) - 5,
-      //        slotPosY + itemSize - Conf::FONT_SIZE_DEFAULT - 5},
-      //       WHITE);
-      // }
     }
   }
 }
@@ -97,22 +96,9 @@ void UI_Handler::DrawToolBar() {
   if (!isToolBarActive) {
     return;
   }
-
   DrawRectangleRec(this->toolBarRect, Fade(GRAY, 0.8f));
-
-  for (int i = 0; i < itemCount; ++i) {
-    float slotPosX = barPosX + padding + (i * slotSize);
-    float slotPosY = barPosY + padding;
-
-    // Draw slot border
-    if (i == selectedItemIndex) {
-      DrawRectangleLinesEx(
-          {slotPosX, slotPosY, (float)itemSize, (float)itemSize}, 3, YELLOW);
-    } else {
-      DrawRectangleLines(slotPosX, slotPosY, itemSize, itemSize, DARKGRAY);
-    }
-  }
 }
+void UI_Handler::DrawTileHighlight() {}
 
 void UI_Handler::SetToolBarActive(bool is_active) {
   isToolBarActive = is_active;

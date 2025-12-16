@@ -60,11 +60,19 @@ static const std::map<ItemID, TileID> item_to_tile_map = {
 };
 enum DrawMaskID {
   DRAW_MASK_NULL = 0,
-  DRAW_MASK_GROUND,
+  DRAW_MASK_GROUND0, // Tiles
+  DRAW_MASK_GROUND1, // Highlighted Tiles
   DRAW_MASK_SHADOW,
   DRAW_MASK_ON_GROUND,
   DRAW_MASK_UI,
   DRAW_MASK_SIZE,
+};
+
+enum UI_ID {
+  UI_ID_NULL = 0,
+  UI_ID_HIGHLIGHTED_TILE,
+  UI_ID_ITEM_BAR_BACKGROUND,
+  UI_ID_SIZE,
 };
 
 typedef enum GrassTerainDetailsID {

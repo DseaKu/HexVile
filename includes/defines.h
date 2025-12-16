@@ -80,6 +80,7 @@ constexpr float UI_TOOL_SIZE = 1.8f * UI_SCALE * TILE_SIZE;
 constexpr float UI_TOOL_BAR_SLOT_SIZE =
     (UI_TOOL_SIZE + UI_TOOL_BAR_PADDING) * UI_SCALE * 1.0f;
 
+constexpr float UI_TOOL_BAR_ITEM_SIZE = 0.8f * UI_SCALE;
 } // namespace Conf
 
 // --- Assest & Animation --- TA = Texture Atlas

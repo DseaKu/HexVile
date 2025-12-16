@@ -9,7 +9,7 @@
 
 struct DrawProperties {
   Rectangle srcRec;
-  Rectangle dstRect;
+  Rectangle dstRec;
   Color color;
 };
 
@@ -24,11 +24,11 @@ public:
   TextureHandler();
   int LoadAssets(const char *);
   void UnloadAssets();
-  void Draw(Rectangle assetsRect, Rectangle destRect, Vector2 origin,
+  void Draw(Rectangle assetsRec, Rectangle destRec, Vector2 origin,
             float rotation, Color color);
 
   void LoadDrawData(DrawMaskID maskID, float y, Rectangle srcRec,
-                    Rectangle dstRect, Color Color);
+                    Rectangle dstRec, Color Color);
   void RenderDrawData(DrawMaskID maskID);
 };
 

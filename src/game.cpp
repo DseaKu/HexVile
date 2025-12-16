@@ -72,14 +72,15 @@ void Game::GameLoop() {
     // --- Camera View ---
     BeginMode2D(camera);
 
-    textureHandler.RenderDrawData(DRAW_MASK_GROUND);
+    textureHandler.RenderDrawData(DRAW_MASK_GROUND0);
+    textureHandler.RenderDrawData(DRAW_MASK_GROUND1);
     textureHandler.RenderDrawData(DRAW_MASK_SHADOW);
     textureHandler.RenderDrawData(DRAW_MASK_ON_GROUND);
 
     EndMode2D();
     // --- End Camera View ---
 
-    uiHandler.DrawToolBar();
+    // uiHandler.DrawToolBar();
     textureHandler.RenderDrawData(DRAW_MASK_UI);
 
     DrawDebugOverlay(Conf::DEBUG_FLAG);

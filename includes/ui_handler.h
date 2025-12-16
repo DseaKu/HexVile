@@ -9,9 +9,10 @@
 class UI_Handler {
 private:
   int itemCount;
-  float padding;
   int itemSize;
   int slotSize;
+  float toolBarItemSize;
+  float padding;
   float barPosY;
   float barPosX;
   float barWidth;
@@ -26,6 +27,9 @@ private:
   int selectedItemIndex;
   bool isToolBarActive;
   void GenerateDrawData();
+  void DrawToolBar();
+  void DrawToolBarItems();
+  void DrawTileHighlight();
 
 public:
   UI_Handler();
@@ -34,8 +38,6 @@ public:
   void SetItemHandler(ItemHandler *ih);
   void SetFontHandler(FontHandler *fh);
   void SetSelectedItem(int index);
-  void DrawToolBar();
-  void DrawToolBarItems();
   bool CheckClick(Vector2 mousePosition);
   void SetToolBarActive(bool is_active);
   bool GetToolBarStatus();

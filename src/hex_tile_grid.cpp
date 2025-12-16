@@ -309,7 +309,7 @@ void HexGrid::DrawVisibleTiles() {
                             TA::ASSEST_RESOLUTION, Conf::TILE_SIZE};
     Vector2 origin = {0.0f, 0.0f};
 
-    textureHandler->LoadDrawData(DRAW_MASK_GROUND, destRect.y, sourceRect,
+    textureHandler->LoadDrawData(DRAW_MASK_GROUND0, destRect.y, sourceRect,
                                  destRect, WHITE);
 
     // Draw details for this tile

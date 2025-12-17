@@ -12,6 +12,13 @@ struct PlayerAnimationData {
   bool loop;
 };
 
+struct PlayerInputState {
+  bool moveUp;
+  bool moveDown;
+  bool moveLeft;
+  bool moveRight;
+};
+
 class Player {
 private:
   int animationFrame;
@@ -27,13 +34,13 @@ private:
   HexCoord playerTile;
 
   void Idle();
-  void Walk(Vector2 dir);
+  void Walk(Vector2 dir, float deltaTime);
   void InitAnimations();
   void GenerateDrawData();
 
 public:
   Player();
-  void Update();
+  void Update(PlayerInputState input, float deltaTime);
   void SetHexGrid(HexGrid *grid);
   Vector2 GetPosition();
   void SetGFX_Manager(GFX_Manager *graphicsManager);

@@ -18,13 +18,13 @@ Player::Player() {
   InitAnimations();
 }
 
-void Player::Update() {
-  this->animationDelta += GetFrameTime();
+void Player::Update(PlayerInputState input, float deltaTime) {
+  this->animationDelta += deltaTime;
   this->playerTile = this->hexGrid->PointToHexCoord(this->position);
 
   Vector2 dir;
-  dir.x = -IsKeyDown(KEY_A) + IsKeyDown(KEY_D);
-  dir.y = -IsKeyDown(KEY_W) + IsKeyDown(KEY_S);
+  dir.x = -input.moveLeft + input.moveRight;
+  dir.y = -input.moveUp + input.moveDown;
 
   // Determine player face direction
   if (dir.x != 0 || dir.y != 0) {
@@ -50,14 +50,18 @@ void Player::Update() {
   if (dir.x == 0 && dir.y == 0) {
     Idle();
   } else if (dir.x != 0 || dir.y != 0) {
-    Walk(dir);
+    Walk(dir, deltaTime);
   } else {
     this->state = PLAYER_STATE_NULL;
   }
 
   // Calculate Speed
   float distance = Vector2Distance(this->position, this->previousPosition);
-  this->speedTilesPerSecond = distance / GetFrameTime() / Conf::TILE_SIZE;
+  if (deltaTime > 0) {
+    this->speedTilesPerSecond = distance / deltaTime / Conf::TILE_SIZE;
+  } else {
+    this->speedTilesPerSecond = 0;
+  }
   this->previousPosition = this->position;
 
   // Calculate animation frame
@@ -146,10 +150,9 @@ void Player::Idle() {
   }
 }
 
-void Player::Walk(Vector2 dir) {
+void Player::Walk(Vector2 dir, float deltaTime) {
 
   float speed = Conf::PLAYER_SPEED;
-  float delta = GetFrameTime();
 
   if (this->state != PLAYER_STATE_WALK) {
     animationFrame = 0.0f;
@@ -159,8 +162,8 @@ void Player::Walk(Vector2 dir) {
   if (Vector2Length(dir) > 0) {
     dir = Vector2Normalize(dir);
   }
-  Vector2 nextPos = {this->position.x + dir.x * delta * speed,
-                     this->position.y + dir.y * delta * speed};
+  Vector2 nextPos = {this->position.x + dir.x * deltaTime * speed,
+                     this->position.y + dir.y * deltaTime * speed};
 
   float offsetX = dir.x * Conf::OFFSET_TO_OBSTACLE;
   float offsetY = dir.y * Conf::OFFSET_TO_OBSTACLE;

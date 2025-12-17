@@ -63,10 +63,10 @@ private:
   std::vector<std::vector<MapTile>> tileData;
 
   // Stores currently visible tiles for rendering.
-  std::vector<HexCoord> visiCache;
+  std::vector<HexCoord> currentVisibleTiles;
 
   // Back buffer for visible tiles calculated asynchronously.
-  std::vector<HexCoord> visiCacheNext;
+  std::vector<HexCoord> nextVisibleTiles;
 
   // Mutex to protect access to visiCache and visiCacheNext during swaps.
   std::mutex visiCacheMutex;

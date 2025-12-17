@@ -48,8 +48,8 @@ HexGrid::HexGrid() {
   visiCacheReady = false;
 
   size_t estimated_hits = Conf::VISIBILTY_ESTIMATED_UPPER_BOUND;
-  visiCache.reserve(estimated_hits);
-  visiCacheNext.reserve(estimated_hits);
+  currentVisibleTiles.reserve(estimated_hits);
+  nextVisibleTiles.reserve(estimated_hits);
 }
 
 void HexGrid::InitGrid(float radius) {
@@ -240,10 +240,10 @@ void HexGrid::CalcVisibleTiles() {
     }
   }
   // Lock the mutex to safely swap the newly calculated visible tiles into the
-  // visiCacheNext. std::lock_guard ensures the mutex is unlocked when exiting
+  // nextVisibleTiles. std::lock_guard ensures the mutex is unlocked when exiting
   // this scope.
   std::lock_guard<std::mutex> lock(visiCacheMutex);
-  visiCacheNext =
+  nextVisibleTiles =
       std::move(newVisiCache); // Move the new data to the back buffer.
   visiCacheReady = true; // Signal that new data is ready for the main thread.
   calcRenderRectTimer = GetTime() - startTime;
@@ -287,8 +287,8 @@ void HexGrid::DrawTile(HexCoord h, Rectangle srcRec, DrawMaskID layer) {
 
 void HexGrid::LoadTileGFX() {
   // Draw chached visible tiles
-  for (int i = 0; i < visiCache.size(); i++) {
-    HexCoord h = visiCache[i];
+  for (int i = 0; i < currentVisibleTiles.size(); i++) {
+    HexCoord h = currentVisibleTiles[i];
     Vector2 pos = HexCoordToPoint(h);
     pos.x -= Conf::TILE_SIZE_HALF;
     pos.y -= Conf::TILE_SIZE_HALF;
@@ -332,8 +332,8 @@ void HexGrid::Update(const Camera2D &camera) {
 
     // Lock the mutex to safely swap the current rendering cache
     std::lock_guard<std::mutex> lock(visiCacheMutex);
-    visiCache.swap(visiCacheNext); // Atomically swap the buffers.
-    visiCacheNext.clear();         // Clear the now-empty back buffer.
+    currentVisibleTiles.swap(nextVisibleTiles); // Atomically swap the buffers.
+    nextVisibleTiles.clear();         // Clear the now-empty back buffer.
     visiCacheReady = false;        // Reset the flag.
   }
 
@@ -392,7 +392,7 @@ void HexGrid::AddGrassDetails(int amount) {
 // --- Get ---
 int HexGrid::GetTilesInUse() const { return tilesInUse; }
 int HexGrid::GetTilesInTotal() const { return tilesInTotal; }
-int HexGrid::GetTilesVisible() const { return visiCache.size(); }
+int HexGrid::GetTilesVisible() const { return currentVisibleTiles.size(); }
 
 int HexGrid::GetMapRadius() const { return mapRadius; }
 

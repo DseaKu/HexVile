@@ -18,7 +18,7 @@ private:
   Texture2D textureAtlas;
   int width;
   int height;
-  std::vector<std::multimap<float, GFX_Props>> DrawData;
+  std::vector<std::multimap<float, GFX_Props>> GFX_Data;
 
 public:
   GFX_Manger();

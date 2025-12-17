@@ -5,7 +5,7 @@
 #include <iostream>
 
 GFX_Manger::GFX_Manger() {
-  DrawData.resize(DRAW_MASK_SIZE);
+  GFX_Data.resize(DRAW_MASK_SIZE);
   textureAtlas = {0, 0, 0, 0, 0};
 }
 
@@ -26,11 +26,11 @@ void GFX_Manger::UnloadAssets() { UnloadTexture(this->textureAtlas); }
 void GFX_Manger::LoadGFX_Data(DrawMaskID maskID, float y, Rectangle srcRec,
                               Rectangle dstRec, Color col) {
 
-  DrawData[static_cast<int>(maskID)].emplace(y, GFX_Props{srcRec, dstRec, col});
+  GFX_Data[static_cast<int>(maskID)].emplace(y, GFX_Props{srcRec, dstRec, col});
 }
 
 void GFX_Manger::RenderGFX_Layer(DrawMaskID maskID) {
-  auto &layer = DrawData[static_cast<int>(maskID)];
+  auto &layer = GFX_Data[static_cast<int>(maskID)];
   for (auto &item : layer) {
     GFX_Props &props = item.second;
     DrawTexturePro(textureAtlas, props.srcRec, props.dstRec, Vector2{0, 0},

@@ -7,7 +7,6 @@
 #include "io_handler.h"
 #include "item_handler.h"
 #include "raylib.h"
-#include <vector>
 
 class UI_Handler {
 private:
@@ -21,10 +20,6 @@ private:
   float barWidth;
   float barHeight;
   Rectangle toolBarRec;
-  Rectangle itemBG_Rec;
-  Rectangle itemBG_Rec_h;
-  Rectangle tileHighlightRec;
-  std::vector<Rectangle> numRec;
 
   float scale;
   GFX_Manager *graphicsManager;

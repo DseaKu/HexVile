@@ -139,7 +139,7 @@ public:
   HexCoord GetNeighbor(HexCoord h, int directionIndex) const;
 
   // --- Direct Drawing (for debugging/special cases) ---
-  void DrawTile(HexCoord h, Rectangle srcRec, DrawMaskID layer);
+  void DrawTile(HexCoord h, int TA_X, int TA_Y, DrawMaskID layer);
 };
 
 #endif // HEX_TILE_GRID_H

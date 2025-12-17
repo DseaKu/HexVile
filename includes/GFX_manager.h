@@ -28,8 +28,6 @@ public:
   GFX_Manager();
   int LoadAssets(const char *);
   void UnloadAssets();
-  void LoadGFX_Data(DrawMaskID maskID, float y, Rectangle srcRec,
-                    Rectangle dstRec, Color Color);
   void LoadGFX_Data(DrawMaskID maskID, float y, int TA_X, int TA_Y,
                     Rectangle dstRec, Color Color);
   void RenderLayer(DrawMaskID maskID);

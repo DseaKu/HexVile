@@ -80,18 +80,14 @@ void Player::GenerateDrawData() {
   playerPosition.x -= TA::ASSEST_RESOLUTION_HALF;
   playerPosition.y -= TA::ASSEST_RESOLUTION_HALF - Conf::PLAYER_Y_OFFSET;
   float resolution = TA::ASSEST_RESOLUTION;
-  float xFrameOffset =
-      resolution * this->animationFrame + TA::PLAYER_X_OFFSET_TILE;
-  float yFrameOffset = resolution * ((this->state - 1) * (DIR_LABELS_SIZE - 1) +
-                                     (this->faceDir));
-
-  Rectangle srcRect = {xFrameOffset, yFrameOffset, resolution, resolution};
+  int ta_x = this->animationFrame + TA::PLAYER_X;
+  int ta_y = (this->state - 1) * (TA::PLAYER_WALK_MAX) + (this->faceDir - 1);
 
   Rectangle dstRect = {playerPosition.x, playerPosition.y, resolution,
                        resolution};
 
-  graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, playerPosition.y, srcRect,
-                                dstRect, WHITE);
+  graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, playerPosition.y, ta_x,
+                                ta_y, dstRect, WHITE);
 }
 
 Vector2 Player::GetPosition() { return position; }
@@ -185,8 +181,7 @@ void Player::InitAnimations() {
     }
   }
   for (int i = 0; i < DIR_LABELS_SIZE; i++) {
-    this->animationData[PLAYER_STATE_WALK][i].frameCount =
-        TA::PLAYER_X_WALK_MAX;
+    this->animationData[PLAYER_STATE_WALK][i].frameCount = TA::PLAYER_WALK_MAX;
   }
   for (int i = 0; i < DIR_LABELS_SIZE; i++) {
     this->animationData[PLAYER_STATE_IDLE][i].speed =

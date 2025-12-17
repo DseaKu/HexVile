@@ -268,7 +268,7 @@ bool HexGrid::CheckSurrounded(HexCoord target) const {
   return (neighborCount > 0 && wallCount == neighborCount);
 }
 
-void HexGrid::DrawTile(HexCoord h, Rectangle srcRec, DrawMaskID layer) {
+void HexGrid::DrawTile(HexCoord h, int TA_X, int TA_Y, DrawMaskID layer) {
   if (!HasTile(h)) {
     return;
   }
@@ -281,7 +281,7 @@ void HexGrid::DrawTile(HexCoord h, Rectangle srcRec, DrawMaskID layer) {
   const MapTile &tile = GetTile(h);
   Vector2 origin = {0.0f, 0.0f};
 
-  graphicsManager->LoadGFX_Data(layer, destRect.y, srcRec, destRect, WHITE);
+  graphicsManager->LoadGFX_Data(layer, destRect.y, TA_X, TA_Y, destRect, WHITE);
 }
 
 void HexGrid::LoadTileGFX() {
@@ -310,8 +310,7 @@ void HexGrid::LoadTileGFX() {
       if (d.detail > 0) { // Assuming detail ID > 0 is a valid detail
 
         Rectangle detailSourceRect = {
-            TA::DETAILS_X_OFFSET_TILE +
-                ((float)d.detail - 1) * TA::ASSEST_RESOLUTION,
+            TA::DETAILS_X + ((float)d.detail - 1) * TA::ASSEST_RESOLUTION,
             (float)ITEM_SET_GRASS * TA::ASSEST_RESOLUTION,
             TA::ASSEST_RESOLUTION, TA::ASSEST_RESOLUTION};
 
@@ -320,7 +319,8 @@ void HexGrid::LoadTileGFX() {
                                     TA::ASSEST_RESOLUTION};
 
         graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, detailDestRect.y,
-                                      detailSourceRect, detailDestRect, WHITE);
+                                      TA::DETAILS_X, GRASS_DETAILS_FLOWER,
+                                      detailDestRect, WHITE);
       }
     }
   }
@@ -349,8 +349,7 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
   }
 
   // Update animation frame based on game time for animated tiles.
-  animationFrame =
-      (int)(totalTime * TA::TILES_ANIMATION_SPEED) % TA::TILES_FRAME_COUNT;
+  animationFrame = (int)(totalTime * TA::TILES_ANIMATION_SPEED) % 1;
 
   LoadTileGFX();
 }

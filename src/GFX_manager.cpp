@@ -43,14 +43,10 @@ Rectangle GFX_Manager::GetSrcRec(int x, int y) { return textureRecData[y][x]; }
 
 void GFX_Manager::UnloadAssets() { UnloadTexture(this->textureAtlas); }
 
-void GFX_Manager::LoadGFX_Data(DrawMaskID maskID, float y, Rectangle srcRec,
-                               Rectangle dstRec, Color col) {
-  GFX_Data[static_cast<int>(maskID)].emplace(y, GFX_Props{srcRec, dstRec, col});
-}
 void GFX_Manager::LoadGFX_Data(DrawMaskID maskID, float y, int TA_X, int TA_Y,
                                Rectangle dstRec, Color col) {
   Rectangle srcRec = GetSrcRec(TA_X, TA_Y);
-  LoadGFX_Data(maskID, y, srcRec, dstRec, col);
+  GFX_Data[static_cast<int>(maskID)].emplace(y, GFX_Props{srcRec, dstRec, col});
 }
 
 void GFX_Manager::RenderLayer(DrawMaskID maskID) {
@@ -64,7 +60,7 @@ void GFX_Manager::RenderLayer(DrawMaskID maskID) {
 }
 
 Rectangle GFX_Manager::GetTileRec(TileID tileID, int frame) {
-  int x_idx = (TA::TILE_X_OFFSET_TILE / TA::ASSEST_RESOLUTION) + frame;
+  int x_idx = (TA::TILE_X / TA::ASSEST_RESOLUTION) + frame;
   int y_idx = static_cast<int>(tileID);
   return textureRecData[y_idx][x_idx];
 }

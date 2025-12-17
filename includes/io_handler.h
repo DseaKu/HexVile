@@ -21,10 +21,11 @@ public:
   Vector2 GetScaledMousePos();
   Vector2 GetRealMousePos();
   int GetToolBarSelction(int curToolBarSel);
-  MouseMask *GetMouseMaskPointer();
+  MouseMask GetMouseMask();
 
   // --- Set ---
   void SetMousePointer(Vector2 *mousePointer);
+  void SetMouseMask(MouseMask mask);
 };
 
 #endif // !IO_HANDLER_H

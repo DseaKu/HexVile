@@ -31,8 +31,6 @@ Game::Game() {
   cameraRect = {0, 0, 0, 0};
   cameraTopLeft = {0, 0};
 
-  mouseMask = ioHandler.GetMouseMaskPointer();
-
   fontHandler.LoadFonts();
 
   uiHandler.SetTextureHandler(&textureHandler);
@@ -97,12 +95,12 @@ void Game::ProcessInputs() {
     if (uiHandler.GetToolBarAvailability() &&
         CheckCollisionPointRec(ioHandler.GetRealMousePos(),
                                uiHandler.GetToolBarRect())) {
-      *mouseMask = MOUSE_MASK_ITEM_BAR;
+      ioHandler.SetMouseMask(MOUSE_MASK_ITEM_BAR);
       toolBarSel = uiHandler.GetItemSlotAt(GetMousePosition());
 
       // Clicked on ground
     } else {
-      *mouseMask = MOUSE_MASK_PLAY_GROUND;
+      ioHandler.SetMouseMask(MOUSE_MASK_PLAY_GROUND);
       HexCoord clickedHex =
           hexGrid.PointToHexCoord(ioHandler.GetScaledMousePos());
       Item *selectedItem = itemHandler.GetToolBarItemPointer(toolBarSel);
@@ -181,7 +179,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
            TextFormat("Tile Q,R: %i,%i", mapTile.q, mapTile.r),
            TextFormat("Type: %s", hexGrid.TileToString(tileMouseType)),
            TextFormat("Clicked on: %s",
-                      this->MouseMaskToString(*this->mouseMask)),
+                      this->MouseMaskToString(ioHandler.GetMouseMask())),
        }});
 
   // --- Player ---

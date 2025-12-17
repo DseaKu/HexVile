@@ -7,6 +7,7 @@
 #include "item_handler.h"
 #include "raylib.h"
 #include "texture_handler.h"
+#include <vector>
 
 class UI_Handler {
 private:
@@ -23,6 +24,7 @@ private:
   Rectangle itemBG_Rec;
   Rectangle itemBG_Rec_h;
   Rectangle tileHighlightRec;
+  std::vector<Rectangle> numRec;
 
   float scale;
   TextureHandler *textureHandler;

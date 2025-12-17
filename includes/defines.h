@@ -75,7 +75,7 @@ constexpr float OFFSET_TO_OBSTACLE = 5;
 // --- UI ---
 constexpr float UI_SCALE = 1.0f;
 constexpr float UI_TOOL_BAR_Y_BOTTOM_MARGIN = 20.0f * UI_SCALE;
-constexpr float UI_TOOL_BAR_PADDING = 15.0f * UI_SCALE;
+constexpr float UI_TOOL_BAR_PADDING = 10.0f * UI_SCALE;
 constexpr float UI_TOOL_SIZE = 1.8f * UI_SCALE * TILE_SIZE;
 constexpr float UI_TOOL_BAR_SLOT_SIZE =
     (UI_TOOL_SIZE + UI_TOOL_BAR_PADDING) * UI_SCALE * 1.0f;
@@ -122,11 +122,16 @@ constexpr int DETAILS_X_END =
     DETAILS_X_OFFSET_TILE + ASSEST_RESOLUTION * DETAILS_X_MAX;
 
 // --- UI ---
-
 constexpr int UI_X_OFFSET_TILE = DETAILS_X_END;
 constexpr int UI_X_OFFSET_PIXEL = UI_X_OFFSET_TILE * ASSEST_RESOLUTION;
 constexpr int UI_X_MAX = 2;
 constexpr int UI_X_END = UI_X_OFFSET_TILE + ASSEST_RESOLUTION * UI_X_MAX;
+
+// --- Number ---
+constexpr int NUMBER_X_OFFSET = UI_X_END;
+constexpr int NUMBER_X_MAX = 1;
+constexpr int NUMBER_X_END = NUMBER_X_OFFSET + ASSEST_RESOLUTION * NUMBER_X_MAX;
+constexpr float NUMBER_SCALE = 1.0f;
 } // namespace TA
 // --- Unsigned Integer Aliases ---
 using u8 = std::uint8_t;

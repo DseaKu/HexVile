@@ -48,6 +48,7 @@ int IO_Handler::GetToolBarSelction(int curToolBarSel) {
   return curToolBarSel;
 }
 
-MouseMask *IO_Handler::GetMouseMaskPointer() { return &mouseMask; }
+MouseMask IO_Handler::GetMouseMask() { return mouseMask; }
 
 // --- Set ---
+void IO_Handler::SetMouseMask(MouseMask mask) { mouseMask = mask; }

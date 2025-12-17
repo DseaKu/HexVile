@@ -8,6 +8,8 @@
 
 UI_Handler::UI_Handler() {
 
+  Rectangle nullRec = Rectangle{0, 0, 0, 0};
+
   itemCount = Conf::ITEM_STACK_MAX_TOOL_BAR;
   padding = Conf::UI_TOOL_BAR_PADDING;
   itemSize = Conf::UI_TOOL_SIZE;
@@ -18,6 +20,12 @@ UI_Handler::UI_Handler() {
   barPosY = Conf::SCREEN_HEIGHT - barHeight - Conf::UI_TOOL_BAR_Y_BOTTOM_MARGIN;
   this->toolBarRec = {barPosX, barPosY, barWidth, barHeight};
   toolBarItemSize = Conf::UI_TOOL_BAR_ITEM_SIZE;
+  scale = Conf::UI_SCALE;
+  textureHandler = nullptr;
+  itemHandler = nullptr;
+  fontHandler = nullptr;
+  selectedItemIndex = 0;
+  isToolBarActive = false;
 
   itemBG_Rec = Rectangle{.x = TA::UI_X_OFFSET_TILE,
                          .y = UI_ID_ITEM_BAR_BACKGROUND * TA::ASSEST_RESOLUTION,
@@ -35,13 +43,15 @@ UI_Handler::UI_Handler() {
                 .width = TA::ASSEST_RESOLUTION,
                 .height = TA::ASSEST_RESOLUTION};
 
-  scale = Conf::UI_SCALE;
-  textureHandler = nullptr;
-  itemHandler = nullptr;
-  fontHandler = nullptr;
-  selectedItemIndex = 0;
-  isToolBarActive = false;
-  toolBarRec = {.x = 0, .y = 0, .width = 0, .height = 0};
+  numRec.resize(10, nullRec);
+  for (int i = 0; i < 10; i++) {
+    numRec[i] = Rectangle{.x = TA::NUMBER_X_OFFSET,
+                          .y = (float)i * TA::ASSEST_RESOLUTION,
+                          .width = TA::ASSEST_RESOLUTION,
+                          .height = TA::ASSEST_RESOLUTION};
+  }
+
+  toolBarRec = nullRec;
 }
 
 void UI_Handler::SetTextureHandler(TextureHandler *p) {
@@ -79,10 +89,9 @@ void UI_Handler::DrawToolBarItems() {
 
     Rectangle dstRec = {slotPosX, slotPosY, (float)itemSize, (float)itemSize};
 
-    // Load btem background and highlight it, if select it.
+    // Load item background
     textureHandler->LoadDrawData(DRAW_MASK_UI, dstRec.y, this->itemBG_Rec,
                                  dstRec, WHITE);
-
     if (i == itemHandler->GetSelectionToolBar()) {
       textureHandler->LoadDrawData(DRAW_MASK_UI, dstRec.y, this->itemBG_Rec_h,
                                    dstRec, WHITE);
@@ -105,6 +114,7 @@ void UI_Handler::DrawToolBarItems() {
                          .height = newHeight};
       textureHandler->LoadDrawData(DRAW_MASK_UI, dstRec.y, srcRec, dstRec,
                                    WHITE);
+      // Draw Numbers
     }
   }
 }

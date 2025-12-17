@@ -22,7 +22,6 @@ private:
   float updateGridTreshold;
   unsigned char *hackFontRegular;
   Camera2D camera;
-  MouseMask *mouseMask;
   Vector2 relativeCenter;
   Vector2 cameraTopLeft;
   Rectangle cameraRect;

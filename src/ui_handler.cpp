@@ -99,6 +99,7 @@ void UI_Handler::LoadItemBgGFX(int x, int y) {
   // Load item background
   graphicsManager->LoadGFX_Data(DRAW_MASK_UI_0, dstRec.y, this->itemBG_Rec,
                                 dstRec, WHITE);
+  // Highlight, if selected
   if (x == itemHandler->GetSelectionToolBar()) {
     graphicsManager->LoadGFX_Data(DRAW_MASK_UI_0, dstRec.y, this->itemBG_Rec_h,
                                   dstRec, WHITE);

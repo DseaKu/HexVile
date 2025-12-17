@@ -47,22 +47,17 @@ void Game::GameLoop() {
     timer += GetTime();
 
     ioHandler.UpdateMousePos(camera);
-    ProcessInputs();
+
+    hexGrid.Update(camera, GetTime());
+    uiHandler.Update();
+    UpdateInputs();
+
     relativeCenter = GetScreenToWorld2D(Conf::SCREEN_CENTER, camera);
     cameraTopLeft = GetScreenToWorld2D(Vector2{0, 0}, camera);
     cameraRect = {cameraTopLeft.x, cameraTopLeft.y, Conf::CAMERA_WIDTH,
                   Conf::CAMERA_HEIGTH};
 
     camera.target = player.GetPosition();
-
-    PlayerInputState playerInput;
-    playerInput.moveLeft = IsKeyDown(KEY_A);
-    playerInput.moveRight = IsKeyDown(KEY_D);
-    playerInput.moveUp = IsKeyDown(KEY_W);
-    playerInput.moveDown = IsKeyDown(KEY_S);
-    player.Update(playerInput, GetFrameTime());
-    hexGrid.Update(camera, GetTime());
-    uiHandler.Update();
 
     // --- Draw ---
     BeginDrawing();
@@ -87,7 +82,7 @@ void Game::GameLoop() {
   }
 }
 
-void Game::ProcessInputs() {
+void Game::UpdateInputs() {
 
   ioHandler.GetScaledMousePos();
   int toolBarSel = itemHandler.GetSelectionToolBar();
@@ -140,6 +135,13 @@ void Game::ProcessInputs() {
 
   uiHandler.SetSelectedItem(toolBarSel);
   itemHandler.SetItemSelection(toolBarSel);
+
+  PlayerInputState playerInput;
+  playerInput.moveLeft = IsKeyDown(KEY_A);
+  playerInput.moveRight = IsKeyDown(KEY_D);
+  playerInput.moveUp = IsKeyDown(KEY_W);
+  playerInput.moveDown = IsKeyDown(KEY_S);
+  player.Update(playerInput, GetFrameTime());
 }
 
 const char *Game::MouseMaskToString(MouseMask m) {

@@ -37,7 +37,7 @@ private:
   IO_Handler ioHandler;
 
   // --- Methods ---
-  void ProcessInputs();
+  void UpdateInputs();
   void DrawDebugOverlay(bool is_enabled);
 
 public:

@@ -99,6 +99,7 @@ private:
   void CalcVisibleTiles();
   void AddGrassDetails(int amount);
   void LoadTileGFX();
+  void UpdateTileVisibility(float totalTime);
 
   // --- Core Lifecycle ---
   void UpdateTilesProperties();

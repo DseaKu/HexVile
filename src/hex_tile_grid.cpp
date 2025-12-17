@@ -326,8 +326,7 @@ void HexGrid::LoadTileGFX() {
   }
 }
 
-void HexGrid::Update(const Camera2D &camera, float totalTime) {
-
+void HexGrid::UpdateTileVisibility(float totalTime) {
   // Check if the asynchronous calculation of visible tiles is complete
   if (visiCacheReady) {
 
@@ -340,8 +339,9 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
 
   // Check if a previous asynchronous calculation is still running.
   // If not valid (first run) or finished, launch a new one.
-  if (!visiCalcFuture.valid() || visiCalcFuture.wait_for(std::chrono::seconds(
-                                     0)) == std::future_status::ready) {
+  if (!visiCalcFuture.valid() ||
+      visiCalcFuture.wait_for(std::chrono::seconds(0)) ==
+          std::future_status::ready) {
     // Launch CalcVisibleTiles asynchronously in a separate thread.
     // std::launch::async ensures it runs on a new thread immediately.
     visiCalcFuture =
@@ -350,7 +350,10 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
 
   // Update animation frame based on game time for animated tiles.
   animationFrame = (int)(totalTime * TA::TILES_ANIMATION_SPEED) % 1;
+}
 
+void HexGrid::Update(const Camera2D &camera, float totalTime) {
+  UpdateTileVisibility(totalTime);
   LoadTileGFX();
 }
 

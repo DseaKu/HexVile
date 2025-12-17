@@ -23,10 +23,10 @@ constexpr const int RENDER_VIEW_OFFSET_WH = Conf::RENDER_VIEW_OFFSET_XY * 2;
 constexpr const int VISIBILTY_ESTIMATED_UPPER_BOUND = 3000;
 
 // --- Screen ---
-// constexpr int SCREEN_WIDTH = 1400;
-// constexpr int SCREEN_HEIGHT = 900;
-constexpr int SCREEN_WIDTH = 2800;
-constexpr int SCREEN_HEIGHT = 1200;
+constexpr int SCREEN_WIDTH = 1400;
+constexpr int SCREEN_HEIGHT = 900;
+// constexpr int SCREEN_WIDTH = 2800;
+// constexpr int SCREEN_HEIGHT = 1200;
 constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
                                    (float)SCREEN_HEIGHT / 2};
 

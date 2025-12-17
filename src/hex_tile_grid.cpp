@@ -72,6 +72,7 @@ void HexGrid::InitGrid(float radius) {
         // the chance
         int version = 0;
         MapTile defaultTile = {.version = 0, .type = TILE_GRASS};
+
         tileData[gridR][gridQ] = defaultTile;
         this->tilesInUse++;
       } else {
@@ -304,24 +305,28 @@ void HexGrid::LoadTileGFX() {
                                   destRect, WHITE);
 
     // Draw details for this tile
-    const MapTile &currentTile = tile;
+    MapTile &currentTile = tile;
     for (int j = 0; j < Conf::TERRAIN_DETAIL_MAX; j++) {
       const TerrainDetail &d = currentTile.detail[j];
-      if (d.detail > 0) { // Assuming detail ID > 0 is a valid detail
 
-        Rectangle detailSourceRect = {
-            TA::DETAILS_X + ((float)d.detail - 1) * TA::ASSEST_RESOLUTION,
-            (float)ITEM_SET_GRASS * TA::ASSEST_RESOLUTION,
-            TA::ASSEST_RESOLUTION, TA::ASSEST_RESOLUTION};
-
-        Rectangle detailDestRect = {pos.x + d.x, pos.y + d.y,
-                                    TA::ASSEST_RESOLUTION,
-                                    TA::ASSEST_RESOLUTION};
-
-        graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, detailDestRect.y,
-                                      TA::DETAILS_X, GRASS_DETAILS_FLOWER,
-                                      detailDestRect, WHITE);
+      // Add details if not Init
+      for (int i = d.detail; i < Conf::TERRAIN_DETAIL_MAX; i++) {
+        int x_pos_rand = GetRandomValue(1, 15);
+        int y_pos_rand = GetRandomValue(1, 15);
+        int detailRand = GetRandomValue(GRASS_DETAILS_NULL, GRASS_DETAILS_SIZE);
       }
+
+      Rectangle detailSourceRect = {
+          TA::DETAILS_X + ((float)d.detail - 1) * TA::ASSEST_RESOLUTION,
+          (float)ITEM_SET_GRASS * TA::ASSEST_RESOLUTION, TA::ASSEST_RESOLUTION,
+          TA::ASSEST_RESOLUTION};
+
+      Rectangle detailDestRect = {pos.x + d.x, pos.y + d.y,
+                                  TA::ASSEST_RESOLUTION, TA::ASSEST_RESOLUTION};
+
+      graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, detailDestRect.y,
+                                    TA::DETAILS_X, GRASS_DETAILS_FLOWER,
+                                    detailDestRect, WHITE);
     }
   }
 }
@@ -339,9 +344,8 @@ void HexGrid::UpdateTileVisibility(float totalTime) {
 
   // Check if a previous asynchronous calculation is still running.
   // If not valid (first run) or finished, launch a new one.
-  if (!visiCalcFuture.valid() ||
-      visiCalcFuture.wait_for(std::chrono::seconds(0)) ==
-          std::future_status::ready) {
+  if (!visiCalcFuture.valid() || visiCalcFuture.wait_for(std::chrono::seconds(
+                                     0)) == std::future_status::ready) {
     // Launch CalcVisibleTiles asynchronously in a separate thread.
     // std::launch::async ensures it runs on a new thread immediately.
     visiCalcFuture =
@@ -355,6 +359,7 @@ void HexGrid::UpdateTileVisibility(float totalTime) {
 void HexGrid::Update(const Camera2D &camera, float totalTime) {
   UpdateTileVisibility(totalTime);
   LoadTileGFX();
+  // AddGrassDetails(200);
 }
 
 void HexGrid::AddGrassDetails(int amount) {
@@ -389,8 +394,6 @@ void HexGrid::AddGrassDetails(int amount) {
     }
   }
 }
-
-// void HexGrid::UpdateGrid() { AddGrassDetails(200); }
 
 // --- Get ---
 int HexGrid::GetTilesInUse() const { return tilesInUse; }

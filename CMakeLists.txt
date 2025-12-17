@@ -24,7 +24,7 @@ set(SOURCES
     src/game.cpp
     src/hex_tile_grid.cpp
     src/player.cpp
-    src/texture_handler.cpp
+    src/graphics_manager.cpp
     src/font_handler.cpp
     src/ui_handler.cpp
     src/item_handler.cpp

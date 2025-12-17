@@ -6,7 +6,7 @@
 #include "io_handler.h"
 #include "item_handler.h"
 #include "raylib.h"
-#include "texture_handler.h"
+#include "graphics_manager.h"
 #include <vector>
 
 class UI_Handler {
@@ -27,7 +27,7 @@ private:
   std::vector<Rectangle> numRec;
 
   float scale;
-  TextureHandler *textureHandler;
+  GraphicsManager *graphicsManager;
   ItemHandler *itemHandler;
   FontHandler *fontHandler;
   IO_Handler *io_Handler;
@@ -42,7 +42,7 @@ private:
 public:
   UI_Handler();
   void Update();
-  void SetTextureHandler(TextureHandler *p);
+  void SetGraphicsManager(GraphicsManager *graphicsManager);
   void SetItemHandler(ItemHandler *p);
   void SetFontHandler(FontHandler *p);
   void SetIO_Handler(IO_Handler *p);

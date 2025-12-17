@@ -4,7 +4,7 @@
 #include "defines.h"
 #include "enums.h"
 #include "raylib.h"
-#include "texture_handler.h"
+#include "graphics_manager.h"
 #include <future>
 #include <mutex>
 #include <vector>
@@ -80,7 +80,7 @@ private:
   int tilesInTotal;
   Rectangle *camRect;
   Vector2 origin;
-  TextureHandler *textureHandler;
+  GraphicsManager *graphicsManager;
 
   // Lookup Tables
   static const std::vector<HexCoord> DIRECTIONS;
@@ -106,7 +106,7 @@ public:
   void Update(const Camera2D &camera);
 
   // --- Setters ---
-  void SetTextureHandler(TextureHandler *textureHandler);
+  void SetGraphicsManager(GraphicsManager *graphicsManager);
   void SetCamRectPointer(Rectangle *camRect);
   bool SetTile(HexCoord h, TileID ID);
   void ToggleTile(HexCoord h);

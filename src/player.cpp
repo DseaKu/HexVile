@@ -86,7 +86,7 @@ void Player::GenerateDrawData() {
   Rectangle dstRect = {playerPosition.x, playerPosition.y, resolution,
                        resolution};
 
-  textureHandler->LoadDrawData(DRAW_MASK_ON_GROUND, playerPosition.y, srcRect,
+  graphicsManager->LoadDrawData(DRAW_MASK_ON_GROUND, playerPosition.y, srcRect,
                                dstRect, WHITE);
 }
 
@@ -134,9 +134,9 @@ int Player::GetAnimationFrame() { return this->animationFrame; }
 
 float Player::GetSpeedTilesPerSecond() { return this->speedTilesPerSecond; }
 
-void Player::SetTextureHandler(TextureHandler *textureHandler) {
+void Player::SetGraphicsManager(GraphicsManager *graphicsManager) {
 
-  this->textureHandler = textureHandler;
+  this->graphicsManager = graphicsManager;
 }
 
 void Player::Idle() {

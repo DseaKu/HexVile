@@ -8,7 +8,7 @@
 #include "item_handler.h"
 #include "player.h"
 #include "raylib.h"
-#include "texture_handler.h"
+#include "graphics_manager.h"
 #include "ui_handler.h"
 #include <vector>
 
@@ -30,7 +30,7 @@ private:
   // --- Objects
   HexGrid hexGrid;
   Player player;
-  TextureHandler textureHandler;
+  GraphicsManager graphicsManager;
   FontHandler fontHandler;
   UI_Handler uiHandler;
   ItemHandler itemHandler;

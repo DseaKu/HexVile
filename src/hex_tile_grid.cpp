@@ -81,8 +81,8 @@ void HexGrid::InitGrid(float radius) {
   CalcVisibleTiles();
 }
 
-void HexGrid::SetTextureHandler(TextureHandler *textureHandler) {
-  this->textureHandler = textureHandler;
+void HexGrid::SetGraphicsManager(GraphicsManager *graphicsManager) {
+  this->graphicsManager = graphicsManager;
 }
 
 bool HexGrid::IsInBounds(HexCoord h) const {
@@ -282,7 +282,7 @@ void HexGrid::DrawTile(HexCoord h, Rectangle srcRec, DrawMaskID layer) {
   const MapTile &tile = GetTile(h);
   Vector2 origin = {0.0f, 0.0f};
 
-  textureHandler->LoadDrawData(layer, destRect.y, srcRec, destRect, WHITE);
+  graphicsManager->LoadDrawData(layer, destRect.y, srcRec, destRect, WHITE);
 }
 
 void HexGrid::DrawVisibleTiles() {
@@ -302,7 +302,7 @@ void HexGrid::DrawVisibleTiles() {
                             TA::ASSEST_RESOLUTION, Conf::TILE_SIZE};
     Vector2 origin = {0.0f, 0.0f};
 
-    textureHandler->LoadDrawData(DRAW_MASK_GROUND0, destRect.y, sourceRect,
+    graphicsManager->LoadDrawData(DRAW_MASK_GROUND0, destRect.y, sourceRect,
                                  destRect, WHITE);
 
     // Draw details for this tile
@@ -321,7 +321,7 @@ void HexGrid::DrawVisibleTiles() {
                                     TA::ASSEST_RESOLUTION,
                                     TA::ASSEST_RESOLUTION};
 
-        textureHandler->LoadDrawData(DRAW_MASK_ON_GROUND, detailDestRect.y,
+        graphicsManager->LoadDrawData(DRAW_MASK_ON_GROUND, detailDestRect.y,
                                      detailSourceRect, detailDestRect, WHITE);
       }
     }

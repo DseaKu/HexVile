@@ -1,15 +1,15 @@
-#include "texture_handler.h"
+#include "graphics_manager.h"
 #include "defines.h"
 #include "enums.h"
 #include "raylib.h"
 #include <iostream>
 
-TextureHandler::TextureHandler() {
+GraphicsManager::GraphicsManager() {
   DrawData.resize(DRAW_MASK_SIZE);
   textureAtlas = {0, 0, 0, 0, 0};
 }
 
-int TextureHandler::LoadAssets(const char *pathToAssest) {
+int GraphicsManager::LoadAssets(const char *pathToAssest) {
   this->textureAtlas = LoadTexture(pathToAssest);
   // Catch error
   if (this->textureAtlas.id == 0) {
@@ -21,22 +21,22 @@ int TextureHandler::LoadAssets(const char *pathToAssest) {
   return 0;
 }
 
-void TextureHandler::UnloadAssets() { UnloadTexture(this->textureAtlas); }
+void GraphicsManager::UnloadAssets() { UnloadTexture(this->textureAtlas); }
 
-void TextureHandler::Draw(Rectangle assetsRect, Rectangle destRect,
+void GraphicsManager::Draw(Rectangle assetsRect, Rectangle destRect,
                           Vector2 origin, float rotation, Color color) {
   DrawTexturePro(this->textureAtlas, assetsRect, destRect, origin, rotation,
                  color);
 }
 
-void TextureHandler::LoadDrawData(DrawMaskID maskID, float y, Rectangle srcRec,
+void GraphicsManager::LoadDrawData(DrawMaskID maskID, float y, Rectangle srcRec,
                                   Rectangle dstRec, Color col) {
 
   DrawData[static_cast<int>(maskID)].emplace(
       y, DrawProperties{srcRec, dstRec, col});
 }
 
-void TextureHandler::RenderDrawData(DrawMaskID maskID) {
+void GraphicsManager::RenderDrawData(DrawMaskID maskID) {
   auto &layer = DrawData[static_cast<int>(maskID)];
   for (auto &item : layer) {
     DrawProperties &props = item.second;

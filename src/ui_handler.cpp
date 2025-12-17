@@ -21,7 +21,7 @@ UI_Handler::UI_Handler() {
   this->toolBarRec = {barPosX, barPosY, barWidth, barHeight};
   toolBarItemSize = Conf::UI_TOOL_BAR_ITEM_SIZE;
   scale = Conf::UI_SCALE;
-  textureHandler = nullptr;
+  graphicsManager = nullptr;
   itemHandler = nullptr;
   fontHandler = nullptr;
   selectedItemIndex = 0;
@@ -54,8 +54,8 @@ UI_Handler::UI_Handler() {
   toolBarRec = nullRec;
 }
 
-void UI_Handler::SetTextureHandler(TextureHandler *p) {
-  this->textureHandler = p;
+void UI_Handler::SetGraphicsManager(GraphicsManager *graphicsManager) {
+  this->graphicsManager = graphicsManager;
 }
 void UI_Handler::SetItemHandler(ItemHandler *p) { this->itemHandler = p; }
 void UI_Handler::SetFontHandler(FontHandler *p) { this->fontHandler = p; }
@@ -90,10 +90,10 @@ void UI_Handler::DrawToolBarItems() {
     Rectangle dstRec = {slotPosX, slotPosY, (float)itemSize, (float)itemSize};
 
     // Load item background
-    textureHandler->LoadDrawData(DRAW_MASK_UI, dstRec.y, this->itemBG_Rec,
+    graphicsManager->LoadDrawData(DRAW_MASK_UI, dstRec.y, this->itemBG_Rec,
                                  dstRec, WHITE);
     if (i == itemHandler->GetSelectionToolBar()) {
-      textureHandler->LoadDrawData(DRAW_MASK_UI, dstRec.y, this->itemBG_Rec_h,
+      graphicsManager->LoadDrawData(DRAW_MASK_UI, dstRec.y, this->itemBG_Rec_h,
                                    dstRec, WHITE);
     }
     // Load Item
@@ -112,9 +112,11 @@ void UI_Handler::DrawToolBarItems() {
                          .y = dstRec.y + offsetY,
                          .width = newWidth,
                          .height = newHeight};
-      textureHandler->LoadDrawData(DRAW_MASK_UI, dstRec.y, srcRec, dstRec,
+      graphicsManager->LoadDrawData(DRAW_MASK_UI, dstRec.y, srcRec, dstRec,
                                    WHITE);
       // Draw Numbers
+
+      // Rectangle rBotRec = Re;
     }
   }
 }

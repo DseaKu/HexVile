@@ -1,5 +1,5 @@
-#ifndef TEXTURE_HANDLER_H
-#define TEXTURE_HANDLER_H
+#ifndef GRAPHICS_MANAGER_H
+#define GRAPHICS_MANAGER_H
 
 #include "raylib.h"
 
@@ -13,7 +13,7 @@ struct DrawProperties {
   Color color;
 };
 
-class TextureHandler {
+class GraphicsManager {
 private:
   Texture2D textureAtlas;
   int width;
@@ -21,7 +21,7 @@ private:
   std::vector<std::multimap<float, DrawProperties>> DrawData;
 
 public:
-  TextureHandler();
+  GraphicsManager();
   int LoadAssets(const char *);
   void UnloadAssets();
   void Draw(Rectangle assetsRec, Rectangle destRec, Vector2 origin,
@@ -32,4 +32,4 @@ public:
   void RenderDrawData(DrawMaskID maskID);
 };
 
-#endif // !TEXTURE_HANDLER_H
+#endif // !GRAPHICS_MANAGER_H

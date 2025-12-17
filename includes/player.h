@@ -4,7 +4,7 @@
 #include "enums.h"
 #include "hex_tile_grid.h"
 #include "raylib.h"
-#include "texture_handler.h"
+#include "graphics_manager.h"
 
 struct PlayerAnimationData {
   int frameCount;
@@ -20,7 +20,7 @@ private:
   Vector2 position;
   Vector2 previousPosition;
   float speedTilesPerSecond;
-  TextureHandler *textureHandler;
+  GraphicsManager *graphicsManager;
   PlayerStateID state;
   PlayerAnimationData animationData[PLAYER_STATE_ID_SIZE][DIR_LABELS_SIZE];
   HexGrid *hexGrid;
@@ -36,7 +36,7 @@ public:
   void Update();
   void SetHexGrid(HexGrid *grid);
   Vector2 GetPosition();
-  void SetTextureHandler(TextureHandler *textureHandler);
+  void SetGraphicsManager(GraphicsManager *graphicsManager);
   int GetAnimationFrame();
   HexCoord GetTile();
   const char *PlayerStateToString();

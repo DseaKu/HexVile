@@ -68,15 +68,15 @@ void Game::GameLoop() {
     // --- Camera View ---
     BeginMode2D(camera);
 
-    graphicsManager.RenderDrawData(DRAW_MASK_GROUND_0);
-    graphicsManager.RenderDrawData(DRAW_MASK_GROUND_1);
-    graphicsManager.RenderDrawData(DRAW_MASK_SHADOW);
-    graphicsManager.RenderDrawData(DRAW_MASK_ON_GROUND);
+    graphicsManager.RenderGFX_Layer(DRAW_MASK_GROUND_0);
+    graphicsManager.RenderGFX_Layer(DRAW_MASK_GROUND_1);
+    graphicsManager.RenderGFX_Layer(DRAW_MASK_SHADOW);
+    graphicsManager.RenderGFX_Layer(DRAW_MASK_ON_GROUND);
 
     // --- End Camera View ---
     EndMode2D();
-    graphicsManager.RenderDrawData(DRAW_MASK_UI_0);
-    graphicsManager.RenderDrawData(DRAW_MASK_UI_1);
+    graphicsManager.RenderGFX_Layer(DRAW_MASK_UI_0);
+    graphicsManager.RenderGFX_Layer(DRAW_MASK_UI_1);
 
     DrawDebugOverlay(Conf::DEBUG_FLAG);
 

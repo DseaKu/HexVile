@@ -24,12 +24,9 @@ public:
   GFX_Manger();
   int LoadAssets(const char *);
   void UnloadAssets();
-  void Draw(Rectangle assetsRec, Rectangle destRec, Vector2 origin,
-            float rotation, Color color);
-
-  void LoadDrawData(DrawMaskID maskID, float y, Rectangle srcRec,
+  void LoadGFX_Data(DrawMaskID maskID, float y, Rectangle srcRec,
                     Rectangle dstRec, Color Color);
-  void RenderDrawData(DrawMaskID maskID);
+  void RenderGFX_Layer(DrawMaskID maskID);
 };
 
 #endif // !GRAPHICS_MANAGER_H

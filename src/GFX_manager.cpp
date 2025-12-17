@@ -23,19 +23,13 @@ int GFX_Manger::LoadAssets(const char *pathToAssest) {
 
 void GFX_Manger::UnloadAssets() { UnloadTexture(this->textureAtlas); }
 
-void GFX_Manger::Draw(Rectangle assetsRect, Rectangle destRect, Vector2 origin,
-                      float rotation, Color color) {
-  DrawTexturePro(this->textureAtlas, assetsRect, destRect, origin, rotation,
-                 color);
-}
-
-void GFX_Manger::LoadDrawData(DrawMaskID maskID, float y, Rectangle srcRec,
+void GFX_Manger::LoadGFX_Data(DrawMaskID maskID, float y, Rectangle srcRec,
                               Rectangle dstRec, Color col) {
 
   DrawData[static_cast<int>(maskID)].emplace(y, GFX_Props{srcRec, dstRec, col});
 }
 
-void GFX_Manger::RenderDrawData(DrawMaskID maskID) {
+void GFX_Manger::RenderGFX_Layer(DrawMaskID maskID) {
   auto &layer = DrawData[static_cast<int>(maskID)];
   for (auto &item : layer) {
     GFX_Props &props = item.second;

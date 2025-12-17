@@ -97,10 +97,10 @@ void UI_Handler::LoadItemBgGFX(int x, int y) {
   Rectangle dstRec = {slotPosX, slotPosY, (float)itemSize, (float)itemSize};
 
   // Load item background
-  graphicsManager->LoadDrawData(DRAW_MASK_UI_0, dstRec.y, this->itemBG_Rec,
+  graphicsManager->LoadGFX_Data(DRAW_MASK_UI_0, dstRec.y, this->itemBG_Rec,
                                 dstRec, WHITE);
   if (x == itemHandler->GetSelectionToolBar()) {
-    graphicsManager->LoadDrawData(DRAW_MASK_UI_0, dstRec.y, this->itemBG_Rec_h,
+    graphicsManager->LoadGFX_Data(DRAW_MASK_UI_0, dstRec.y, this->itemBG_Rec_h,
                                   dstRec, WHITE);
   }
 }
@@ -128,7 +128,7 @@ void UI_Handler::LoadItemGFX(int x, int y) {
                        .y = dstRec.y + offsetY,
                        .width = newWidth,
                        .height = newHeight};
-    graphicsManager->LoadDrawData(DRAW_MASK_UI_0, dstRec.y, srcRec, dstRec,
+    graphicsManager->LoadGFX_Data(DRAW_MASK_UI_0, dstRec.y, srcRec, dstRec,
                                   WHITE);
   }
 }
@@ -155,7 +155,7 @@ void UI_Handler::LoadItemNumGFX(int x, int y) {
                        .y = dstRec.y + offsetY,
                        .width = newWidth,
                        .height = newHeight};
-    graphicsManager->LoadDrawData(DRAW_MASK_UI_0, dstRec.y, srcRec, dstRec,
+    graphicsManager->LoadGFX_Data(DRAW_MASK_UI_0, dstRec.y, srcRec, dstRec,
                                   WHITE);
 
     // Draw Numbers
@@ -171,7 +171,7 @@ void UI_Handler::LoadItemNumGFX(int x, int y) {
                          .width = -TA::NUMBER_SCALE * i,
                          .height = -TA::NUMBER_SCALE};
 
-      graphicsManager->LoadDrawData(DRAW_MASK_UI_1, dstRec.y, numRec[digit],
+      graphicsManager->LoadGFX_Data(DRAW_MASK_UI_1, dstRec.y, numRec[digit],
                                     dstRec, WHITE);
       i++;
     }

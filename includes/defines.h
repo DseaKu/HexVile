@@ -107,7 +107,7 @@ constexpr int TILES_X_MAX = 8;
 constexpr int TILES_FRAME_COUNT = 1;
 constexpr float TILES_ANIMATION_SPEED = 0.3f;
 constexpr int TILES_X_END =
-    TILE_X_OFFSET_TILE + ASSEST_RESOLUTION * TILES_X_MAX;
+    TILE_X_OFFSET_PIXEL + ASSEST_RESOLUTION * TILES_X_MAX;
 
 // --- Item ---
 constexpr int ITEM_X_OFFSET_TILE = TILES_X_END;

@@ -20,7 +20,7 @@ void GFX_Manager::InitTextureRec() {
 
       float xOffset = static_cast<float>(x * reso);
       float yOffset = static_cast<float>(y * reso);
-      textureRecData[x][y] =
+      textureRecData[y][x] =
           Rectangle{.x = xOffset, .y = yOffset, .width = reso, .height = reso};
     }
   }
@@ -39,7 +39,7 @@ int GFX_Manager::LoadAssets(const char *pathToAssest) {
   return 0;
 }
 
-Rectangle GFX_Manager::GetSrcRec(int x, int y) { return textureRecData[x][y]; }
+Rectangle GFX_Manager::GetSrcRec(int x, int y) { return textureRecData[y][x]; }
 
 void GFX_Manager::UnloadAssets() { UnloadTexture(this->textureAtlas); }
 

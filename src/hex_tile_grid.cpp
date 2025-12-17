@@ -1,4 +1,5 @@
 #include "hex_tile_grid.h"
+#include "GFX_manager.h"
 #include "defines.h"
 #include "enums.h"
 #include "raylib.h"
@@ -239,8 +240,8 @@ void HexGrid::CalcVisibleTiles() {
     }
   }
   // Lock the mutex to safely swap the newly calculated visible tiles into the
-  // nextVisibleTiles. std::lock_guard ensures the mutex is unlocked when exiting
-  // this scope.
+  // nextVisibleTiles. std::lock_guard ensures the mutex is unlocked when
+  // exiting this scope.
   std::lock_guard<std::mutex> lock(visiCacheMutex);
   nextVisibleTiles =
       std::move(newVisiCache); // Move the new data to the back buffer.
@@ -294,10 +295,12 @@ void HexGrid::LoadTileGFX() {
                           TA::ASSEST_RESOLUTION};
 
     const MapTile &tile = GetTile(h);
-    Rectangle sourceRect = TX::Tiles[tile.type][animationFrame];
-    Vector2 origin = {0.0f, 0.0f};
 
-    graphicsManager->LoadGFX_Data(DRAW_MASK_GROUND_0, destRect.y, sourceRect,
+    int x = animationFrame + 12; // For testing purpose first with 12 -> tile
+                                 // txt begin at the 12th 32x32 square
+    int y = tile.type;
+
+    graphicsManager->LoadGFX_Data(DRAW_MASK_GROUND_0, destRect.y, x, y,
                                   destRect, WHITE);
 
     // Draw details for this tile
@@ -331,8 +334,8 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
     // Lock the mutex to safely swap the current rendering cache
     std::lock_guard<std::mutex> lock(visiCacheMutex);
     currentVisibleTiles.swap(nextVisibleTiles); // Atomically swap the buffers.
-    nextVisibleTiles.clear();                   // Clear the now-empty back buffer.
-    visiCacheReady = false;                     // Reset the flag.
+    nextVisibleTiles.clear(); // Clear the now-empty back buffer.
+    visiCacheReady = false;   // Reset the flag.
   }
 
   // Check if a previous asynchronous calculation is still running.
@@ -393,7 +396,6 @@ int HexGrid::GetTilesInTotal() const { return tilesInTotal; }
 int HexGrid::GetTilesVisible() const { return currentVisibleTiles.size(); }
 
 int HexGrid::GetMapRadius() const { return mapRadius; }
-
 
 HexCoord HexGrid::GetNeighbor(HexCoord h, int directionIndex) const {
   return h + DIRECTIONS[directionIndex];

@@ -9,6 +9,23 @@ GFX_Manager::GFX_Manager() {
   textureAtlas = {0, 0, 0, 0, 0};
 }
 
+void GFX_Manager::InitTextureRec() {
+
+  float reso = static_cast<float>(TA::ASSEST_RESOLUTION);
+  textureRecData.resize(TA_Height);
+
+  for (int y = 0; y < TA_Height; y++) {
+    textureRecData[y].resize(TA_Width);
+    for (int x = 0; x < TA_Width; x++) {
+
+      float xOffset = static_cast<float>(x * reso);
+      float yOffset = static_cast<float>(y * reso);
+      textureRecData[x][y] =
+          Rectangle{.x = xOffset, .y = yOffset, .width = reso, .height = reso};
+    }
+  }
+}
+
 int GFX_Manager::LoadAssets(const char *pathToAssest) {
   this->textureAtlas = LoadTexture(pathToAssest);
   // Catch error
@@ -16,17 +33,24 @@ int GFX_Manager::LoadAssets(const char *pathToAssest) {
     std::cout << "Error loading texture atlas" << std::endl;
     return 1;
   }
-  this->width = this->textureAtlas.width / TA::ASSEST_RESOLUTION;
-  this->height = this->textureAtlas.height / TA::ASSEST_RESOLUTION;
+  this->TA_Width = this->textureAtlas.width / TA::ASSEST_RESOLUTION;
+  this->TA_Height = this->textureAtlas.height / TA::ASSEST_RESOLUTION;
+  InitTextureRec();
   return 0;
 }
+
+Rectangle GFX_Manager::GetSrcRec(int x, int y) { return textureRecData[x][y]; }
 
 void GFX_Manager::UnloadAssets() { UnloadTexture(this->textureAtlas); }
 
 void GFX_Manager::LoadGFX_Data(DrawMaskID maskID, float y, Rectangle srcRec,
                                Rectangle dstRec, Color col) {
-
   GFX_Data[static_cast<int>(maskID)].emplace(y, GFX_Props{srcRec, dstRec, col});
+}
+void GFX_Manager::LoadGFX_Data(DrawMaskID maskID, float y, int TA_X, int TA_Y,
+                               Rectangle dstRec, Color col) {
+  Rectangle srcRec = GetSrcRec(TA_X, TA_Y);
+  LoadGFX_Data(maskID, y, srcRec, dstRec, col);
 }
 
 void GFX_Manager::RenderLayer(DrawMaskID maskID) {
@@ -37,4 +61,10 @@ void GFX_Manager::RenderLayer(DrawMaskID maskID) {
                    0.0f, props.color);
   }
   layer.clear();
+}
+
+Rectangle GFX_Manager::GetTileRec(TileID tileID, int frame) {
+  int x_idx = (TA::TILE_X_OFFSET_TILE / TA::ASSEST_RESOLUTION) + frame;
+  int y_idx = static_cast<int>(tileID);
+  return textureRecData[y_idx][x_idx];
 }

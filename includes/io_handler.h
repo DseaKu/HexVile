@@ -3,6 +3,19 @@
 
 #include "enums.h"
 #include "raylib.h"
+struct KeyboardInputState {
+  bool keyOne;
+  bool keyTwo;
+  bool keyThree;
+  bool keyFour;
+  bool keyFive;
+  bool keySix;
+  bool keySeven;
+  bool keyEight;
+  bool keyNine;
+  bool keyZero;
+};
+
 class IO_Handler {
 private:
   MouseMask mouseMask;
@@ -20,7 +33,7 @@ public:
   // --- Get ---
   Vector2 GetScaledMousePos();
   Vector2 GetRealMousePos();
-  int GetToolBarSelction(int curToolBarSel);
+  int GetToolBarSelction(int curToolBarSel, KeyboardInputState keyboardState);
   MouseMask GetMouseMask();
 
   // --- Set ---

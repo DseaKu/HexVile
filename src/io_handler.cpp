@@ -17,29 +17,29 @@ Vector2 IO_Handler::GetRealMousePos() { return realMousePos; }
 
 Vector2 IO_Handler::GetScaledMousePos() { return scaledMousePos; }
 
-int IO_Handler::GetToolBarSelction(int curToolBarSel) {
+int IO_Handler::GetToolBarSelction(int curToolBarSel, KeyboardInputState keyboardState) {
 
   int toolBarSel = -1;
 
-  if (IsKeyPressed(KEY_ONE)) {
+  if (keyboardState.keyOne) {
     toolBarSel = 0;
-  } else if (IsKeyPressed(KEY_TWO)) {
+  } else if (keyboardState.keyTwo) {
     toolBarSel = 1;
-  } else if (IsKeyPressed(KEY_THREE)) {
+  } else if (keyboardState.keyThree) {
     toolBarSel = 2;
-  } else if (IsKeyPressed(KEY_FOUR)) {
+  } else if (keyboardState.keyFour) {
     toolBarSel = 3;
-  } else if (IsKeyPressed(KEY_FIVE)) {
+  } else if (keyboardState.keyFive) {
     toolBarSel = 4;
-  } else if (IsKeyPressed(KEY_SIX)) {
+  } else if (keyboardState.keySix) {
     toolBarSel = 5;
-  } else if (IsKeyPressed(KEY_SEVEN)) {
+  } else if (keyboardState.keySeven) {
     toolBarSel = 6;
-  } else if (IsKeyPressed(KEY_EIGHT)) {
+  } else if (keyboardState.keyEight) {
     toolBarSel = 7;
-  } else if (IsKeyPressed(KEY_NINE)) {
+  } else if (keyboardState.keyNine) {
     toolBarSel = 8;
-  } else if (IsKeyPressed(KEY_ZERO)) {
+  } else if (keyboardState.keyZero) {
     toolBarSel = 9;
   }
 

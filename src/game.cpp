@@ -123,7 +123,19 @@ void Game::ProcessInputs() {
     hexGrid.SetTile(clickedHex, TILE_NULL);
   }
 
-  toolBarSel = ioHandler.GetToolBarSelction(toolBarSel);
+  KeyboardInputState keyboardState;
+  keyboardState.keyOne = IsKeyPressed(KEY_ONE);
+  keyboardState.keyTwo = IsKeyPressed(KEY_TWO);
+  keyboardState.keyThree = IsKeyPressed(KEY_THREE);
+  keyboardState.keyFour = IsKeyPressed(KEY_FOUR);
+  keyboardState.keyFive = IsKeyPressed(KEY_FIVE);
+  keyboardState.keySix = IsKeyPressed(KEY_SIX);
+  keyboardState.keySeven = IsKeyPressed(KEY_SEVEN);
+  keyboardState.keyEight = IsKeyPressed(KEY_EIGHT);
+  keyboardState.keyNine = IsKeyPressed(KEY_NINE);
+  keyboardState.keyZero = IsKeyPressed(KEY_ZERO);
+
+  toolBarSel = ioHandler.GetToolBarSelction(toolBarSel, keyboardState);
   // --- Keyboard ---
 
   uiHandler.SetSelectedItem(toolBarSel);

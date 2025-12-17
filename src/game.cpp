@@ -10,7 +10,7 @@
 Game::Game() {
   InitWindow(Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT, Conf::WINDOW_TITLE);
   SetTargetFPS(Conf::FPS_MAX);
-  graphicsManager.LoadAssets(Conf::TA_PATH);
+  GFX_Manager.LoadAssets(Conf::TA_PATH);
 
   timer = 0.0f;
   updateGridTreshold = Conf::TRIGGER_UPDATE_GRID;
@@ -18,11 +18,11 @@ Game::Game() {
   hackFontRegular = LoadFileData(Conf::FONT_HACK_REGULAR_PATH, &fileSize);
 
   hexGrid.InitGrid(Conf::MAP_SIZE);
-  hexGrid.SetGFX_Manager(&graphicsManager);
+  hexGrid.SetGFX_Manager(&GFX_Manager);
   hexGrid.SetCamRectPointer(&this->cameraRect);
 
   player.SetHexGrid(&hexGrid);
-  player.SetGFX_Manager(&graphicsManager);
+  player.SetGFX_Manager(&GFX_Manager);
 
   camera.target = Conf::SCREEN_CENTER;
   camera.offset = Conf::SCREEN_CENTER;
@@ -33,7 +33,7 @@ Game::Game() {
 
   fontHandler.LoadFonts();
 
-  uiHandler.SetGFX_Manager(&graphicsManager);
+  uiHandler.SetGFX_Manager(&GFX_Manager);
   uiHandler.SetItemHandler(&itemHandler);
   uiHandler.SetFontHandler(&fontHandler);
   uiHandler.SetIO_Handler(&ioHandler);
@@ -68,15 +68,15 @@ void Game::GameLoop() {
     // --- Camera View ---
     BeginMode2D(camera);
 
-    graphicsManager.RenderLayer(DRAW_MASK_GROUND_0);
-    graphicsManager.RenderLayer(DRAW_MASK_GROUND_1);
-    graphicsManager.RenderLayer(DRAW_MASK_SHADOW);
-    graphicsManager.RenderLayer(DRAW_MASK_ON_GROUND);
+    GFX_Manager.RenderLayer(DRAW_MASK_GROUND_0);
+    GFX_Manager.RenderLayer(DRAW_MASK_GROUND_1);
+    GFX_Manager.RenderLayer(DRAW_MASK_SHADOW);
+    GFX_Manager.RenderLayer(DRAW_MASK_ON_GROUND);
 
     // --- End Camera View ---
     EndMode2D();
-    graphicsManager.RenderLayer(DRAW_MASK_UI_0);
-    graphicsManager.RenderLayer(DRAW_MASK_UI_1);
+    GFX_Manager.RenderLayer(DRAW_MASK_UI_0);
+    GFX_Manager.RenderLayer(DRAW_MASK_UI_1);
 
     DrawDebugOverlay(Conf::DEBUG_FLAG);
 
@@ -234,7 +234,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
 // --- Deinitialization ---
 Game::~Game() {
 
-  graphicsManager.UnloadAssets();
+  GFX_Manager.UnloadAssets();
   fontHandler.UnloadFonts();
   CloseWindow(); // Close window and OpenGL context
 }

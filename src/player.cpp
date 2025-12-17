@@ -81,27 +81,14 @@ void Player::GenerateDrawData() {
   playerPosition.y -= TA::ASSEST_RESOLUTION_HALF - Conf::PLAYER_Y_OFFSET;
   float resolution = TA::ASSEST_RESOLUTION;
 
-  // --- Texture Atlas Y Calculation ---
-  // Adjust these values to match the layout of your texture atlas.
-  
-  // The base Y offset for player animations in the atlas (in tiles).
-  // This is the number of rows before the player animations start.
-  const int PLAYER_ANIM_Y_OFFSET = TILE_ID_SIZE; 
-  
-  // The stride between animation states (e.g., walk vs idle) in the atlas (in rows).
-  const int STATE_STRIDE = TA::PLAYER_WALK_MAX; // Assumes 8 rows per state.
-  
-  // The offset for the direction. This depends on the order of directions in your atlas.
-  const int DIRECTION_OFFSET = -1; // Assumes directions are 1-based in the enum.
-
-  int ta_x = this->animationFrame + TA::PLAYER_X;
-  int ta_y = PLAYER_ANIM_Y_OFFSET + (this->state - 1) * STATE_STRIDE + (this->faceDir + DIRECTION_OFFSET);
+  int TA_X = this->animationFrame + TA::PLAYER_X;
+  int TA_Y = (state - 1) * (DIR_LABELS_SIZE - 1) + faceDir;
 
   Rectangle dstRect = {playerPosition.x, playerPosition.y, resolution,
                        resolution};
 
-  graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, playerPosition.y, ta_x,
-                                ta_y, dstRect, WHITE);
+  graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, playerPosition.y, TA_X,
+                                TA_Y, dstRect, WHITE);
 }
 
 Vector2 Player::GetPosition() { return position; }

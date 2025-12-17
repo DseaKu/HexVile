@@ -123,13 +123,6 @@ constexpr int NUMBER_X_MAX = 1;
 constexpr float NUMBER_SCALE = ASSEST_RESOLUTION * 0.5f;
 } // namespace TA
 
-// using namespace TA_OFF{
-//
-//
-//
-// }
-//
-
 // --- Unsigned Integer Aliases ---
 using u8 = std::uint8_t;
 using u16 = std::uint16_t;

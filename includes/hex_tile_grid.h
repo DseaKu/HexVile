@@ -61,16 +61,22 @@ struct MapTile {
 class HexGrid {
 private:
   std::vector<std::vector<MapTile>> tileData;
-  std::vector<HexCoord>
-      visiCache; // Stores currently visible tiles for rendering.
-  std::vector<HexCoord>
-      visiCacheNext; // Back buffer for visible tiles calculated asynchronously.
-  std::mutex visiCacheMutex; // Mutex to protect access to visiCache and
-                             // visiCacheNext during swaps.
-  std::future<void>
-      visiCalcFuture;  // Manages the asynchronous calculation of visible tiles.
-  bool visiCacheReady; // Flag indicating if visiCacheNext has new data ready to
-                       // be swapped.
+
+  // Stores currently visible tiles for rendering.
+  std::vector<HexCoord> visiCache;
+
+  // Back buffer for visible tiles calculated asynchronously.
+  std::vector<HexCoord> visiCacheNext;
+
+  // Mutex to protect access to visiCache and visiCacheNext during swaps.
+  std::mutex visiCacheMutex;
+
+  // Manages the asynchronous calculation of visible tiles.
+  std::future<void> visiCalcFuture;
+
+  // Flag indicating if visiCacheNext has new data ready to be swapped.
+  bool visiCacheReady;
+
   float tileGapX;
   float tileGapY;
   float calcRenderRectTimer;
@@ -93,7 +99,7 @@ private:
   void CalcRenderRect();
   void CalcVisibleTiles();
   void AddGrassDetails(int amount);
-  void DrawVisibleTiles();
+  void LoadTileGFX();
 
   // --- Core Lifecycle ---
   void UpdateTilesProperties();

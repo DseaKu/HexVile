@@ -285,7 +285,7 @@ void HexGrid::DrawTile(HexCoord h, Rectangle srcRec, DrawMaskID layer) {
   graphicsManager->LoadGFX_Data(layer, destRect.y, srcRec, destRect, WHITE);
 }
 
-void HexGrid::DrawVisibleTiles() {
+void HexGrid::LoadTileGFX() {
   // Draw chached visible tiles
   for (int i = 0; i < visiCache.size(); i++) {
     HexCoord h = visiCache[i];
@@ -296,10 +296,7 @@ void HexGrid::DrawVisibleTiles() {
                           TA::ASSEST_RESOLUTION};
 
     const MapTile &tile = GetTile(h);
-    Rectangle sourceRect = {TA::TILE_X_OFFSET_TILE +
-                                (float)animationFrame * TA::ASSEST_RESOLUTION,
-                            (float)TA::ASSEST_RESOLUTION * tile.type,
-                            TA::ASSEST_RESOLUTION, Conf::TILE_SIZE};
+    Rectangle sourceRect = TX::Tiles[tile.type][animationFrame];
     Vector2 origin = {0.0f, 0.0f};
 
     graphicsManager->LoadGFX_Data(DRAW_MASK_GROUND_0, destRect.y, sourceRect,
@@ -329,11 +326,11 @@ void HexGrid::DrawVisibleTiles() {
 }
 
 void HexGrid::Update(const Camera2D &camera) {
-  // Check if the asynchronous calculation of visible tiles is complete and new
-  // data is ready.
+
+  // Check if the asynchronous calculation of visible tiles is complete
   if (visiCacheReady) {
-    // Lock the mutex to safely swap the current rendering cache with the newly
-    // calculated one.
+
+    // Lock the mutex to safely swap the current rendering cache
     std::lock_guard<std::mutex> lock(visiCacheMutex);
     visiCache.swap(visiCacheNext); // Atomically swap the buffers.
     visiCacheNext.clear();         // Clear the now-empty back buffer.
@@ -354,7 +351,7 @@ void HexGrid::Update(const Camera2D &camera) {
   animationFrame =
       (int)(GetTime() * TA::TILES_ANIMATION_SPEED) % TA::TILES_FRAME_COUNT;
 
-  DrawVisibleTiles();
+  LoadTileGFX();
 }
 
 void HexGrid::AddGrassDetails(int amount) {

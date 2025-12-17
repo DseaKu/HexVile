@@ -141,7 +141,24 @@ namespace TX {
 // This var shoul represent all tiles from the texture atlas, so I can later
 // call each texture by TX::Rectangle[TILE_GRASS][0]; This should result the
 // first grass texture of the texture atlas
-inline std::vector<std::vector<Rectangle>> Tiles = ;
+inline std::vector<std::vector<Rectangle>> InitializeTiles() {
+  std::vector<std::vector<Rectangle>> tiles(TILE_ID_SIZE);
+
+  for (int tile_id = 0; tile_id < TILE_ID_SIZE; ++tile_id) {
+    tiles[tile_id].reserve(TA::TILES_X_MAX);
+    for (int frame = 0; frame < TA::TILES_X_MAX; ++frame) {
+      Rectangle rect = {
+          .x = (float)TA::TILE_X_OFFSET_TILE + (frame * TA::ASSEST_RESOLUTION),
+          .y = (float)tile_id * TA::ASSEST_RESOLUTION,
+          .width = (float)TA::ASSEST_RESOLUTION,
+          .height = (float)TA::ASSEST_RESOLUTION};
+      tiles[tile_id].push_back(rect);
+    }
+  }
+  return tiles;
+}
+
+inline std::vector<std::vector<Rectangle>> Tiles = InitializeTiles();
 
 }; // namespace TX
 

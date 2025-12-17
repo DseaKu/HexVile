@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <vector>
 
+constexpr Rectangle nullRec = Rectangle{0, 0, 0, 0};
+
 namespace Conf {
 
 // --- Core ---

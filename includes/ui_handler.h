@@ -35,10 +35,11 @@ private:
   int selectedItemIndex;
   bool isToolBarActive;
   void GenerateDrawData();
-  void DrawToolBar();
-  void DrawToolBarItems();
-  void DrawTileHighlight();
-  void DrawItemBackground(Vector2 pos);
+  void LoadToolBarGFX();
+  void LoadHiTileGFX();
+  void LoadItemBgGFX(int x, int y);
+  void LoadItemGFX(int x, int y);
+  void LoadItemNumGFX(int x, int y);
 
 public:
   UI_Handler();

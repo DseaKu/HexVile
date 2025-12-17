@@ -141,6 +141,8 @@ void UI_Handler::LoadItemNumGFX(int x, int y) {
   Rectangle dstRec = {slotPosX, slotPosY, (float)itemSize, (float)itemSize};
 
   if (item->id != ITEM_NULL) {
+
+    // Load Item GFX
     Rectangle srcRec = {(float)TA::ITEM_X_OFFSET_TILE,
                         (float)TA::ASSEST_RESOLUTION * item->id,
                         (float)TA::ASSEST_RESOLUTION, (float)Conf::TILE_SIZE};
@@ -158,7 +160,7 @@ void UI_Handler::LoadItemNumGFX(int x, int y) {
     graphicsManager->LoadGFX_Data(DRAW_MASK_UI_0, dstRec.y, srcRec, dstRec,
                                   WHITE);
 
-    // Draw Numbers
+    // Load Numbers GFX
     int i = 0;
     for (char c : std::to_string(item->count)) {
       int digit = c - '0';

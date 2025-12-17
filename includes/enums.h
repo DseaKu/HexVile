@@ -64,8 +64,8 @@ enum DrawMaskID {
   DRAW_MASK_GROUND_1, // Highlighted Tiles
   DRAW_MASK_SHADOW,
   DRAW_MASK_ON_GROUND,
-  DRAW_MASK_UI_0, // Tool bar, Items
-  DRAW_MASK_UI_1, // Num Items,
+  DRAW_MASK_UI_0, // Tool bar, Item background,
+  DRAW_MASK_UI_1, // Items, Num Items,
   DRAW_MASK_SIZE,
 };
 

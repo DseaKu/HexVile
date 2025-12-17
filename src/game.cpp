@@ -18,11 +18,11 @@ Game::Game() {
   hackFontRegular = LoadFileData(Conf::FONT_HACK_REGULAR_PATH, &fileSize);
 
   hexGrid.InitGrid(Conf::MAP_SIZE);
-  hexGrid.SetGFX_Manger(&graphicsManager);
+  hexGrid.SetGFX_Manager(&graphicsManager);
   hexGrid.SetCamRectPointer(&this->cameraRect);
 
   player.SetHexGrid(&hexGrid);
-  player.SetGFX_Manger(&graphicsManager);
+  player.SetGFX_Manager(&graphicsManager);
 
   camera.target = Conf::SCREEN_CENTER;
   camera.offset = Conf::SCREEN_CENTER;
@@ -33,7 +33,7 @@ Game::Game() {
 
   fontHandler.LoadFonts();
 
-  uiHandler.SetGFX_Manger(&graphicsManager);
+  uiHandler.SetGFX_Manager(&graphicsManager);
   uiHandler.SetItemHandler(&itemHandler);
   uiHandler.SetFontHandler(&fontHandler);
   uiHandler.SetIO_Handler(&ioHandler);
@@ -68,15 +68,15 @@ void Game::GameLoop() {
     // --- Camera View ---
     BeginMode2D(camera);
 
-    graphicsManager.RenderGFX_Layer(DRAW_MASK_GROUND_0);
-    graphicsManager.RenderGFX_Layer(DRAW_MASK_GROUND_1);
-    graphicsManager.RenderGFX_Layer(DRAW_MASK_SHADOW);
-    graphicsManager.RenderGFX_Layer(DRAW_MASK_ON_GROUND);
+    graphicsManager.RenderLayer(DRAW_MASK_GROUND_0);
+    graphicsManager.RenderLayer(DRAW_MASK_GROUND_1);
+    graphicsManager.RenderLayer(DRAW_MASK_SHADOW);
+    graphicsManager.RenderLayer(DRAW_MASK_ON_GROUND);
 
     // --- End Camera View ---
     EndMode2D();
-    graphicsManager.RenderGFX_Layer(DRAW_MASK_UI_0);
-    graphicsManager.RenderGFX_Layer(DRAW_MASK_UI_1);
+    graphicsManager.RenderLayer(DRAW_MASK_UI_0);
+    graphicsManager.RenderLayer(DRAW_MASK_UI_1);
 
     DrawDebugOverlay(Conf::DEBUG_FLAG);
 

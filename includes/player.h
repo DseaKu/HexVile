@@ -20,7 +20,7 @@ private:
   Vector2 position;
   Vector2 previousPosition;
   float speedTilesPerSecond;
-  GFX_Manger *graphicsManager;
+  GFX_Manager *graphicsManager;
   PlayerStateID state;
   PlayerAnimationData animationData[PLAYER_STATE_ID_SIZE][DIR_LABELS_SIZE];
   HexGrid *hexGrid;
@@ -36,7 +36,7 @@ public:
   void Update();
   void SetHexGrid(HexGrid *grid);
   Vector2 GetPosition();
-  void SetGFX_Manger(GFX_Manger *graphicsManager);
+  void SetGFX_Manager(GFX_Manager *graphicsManager);
   int GetAnimationFrame();
   HexCoord GetTile();
   const char *PlayerStateToString();

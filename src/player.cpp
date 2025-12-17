@@ -134,7 +134,7 @@ int Player::GetAnimationFrame() { return this->animationFrame; }
 
 float Player::GetSpeedTilesPerSecond() { return this->speedTilesPerSecond; }
 
-void Player::SetGFX_Manger(GFX_Manger *graphicsManager) {
+void Player::SetGFX_Manager(GFX_Manager *graphicsManager) {
 
   this->graphicsManager = graphicsManager;
 }

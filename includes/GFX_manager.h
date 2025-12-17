@@ -13,7 +13,7 @@ struct GFX_Props {
   Color color;
 };
 
-class GFX_Manger {
+class GFX_Manager {
 private:
   Texture2D textureAtlas;
   int width;
@@ -21,12 +21,12 @@ private:
   std::vector<std::multimap<float, GFX_Props>> GFX_Data;
 
 public:
-  GFX_Manger();
+  GFX_Manager();
   int LoadAssets(const char *);
   void UnloadAssets();
   void LoadGFX_Data(DrawMaskID maskID, float y, Rectangle srcRec,
                     Rectangle dstRec, Color Color);
-  void RenderGFX_Layer(DrawMaskID maskID);
+  void RenderLayer(DrawMaskID maskID);
 };
 
 #endif // !GRAPHICS_MANAGER_H

@@ -30,7 +30,7 @@ private:
   // --- Objects
   HexGrid hexGrid;
   Player player;
-  GFX_Manger graphicsManager;
+  GFX_Manager graphicsManager;
   FontHandler fontHandler;
   UI_Handler uiHandler;
   ItemHandler itemHandler;

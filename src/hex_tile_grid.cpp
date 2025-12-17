@@ -81,7 +81,7 @@ void HexGrid::InitGrid(float radius) {
   CalcVisibleTiles();
 }
 
-void HexGrid::SetGFX_Manger(GFX_Manger *graphicsManager) {
+void HexGrid::SetGFX_Manager(GFX_Manager *graphicsManager) {
   this->graphicsManager = graphicsManager;
 }
 

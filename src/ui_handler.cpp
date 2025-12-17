@@ -53,7 +53,7 @@ UI_Handler::UI_Handler() {
   toolBarRec = nullRec;
 }
 
-void UI_Handler::SetGFX_Manger(GFX_Manger *graphicsManager) {
+void UI_Handler::SetGFX_Manager(GFX_Manager *graphicsManager) {
   this->graphicsManager = graphicsManager;
 }
 void UI_Handler::SetItemHandler(ItemHandler *p) { this->itemHandler = p; }
@@ -157,24 +157,25 @@ void UI_Handler::LoadItemNumGFX(int x, int y) {
                        .y = dstRec.y + offsetY,
                        .width = newWidth,
                        .height = newHeight};
-    graphicsManager->LoadGFX_Data(DRAW_MASK_UI_0, dstRec.y, srcRec, dstRec,
+    graphicsManager->LoadGFX_Data(DRAW_MASK_UI_1, dstRec.y, srcRec, dstRec,
                                   WHITE);
 
-    // Load Numbers GFX
+    // Draw Numbers
+    std::string num_str = std::to_string(item->count);
     int i = 0;
-    for (char c : std::to_string(item->count)) {
-      int digit = c - '0';
+    for (auto it = num_str.rbegin(); it != num_str.rend(); ++it) {
+      int digit = *it - '0';
 
       Vector2 rbCorner =
           Vector2{.x = dstRec.x + dstRec.width, .y = dstRec.y + dstRec.height};
 
-      dstRec = Rectangle{.x = rbCorner.x,
-                         .y = rbCorner.y,
-                         .width = -TA::NUMBER_SCALE * i,
-                         .height = -TA::NUMBER_SCALE};
+      Rectangle digit_dst_rec = {.x = rbCorner.x - (i * TA::NUMBER_SCALE),
+                                 .y = rbCorner.y,
+                                 .width = -TA::NUMBER_SCALE,
+                                 .height = -TA::NUMBER_SCALE};
 
-      graphicsManager->LoadGFX_Data(DRAW_MASK_UI_1, dstRec.y, numRec[digit],
-                                    dstRec, WHITE);
+      graphicsManager->LoadGFX_Data(DRAW_MASK_UI_1, digit_dst_rec.y,
+                                    numRec[digit], digit_dst_rec, WHITE);
       i++;
     }
   }

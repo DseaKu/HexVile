@@ -80,7 +80,7 @@ private:
   int tilesInTotal;
   Rectangle *camRect;
   Vector2 origin;
-  GFX_Manger *graphicsManager;
+  GFX_Manager *graphicsManager;
 
   // Lookup Tables
   static const std::vector<HexCoord> DIRECTIONS;
@@ -106,7 +106,7 @@ public:
   void Update(const Camera2D &camera);
 
   // --- Setters ---
-  void SetGFX_Manger(GFX_Manger *graphicsManager);
+  void SetGFX_Manager(GFX_Manager *graphicsManager);
   void SetCamRectPointer(Rectangle *camRect);
   bool SetTile(HexCoord h, TileID ID);
   void ToggleTile(HexCoord h);

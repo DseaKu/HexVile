@@ -27,7 +27,7 @@ private:
   std::vector<Rectangle> numRec;
 
   float scale;
-  GFX_Manger *graphicsManager;
+  GFX_Manager *graphicsManager;
   ItemHandler *itemHandler;
   FontHandler *fontHandler;
   IO_Handler *io_Handler;
@@ -44,7 +44,7 @@ private:
 public:
   UI_Handler();
   void Update();
-  void SetGFX_Manger(GFX_Manger *graphicsManager);
+  void SetGFX_Manager(GFX_Manager *graphicsManager);
   void SetItemHandler(ItemHandler *p);
   void SetFontHandler(FontHandler *p);
   void SetIO_Handler(IO_Handler *p);

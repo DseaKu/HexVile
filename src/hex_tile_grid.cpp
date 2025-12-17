@@ -204,7 +204,6 @@ void HexGrid::CalcVisibleTiles() {
   if (camRect == nullptr) {
     return;
   }
-  float startTime = GetTime();
   // Define the rendering view rectangle, expanded by an offset for culling.
   Rectangle renderView = {.x = camRect->x - Conf::RENDER_VIEW_OFFSET_XY,
                           .y = camRect->y - Conf::RENDER_VIEW_OFFSET_XY,
@@ -246,7 +245,6 @@ void HexGrid::CalcVisibleTiles() {
   nextVisibleTiles =
       std::move(newVisiCache); // Move the new data to the back buffer.
   visiCacheReady = true; // Signal that new data is ready for the main thread.
-  calcRenderRectTimer = GetTime() - startTime;
 }
 
 bool HexGrid::CheckSurrounded(HexCoord target) const {
@@ -325,7 +323,7 @@ void HexGrid::LoadTileGFX() {
   }
 }
 
-void HexGrid::Update(const Camera2D &camera) {
+void HexGrid::Update(const Camera2D &camera, float totalTime) {
 
   // Check if the asynchronous calculation of visible tiles is complete
   if (visiCacheReady) {
@@ -333,8 +331,8 @@ void HexGrid::Update(const Camera2D &camera) {
     // Lock the mutex to safely swap the current rendering cache
     std::lock_guard<std::mutex> lock(visiCacheMutex);
     currentVisibleTiles.swap(nextVisibleTiles); // Atomically swap the buffers.
-    nextVisibleTiles.clear();         // Clear the now-empty back buffer.
-    visiCacheReady = false;        // Reset the flag.
+    nextVisibleTiles.clear();                   // Clear the now-empty back buffer.
+    visiCacheReady = false;                     // Reset the flag.
   }
 
   // Check if a previous asynchronous calculation is still running.
@@ -349,7 +347,7 @@ void HexGrid::Update(const Camera2D &camera) {
 
   // Update animation frame based on game time for animated tiles.
   animationFrame =
-      (int)(GetTime() * TA::TILES_ANIMATION_SPEED) % TA::TILES_FRAME_COUNT;
+      (int)(totalTime * TA::TILES_ANIMATION_SPEED) % TA::TILES_FRAME_COUNT;
 
   LoadTileGFX();
 }
@@ -396,7 +394,7 @@ int HexGrid::GetTilesVisible() const { return currentVisibleTiles.size(); }
 
 int HexGrid::GetMapRadius() const { return mapRadius; }
 
-float HexGrid::GetRenderRectTimer() const { return calcRenderRectTimer; }
+
 HexCoord HexGrid::GetNeighbor(HexCoord h, int directionIndex) const {
   return h + DIRECTIONS[directionIndex];
 }

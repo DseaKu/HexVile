@@ -61,7 +61,7 @@ void Game::GameLoop() {
     playerInput.moveUp = IsKeyDown(KEY_W);
     playerInput.moveDown = IsKeyDown(KEY_S);
     player.Update(playerInput, GetFrameTime());
-    hexGrid.Update(camera);
+    hexGrid.Update(camera, GetTime());
     uiHandler.Update();
 
     // --- Draw ---
@@ -166,7 +166,6 @@ void Game::DrawDebugOverlay(bool is_enabled) {
       {"Resources",
        {
            TextFormat("FPS: %i", GetFPS()),
-           TextFormat("Render Rect Timer: %0.2f", hexGrid.GetRenderRectTimer()),
            TextFormat("Tiles Total: %i", hexGrid.GetTilesInTotal()),
            TextFormat("Tiles Used: %i", hexGrid.GetTilesInUse()),
            TextFormat("Tiles Visible: %i", hexGrid.GetTilesVisible()),

@@ -79,7 +79,6 @@ private:
 
   float tileGapX;
   float tileGapY;
-  float calcRenderRectTimer;
   int animationFrame;
   int mapRadius;
   int tilesInUse;
@@ -109,7 +108,7 @@ public:
 
   // --- Core Lifecycle ---
   void InitGrid(float radius);
-  void Update(const Camera2D &camera);
+  void Update(const Camera2D &camera, float totalTime);
   void Shutdown();
 
   // --- Setters ---
@@ -123,7 +122,6 @@ public:
   int GetTilesInTotal() const;
   int GetTilesVisible() const;
   int GetMapRadius() const;
-  float GetRenderRectTimer() const;
   bool IsInBounds(HexCoord h) const;
   bool HasTile(HexCoord h) const;
   bool IsWalkable(HexCoord h) const;

@@ -5,16 +5,17 @@
 #include "hex_tile_grid.h"
 #include "io_handler.h"
 #include "raylib.h"
+#include <string>
 
 UI_Handler::UI_Handler() {
 
   Rectangle nullRec = Rectangle{0, 0, 0, 0};
 
-  itemCount = Conf::ITEM_STACK_MAX_TOOL_BAR;
+  nToolBarItemMax = Conf::ITEM_STACK_MAX_TOOL_BAR;
   padding = Conf::UI_TOOL_BAR_PADDING;
   itemSize = Conf::UI_TOOL_SIZE;
   slotSize = Conf::UI_TOOL_BAR_SLOT_SIZE;
-  barWidth = (itemCount * slotSize) + padding;
+  barWidth = (nToolBarItemMax * slotSize) + padding;
   barHeight = itemSize + (2 * padding);
   barPosX = Conf::SCREEN_CENTER.x - (barWidth / 2.0f);
   barPosY = Conf::SCREEN_HEIGHT - barHeight - Conf::UI_TOOL_BAR_Y_BOTTOM_MARGIN;
@@ -46,7 +47,7 @@ UI_Handler::UI_Handler() {
   numRec.resize(10, nullRec);
   for (int i = 0; i < 10; i++) {
     numRec[i] = Rectangle{.x = TA::NUMBER_X_OFFSET,
-                          .y = (float)i * TA::ASSEST_RESOLUTION,
+                          .y = ((float)i + 1.0f) * TA::ASSEST_RESOLUTION,
                           .width = TA::ASSEST_RESOLUTION,
                           .height = TA::ASSEST_RESOLUTION};
   }
@@ -74,32 +75,38 @@ void UI_Handler::GenerateDrawData() {
   DrawToolBar();
   DrawToolBarItems();
   DrawTileHighlight();
+
+  // DrawToolBar
+  for (int i = 0; i < nToolBarItemMax; i++) {
+    DrawToolBarItems(Vector2{i, 0});
+  }
 }
 
+void UI_Handler::DrawItemBackground(Vector2 pos) {}
 void UI_Handler::DrawToolBarItems() {
   if (!isToolBarActive) {
     return;
   }
 
-  for (int i = 0; i < itemCount; ++i) {
+  for (int i = 0; i < nToolBarItemMax; ++i) {
     float slotPosX = barPosX + padding + (i * slotSize);
     float slotPosY = barPosY + padding;
 
-    ItemID currentTile = itemHandler->GetToolBarItemType(i);
+    Item *item = itemHandler->GetToolBarItemPointer(i);
 
     Rectangle dstRec = {slotPosX, slotPosY, (float)itemSize, (float)itemSize};
 
     // Load item background
-    graphicsManager->LoadDrawData(DRAW_MASK_UI, dstRec.y, this->itemBG_Rec,
-                                 dstRec, WHITE);
+    graphicsManager->LoadDrawData(DRAW_MASK_UI_0, dstRec.y, this->itemBG_Rec,
+                                  dstRec, WHITE);
     if (i == itemHandler->GetSelectionToolBar()) {
-      graphicsManager->LoadDrawData(DRAW_MASK_UI, dstRec.y, this->itemBG_Rec_h,
-                                   dstRec, WHITE);
+      graphicsManager->LoadDrawData(DRAW_MASK_UI_0, dstRec.y,
+                                    this->itemBG_Rec_h, dstRec, WHITE);
     }
     // Load Item
-    if (currentTile != ITEM_NULL) {
+    if (item->id != ITEM_NULL) {
       Rectangle srcRec = {(float)TA::ITEM_X_OFFSET_TILE,
-                          (float)TA::ASSEST_RESOLUTION * currentTile,
+                          (float)TA::ASSEST_RESOLUTION * item->id,
                           (float)TA::ASSEST_RESOLUTION, (float)Conf::TILE_SIZE};
 
       // Shrink item
@@ -112,11 +119,26 @@ void UI_Handler::DrawToolBarItems() {
                          .y = dstRec.y + offsetY,
                          .width = newWidth,
                          .height = newHeight};
-      graphicsManager->LoadDrawData(DRAW_MASK_UI, dstRec.y, srcRec, dstRec,
-                                   WHITE);
-      // Draw Numbers
+      graphicsManager->LoadDrawData(DRAW_MASK_UI_0, dstRec.y, srcRec, dstRec,
+                                    WHITE);
 
-      // Rectangle rBotRec = Re;
+      // Draw Numbers
+      int i = 0;
+      for (char c : std::to_string(item->count)) {
+        int digit = c - '0';
+
+        Vector2 rbCorner = Vector2{.x = dstRec.x + dstRec.width,
+                                   .y = dstRec.y + dstRec.height};
+
+        dstRec = Rectangle{.x = rbCorner.x,
+                           .y = rbCorner.y,
+                           .width = -TA::NUMBER_SCALE * i,
+                           .height = -TA::NUMBER_SCALE};
+
+        graphicsManager->LoadDrawData(DRAW_MASK_UI_1, dstRec.y, numRec[digit],
+                                      dstRec, WHITE);
+        i++;
+      }
     }
   }
 }
@@ -129,7 +151,7 @@ void UI_Handler::DrawToolBar() {
 void UI_Handler::DrawTileHighlight() {
   Vector2 mousePos = io_Handler->GetScaledMousePos();
   HexCoord coord = hexGrid->PointToHexCoord(mousePos);
-  hexGrid->DrawTile(coord, tileHighlightRec, DRAW_MASK_GROUND1);
+  hexGrid->DrawTile(coord, tileHighlightRec, DRAW_MASK_GROUND_1);
 }
 
 void UI_Handler::SetToolBarActive(bool is_active) {
@@ -148,7 +170,7 @@ int UI_Handler::GetItemSlotAt(Vector2 point) {
   float barPosX = this->toolBarRec.x;
   float barPosY = this->toolBarRec.y;
 
-  for (int i = 0; i < itemCount; ++i) {
+  for (int i = 0; i < nToolBarItemMax; ++i) {
     float slotPosX = barPosX + padding + (i * slotSize);
     float slotPosY = barPosY + padding;
     Rectangle slotRect = {slotPosX, slotPosY, (float)itemSize, (float)itemSize};

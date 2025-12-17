@@ -124,15 +124,16 @@ constexpr int DETAILS_X_END =
 // --- UI ---
 constexpr int UI_X_OFFSET_TILE = DETAILS_X_END;
 constexpr int UI_X_OFFSET_PIXEL = UI_X_OFFSET_TILE * ASSEST_RESOLUTION;
-constexpr int UI_X_MAX = 2;
+constexpr int UI_X_MAX = 1;
 constexpr int UI_X_END = UI_X_OFFSET_TILE + ASSEST_RESOLUTION * UI_X_MAX;
 
 // --- Number ---
 constexpr int NUMBER_X_OFFSET = UI_X_END;
 constexpr int NUMBER_X_MAX = 1;
 constexpr int NUMBER_X_END = NUMBER_X_OFFSET + ASSEST_RESOLUTION * NUMBER_X_MAX;
-constexpr float NUMBER_SCALE = 1.0f;
+constexpr float NUMBER_SCALE = ASSEST_RESOLUTION * 0.3f;
 } // namespace TA
+
 // --- Unsigned Integer Aliases ---
 using u8 = std::uint8_t;
 using u16 = std::uint16_t;

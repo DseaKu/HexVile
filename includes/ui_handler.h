@@ -2,16 +2,16 @@
 #define UI_HANDLER_H
 
 #include "font_handler.h"
+#include "graphics_manager.h"
 #include "hex_tile_grid.h"
 #include "io_handler.h"
 #include "item_handler.h"
 #include "raylib.h"
-#include "graphics_manager.h"
 #include <vector>
 
 class UI_Handler {
 private:
-  int itemCount;
+  int nToolBarItemMax;
   int itemSize;
   int slotSize;
   float toolBarItemSize;
@@ -38,6 +38,7 @@ private:
   void DrawToolBar();
   void DrawToolBarItems();
   void DrawTileHighlight();
+  void DrawItemBackground(Vector2 pos);
 
 public:
   UI_Handler();

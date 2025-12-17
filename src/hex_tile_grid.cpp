@@ -302,8 +302,8 @@ void HexGrid::DrawVisibleTiles() {
                             TA::ASSEST_RESOLUTION, Conf::TILE_SIZE};
     Vector2 origin = {0.0f, 0.0f};
 
-    graphicsManager->LoadDrawData(DRAW_MASK_GROUND0, destRect.y, sourceRect,
-                                 destRect, WHITE);
+    graphicsManager->LoadDrawData(DRAW_MASK_GROUND_0, destRect.y, sourceRect,
+                                  destRect, WHITE);
 
     // Draw details for this tile
     const MapTile &currentTile = tile;
@@ -322,7 +322,7 @@ void HexGrid::DrawVisibleTiles() {
                                     TA::ASSEST_RESOLUTION};
 
         graphicsManager->LoadDrawData(DRAW_MASK_ON_GROUND, detailDestRect.y,
-                                     detailSourceRect, detailDestRect, WHITE);
+                                      detailSourceRect, detailDestRect, WHITE);
       }
     }
   }

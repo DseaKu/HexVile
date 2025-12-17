@@ -104,6 +104,7 @@ public:
   // --- Core Lifecycle ---
   void InitGrid(float radius);
   void Update(const Camera2D &camera);
+  void Shutdown();
 
   // --- Setters ---
   void SetGFX_Manager(GFX_Manager *graphicsManager);

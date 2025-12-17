@@ -420,3 +420,9 @@ bool HexGrid::SetTile(HexCoord h, TileID id) {
   }
   return false;
 }
+
+void HexGrid::Shutdown() {
+  if (visiCalcFuture.valid()) {
+    visiCalcFuture.wait();
+  }
+}

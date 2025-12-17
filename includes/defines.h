@@ -137,6 +137,11 @@ constexpr float NUMBER_SCALE =
     ASSEST_RESOLUTION * 0.5f; // Don't go to low, it can corruped the font
 } // namespace TA
 
+namespace TX {
+// inline std::vector<std::vector<Rectangle>> Tiles = nullRec;
+
+};
+
 // --- Unsigned Integer Aliases ---
 using u8 = std::uint8_t;
 using u16 = std::uint16_t;

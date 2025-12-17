@@ -44,6 +44,7 @@ public:
   Game();
   ~Game();
   void GameLoop();
+  void Unload();
   const char *MouseMaskToString(MouseMask m);
 };
 

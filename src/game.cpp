@@ -8,8 +8,6 @@
 
 // --- Initialization ---
 Game::Game() {
-  InitWindow(Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT, Conf::WINDOW_TITLE);
-  SetTargetFPS(Conf::FPS_MAX);
   GFX_Manager.LoadAssets(Conf::TA_PATH);
 
   timer = 0.0f;
@@ -231,10 +229,12 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   }
 };
 
-// --- Deinitialization ---
-Game::~Game() {
-
+void Game::Unload() {
+  hexGrid.Shutdown();
   GFX_Manager.UnloadAssets();
   fontHandler.UnloadFonts();
-  CloseWindow(); // Close window and OpenGL context
+  UnloadFileData(hackFontRegular);
 }
+
+// --- Deinitialization ---
+Game::~Game() {}

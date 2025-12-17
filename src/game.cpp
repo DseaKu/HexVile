@@ -70,12 +70,6 @@ void Game::GameLoop() {
     // --- Camera View ---
     BeginMode2D(camera);
 
-    // if (Conf::DEBUG_FLAG) {
-    //   HexCoord mapTile =
-    //   hexGrid.PointToHexCoord(ioHandler.GetScaledMousePos());
-    //   hexGrid.DrawTile(mapTile);
-    // }
-
     textureHandler.RenderDrawData(DRAW_MASK_GROUND0);
     textureHandler.RenderDrawData(DRAW_MASK_GROUND1);
     textureHandler.RenderDrawData(DRAW_MASK_SHADOW);
@@ -100,7 +94,7 @@ void Game::ProcessInputs() {
   if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 
     // Clicked on item bar
-    if (uiHandler.GetToolBarStatus() &&
+    if (uiHandler.GetToolBarAvailability() &&
         CheckCollisionPointRec(ioHandler.GetRealMousePos(),
                                uiHandler.GetToolBarRect())) {
       *mouseMask = MOUSE_MASK_ITEM_BAR;

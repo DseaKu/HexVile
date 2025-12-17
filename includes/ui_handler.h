@@ -21,6 +21,7 @@ private:
   float barHeight;
   Rectangle toolBarRec;
   Rectangle itemBG_Rec;
+  Rectangle itemBG_Rec_h;
   Rectangle tileHighlightRec;
 
   float scale;
@@ -47,7 +48,7 @@ public:
   void SetSelectedItem(int index);
   void SetToolBarActive(bool is_active);
   bool CheckClick(Vector2 mousePosition);
-  bool GetToolBarStatus();
+  bool GetToolBarAvailability();
   Rectangle GetToolBarRect();
   int GetItemSlotAt(Vector2 point);
 };

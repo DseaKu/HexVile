@@ -125,7 +125,7 @@ constexpr int DETAILS_X_END =
 
 constexpr int UI_X_OFFSET_TILE = DETAILS_X_END;
 constexpr int UI_X_OFFSET_PIXEL = UI_X_OFFSET_TILE * ASSEST_RESOLUTION;
-constexpr int UI_X_MAX = 4;
+constexpr int UI_X_MAX = 2;
 constexpr int UI_X_END = UI_X_OFFSET_TILE + ASSEST_RESOLUTION * UI_X_MAX;
 } // namespace TA
 // --- Unsigned Integer Aliases ---

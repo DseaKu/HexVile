@@ -23,9 +23,15 @@ UI_Handler::UI_Handler() {
                          .y = UI_ID_ITEM_BAR_BACKGROUND * TA::ASSEST_RESOLUTION,
                          .width = TA::ASSEST_RESOLUTION,
                          .height = TA::ASSEST_RESOLUTION};
+
+  itemBG_Rec_h = Rectangle{.x = TA::UI_X_OFFSET_TILE,
+                           .y = UI_ID_ITEM_BAR_BACKGROUND_HIGHLIGHTED *
+                                TA::ASSEST_RESOLUTION,
+                           .width = TA::ASSEST_RESOLUTION,
+                           .height = TA::ASSEST_RESOLUTION};
   tileHighlightRec =
       Rectangle{.x = TA::UI_X_OFFSET_TILE,
-                .y = UI_ID_HIGHLIGHTED_TILE * TA::ASSEST_RESOLUTION,
+                .y = UI_ID_TILE_HIGHLIGHTED * TA::ASSEST_RESOLUTION,
                 .width = TA::ASSEST_RESOLUTION,
                 .height = TA::ASSEST_RESOLUTION};
 
@@ -73,10 +79,14 @@ void UI_Handler::DrawToolBarItems() {
 
     Rectangle dstRec = {slotPosX, slotPosY, (float)itemSize, (float)itemSize};
 
-    // Load Item Background
+    // Load btem background and highlight it, if select it.
     textureHandler->LoadDrawData(DRAW_MASK_UI, dstRec.y, this->itemBG_Rec,
                                  dstRec, WHITE);
 
+    if (i == itemHandler->GetSelectionToolBar()) {
+      textureHandler->LoadDrawData(DRAW_MASK_UI, dstRec.y, this->itemBG_Rec_h,
+                                   dstRec, WHITE);
+    }
     // Load Item
     if (currentTile != ITEM_NULL) {
       Rectangle srcRec = {(float)TA::ITEM_X_OFFSET_TILE,
@@ -114,7 +124,7 @@ void UI_Handler::SetToolBarActive(bool is_active) {
   isToolBarActive = is_active;
 }
 
-bool UI_Handler::GetToolBarStatus() { return isToolBarActive; }
+bool UI_Handler::GetToolBarAvailability() { return isToolBarActive; }
 
 Rectangle UI_Handler::GetToolBarRect() { return this->toolBarRec; }
 
@@ -122,11 +132,6 @@ int UI_Handler::GetItemSlotAt(Vector2 point) {
   if (!isToolBarActive) {
     return -1;
   }
-
-  const int itemCount = Conf::ITEM_STACK_MAX_TOOL_BAR;
-  const float padding = Conf::UI_TOOL_BAR_PADDING;
-  const int itemSize = Conf::UI_TOOL_SIZE;
-  const int slotSize = Conf::UI_TOOL_BAR_SLOT_SIZE;
 
   float barPosX = this->toolBarRec.x;
   float barPosY = this->toolBarRec.y;

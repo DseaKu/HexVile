@@ -138,9 +138,12 @@ constexpr float NUMBER_SCALE =
 } // namespace TA
 
 namespace TX {
-// inline std::vector<std::vector<Rectangle>> Tiles = nullRec;
+// This var shoul represent all tiles from the texture atlas, so I can later
+// call each texture by TX::Rectangle[TILE_GRASS][0]; This should result the
+// first grass texture of the texture atlas
+inline std::vector<std::vector<Rectangle>> Tiles = ;
 
-};
+}; // namespace TX
 
 // --- Unsigned Integer Aliases ---
 using u8 = std::uint8_t;

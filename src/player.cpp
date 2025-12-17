@@ -87,7 +87,7 @@ void Player::GenerateDrawData() {
                        resolution};
 
   graphicsManager->LoadDrawData(DRAW_MASK_ON_GROUND, playerPosition.y, srcRect,
-                               dstRect, WHITE);
+                                dstRect, WHITE);
 }
 
 Vector2 Player::GetPosition() { return position; }
@@ -134,7 +134,7 @@ int Player::GetAnimationFrame() { return this->animationFrame; }
 
 float Player::GetSpeedTilesPerSecond() { return this->speedTilesPerSecond; }
 
-void Player::SetGraphicsManager(GraphicsManager *graphicsManager) {
+void Player::SetGFX_Manger(GFX_Manger *graphicsManager) {
 
   this->graphicsManager = graphicsManager;
 }

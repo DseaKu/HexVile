@@ -1,10 +1,10 @@
 #ifndef HEX_TILE_GRID_H
 #define HEX_TILE_GRID_H
 
+#include "GFX_manager.h"
 #include "defines.h"
 #include "enums.h"
 #include "raylib.h"
-#include "graphics_manager.h"
 #include <future>
 #include <mutex>
 #include <vector>
@@ -80,7 +80,7 @@ private:
   int tilesInTotal;
   Rectangle *camRect;
   Vector2 origin;
-  GraphicsManager *graphicsManager;
+  GFX_Manger *graphicsManager;
 
   // Lookup Tables
   static const std::vector<HexCoord> DIRECTIONS;
@@ -106,7 +106,7 @@ public:
   void Update(const Camera2D &camera);
 
   // --- Setters ---
-  void SetGraphicsManager(GraphicsManager *graphicsManager);
+  void SetGFX_Manger(GFX_Manger *graphicsManager);
   void SetCamRectPointer(Rectangle *camRect);
   bool SetTile(HexCoord h, TileID ID);
   void ToggleTile(HexCoord h);

@@ -1,6 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "GFX_manager.h"
 #include "enums.h"
 #include "font_handler.h"
 #include "hex_tile_grid.h"
@@ -8,7 +9,6 @@
 #include "item_handler.h"
 #include "player.h"
 #include "raylib.h"
-#include "graphics_manager.h"
 #include "ui_handler.h"
 #include <vector>
 
@@ -30,7 +30,7 @@ private:
   // --- Objects
   HexGrid hexGrid;
   Player player;
-  GraphicsManager graphicsManager;
+  GFX_Manger graphicsManager;
   FontHandler fontHandler;
   UI_Handler uiHandler;
   ItemHandler itemHandler;

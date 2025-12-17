@@ -1,10 +1,10 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "GFX_manager.h"
 #include "enums.h"
 #include "hex_tile_grid.h"
 #include "raylib.h"
-#include "graphics_manager.h"
 
 struct PlayerAnimationData {
   int frameCount;
@@ -20,7 +20,7 @@ private:
   Vector2 position;
   Vector2 previousPosition;
   float speedTilesPerSecond;
-  GraphicsManager *graphicsManager;
+  GFX_Manger *graphicsManager;
   PlayerStateID state;
   PlayerAnimationData animationData[PLAYER_STATE_ID_SIZE][DIR_LABELS_SIZE];
   HexGrid *hexGrid;
@@ -36,7 +36,7 @@ public:
   void Update();
   void SetHexGrid(HexGrid *grid);
   Vector2 GetPosition();
-  void SetGraphicsManager(GraphicsManager *graphicsManager);
+  void SetGFX_Manger(GFX_Manger *graphicsManager);
   int GetAnimationFrame();
   HexCoord GetTile();
   const char *PlayerStateToString();

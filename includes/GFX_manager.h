@@ -7,21 +7,21 @@
 #include <map>
 #include <vector>
 
-struct DrawProperties {
+struct GFX_Props {
   Rectangle srcRec;
   Rectangle dstRec;
   Color color;
 };
 
-class GraphicsManager {
+class GFX_Manger {
 private:
   Texture2D textureAtlas;
   int width;
   int height;
-  std::vector<std::multimap<float, DrawProperties>> DrawData;
+  std::vector<std::multimap<float, GFX_Props>> DrawData;
 
 public:
-  GraphicsManager();
+  GFX_Manger();
   int LoadAssets(const char *);
   void UnloadAssets();
   void Draw(Rectangle assetsRec, Rectangle destRec, Vector2 origin,

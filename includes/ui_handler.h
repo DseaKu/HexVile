@@ -1,8 +1,8 @@
 #ifndef UI_HANDLER_H
 #define UI_HANDLER_H
 
+#include "GFX_manager.h"
 #include "font_handler.h"
-#include "graphics_manager.h"
 #include "hex_tile_grid.h"
 #include "io_handler.h"
 #include "item_handler.h"
@@ -27,7 +27,7 @@ private:
   std::vector<Rectangle> numRec;
 
   float scale;
-  GraphicsManager *graphicsManager;
+  GFX_Manger *graphicsManager;
   ItemHandler *itemHandler;
   FontHandler *fontHandler;
   IO_Handler *io_Handler;
@@ -44,7 +44,7 @@ private:
 public:
   UI_Handler();
   void Update();
-  void SetGraphicsManager(GraphicsManager *graphicsManager);
+  void SetGFX_Manger(GFX_Manger *graphicsManager);
   void SetItemHandler(ItemHandler *p);
   void SetFontHandler(FontHandler *p);
   void SetIO_Handler(IO_Handler *p);

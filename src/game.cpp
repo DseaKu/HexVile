@@ -18,11 +18,11 @@ Game::Game() {
   hackFontRegular = LoadFileData(Conf::FONT_HACK_REGULAR_PATH, &fileSize);
 
   hexGrid.InitGrid(Conf::MAP_SIZE);
-  hexGrid.SetGraphicsManager(&graphicsManager);
+  hexGrid.SetGFX_Manger(&graphicsManager);
   hexGrid.SetCamRectPointer(&this->cameraRect);
 
   player.SetHexGrid(&hexGrid);
-  player.SetGraphicsManager(&graphicsManager);
+  player.SetGFX_Manger(&graphicsManager);
 
   camera.target = Conf::SCREEN_CENTER;
   camera.offset = Conf::SCREEN_CENTER;
@@ -33,7 +33,7 @@ Game::Game() {
 
   fontHandler.LoadFonts();
 
-  uiHandler.SetGraphicsManager(&graphicsManager);
+  uiHandler.SetGFX_Manger(&graphicsManager);
   uiHandler.SetItemHandler(&itemHandler);
   uiHandler.SetFontHandler(&fontHandler);
   uiHandler.SetIO_Handler(&ioHandler);

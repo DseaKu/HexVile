@@ -53,7 +53,7 @@ UI_Handler::UI_Handler() {
   toolBarRec = nullRec;
 }
 
-void UI_Handler::SetGraphicsManager(GraphicsManager *graphicsManager) {
+void UI_Handler::SetGFX_Manger(GFX_Manger *graphicsManager) {
   this->graphicsManager = graphicsManager;
 }
 void UI_Handler::SetItemHandler(ItemHandler *p) { this->itemHandler = p; }

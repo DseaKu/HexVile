@@ -25,7 +25,7 @@ constexpr int ITEM_X_MAX = ITEM_X + 1;
 
 // --- Details ---
 constexpr int DETAILS_X = ITEM_X_MAX;
-constexpr int DETAILS_X_MAX = DETAILS_X + 6;
+constexpr int DETAILS_X_MAX = DETAILS_X + 12;
 
 // --- UI ---
 constexpr int UI_X = DETAILS_X_MAX;

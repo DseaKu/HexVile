@@ -1,8 +1,7 @@
 #include "GFX_manager.h"
-#include "defines.h"
-#include "texture_atlas.h"
 #include "enums.h"
 #include "raylib.h"
+#include "texture_atlas.h"
 #include <iostream>
 
 GFX_Manager::GFX_Manager() {

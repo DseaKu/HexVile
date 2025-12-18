@@ -18,15 +18,16 @@ constexpr const char *FONT_HACK_REGULAR_PATH = "assets/font/hack_regular.ttf";
 constexpr const int MAX_TERRAIN_DETAILS_PER_TILE = 2;
 constexpr const int VISIBLE_TILE_CALC_PERIOD = 20;
 constexpr const int RENDER_VIEW_CULLING_MARGIN = 50;
-constexpr const int RENDER_VIEW_CULLING_EXPANSION = Conf::RENDER_VIEW_CULLING_MARGIN * 2;
+constexpr const int RENDER_VIEW_CULLING_EXPANSION =
+    Conf::RENDER_VIEW_CULLING_MARGIN * 2;
 
 constexpr const int ESTIMATED_VISIBLE_TILES = 3000;
 
 // --- Screen ---
-// constexpr int SCREEN_WIDTH = 1400;
-// constexpr int SCREEN_HEIGHT = 900;
-constexpr int SCREEN_WIDTH = 2800;
-constexpr int SCREEN_HEIGHT = 1200;
+constexpr int SCREEN_WIDTH = 1400;
+constexpr int SCREEN_HEIGHT = 900;
+// constexpr int SCREEN_WIDTH = 2800;
+// constexpr int SCREEN_HEIGHT = 1200;
 constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
                                    (float)SCREEN_HEIGHT / 2};
 
@@ -84,7 +85,6 @@ constexpr float TOOLBAR_SLOT_SIZE =
     (TOOLBAR_SLOT_CONTENT_SIZE + TOOLBAR_PADDING) * UI_SCALE * 1.0f;
 constexpr float TOOLBAR_ITEM_ICON_SCALE = 0.8f * UI_SCALE;
 } // namespace Conf
-
 
 // --- Unsigned Integer Aliases ---
 using u8 = std::uint8_t;

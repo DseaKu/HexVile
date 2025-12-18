@@ -383,7 +383,7 @@ bool HexGrid::SetTile(HexCoord h, TileID id) {
     return false;
   } else {
     MapTile &tile = GetTile(h);
-
+    tile.type = id;
     for (int i = 0; i < Conf::TERRAIN_DETAIL_MAX; i++) {
       tile.detail[i] = {0};
     }

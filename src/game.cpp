@@ -65,7 +65,6 @@ void Game::GameLoop() {
 
     // --- Camera View ---
     BeginMode2D(camera);
-
     GFX_Manager.RenderLayer(DRAW_MASK_GROUND_0);
     GFX_Manager.RenderLayer(DRAW_MASK_GROUND_1);
     GFX_Manager.RenderLayer(DRAW_MASK_SHADOW);

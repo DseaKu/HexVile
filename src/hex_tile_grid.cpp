@@ -286,54 +286,6 @@ void HexGrid::DrawTile(HexCoord h, int TA_X, int TA_Y, DrawMaskID layer) {
   graphicsManager->LoadGFX_Data(layer, destRect.y, TA_X, TA_Y, destRect, WHITE);
 }
 
-void HexGrid::LoadTileGFX() {
-  // Draw chached visible tiles
-  for (int i = 0; i < currentVisibleTiles.size(); i++) {
-    HexCoord h = currentVisibleTiles[i];
-    Vector2 pos = HexCoordToPoint(h);
-    pos.x -= Conf::TILE_SIZE_HALF;
-    pos.y -= Conf::TILE_SIZE_HALF;
-    Rectangle destRect = {pos.x, pos.y, TA::ASSEST_RESOLUTION,
-                          TA::ASSEST_RESOLUTION};
-
-    MapTile &tile = GetTile(h);
-
-    int x = animationFrame + 12; // For testing purpose first with 12 -> tile
-                                 // txt begin at the 12th 32x32 square
-    int y = tile.type;
-
-    graphicsManager->LoadGFX_Data(DRAW_MASK_GROUND_0, destRect.y, x, y,
-                                  destRect, WHITE);
-
-    // Draw details for this tile
-
-    for (int j = 0; j < Conf::TERRAIN_DETAIL_MAX; j++) {
-      TerrainDetail &d = tile.detail[j];
-
-      // Init detail if none exsits
-      if (d.detail < GRASS_DETAILS_NULL || d.detail > GRASS_DETAILS_SIZE) {
-        d.detail = GetRandomValue(GRASS_DETAILS_NULL, GRASS_DETAILS_SIZE - 1);
-      }
-
-      if (d.detail != GRASS_DETAILS_NULL) {
-
-        // Calculate the destination rectangle on the screen
-        Rectangle detailDestRect = {pos.x + d.x, pos.y + d.y,
-                                    TA::ASSEST_RESOLUTION,
-                                    TA::ASSEST_RESOLUTION};
-
-        // Load the graphics data for the detail
-        graphicsManager->LoadGFX_Data(
-            DRAW_MASK_ON_GROUND, detailDestRect.y,
-            TA::DETAILS_X + d.detail, // Source X index in texture atlas
-
-            1, // Source Y index in texture atlas
-            detailDestRect, WHITE);
-      }
-    }
-  }
-}
-
 void HexGrid::UpdateTileVisibility(float totalTime) {
   // Check if the asynchronous calculation of visible tiles is complete
   if (visiCacheReady) {
@@ -394,6 +346,47 @@ void HexGrid::AddGrassDetails(int amount) {
       tileData[r_rand][q_rand].detail[index_rand] = {
           .x = (u8)x_pos_rand, .y = (u8)y_pos_rand, .detail = detailRand};
       detailsAdded++;
+    }
+  }
+}
+
+// --- Render ---
+void HexGrid::LoadTileGFX() {
+  // Draw chached visible tiles
+  for (int i = 0; i < currentVisibleTiles.size(); i++) {
+    HexCoord h = currentVisibleTiles[i];
+    Vector2 pos = HexCoordToPoint(h);
+    pos.x -= Conf::TILE_SIZE_HALF;
+    pos.y -= Conf::TILE_SIZE_HALF;
+    Rectangle destRect = {pos.x, pos.y, TA::ASSEST_RESOLUTION,
+                          TA::ASSEST_RESOLUTION};
+
+    MapTile &tile = GetTile(h);
+
+    int x = animationFrame + 12;
+    int y = tile.type;
+
+    graphicsManager->LoadGFX_Data(DRAW_MASK_GROUND_0, destRect.y, x, y,
+                                  destRect, WHITE);
+
+    // Draw details for this tile
+    for (int j = 0; j < Conf::TERRAIN_DETAIL_MAX; j++) {
+      TerrainDetail &d = tile.detail[j];
+
+      // Init detail if none exsits
+      if (d.detail < GRASS_DETAILS_NULL || d.detail > GRASS_DETAILS_SIZE) {
+        d.detail = GetRandomValue(GRASS_DETAILS_NULL, GRASS_DETAILS_SIZE - 1);
+      }
+
+      if (d.detail != GRASS_DETAILS_NULL) {
+        Rectangle detailDestRect = {pos.x + d.x, pos.y + d.y,
+                                    TA::ASSEST_RESOLUTION,
+                                    TA::ASSEST_RESOLUTION};
+
+        graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, detailDestRect.y,
+                                      TA::DETAILS_X + d.detail, 1,
+                                      detailDestRect, WHITE);
+      }
     }
   }
 }

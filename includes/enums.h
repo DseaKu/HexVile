@@ -60,12 +60,12 @@ static const std::map<ItemID, TileID> item_to_tile_map = {
 };
 enum DrawMaskID {
   DRAW_MASK_NULL = 0,
-  DRAW_MASK_GROUND_0, // Tiles
-  DRAW_MASK_GROUND_1, // Highlighted Tiles
+  DRAW_MASK_GROUND_0, // Tiles,
+  DRAW_MASK_GROUND_1, // Highlighted Tiles,
   DRAW_MASK_SHADOW,
-  DRAW_MASK_ON_GROUND,
-  DRAW_MASK_UI_0, // Tool bar, Item background,
-  DRAW_MASK_UI_1, // Items, Num Items,
+  DRAW_MASK_ON_GROUND, // Player, Terrain Details,
+  DRAW_MASK_UI_0,      // Toolbar, Item BG,
+  DRAW_MASK_UI_1,      // Items, ItemsNum,
   DRAW_MASK_SIZE,
 };
 

@@ -90,9 +90,12 @@ constexpr float UI_TOOL_BAR_ITEM_SIZE = 0.8f * UI_SCALE;
 namespace TA {
 constexpr int RES = Conf::TILE_SIZE;
 constexpr int RES16 = RES / 2;
+constexpr int RES8 = RES16 / 2;
 
 constexpr float RES_F = RES;
 constexpr float RES16_F = RES16;
+constexpr float RES8_F = RES8;
+
 // --- Player ---
 constexpr int PLAYER_X = 0;
 constexpr int PLAYER_X_MAX = PLAYER_X + 12;

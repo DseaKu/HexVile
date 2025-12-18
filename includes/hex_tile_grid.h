@@ -104,7 +104,7 @@ private:
 
   // --- Render ---
   void LoadTileGFX();
-  void LoadDetailGFX(const TerrainDetail d, float x, float y);
+  void LoadDetailGFX(const TerrainDetail d, float x, float y, TileID type);
 
 public:
   HexGrid();

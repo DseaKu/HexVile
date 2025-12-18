@@ -337,29 +337,30 @@ void HexGrid::LoadTileGFX() {
     Rectangle destRec = {pos.x, pos.y, TA::ASSEST_RESOLUTION,
                          TA::ASSEST_RESOLUTION};
 
-    MapTile &tile = GetTile(h);
+    MapTile &t = GetTile(h);
     int x = animationFrame + 12;
-    int y = tile.type;
+    int y = t.type;
 
     graphicsManager->LoadGFX_Data(DRAW_MASK_GROUND_0, destRec.y, x, y, destRec,
                                   WHITE);
 
     // Draw details for this tile
-    for (const TerrainDetail &d : tile.detail) {
+    for (const TerrainDetail &d : t.detail) {
       if (d.type != 0) {
-        LoadDetailGFX(d, pos.x, pos.y);
+        LoadDetailGFX(d, pos.x, pos.y, t.type);
       }
     }
   }
 }
 
-void HexGrid::LoadDetailGFX(const TerrainDetail d, float x, float y) {
+void HexGrid::LoadDetailGFX(const TerrainDetail d, float x, float y,
+                            TileID type) {
 
   Rectangle destRec = {x + d.x, y + d.y - TA::ASSEST_RESOLUTION_HALF_F,
                        TA::ASSEST_RESOLUTION, TA::ASSEST_RESOLUTION};
 
   graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND,
-                                y - TA::ASSEST_RESOLUTION_HALF_F, d.type, 1,
+                                y - TA::ASSEST_RESOLUTION_HALF_F, d.type, type,
                                 destRec, WHITE);
 }
 

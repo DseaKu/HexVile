@@ -3,15 +3,13 @@
 
 #include "defines.h"
 
-// --- Assest & Animation --- TA = Texture Atlas
+// ==========================================
+//               32x32 Resolution
+// ==========================================
 namespace TA {
+constexpr int RES32_OFFSET = 100;
 constexpr int RES = Conf::TILE_SIZE;
-constexpr int RES16 = RES / 2;
-constexpr int RES8 = RES16 / 2;
-
 constexpr float RES_F = RES;
-constexpr float RES16_F = RES16;
-constexpr float RES8_F = RES8;
 
 // --- Player ---
 constexpr int PLAYER_X = 0;
@@ -36,6 +34,18 @@ constexpr int UI_X_MAX = UI_X + 1;
 // --- Number ---
 constexpr int NUMBER_X = UI_X_MAX;
 constexpr int NUMBER_X_MAX = 1;
+
+// ==========================================
+//               16x16 Resolution
+// ==========================================
+constexpr int RES16 = RES / 2;
+constexpr float RES16_F = RES16;
+
+// ==========================================
+//               8x8 Resolution
+// ==========================================
+constexpr int RES8 = RES16 / 2;
+constexpr float RES8_F = RES8;
 
 // ==========================================
 //               Animation

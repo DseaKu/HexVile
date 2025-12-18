@@ -346,7 +346,7 @@ void HexGrid::LoadTileGFX() {
 
     // Draw details for this tile
     for (const TerrainDetail &d : tile.detail) {
-      if (d.type != GRASS_DETAILS_NULL) {
+      if (d.type != 0) {
         LoadDetailGFX(d, pos.x, pos.y);
       }
     }
@@ -355,8 +355,7 @@ void HexGrid::LoadTileGFX() {
 
 void HexGrid::LoadDetailGFX(const TerrainDetail d, float x, float y) {
 
-  Rectangle destRec = {x + d.x, //- TA::ASSEST_RESOLUTION_F,
-                       y + d.y - TA::ASSEST_RESOLUTION_HALF_F,
+  Rectangle destRec = {x + d.x, y + d.y - TA::ASSEST_RESOLUTION_HALF_F,
                        TA::ASSEST_RESOLUTION, TA::ASSEST_RESOLUTION};
 
   graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND,

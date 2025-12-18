@@ -359,8 +359,9 @@ void HexGrid::LoadDetailGFX(const TerrainDetail d, float x, float y) {
                        y + d.y - TA::ASSEST_RESOLUTION_HALF_F,
                        TA::ASSEST_RESOLUTION, TA::ASSEST_RESOLUTION};
 
-  graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, y, d.type, 1, destRec,
-                                WHITE);
+  graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND,
+                                y - TA::ASSEST_RESOLUTION_HALF_F, d.type, 1,
+                                destRec, WHITE);
 }
 
 // --- Get ---
@@ -382,7 +383,7 @@ bool HexGrid::SetTile(HexCoord h, TileID id) {
     return false;
   } else {
     MapTile &tile = GetTile(h);
-    tile.type = id;
+
     for (int i = 0; i < Conf::TERRAIN_DETAIL_MAX; i++) {
       tile.detail[i] = {0};
     }

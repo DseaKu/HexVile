@@ -27,6 +27,14 @@ UI_Handler::UI_Handler() {
   toolBarRec = {barPosX, barPosY, barWidth, barHeight};
 }
 
+void UI_Handler::Update() { GenerateDrawData(); }
+void UI_Handler::GenerateDrawData() {
+
+  LoadHiTileGFX();
+  LoadToolBarGFX();
+}
+
+// --- Setter ---
 void UI_Handler::SetGFX_Manager(GFX_Manager *graphicsManager) {
   this->graphicsManager = graphicsManager;
 }
@@ -40,14 +48,36 @@ void UI_Handler::SetSelectedItem(int index) {
     selectedItemIndex = index;
   }
 }
-
-void UI_Handler::Update() { GenerateDrawData(); }
-void UI_Handler::GenerateDrawData() {
-
-  LoadHiTileGFX();
-  LoadToolBarGFX();
+void UI_Handler::SetToolBarActive(bool is_active) {
+  isToolBarActive = is_active;
 }
 
+// --- Getter ---
+bool UI_Handler::GetToolBarAvailability() { return isToolBarActive; }
+
+Rectangle UI_Handler::GetToolBarRect() { return this->toolBarRec; }
+
+int UI_Handler::GetItemSlotAt(Vector2 point) {
+  if (!isToolBarActive) {
+    return -1;
+  }
+
+  float barPosX = this->toolBarRec.x;
+  float barPosY = this->toolBarRec.y;
+
+  for (int i = 0; i < nToolBarItemMax; ++i) {
+    float slotPosX = barPosX + padding + (i * slotSize);
+    float slotPosY = barPosY + padding;
+    Rectangle slotRect = {slotPosX, slotPosY, (float)itemSize, (float)itemSize};
+    if (CheckCollisionPointRec(point, slotRect)) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+// --- Render ---
 void UI_Handler::LoadToolBarGFX() {
   if (!isToolBarActive) {
     return;
@@ -156,32 +186,4 @@ void UI_Handler::LoadHiTileGFX() {
   Vector2 mousePos = io_Handler->GetScaledMousePos();
   HexCoord coord = hexGrid->PointToHexCoord(mousePos);
   hexGrid->DrawTile(coord, TA::UI_X, UI_ID_TILE_H, DRAW_MASK_GROUND_1);
-}
-
-void UI_Handler::SetToolBarActive(bool is_active) {
-  isToolBarActive = is_active;
-}
-
-bool UI_Handler::GetToolBarAvailability() { return isToolBarActive; }
-
-Rectangle UI_Handler::GetToolBarRect() { return this->toolBarRec; }
-
-int UI_Handler::GetItemSlotAt(Vector2 point) {
-  if (!isToolBarActive) {
-    return -1;
-  }
-
-  float barPosX = this->toolBarRec.x;
-  float barPosY = this->toolBarRec.y;
-
-  for (int i = 0; i < nToolBarItemMax; ++i) {
-    float slotPosX = barPosX + padding + (i * slotSize);
-    float slotPosY = barPosY + padding;
-    Rectangle slotRect = {slotPosX, slotPosY, (float)itemSize, (float)itemSize};
-    if (CheckCollisionPointRec(point, slotRect)) {
-      return i;
-    }
-  }
-
-  return -1;
 }

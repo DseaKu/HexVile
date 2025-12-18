@@ -68,10 +68,10 @@ void HexGrid::InitGrid(float radius) {
 
       if (abs(q) + abs(r) + abs(-q - r) <= mapRadius * 2) {
 
-        // 'version' should be random from 0-4, the lower the number the higher
-        // the chance
-        int version = 0;
-        MapTile defaultTile = {.version = 0, .type = TILE_GRASS};
+        MapTile defaultTile = {.type = TILE_GRASS};
+        for (int i = 0; i < Conf::TERRAIN_DETAIL_MAX; i++) {
+          defaultTile.detail[i] = GetRandomTerainDetail();
+        }
 
         tileData[gridR][gridQ] = defaultTile;
         this->tilesInUse++;
@@ -80,8 +80,16 @@ void HexGrid::InitGrid(float radius) {
       }
     }
   }
-  AddGrassDetails(tilesInUse / 2); // Add random terrain details
   CalcVisibleTiles();
+}
+
+TerrainDetail HexGrid::GetRandomTerainDetail() {
+  u8 x =
+      GetRandomValue(-TA::ASSEST_RESOLUTION_HALF, TA::ASSEST_RESOLUTION_HALF);
+  u8 y =
+      GetRandomValue(-TA::ASSEST_RESOLUTION_HALF, TA::ASSEST_RESOLUTION_HALF);
+  int type = GetRandomValue(TA::DETAILS_X, TA::DETAILS_X_MAX);
+  return TerrainDetail{.x = x, .y = y, .type = type};
 }
 
 void HexGrid::SetGFX_Manager(GFX_Manager *graphicsManager) {
@@ -317,39 +325,6 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
   // AddGrassDetails(200);
 }
 
-void HexGrid::AddGrassDetails(int amount) {
-  int detailsAdded = 0;
-  int attempts = 0;
-  // Try to add 'amount' details, with a limit on attempts to avoid
-  // infinite loops
-  while (detailsAdded < amount && attempts < amount * 10) {
-    attempts++;
-    int q_rand = GetRandomValue(0, mapRadius * 2);
-    int r_rand = GetRandomValue(0, mapRadius * 2);
-
-    // Only add details to grass tiles.
-    if (tileData[r_rand][q_rand].type != TILE_GRASS) {
-      continue;
-    }
-
-    // Generate smaller, positive-only offsets to keep details within tile
-    // bounds. The previous range of [-16, 16] was causing issues with the `u8`
-    // type and placing details far outside the tile. This range is a guess;
-    // you may need to adjust it based on your asset sizes.
-    int x_pos_rand = GetRandomValue(1, 15);
-    int y_pos_rand = GetRandomValue(1, 15);
-    int index_rand = GetRandomValue(0, Conf::TERRAIN_DETAIL_MAX - 1);
-    int detailRand = GetRandomValue(GRASS_DETAILS_FLOWER, GRASS_DETAILS_SIZE);
-
-    // Only add detail if the slot is empty.
-    if (tileData[r_rand][q_rand].detail[index_rand].detail == 0) {
-      tileData[r_rand][q_rand].detail[index_rand] = {
-          .x = (u8)x_pos_rand, .y = (u8)y_pos_rand, .detail = detailRand};
-      detailsAdded++;
-    }
-  }
-}
-
 // --- Render ---
 void HexGrid::LoadTileGFX() {
   // Draw chached visible tiles
@@ -370,25 +345,28 @@ void HexGrid::LoadTileGFX() {
                                   destRect, WHITE);
 
     // Draw details for this tile
-    for (int j = 0; j < Conf::TERRAIN_DETAIL_MAX; j++) {
-      TerrainDetail &d = tile.detail[j];
+    for (const TerrainDetail &d : tile.detail) {
 
-      // Init detail if none exsits
-      if (d.detail < GRASS_DETAILS_NULL || d.detail > GRASS_DETAILS_SIZE) {
-        d.detail = GetRandomValue(GRASS_DETAILS_NULL, GRASS_DETAILS_SIZE - 1);
-      }
-
-      if (d.detail != GRASS_DETAILS_NULL) {
-        Rectangle detailDestRect = {pos.x + d.x, pos.y + d.y,
-                                    TA::ASSEST_RESOLUTION,
-                                    TA::ASSEST_RESOLUTION};
-
-        graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, detailDestRect.y,
-                                      TA::DETAILS_X + d.detail, 1,
-                                      detailDestRect, WHITE);
+      if (d.type != GRASS_DETAILS_NULL) {
+        LoadDetailGFX(d, pos.x, pos.y);
       }
     }
   }
+}
+
+void HexGrid::LoadDetailGFX(const TerrainDetail d, float x, float y) {
+  Rectangle detailDestRect = {
+      static_cast<float>(x - TA::ASSEST_RESOLUTION_HALF),
+      static_cast<float>(y - TA::ASSEST_RESOLUTION), TA::ASSEST_RESOLUTION,
+      TA::ASSEST_RESOLUTION};
+
+  // Rectangle detailDestRect = {
+  //     static_cast<float>(d.x - TA::ASSEST_RESOLUTION_HALF),
+  //     static_cast<float>(d.y - TA::ASSEST_RESOLUTION), TA::ASSEST_RESOLUTION,
+  //     TA::ASSEST_RESOLUTION};
+  graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, detailDestRect.y,
+                                TA::DETAILS_X + d.type, 1, detailDestRect,
+                                WHITE);
 }
 
 // --- Get ---
@@ -411,9 +389,9 @@ bool HexGrid::SetTile(HexCoord h, TileID id) {
   } else {
     MapTile &tile = GetTile(h);
     tile.type = id;
-    for (int i = 0; i < Conf::TERRAIN_DETAIL_MAX; i++) {
-      tile.detail[i] = {0};
-    }
+    // for (int i = 0; i < Conf::TERRAIN_DETAIL_MAX; i++) {
+    //   tile.detail[i] = {0};
+    // }
     return true;
   }
   return false;

@@ -43,7 +43,8 @@ constexpr float TILE_GAP_Y = 15.95f;
 const std::vector<TileID> WALKABLE_TILES = {TILE_GRASS, TILE_DIRT};
 
 // --- Camera ---
-constexpr float CAMERA_ZOOM = 8.0f; // 3.8f;
+constexpr float CAMERA_ZOOM = 3.8f; // 3.8f;
+// constexpr float CAMERA_ZOOM = 8.0f; // 3.8f;
 constexpr float CAMERA_WIDTH = (float)SCREEN_WIDTH / CAMERA_ZOOM;
 constexpr float CAMERA_HEIGTH = (float)SCREEN_HEIGHT / CAMERA_ZOOM;
 
@@ -92,33 +93,35 @@ constexpr int ASSEST_RESOLUTION_HALF = ASSEST_RESOLUTION / 2;
 
 // --- Player ---
 constexpr int PLAYER_X = 0;
-constexpr int PLAYER_X_MAX = 12;
-constexpr int PLAYER_WALK_MAX = 8;
+constexpr int PLAYER_X_MAX = PLAYER_X + 12;
+//
+// --- Tile ---
+constexpr int TILE_X = PLAYER_X_MAX;
+constexpr int TILES_X_MAX = TILE_X + 8;
 
+// --- Item ---
+constexpr int ITEM_X = TILES_X_MAX;
+constexpr int ITEM_X_MAX = ITEM_X + 1;
+
+// --- Details ---
+constexpr int DETAILS_X = ITEM_X_MAX;
+constexpr int DETAILS_X_MAX = DETAILS_X + 6;
+
+// --- UI ---
+constexpr int UI_X = DETAILS_X_MAX;
+constexpr int UI_X_MAX = UI_X + 1;
+
+// --- Number ---
+constexpr int NUMBER_X = UI_X_MAX;
+constexpr int NUMBER_X_MAX = 1;
+
+// --- Animation ---
 constexpr float PLAYER_ANIMATION_SPEED = 10.0f;
 constexpr float PLAYER_ANIMATION_SPEED_IDLE = 5.0f;
-
-// --- Tile ---
-constexpr int TILE_X = PLAYER_X + PLAYER_X_MAX;
-constexpr int TILES_X_MAX = 8;
+constexpr int PLAYER_WALK_MAX = 8;
 
 constexpr float TILES_ANIMATION_SPEED = 0.3f;
 
-// --- Item ---
-constexpr int ITEM_X = TILE_X + TILES_X_MAX;
-constexpr int ITEM_X_MAX = 1;
-
-// --- Details ---
-constexpr int DETAILS_X = ITEM_X + ITEM_X_MAX;
-constexpr int DETAILS_X_MAX = 8;
-
-// --- UI ---
-constexpr int UI_X = DETAILS_X + DETAILS_X_MAX;
-constexpr int UI_X_MAX = 1;
-
-// --- Number ---
-constexpr int NUMBER_X = UI_X + UI_X_MAX;
-constexpr int NUMBER_X_MAX = 1;
 // Don't go to low, it can corruped the font
 constexpr float NUMBER_SCALE = ASSEST_RESOLUTION * 0.5f;
 } // namespace TA

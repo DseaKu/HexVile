@@ -38,12 +38,11 @@ struct FractionalHex {
 struct TerrainDetail {
   u8 x;
   u8 y;
-  int detail;
+  int type;
 };
 
 // --- Map Tile ---
 struct MapTile {
-  int version;
   TileID type;
   TerrainDetail detail[Conf::TERRAIN_DETAIL_MAX];
 };
@@ -95,14 +94,17 @@ private:
   HexCoord HexRound(FractionalHex h) const;
   const MapTile &GetTile(HexCoord h) const;
   MapTile &GetTile(HexCoord h);
+  TerrainDetail GetRandomTerainDetail();
   void CalcRenderRect();
   void CalcVisibleTiles();
-  void AddGrassDetails(int amount);
-  void LoadTileGFX();
   void UpdateTileVisibility(float totalTime);
 
   // --- Core Lifecycle ---
   void UpdateTilesProperties();
+
+  // --- Render ---
+  void LoadTileGFX();
+  void LoadDetailGFX(const TerrainDetail d, float x, float y);
 
 public:
   HexGrid();

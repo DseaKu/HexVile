@@ -68,12 +68,13 @@ void HexGrid::InitGrid(float radius) {
 
       if (abs(q) + abs(r) + abs(-q - r) <= mapRadius * 2) {
 
-        MapTile defaultTile = {.type = TILE_GRASS};
-        for (int i = 0; i < Conf::TERRAIN_DETAIL_MAX; i++) {
-          defaultTile.detail[i] = GetRandomTerainDetail();
+        MapTile initTile = {.type = TILE_GRASS};
+
+        for (TerrainDetail &d : initTile.detail) {
+          d = GetRandomTerainDetail();
         }
 
-        tileData[gridR][gridQ] = defaultTile;
+        tileData[gridR][gridQ] = initTile;
         this->tilesInUse++;
       } else {
         tileData[gridR][gridQ] = (MapTile){.type = TILE_NULL};

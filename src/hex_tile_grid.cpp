@@ -381,11 +381,12 @@ void HexGrid::SetCamRectPointer(Rectangle *camRect) { this->camRect = camRect; }
 bool HexGrid::SetTile(HexCoord h, TileID id) {
   if (!IsInBounds(h) || HexCoordToType(h) == id) {
     return false;
+
   } else {
-    MapTile &tile = GetTile(h);
-    tile.type = id;
-    for (int i = 0; i < Conf::TERRAIN_DETAIL_MAX; i++) {
-      tile.detail[i] = {0};
+    MapTile &t = GetTile(h);
+    t.type = id;
+    for (TerrainDetail &d : t.detail) {
+      d = GetRandomTerainDetail();
     }
     return true;
   }

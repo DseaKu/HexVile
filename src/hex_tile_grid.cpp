@@ -40,16 +40,16 @@ bool HexCoord::operator<(const HexCoord &other) const {
 HexGrid::HexGrid() {
 
   animationFrame = 0;
-  tileGapX = Conf::TILE_GAP_X;
-  tileGapY = Conf::TILE_GAP_Y;
+  tileGapX = Conf::TILE_SPACING_X;
+  tileGapY = Conf::TILE_SPACING_Y;
   origin = Conf::SCREEN_CENTER;
-  mapRadius = Conf::MAP_SIZE;
+  mapRadius = Conf::MAP_RADIUS;
   tilesInUse = 0;
   tilesInTotal = 0;
   camRect = nullptr;
   visiCacheReady = false;
 
-  size_t estimated_hits = Conf::VISIBILTY_ESTIMATED_UPPER_BOUND;
+  size_t estimated_hits = Conf::ESTIMATED_VISIBLE_TILES;
   currentVisibleTiles.reserve(estimated_hits);
   nextVisibleTiles.reserve(estimated_hits);
 }
@@ -114,8 +114,8 @@ bool HexGrid::IsWalkable(HexCoord h) const {
   }
   MapTile tile = HexCoordToTile(h);
   TileID type = tile.type;
-  for (int i = 0; i < Conf::WALKABLE_TILES.size(); i++) {
-    if (type == Conf::WALKABLE_TILES[i]) {
+  for (int i = 0; i < Conf::WALKABLE_TILE_IDS.size(); i++) {
+    if (type == Conf::WALKABLE_TILE_IDS[i]) {
       return true;
     }
   }
@@ -216,17 +216,17 @@ void HexGrid::CalcVisibleTiles() {
     return;
   }
   // Define the rendering view rectangle, expanded by an offset for culling.
-  Rectangle renderView = {.x = camRect->x - Conf::RENDER_VIEW_OFFSET_XY,
-                          .y = camRect->y - Conf::RENDER_VIEW_OFFSET_XY,
-                          .width = camRect->width + Conf::RENDER_VIEW_OFFSET_WH,
+  Rectangle renderView = {.x = camRect->x - Conf::RENDER_VIEW_CULLING_MARGIN,
+                          .y = camRect->y - Conf::RENDER_VIEW_CULLING_MARGIN,
+                          .width = camRect->width + Conf::RENDER_VIEW_CULLING_EXPANSION,
                           .height =
-                              camRect->height + Conf::RENDER_VIEW_OFFSET_WH};
+                              camRect->height + Conf::RENDER_VIEW_CULLING_EXPANSION};
 
   int gridSize = mapRadius * 2 + 1;
 
   std::vector<HexCoord> newVisiCache;
   newVisiCache.reserve(
-      Conf::VISIBILTY_ESTIMATED_UPPER_BOUND); // Pre-allocate memory for
+      Conf::ESTIMATED_VISIBLE_TILES); // Pre-allocate memory for
                                               // efficiency.
 
   // Iterate over all tiles in the grid.
@@ -239,8 +239,8 @@ void HexGrid::CalcVisibleTiles() {
       // Convert grid coordinates to HexCoord and then to screen coordinates.
       HexCoord h(q - mapRadius, r - mapRadius);
       Vector2 pos = HexCoordToPoint(h);
-      pos.x -= Conf::TILE_SIZE_HALF;
-      pos.y -= Conf::TILE_SIZE_HALF;
+      pos.x -= Conf::TILE_RESOLUTION_HALF;
+      pos.y -= Conf::TILE_RESOLUTION_HALF;
       Rectangle dest_rect = {pos.x, pos.y, TA::RES, TA::RES};
       // Check if the tile's bounding box intersects with the render view.
       if (CheckCollisionRecs(renderView, dest_rect)) {
@@ -282,8 +282,8 @@ void HexGrid::DrawTile(HexCoord h, int TA_X, int TA_Y, DrawMaskID layer) {
     return;
   }
   Vector2 pos = HexCoordToPoint(h);
-  pos.x -= Conf::TILE_SIZE_HALF;
-  pos.y -= Conf::TILE_SIZE_HALF;
+  pos.x -= Conf::TILE_RESOLUTION_HALF;
+  pos.y -= Conf::TILE_RESOLUTION_HALF;
   Rectangle destRect = {pos.x, pos.y, TA::RES, TA::RES};
 
   const MapTile &tile = GetTile(h);
@@ -329,8 +329,8 @@ void HexGrid::LoadTileGFX() {
   for (int i = 0; i < currentVisibleTiles.size(); i++) {
     HexCoord h = currentVisibleTiles[i];
     Vector2 pos = HexCoordToPoint(h);
-    pos.x -= Conf::TILE_SIZE_HALF;
-    pos.y -= Conf::TILE_SIZE_HALF;
+    pos.x -= Conf::TILE_RESOLUTION_HALF;
+    pos.y -= Conf::TILE_RESOLUTION_HALF;
     Rectangle destRec = {pos.x, pos.y, TA::RES, TA::RES};
 
     MapTile &t = GetTile(h);

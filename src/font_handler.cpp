@@ -8,7 +8,7 @@
 
 FontHandler::FontHandler() {
 
-  this->fontSizeDefault = Conf::FONT_SIZE_DEFAULT;
+  this->fontSizeDefault = Conf::DEFAULT_FONT_SIZE;
   this->fontHackRegular = {0};
 }
 
@@ -21,7 +21,7 @@ void FontHandler::LoadFonts() {
   this->fontHackRegular.baseSize = this->fontSizeDefault;
   this->fontHackRegular.glyphCount = Conf::HACK_REGULAR_GLYPH_COUNT;
   this->fontHackRegular.glyphs =
-      LoadFontData(fileData, fileSize, Conf::FONT_SIZE_DEFAULT, 0,
+      LoadFontData(fileData, fileSize, Conf::DEFAULT_FONT_SIZE, 0,
                    Conf::HACK_REGULAR_GLYPH_COUNT, FONT_DEFAULT,
                    &fontHackRegular.glyphCount);
   Image atlas = GenImageFontAtlas(fontHackRegular.glyphs, &fontHackRegular.recs,
@@ -36,6 +36,6 @@ Font FontHandler::GetFontHackRegular() { return this->fontHackRegular; }
 int FontHandler::GetFontSizeDefault() { return this->fontSizeDefault; }
 void FontHandler::DrawTextHackRegular(const char *text, Vector2 pos,
                                       Color color) {
-  DrawTextEx(this->fontHackRegular, text, pos, Conf::FONT_SIZE_DEFAULT,
-             Conf::FONT_SPACING_DEFAULT, color);
+  DrawTextEx(this->fontHackRegular, text, pos, Conf::DEFAULT_FONT_SIZE,
+             Conf::DEFAULT_FONT_SPACING, color);
 }

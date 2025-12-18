@@ -8,7 +8,7 @@
 // ==========================================
 namespace TA {
 constexpr int RES32_OFFSET = 100;
-constexpr int RES = Conf::TILE_SIZE;
+constexpr int RES = Conf::TILE_RESOLUTION;
 constexpr float RES_F = RES;
 
 // --- Player ---

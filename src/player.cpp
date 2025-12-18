@@ -59,7 +59,7 @@ void Player::Update(PlayerInputState input, float deltaTime) {
   // Calculate Speed
   float distance = Vector2Distance(this->position, this->previousPosition);
   if (deltaTime > 0) {
-    this->speedTilesPerSecond = distance / deltaTime / Conf::TILE_SIZE;
+    this->speedTilesPerSecond = distance / deltaTime / Conf::TILE_RESOLUTION;
   } else {
     this->speedTilesPerSecond = 0;
   }
@@ -79,7 +79,7 @@ HexCoord Player::GetTile() { return this->playerTile; }
 void Player::GenerateDrawData() {
   Vector2 playerPosition = this->position;
   playerPosition.x -= TA::RES16;
-  playerPosition.y -= TA::RES16 - Conf::PLAYER_Y_OFFSET;
+  playerPosition.y -= TA::RES16 - Conf::PLAYER_SPRITE_Y_OFFSET;
   float resolution = TA::RES;
 
   int TA_X = this->animationFrame + TA::PLAYER_X;
@@ -150,7 +150,7 @@ void Player::Idle() {
 
 void Player::Walk(Vector2 dir, float deltaTime) {
 
-  float speed = Conf::PLAYER_SPEED;
+  float speed = Conf::PLAYER_MOVE_SPEED;
 
   if (this->state != PLAYER_STATE_WALK) {
     animationFrame = 0.0f;
@@ -163,8 +163,8 @@ void Player::Walk(Vector2 dir, float deltaTime) {
   Vector2 nextPos = {this->position.x + dir.x * deltaTime * speed,
                      this->position.y + dir.y * deltaTime * speed};
 
-  float offsetX = dir.x * Conf::OFFSET_TO_OBSTACLE;
-  float offsetY = dir.y * Conf::OFFSET_TO_OBSTACLE;
+  float offsetX = dir.x * Conf::PLAYER_COLLISION_CHECK_OFFSET;
+  float offsetY = dir.y * Conf::PLAYER_COLLISION_CHECK_OFFSET;
   Vector2 a = {nextPos.x + offsetX, nextPos.y + offsetY};
   // Check if destination is walkable
   if (this->hexGrid->IsWalkable(this->hexGrid->PointToHexCoord(a))) {

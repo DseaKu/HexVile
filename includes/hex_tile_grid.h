@@ -44,7 +44,7 @@ struct TerrainDetail {
 // --- Map Tile ---
 struct MapTile {
   TileID type;
-  TerrainDetail detail[Conf::TERRAIN_DETAIL_MAX];
+  TerrainDetail detail[Conf::MAX_TERRAIN_DETAILS_PER_TILE];
 };
 
 /* Grid parts and relationships: https://www.redblobgames.com/grids/parts/

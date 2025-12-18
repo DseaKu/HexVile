@@ -4,7 +4,7 @@
 
 int main(void) {
   InitWindow(Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT, Conf::WINDOW_TITLE);
-  SetTargetFPS(Conf::FPS_MAX);
+  SetTargetFPS(Conf::MAX_FPS);
   Game game;
   game.GameLoop();
   game.Unload();

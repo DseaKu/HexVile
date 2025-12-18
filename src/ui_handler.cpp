@@ -10,15 +10,15 @@
 
 UI_Handler::UI_Handler() {
 
-  nToolBarItemMax = Conf::ITEM_STACK_MAX_TOOL_BAR;
-  padding = Conf::UI_TOOL_BAR_PADDING;
-  itemSize = Conf::UI_TOOL_SIZE;
-  slotSize = Conf::UI_TOOL_BAR_SLOT_SIZE;
+  nToolBarItemMax = Conf::TOOLBAR_SLOTS;
+  padding = Conf::TOOLBAR_PADDING;
+  itemSize = Conf::TOOLBAR_SLOT_CONTENT_SIZE;
+  slotSize = Conf::TOOLBAR_SLOT_SIZE;
   barWidth = (nToolBarItemMax * slotSize) + padding;
   barHeight = itemSize + (2 * padding);
   barPosX = Conf::SCREEN_CENTER.x - (barWidth / 2.0f);
-  barPosY = Conf::SCREEN_HEIGHT - barHeight - Conf::UI_TOOL_BAR_Y_BOTTOM_MARGIN;
-  toolBarItemSize = Conf::UI_TOOL_BAR_ITEM_SIZE;
+  barPosY = Conf::SCREEN_HEIGHT - barHeight - Conf::TOOLBAR_BOTTOM_MARGIN;
+  toolBarItemSize = Conf::TOOLBAR_ITEM_ICON_SCALE;
   scale = Conf::UI_SCALE;
   graphicsManager = nullptr;
   itemHandler = nullptr;
@@ -123,7 +123,7 @@ void UI_Handler::LoadItemGFX(int x, int y) {
     // Rectangle srcRec = {(float)TA::ITEM_X_OFFSET_TILE,
     //                     (float)TA::ASSEST_RESOLUTION * item->id,
     //                     (float)TA::ASSEST_RESOLUTION,
-    //                     (float)Conf::TILE_SIZE};
+    //                     (float)Conf::TILE_RESOLUTION};
 
     // Shrink item
     float newWidth = dstRec.width * toolBarItemSize;

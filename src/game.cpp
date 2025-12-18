@@ -8,14 +8,14 @@
 
 // --- Initialization ---
 Game::Game() {
-  GFX_Manager.LoadAssets(Conf::TA_PATH);
+  GFX_Manager.LoadAssets(Conf::TEXTURE_ATLAS_PATH);
 
   timer = 0.0f;
-  updateGridTreshold = Conf::TRIGGER_UPDATE_GRID;
+  updateGridTreshold = Conf::GRID_UPDATE_PLAYER_MOVE_THRESHOLD;
   int fileSize = 0;
   hackFontRegular = LoadFileData(Conf::FONT_HACK_REGULAR_PATH, &fileSize);
 
-  hexGrid.InitGrid(Conf::MAP_SIZE);
+  hexGrid.InitGrid(Conf::MAP_RADIUS);
   hexGrid.SetGFX_Manager(&GFX_Manager);
   hexGrid.SetCamRectPointer(&this->cameraRect);
 
@@ -24,7 +24,7 @@ Game::Game() {
 
   camera.target = Conf::SCREEN_CENTER;
   camera.offset = Conf::SCREEN_CENTER;
-  camera.zoom = Conf::CAMERA_ZOOM;
+  camera.zoom = Conf::INITIAL_CAMERA_ZOOM;
   camera.rotation = 0.0f;
   cameraRect = {0, 0, 0, 0};
   cameraTopLeft = {0, 0};
@@ -55,7 +55,7 @@ void Game::GameLoop() {
     relativeCenter = GetScreenToWorld2D(Conf::SCREEN_CENTER, camera);
     cameraTopLeft = GetScreenToWorld2D(Vector2{0, 0}, camera);
     cameraRect = {cameraTopLeft.x, cameraTopLeft.y, Conf::CAMERA_WIDTH,
-                  Conf::CAMERA_HEIGTH};
+                  Conf::CAMERA_HEIGHT};
 
     camera.target = player.GetPosition();
 
@@ -75,7 +75,7 @@ void Game::GameLoop() {
     GFX_Manager.RenderLayer(DRAW_MASK_UI_0);
     GFX_Manager.RenderLayer(DRAW_MASK_UI_1);
 
-    DrawDebugOverlay(Conf::DEBUG_FLAG);
+    DrawDebugOverlay(Conf::IS_DEBUG_OVERLAY_ENABLED);
 
     EndDrawing();
   }
@@ -161,8 +161,8 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   if (!is_enabled)
     return;
 
-  float sectionPosX = Conf::DEBUG_OVERLAY_SECTION_X_POS;
-  int sectionPosY = Conf::DEBUG_OVERLAY_SECTION_Y_POS;
+  float sectionPosX = Conf::DEBUG_OVERLAY_SECTION_X;
+  int sectionPosY = Conf::DEBUG_OVERLAY_SECTION_Y;
   int sectionGapY = Conf::DEBUG_OVERLAY_SECTION_Y_GAP;
   int sectionFontSize = Conf::DEBUG_OVERLAY_SECTION_FONT_SIZE;
   Color sectionColor = Conf::DEBUG_OVERLAY_SECTION_FONT_COLOR;

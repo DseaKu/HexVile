@@ -10,17 +10,17 @@ constexpr Rectangle nullRec = Rectangle{0, 0, 0, 0};
 namespace Conf {
 
 // --- Core ---
-constexpr int MAP_SIZE = 1800;
-constexpr int FPS_MAX = 8000;
+constexpr int MAP_RADIUS = 1800;
+constexpr int MAX_FPS = 8000;
 constexpr const char *WINDOW_TITLE = "HexVile";
-constexpr const char *TA_PATH = "assets/images/texture_atlas.png";
+constexpr const char *TEXTURE_ATLAS_PATH = "assets/images/texture_atlas.png";
 constexpr const char *FONT_HACK_REGULAR_PATH = "assets/font/hack_regular.ttf";
-constexpr const int TERRAIN_DETAIL_MAX = 2;
-constexpr const int CALC_VISIBLE_TILE_PERIOD = 20;
-constexpr const int RENDER_VIEW_OFFSET_XY = 50;
-constexpr const int RENDER_VIEW_OFFSET_WH = Conf::RENDER_VIEW_OFFSET_XY * 2;
+constexpr const int MAX_TERRAIN_DETAILS_PER_TILE = 2;
+constexpr const int VISIBLE_TILE_CALC_PERIOD = 20;
+constexpr const int RENDER_VIEW_CULLING_MARGIN = 50;
+constexpr const int RENDER_VIEW_CULLING_EXPANSION = Conf::RENDER_VIEW_CULLING_MARGIN * 2;
 
-constexpr const int VISIBILTY_ESTIMATED_UPPER_BOUND = 3000;
+constexpr const int ESTIMATED_VISIBLE_TILES = 3000;
 
 // --- Screen ---
 // constexpr int SCREEN_WIDTH = 1400;
@@ -31,26 +31,26 @@ constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
                                    (float)SCREEN_HEIGHT / 2};
 
 // --- Game ---
-constexpr int ITEM_STACK_MAX_TOOL_BAR = 8;
-constexpr int ITEM_STACK_MAX_INVENTORY = 30;
-constexpr float TRIGGER_UPDATE_GRID = 3.0f;
+constexpr int TOOLBAR_SLOTS = 8;
+constexpr int INVENTORY_SLOTS = 30;
+constexpr float GRID_UPDATE_PLAYER_MOVE_THRESHOLD = 3.0f;
 
 // --- Tile ---
-constexpr int TILE_SIZE = 32;
-constexpr int TILE_SIZE_HALF = TILE_SIZE / 2;
-constexpr float TILE_GAP_X = 18.30f;
-constexpr float TILE_GAP_Y = 15.95f;
-const std::vector<TileID> WALKABLE_TILES = {TILE_GRASS, TILE_DIRT};
+constexpr int TILE_RESOLUTION = 32;
+constexpr int TILE_RESOLUTION_HALF = TILE_RESOLUTION / 2;
+constexpr float TILE_SPACING_X = 18.30f;
+constexpr float TILE_SPACING_Y = 15.95f;
+const std::vector<TileID> WALKABLE_TILE_IDS = {TILE_GRASS, TILE_DIRT};
 
 // --- Camera ---
-constexpr float CAMERA_ZOOM = 4.2f; // 3.8f;
+constexpr float INITIAL_CAMERA_ZOOM = 4.2f; // 3.8f;
 // constexpr float CAMERA_ZOOM = 8.0f; // 3.8f;
-constexpr float CAMERA_WIDTH = (float)SCREEN_WIDTH / CAMERA_ZOOM;
-constexpr float CAMERA_HEIGTH = (float)SCREEN_HEIGHT / CAMERA_ZOOM;
+constexpr float CAMERA_WIDTH = (float)SCREEN_WIDTH / INITIAL_CAMERA_ZOOM;
+constexpr float CAMERA_HEIGHT = (float)SCREEN_HEIGHT / INITIAL_CAMERA_ZOOM;
 
 // --- Font ---
-constexpr int FONT_SIZE_DEFAULT = 20;
-constexpr int FONT_SPACING_DEFAULT = 0.0f;
+constexpr int DEFAULT_FONT_SIZE = 20;
+constexpr int DEFAULT_FONT_SPACING = 0.0f;
 constexpr Color DEBUG_OVERLAY_SECTION_FONT_COLOR = RED;
 constexpr Color DEBUG_OVERLAY_SUBSECTION_FONT_COLOR = RED;
 constexpr int DEBUG_OVERLAY_SECTION_FONT_SIZE = 20;
@@ -58,32 +58,31 @@ constexpr int DEBUG_OVERLAY_SUBSECTION_FONT_SIZE = 15;
 constexpr int HACK_REGULAR_GLYPH_COUNT = 95;
 
 // --- Debug --- DO = Debug Overlay
-constexpr bool DEBUG_FLAG = true;
-constexpr int DEBUG_OVERLAY_SECTION_X_POS = 30;
-constexpr int DEBUG_OVERLAY_SECTION_Y_POS = 30;
+constexpr bool IS_DEBUG_OVERLAY_ENABLED = true;
+constexpr int DEBUG_OVERLAY_SECTION_X = 30;
+constexpr int DEBUG_OVERLAY_SECTION_Y = 30;
 constexpr int DEBUG_OVERLAY_SECTION_Y_GAP = 3;
 constexpr int DEBUG_OVERLAY_SUBSECTION_X_GAP = 30;
 constexpr int DEBUG_OVERLAY_SUBSECTION_X_POS =
-    DEBUG_OVERLAY_SECTION_X_POS + DEBUG_OVERLAY_SUBSECTION_X_GAP;
+    DEBUG_OVERLAY_SECTION_X + DEBUG_OVERLAY_SUBSECTION_X_GAP;
 constexpr int DEBUG_OVERLAY_SUBSECTION_Y_GAP =
     DEBUG_OVERLAY_SUBSECTION_FONT_SIZE + 3;
 constexpr int DEBUG_OVERLAY_SUBSECTION_Y_POS =
-    DEBUG_OVERLAY_SECTION_Y_POS + DEBUG_OVERLAY_SUBSECTION_Y_GAP;
+    DEBUG_OVERLAY_SECTION_Y + DEBUG_OVERLAY_SUBSECTION_Y_GAP;
 
 // --- Player ---
-constexpr float PLAYER_SPEED = 90.0f;
-constexpr int PLAYER_Y_OFFSET = -13;
-constexpr float OFFSET_TO_OBSTACLE = 5;
+constexpr float PLAYER_MOVE_SPEED = 90.0f;
+constexpr int PLAYER_SPRITE_Y_OFFSET = -13;
+constexpr float PLAYER_COLLISION_CHECK_OFFSET = 5;
 
 // --- UI ---
 constexpr float UI_SCALE = 1.0f;
-constexpr float UI_TOOL_BAR_Y_BOTTOM_MARGIN = 20.0f * UI_SCALE;
-constexpr float UI_TOOL_BAR_PADDING = 10.0f * UI_SCALE;
-constexpr float UI_TOOL_SIZE = 1.8f * UI_SCALE * TILE_SIZE;
-constexpr float UI_TOOL_BAR_SLOT_SIZE =
-    (UI_TOOL_SIZE + UI_TOOL_BAR_PADDING) * UI_SCALE * 1.0f;
-
-constexpr float UI_TOOL_BAR_ITEM_SIZE = 0.8f * UI_SCALE;
+constexpr float TOOLBAR_BOTTOM_MARGIN = 20.0f * UI_SCALE;
+constexpr float TOOLBAR_PADDING = 10.0f * UI_SCALE;
+constexpr float TOOLBAR_SLOT_CONTENT_SIZE = 1.8f * UI_SCALE * TILE_RESOLUTION;
+constexpr float TOOLBAR_SLOT_SIZE =
+    (TOOLBAR_SLOT_CONTENT_SIZE + TOOLBAR_PADDING) * UI_SCALE * 1.0f;
+constexpr float TOOLBAR_ITEM_ICON_SCALE = 0.8f * UI_SCALE;
 } // namespace Conf
 
 

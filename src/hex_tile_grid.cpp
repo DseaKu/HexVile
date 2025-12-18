@@ -80,6 +80,7 @@ void HexGrid::InitGrid(float radius) {
       }
     }
   }
+  AddGrassDetails(tilesInUse / 2); // Add random terrain details
   CalcVisibleTiles();
 }
 
@@ -295,7 +296,7 @@ void HexGrid::LoadTileGFX() {
     Rectangle destRect = {pos.x, pos.y, TA::ASSEST_RESOLUTION,
                           TA::ASSEST_RESOLUTION};
 
-    const MapTile &tile = GetTile(h);
+    MapTile &tile = GetTile(h);
 
     int x = animationFrame + 12; // For testing purpose first with 12 -> tile
                                  // txt begin at the 12th 32x32 square
@@ -305,28 +306,30 @@ void HexGrid::LoadTileGFX() {
                                   destRect, WHITE);
 
     // Draw details for this tile
-    MapTile &currentTile = tile;
-    for (int j = 0; j < Conf::TERRAIN_DETAIL_MAX; j++) {
-      const TerrainDetail &d = currentTile.detail[j];
 
-      // Add details if not Init
-      for (int i = d.detail; i < Conf::TERRAIN_DETAIL_MAX; i++) {
-        int x_pos_rand = GetRandomValue(1, 15);
-        int y_pos_rand = GetRandomValue(1, 15);
-        int detailRand = GetRandomValue(GRASS_DETAILS_NULL, GRASS_DETAILS_SIZE);
+    for (int j = 0; j < Conf::TERRAIN_DETAIL_MAX; j++) {
+      TerrainDetail &d = tile.detail[j];
+
+      // Init detail if none exsits
+      if (d.detail < GRASS_DETAILS_NULL || d.detail > GRASS_DETAILS_SIZE) {
+        d.detail = GetRandomValue(GRASS_DETAILS_NULL, GRASS_DETAILS_SIZE - 1);
       }
 
-      Rectangle detailSourceRect = {
-          TA::DETAILS_X + ((float)d.detail - 1) * TA::ASSEST_RESOLUTION,
-          (float)ITEM_SET_GRASS * TA::ASSEST_RESOLUTION, TA::ASSEST_RESOLUTION,
-          TA::ASSEST_RESOLUTION};
+      if (d.detail != GRASS_DETAILS_NULL) {
 
-      Rectangle detailDestRect = {pos.x + d.x, pos.y + d.y,
-                                  TA::ASSEST_RESOLUTION, TA::ASSEST_RESOLUTION};
+        // Calculate the destination rectangle on the screen
+        Rectangle detailDestRect = {pos.x + d.x, pos.y + d.y,
+                                    TA::ASSEST_RESOLUTION,
+                                    TA::ASSEST_RESOLUTION};
 
-      graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, detailDestRect.y,
-                                    TA::DETAILS_X, GRASS_DETAILS_FLOWER,
-                                    detailDestRect, WHITE);
+        // Load the graphics data for the detail
+        graphicsManager->LoadGFX_Data(
+            DRAW_MASK_ON_GROUND, detailDestRect.y,
+            TA::DETAILS_X + d.detail, // Source X index in texture atlas
+
+            1, // Source Y index in texture atlas
+            detailDestRect, WHITE);
+      }
     }
   }
 }

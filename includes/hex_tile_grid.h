@@ -36,9 +36,9 @@ struct FractionalHex {
 
 // --- Terrain Detail --- TD = Terrain Detail
 struct TerrainDetail {
-  u8 x;
-  u8 y;
-  u8 type;
+  float x;
+  float y;
+  int type;
 };
 
 // --- Map Tile ---

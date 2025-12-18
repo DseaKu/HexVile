@@ -85,11 +85,11 @@ void HexGrid::InitGrid(float radius) {
 }
 
 TerrainDetail HexGrid::GetRandomTerainDetail() {
-  u8 x =
-      GetRandomValue(-TA::ASSEST_RESOLUTION_HALF, TA::ASSEST_RESOLUTION_HALF);
-  u8 y =
-      GetRandomValue(-TA::ASSEST_RESOLUTION_HALF, TA::ASSEST_RESOLUTION_HALF);
-  u8 type = GetRandomValue(TA::DETAILS_X, TA::DETAILS_X_MAX - 1);
+  float x = GetRandomValue(-TA::ASSEST_RESOLUTION_HALF / 2,
+                           TA::ASSEST_RESOLUTION_HALF / 2);
+  float y = GetRandomValue(-TA::ASSEST_RESOLUTION_HALF / 2,
+                           TA::ASSEST_RESOLUTION_HALF / 2);
+  int type = GetRandomValue(TA::DETAILS_X, TA::DETAILS_X_MAX - 1);
   return TerrainDetail{.x = x, .y = y, .type = type};
 }
 
@@ -334,20 +334,18 @@ void HexGrid::LoadTileGFX() {
     Vector2 pos = HexCoordToPoint(h);
     pos.x -= Conf::TILE_SIZE_HALF;
     pos.y -= Conf::TILE_SIZE_HALF;
-    Rectangle destRect = {pos.x, pos.y, TA::ASSEST_RESOLUTION,
-                          TA::ASSEST_RESOLUTION};
+    Rectangle destRec = {pos.x, pos.y, TA::ASSEST_RESOLUTION,
+                         TA::ASSEST_RESOLUTION};
 
     MapTile &tile = GetTile(h);
-
     int x = animationFrame + 12;
     int y = tile.type;
 
-    graphicsManager->LoadGFX_Data(DRAW_MASK_GROUND_0, destRect.y, x, y,
-                                  destRect, WHITE);
+    graphicsManager->LoadGFX_Data(DRAW_MASK_GROUND_0, destRec.y, x, y, destRec,
+                                  WHITE);
 
     // Draw details for this tile
     for (const TerrainDetail &d : tile.detail) {
-
       if (d.type != GRASS_DETAILS_NULL) {
         LoadDetailGFX(d, pos.x, pos.y);
       }
@@ -356,11 +354,12 @@ void HexGrid::LoadTileGFX() {
 }
 
 void HexGrid::LoadDetailGFX(const TerrainDetail d, float x, float y) {
-  Rectangle detailDestRect = {x + d.x, y + d.y, TA::ASSEST_RESOLUTION,
-                              TA::ASSEST_RESOLUTION};
 
-  graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, detailDestRect.y, d.type,
-                                1, detailDestRect, WHITE);
+  Rectangle destRec = {x + d.x, y + d.y, TA::ASSEST_RESOLUTION,
+                       TA::ASSEST_RESOLUTION};
+
+  graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, y, d.type, 1, destRec,
+                                WHITE);
 }
 
 // --- Get ---

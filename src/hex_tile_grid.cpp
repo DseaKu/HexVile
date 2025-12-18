@@ -1,6 +1,7 @@
 #include "hex_tile_grid.h"
 #include "GFX_manager.h"
 #include "defines.h"
+#include "texture_atlas.h"
 #include "enums.h"
 #include "raylib.h"
 #include <vector>

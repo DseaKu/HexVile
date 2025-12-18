@@ -1,5 +1,6 @@
 #include "player.h"
 #include "defines.h"
+#include "texture_atlas.h"
 #include "enums.h"
 #include "hex_tile_grid.h"
 #include "raylib.h"

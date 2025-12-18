@@ -1,5 +1,6 @@
 #include "ui_handler.h"
 #include "defines.h"
+#include "texture_atlas.h"
 #include "enums.h"
 #include "font_handler.h"
 #include "hex_tile_grid.h"

@@ -7,6 +7,7 @@
 #include "raylib.h"
 #include <future>
 #include <mutex>
+#include <random>
 #include <vector>
 
 // --- HEXAGON ---
@@ -84,6 +85,11 @@ private:
   int tilesInTotal;
   Rectangle *camRect;
   Vector2 origin;
+
+  // Gaussian distribution for terrain detail generation
+  std::mt19937 randomEngine;
+  std::normal_distribution<float> typeDistribution;
+
   GFX_Manager *graphicsManager;
 
   // Lookup Tables

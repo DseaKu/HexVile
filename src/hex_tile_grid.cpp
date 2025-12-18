@@ -1,9 +1,10 @@
 #include "hex_tile_grid.h"
 #include "GFX_manager.h"
 #include "defines.h"
-#include "texture_atlas.h"
 #include "enums.h"
 #include "raylib.h"
+#include "texture_atlas.h"
+#include <algorithm>
 #include <vector>
 
 const std::vector<HexCoord> HexGrid::DIRECTIONS = {
@@ -49,6 +50,14 @@ HexGrid::HexGrid() {
   camRect = nullptr;
   visiCacheReady = false;
 
+  // Gaussian distribution for terrain detail generation
+  std::random_device rd;
+  randomEngine = std::mt19937(rd());
+
+  const float mean = (TA::DETAILS_X + TA::DETAILS_X_MAX - 1) / 2.0f;
+  const float stddev = (TA::DETAILS_X_MAX - TA::DETAILS_X) / 6.0f;
+  typeDistribution = std::normal_distribution<float>(mean, stddev);
+
   size_t estimated_hits = Conf::ESTIMATED_VISIBLE_TILES;
   currentVisibleTiles.reserve(estimated_hits);
   nextVisibleTiles.reserve(estimated_hits);
@@ -88,7 +97,16 @@ void HexGrid::InitGrid(float radius) {
 TerrainDetail HexGrid::GetRandomTerainDetail() {
   float x = GetRandomValue(-TA::RES16 / 2, TA::RES16 / 2);
   float y = GetRandomValue(-TA::RES16 / 2, TA::RES16 / 2);
-  int type = GetRandomValue(TA::DETAILS_X, TA::DETAILS_X_MAX - 1);
+
+  // Generate a value from the normal distribution
+  float generated_type_float = typeDistribution(randomEngine);
+
+  // Round to nearest integer
+  int generated_type = static_cast<int>(std::round(generated_type_float));
+
+  // Clamp the value to the valid range
+  int type = std::clamp(generated_type, TA::DETAILS_X, TA::DETAILS_X_MAX - 1);
+
   return TerrainDetail{.x = x, .y = y, .type = type};
 }
 
@@ -216,18 +234,17 @@ void HexGrid::CalcVisibleTiles() {
     return;
   }
   // Define the rendering view rectangle, expanded by an offset for culling.
-  Rectangle renderView = {.x = camRect->x - Conf::RENDER_VIEW_CULLING_MARGIN,
-                          .y = camRect->y - Conf::RENDER_VIEW_CULLING_MARGIN,
-                          .width = camRect->width + Conf::RENDER_VIEW_CULLING_EXPANSION,
-                          .height =
-                              camRect->height + Conf::RENDER_VIEW_CULLING_EXPANSION};
+  Rectangle renderView = {
+      .x = camRect->x - Conf::RENDER_VIEW_CULLING_MARGIN,
+      .y = camRect->y - Conf::RENDER_VIEW_CULLING_MARGIN,
+      .width = camRect->width + Conf::RENDER_VIEW_CULLING_EXPANSION,
+      .height = camRect->height + Conf::RENDER_VIEW_CULLING_EXPANSION};
 
   int gridSize = mapRadius * 2 + 1;
 
   std::vector<HexCoord> newVisiCache;
-  newVisiCache.reserve(
-      Conf::ESTIMATED_VISIBLE_TILES); // Pre-allocate memory for
-                                              // efficiency.
+  newVisiCache.reserve(Conf::ESTIMATED_VISIBLE_TILES); // Pre-allocate memory
+                                                       // for efficiency.
 
   // Iterate over all tiles in the grid.
   for (u16 r = 0; r < gridSize; r++) {

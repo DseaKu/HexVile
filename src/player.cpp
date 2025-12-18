@@ -77,9 +77,9 @@ HexCoord Player::GetTile() { return this->playerTile; }
 
 void Player::GenerateDrawData() {
   Vector2 playerPosition = this->position;
-  playerPosition.x -= TA::ASSEST_RESOLUTION_HALF;
-  playerPosition.y -= TA::ASSEST_RESOLUTION_HALF - Conf::PLAYER_Y_OFFSET;
-  float resolution = TA::ASSEST_RESOLUTION;
+  playerPosition.x -= TA::RES16;
+  playerPosition.y -= TA::RES16 - Conf::PLAYER_Y_OFFSET;
+  float resolution = TA::RES;
 
   int TA_X = this->animationFrame + TA::PLAYER_X;
   int TA_Y = (state - 1) * (DIR_LABELS_SIZE - 1) + faceDir;

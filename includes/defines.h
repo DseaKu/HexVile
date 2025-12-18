@@ -88,11 +88,11 @@ constexpr float UI_TOOL_BAR_ITEM_SIZE = 0.8f * UI_SCALE;
 
 // --- Assest & Animation --- TA = Texture Atlas
 namespace TA {
-constexpr int ASSEST_RESOLUTION = Conf::TILE_SIZE;
-constexpr int ASSEST_RESOLUTION_HALF = ASSEST_RESOLUTION / 2;
+constexpr int RES = Conf::TILE_SIZE;
+constexpr int RES16 = RES / 2;
 
-constexpr float ASSEST_RESOLUTION_F = ASSEST_RESOLUTION;
-constexpr float ASSEST_RESOLUTION_HALF_F = ASSEST_RESOLUTION_HALF;
+constexpr float RES_F = RES;
+constexpr float RES16_F = RES16;
 // --- Player ---
 constexpr int PLAYER_X = 0;
 constexpr int PLAYER_X_MAX = PLAYER_X + 12;
@@ -125,7 +125,7 @@ constexpr int PLAYER_WALK_MAX = 8;
 constexpr float TILES_ANIMATION_SPEED = 0.3f;
 
 // Don't go to low, it can corruped the font
-constexpr float NUMBER_SCALE = ASSEST_RESOLUTION * 0.5f;
+constexpr float NUMBER_SCALE = RES * 0.5f;
 } // namespace TA
 
 // --- Unsigned Integer Aliases ---

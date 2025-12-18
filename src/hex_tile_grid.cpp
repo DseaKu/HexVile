@@ -85,10 +85,8 @@ void HexGrid::InitGrid(float radius) {
 }
 
 TerrainDetail HexGrid::GetRandomTerainDetail() {
-  float x = GetRandomValue(-TA::ASSEST_RESOLUTION_HALF / 2,
-                           TA::ASSEST_RESOLUTION_HALF / 2);
-  float y = GetRandomValue(-TA::ASSEST_RESOLUTION_HALF / 2,
-                           TA::ASSEST_RESOLUTION_HALF / 2);
+  float x = GetRandomValue(-TA::RES16 / 2, TA::RES16 / 2);
+  float y = GetRandomValue(-TA::RES16 / 2, TA::RES16 / 2);
   int type = GetRandomValue(TA::DETAILS_X, TA::DETAILS_X_MAX - 1);
   return TerrainDetail{.x = x, .y = y, .type = type};
 }
@@ -242,8 +240,7 @@ void HexGrid::CalcVisibleTiles() {
       Vector2 pos = HexCoordToPoint(h);
       pos.x -= Conf::TILE_SIZE_HALF;
       pos.y -= Conf::TILE_SIZE_HALF;
-      Rectangle dest_rect = {pos.x, pos.y, TA::ASSEST_RESOLUTION,
-                             TA::ASSEST_RESOLUTION};
+      Rectangle dest_rect = {pos.x, pos.y, TA::RES, TA::RES};
       // Check if the tile's bounding box intersects with the render view.
       if (CheckCollisionRecs(renderView, dest_rect)) {
         newVisiCache.push_back(h);
@@ -286,8 +283,7 @@ void HexGrid::DrawTile(HexCoord h, int TA_X, int TA_Y, DrawMaskID layer) {
   Vector2 pos = HexCoordToPoint(h);
   pos.x -= Conf::TILE_SIZE_HALF;
   pos.y -= Conf::TILE_SIZE_HALF;
-  Rectangle destRect = {pos.x, pos.y, TA::ASSEST_RESOLUTION,
-                        TA::ASSEST_RESOLUTION};
+  Rectangle destRect = {pos.x, pos.y, TA::RES, TA::RES};
 
   const MapTile &tile = GetTile(h);
   Vector2 origin = {0.0f, 0.0f};
@@ -334,8 +330,7 @@ void HexGrid::LoadTileGFX() {
     Vector2 pos = HexCoordToPoint(h);
     pos.x -= Conf::TILE_SIZE_HALF;
     pos.y -= Conf::TILE_SIZE_HALF;
-    Rectangle destRec = {pos.x, pos.y, TA::ASSEST_RESOLUTION,
-                         TA::ASSEST_RESOLUTION};
+    Rectangle destRec = {pos.x, pos.y, TA::RES, TA::RES};
 
     MapTile &t = GetTile(h);
     int x = animationFrame + 12;
@@ -356,12 +351,10 @@ void HexGrid::LoadTileGFX() {
 void HexGrid::LoadDetailGFX(const TerrainDetail d, float x, float y,
                             TileID type) {
 
-  Rectangle destRec = {x + d.x, y + d.y - TA::ASSEST_RESOLUTION_HALF_F,
-                       TA::ASSEST_RESOLUTION, TA::ASSEST_RESOLUTION};
+  Rectangle destRec = {x + d.x, y + d.y - TA::RES16_F, TA::RES, TA::RES};
 
-  graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND,
-                                y - TA::ASSEST_RESOLUTION_HALF_F, d.type, type,
-                                destRec, WHITE);
+  graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, y - TA::RES16_F, d.type,
+                                type, destRec, WHITE);
 }
 
 // --- Get ---

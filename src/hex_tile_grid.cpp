@@ -355,8 +355,9 @@ void HexGrid::LoadTileGFX() {
 
 void HexGrid::LoadDetailGFX(const TerrainDetail d, float x, float y) {
 
-  Rectangle destRec = {x + d.x, y + d.y, TA::ASSEST_RESOLUTION,
-                       TA::ASSEST_RESOLUTION};
+  Rectangle destRec = {x + d.x, //- TA::ASSEST_RESOLUTION_F,
+                       y + d.y - TA::ASSEST_RESOLUTION_HALF_F,
+                       TA::ASSEST_RESOLUTION, TA::ASSEST_RESOLUTION};
 
   graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, y, d.type, 1, destRec,
                                 WHITE);

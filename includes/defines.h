@@ -91,6 +91,8 @@ namespace TA {
 constexpr int ASSEST_RESOLUTION = Conf::TILE_SIZE;
 constexpr int ASSEST_RESOLUTION_HALF = ASSEST_RESOLUTION / 2;
 
+constexpr float ASSEST_RESOLUTION_F = ASSEST_RESOLUTION;
+constexpr float ASSEST_RESOLUTION_HALF_F = ASSEST_RESOLUTION_HALF;
 // --- Player ---
 constexpr int PLAYER_X = 0;
 constexpr int PLAYER_X_MAX = PLAYER_X + 12;

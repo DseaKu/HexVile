@@ -89,7 +89,7 @@ TerrainDetail HexGrid::GetRandomTerainDetail() {
       GetRandomValue(-TA::ASSEST_RESOLUTION_HALF, TA::ASSEST_RESOLUTION_HALF);
   u8 y =
       GetRandomValue(-TA::ASSEST_RESOLUTION_HALF, TA::ASSEST_RESOLUTION_HALF);
-  int type = GetRandomValue(TA::DETAILS_X, TA::DETAILS_X_MAX);
+  u8 type = GetRandomValue(TA::DETAILS_X, TA::DETAILS_X_MAX - 1);
   return TerrainDetail{.x = x, .y = y, .type = type};
 }
 
@@ -356,18 +356,11 @@ void HexGrid::LoadTileGFX() {
 }
 
 void HexGrid::LoadDetailGFX(const TerrainDetail d, float x, float y) {
-  Rectangle detailDestRect = {
-      static_cast<float>(x - TA::ASSEST_RESOLUTION_HALF),
-      static_cast<float>(y - TA::ASSEST_RESOLUTION), TA::ASSEST_RESOLUTION,
-      TA::ASSEST_RESOLUTION};
+  Rectangle detailDestRect = {x + d.x, y + d.y, TA::ASSEST_RESOLUTION,
+                              TA::ASSEST_RESOLUTION};
 
-  // Rectangle detailDestRect = {
-  //     static_cast<float>(d.x - TA::ASSEST_RESOLUTION_HALF),
-  //     static_cast<float>(d.y - TA::ASSEST_RESOLUTION), TA::ASSEST_RESOLUTION,
-  //     TA::ASSEST_RESOLUTION};
-  graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, detailDestRect.y,
-                                TA::DETAILS_X + d.type, 1, detailDestRect,
-                                WHITE);
+  graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, detailDestRect.y, d.type,
+                                1, detailDestRect, WHITE);
 }
 
 // --- Get ---
@@ -390,9 +383,9 @@ bool HexGrid::SetTile(HexCoord h, TileID id) {
   } else {
     MapTile &tile = GetTile(h);
     tile.type = id;
-    // for (int i = 0; i < Conf::TERRAIN_DETAIL_MAX; i++) {
-    //   tile.detail[i] = {0};
-    // }
+    for (int i = 0; i < Conf::TERRAIN_DETAIL_MAX; i++) {
+      tile.detail[i] = {0};
+    }
     return true;
   }
   return false;

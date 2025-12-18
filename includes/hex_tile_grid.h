@@ -38,7 +38,7 @@ struct FractionalHex {
 struct TerrainDetail {
   u8 x;
   u8 y;
-  int type;
+  u8 type;
 };
 
 // --- Map Tile ---

@@ -81,7 +81,7 @@ void HexGrid::InitGrid(float radius) {
         MapTile initTile = {.type = TILE_GRASS};
 
         for (TerrainDetail &d : initTile.detail) {
-          d = GetRandomTerainDetail(initTile.type);
+          d.type = TA::UNINITIALIZED;
         }
 
         tileData[gridR][gridQ] = initTile;
@@ -366,7 +366,10 @@ void HexGrid::LoadTileGFX() {
                                   WHITE);
 
     // Draw details for this tile
-    for (const TerrainDetail &d : t.detail) {
+    for (TerrainDetail &d : t.detail) {
+      if (d.type == TA::UNINITIALIZED) {
+        d = GetRandomTerainDetail(t.type);
+      }
       if (d.type != TA::SKIP_RENDER) {
         LoadDetailGFX(d, pos.x, pos.y, t.type);
       }

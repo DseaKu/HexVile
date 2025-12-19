@@ -5,7 +5,9 @@
 #include <iostream>
 
 GFX_Manager::GFX_Manager() {
-  GFX_Data.resize(DRAW_MASK_SIZE);
+  GFX_Data_Buffers[0].resize(DRAW_MASK_SIZE);
+  GFX_Data_Buffers[1].resize(DRAW_MASK_SIZE);
+  backBufferIndex = 1; // Start writing to 1
   textureAtlas = {0, 0, 0, 0, 0};
 }
 
@@ -46,17 +48,34 @@ void GFX_Manager::UnloadAssets() { UnloadTexture(this->textureAtlas); }
 void GFX_Manager::LoadGFX_Data(DrawMaskID maskID, float y, int TA_X, int TA_Y,
                                Rectangle dstRec, Color col) {
   Rectangle srcRec = GetSrcRec(TA_X, TA_Y);
-  GFX_Data[static_cast<int>(maskID)].emplace(y, GFX_Props{srcRec, dstRec, col});
+  // Write to Back Buffer
+  GFX_Data_Buffers[backBufferIndex][static_cast<int>(maskID)].emplace(y, GFX_Props{srcRec, dstRec, col});
 }
 
 void GFX_Manager::RenderLayer(DrawMaskID maskID) {
-  auto &layer = GFX_Data[static_cast<int>(maskID)];
+  // Read from Front Buffer (1 - backBufferIndex)
+  int frontIndex = 1 - backBufferIndex;
+  auto &layer = GFX_Data_Buffers[frontIndex][static_cast<int>(maskID)];
   for (auto &item : layer) {
     GFX_Props &props = item.second;
     DrawTexturePro(textureAtlas, props.srcRec, props.dstRec, Vector2{0, 0},
                    0.0f, props.color);
   }
-  layer.clear();
+  layer.clear(); // Consumed
+}
+
+void GFX_Manager::SwapBuffers() {
+    // Check if the NEW back buffer (old front) is clear?
+    // RenderLayer clears it, so it should be fine. 
+    // Just to be safe, we could clear it here, but it's O(N) redundant if Render cleared it.
+    // However, if we missed rendering a layer, it might persist.
+    // Safety clear:
+    int nextBack = 1 - backBufferIndex;
+    for(auto &layer : GFX_Data_Buffers[nextBack]) {
+        layer.clear();
+    }
+    
+    backBufferIndex = nextBack;
 }
 
 Rectangle GFX_Manager::GetTileRec(TileID tileID, int frame) {

@@ -10,34 +10,75 @@
 #include "player.h"
 #include "raylib.h"
 #include "ui_handler.h"
+#include <atomic>
+#include <condition_variable>
+#include <mutex>
+#include <thread>
 #include <vector>
 
 struct DebugData {
   std::string section;
   std::vector<std::string> subSection;
 };
-class Game {
-private:
-  float timer;
-  float updateGridTreshold;
-  unsigned char *hackFontRegular;
+
+struct InputState {
+  // Mouse
+  Vector2 mouseScreenPos;
+  Vector2 mouseWorldPos;
+  bool leftMouseClicked;
+  bool rightMouseClicked;
+  MouseMask mouseMask;
+
+  // Keyboard
+  bool keyOne, keyTwo, keyThree, keyFour, keyFive;
+  bool keySix, keySeven, keyEight, keyNine, keyZero;
+
+  PlayerInputState playerInput;
+  float frameTime; // Delta time
+};
+
+struct GameState {
+  HexGrid hexGrid;
+  Player player;
+  ItemHandler itemHandler;
   Camera2D camera;
   Vector2 relativeCenter;
   Vector2 cameraTopLeft;
   Rectangle cameraRect;
-  std::vector<DebugData> debugData;
+  float timer;
+  float updateGridTreshold;
+};
 
-  // --- Objects
-  HexGrid hexGrid;
-  Player player;
+class Game {
+private:
+  unsigned char *hackFontRegular;
+  
+  // Logic/State
+  GameState gameState;
+  InputState currentInput;
+
+  // Rendering/System
   GFX_Manager GFX_Manager;
   FontHandler fontHandler;
   UI_Handler uiHandler;
-  ItemHandler itemHandler;
   IO_Handler ioHandler;
+  
+  std::vector<DebugData> debugData;
 
-  // --- Methods ---
-  void UpdateInputs();
+  // Threading
+  std::thread logicThread;
+  std::mutex logicMutex;
+  std::condition_variable mainToLogicCV;
+  std::condition_variable logicToMainCV;
+  std::atomic<bool> isRunning;
+  bool logicUpdateReady; // Input ready for logic
+  bool logicUpdateDone;  // Logic finished for this frame
+
+  // Methods
+  void UpdateInputs(); // Gathers inputs from Raylib
+  void LogicLoop();    // The function running in the separate thread
+  void RunLogic();     // Calls the update functions on gameState
+
   void DrawDebugOverlay(bool is_enabled);
 
 public:

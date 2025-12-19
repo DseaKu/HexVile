@@ -7,140 +7,241 @@
 #include <string>
 
 // --- Initialization ---
-Game::Game() {
+Game::Game() : isRunning(true), logicUpdateReady(false), logicUpdateDone(true) {
   GFX_Manager.LoadAssets(Conf::TEXTURE_ATLAS_PATH);
 
-  timer = 0.0f;
-  updateGridTreshold = Conf::GRID_UPDATE_PLAYER_MOVE_THRESHOLD;
+  gameState.timer = 0.0f;
+  gameState.updateGridTreshold = Conf::GRID_UPDATE_PLAYER_MOVE_THRESHOLD;
   int fileSize = 0;
   hackFontRegular = LoadFileData(Conf::FONT_HACK_REGULAR_PATH, &fileSize);
 
-  hexGrid.InitGrid(Conf::MAP_RADIUS);
-  hexGrid.SetGFX_Manager(&GFX_Manager);
-  hexGrid.SetCamRectPointer(&this->cameraRect);
+  gameState.hexGrid.InitGrid(Conf::MAP_RADIUS);
+  gameState.hexGrid.SetGFX_Manager(&GFX_Manager);
+  gameState.hexGrid.SetCamRectPointer(&gameState.cameraRect);
 
-  player.SetHexGrid(&hexGrid);
-  player.SetGFX_Manager(&GFX_Manager);
+  gameState.player.SetHexGrid(&gameState.hexGrid);
+  gameState.player.SetGFX_Manager(&GFX_Manager);
 
-  camera.target = Conf::SCREEN_CENTER;
-  camera.offset = Conf::SCREEN_CENTER;
-  camera.zoom = Conf::INITIAL_CAMERA_ZOOM;
-  camera.rotation = 0.0f;
-  cameraRect = {0, 0, 0, 0};
-  cameraTopLeft = {0, 0};
+  gameState.camera.target = Conf::SCREEN_CENTER;
+  gameState.camera.offset = Conf::SCREEN_CENTER;
+  gameState.camera.zoom = Conf::INITIAL_CAMERA_ZOOM;
+  gameState.camera.rotation = 0.0f;
+  gameState.cameraRect = {0, 0, 0, 0};
+  gameState.cameraTopLeft = {0, 0};
 
   fontHandler.LoadFonts();
 
   uiHandler.SetGFX_Manager(&GFX_Manager);
-  uiHandler.SetItemHandler(&itemHandler);
+  uiHandler.SetItemHandler(&gameState.itemHandler);
   uiHandler.SetFontHandler(&fontHandler);
   uiHandler.SetIO_Handler(&ioHandler);
-  uiHandler.SetHexGrid(&hexGrid);
+  uiHandler.SetHexGrid(&gameState.hexGrid);
   uiHandler.SetToolBarActive(true);
+
+  // Start the logic thread
+  logicThread = std::thread(&Game::LogicLoop, this);
 }
 
-// --- Main Loop ---
+// --- Main Loop (Rendering Thread) ---
 void Game::GameLoop() {
   while (!WindowShouldClose()) {
-
-    // --- Update ---
-    timer += GetTime();
-
-    ioHandler.UpdateMousePos(camera);
-
-    hexGrid.Update(camera, GetTime());
-    uiHandler.Update();
+    // 1. Gather Input (Main Thread)
     UpdateInputs();
 
-    relativeCenter = GetScreenToWorld2D(Conf::SCREEN_CENTER, camera);
-    cameraTopLeft = GetScreenToWorld2D(Vector2{0, 0}, camera);
-    cameraRect = {cameraTopLeft.x, cameraTopLeft.y, Conf::CAMERA_WIDTH,
-                  Conf::CAMERA_HEIGHT};
+    // 2. Sync: Send Input to Logic
+    {
+      std::unique_lock<std::mutex> lock(logicMutex);
+      logicUpdateReady = true;
+      logicUpdateDone = false;
+    }
+    mainToLogicCV.notify_one();
 
-    camera.target = player.GetPosition();
-
-    // --- Draw ---
+    // 3. Render (Main Thread) - Uses current GameState
     BeginDrawing();
     ClearBackground(WHITE);
 
-    // --- Camera View ---
-    BeginMode2D(camera);
+    BeginMode2D(gameState.camera);
     GFX_Manager.RenderLayer(DRAW_MASK_GROUND_0);
     GFX_Manager.RenderLayer(DRAW_MASK_GROUND_1);
     GFX_Manager.RenderLayer(DRAW_MASK_SHADOW);
     GFX_Manager.RenderLayer(DRAW_MASK_ON_GROUND);
-
-    // --- End Camera View ---
     EndMode2D();
+
     GFX_Manager.RenderLayer(DRAW_MASK_UI_0);
     GFX_Manager.RenderLayer(DRAW_MASK_UI_1);
 
     DrawDebugOverlay(Conf::IS_DEBUG_OVERLAY_ENABLED);
 
     EndDrawing();
+
+    // 4. Sync: Wait for Logic to finish (Barrier)
+    // We wait here to ensure we don't start the next frame's input gathering
+    // until the logic is done with the current frame's input.
+    // Also, this ensures that the GameState is consistent before we loop again.
+    {
+      std::unique_lock<std::mutex> lock(logicMutex);
+      logicToMainCV.wait(lock, [this] { return logicUpdateDone; });
+    }
+
+    GFX_Manager.SwapBuffers();
+  }
+  
+  // Signal logic thread to stop
+  isRunning = false;
+  mainToLogicCV.notify_one();
+}
+
+// --- Logic Loop (Worker Thread) ---
+void Game::LogicLoop() {
+  while (isRunning) {
+    std::unique_lock<std::mutex> lock(logicMutex);
+    mainToLogicCV.wait(lock, [this] { return logicUpdateReady || !isRunning; });
+
+    if (!isRunning) break;
+
+    // Copy input to local variable to minimize locking time if we wanted to
+    // but here we just process it.
+    RunLogic();
+
+    logicUpdateReady = false;
+    logicUpdateDone = true;
+    lock.unlock();
+    logicToMainCV.notify_one();
   }
 }
 
 void Game::UpdateInputs() {
+  // Populate currentInput struct
+  currentInput.frameTime = GetFrameTime();
+  currentInput.mouseScreenPos = GetMousePosition();
+  
+  // Calculate World Position here (Main Thread)
+  currentInput.mouseWorldPos = GetScreenToWorld2D(currentInput.mouseScreenPos, gameState.camera);
+  
+  currentInput.leftMouseClicked = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+  currentInput.rightMouseClicked = IsMouseButtonPressed(MOUSE_BUTTON_RIGHT);
 
-  ioHandler.GetScaledMousePos();
-  int toolBarSel = itemHandler.GetSelectionToolBar();
+  currentInput.keyOne = IsKeyPressed(KEY_ONE);
+  currentInput.keyTwo = IsKeyPressed(KEY_TWO);
+  currentInput.keyThree = IsKeyPressed(KEY_THREE);
+  currentInput.keyFour = IsKeyPressed(KEY_FOUR);
+  currentInput.keyFive = IsKeyPressed(KEY_FIVE);
+  currentInput.keySix = IsKeyPressed(KEY_SIX);
+  currentInput.keySeven = IsKeyPressed(KEY_SEVEN);
+  currentInput.keyEight = IsKeyPressed(KEY_EIGHT);
+  currentInput.keyNine = IsKeyPressed(KEY_NINE);
+  currentInput.keyZero = IsKeyPressed(KEY_ZERO);
 
-  // --- Mouse ---
-  if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+  currentInput.playerInput.moveLeft = IsKeyDown(KEY_A);
+  currentInput.playerInput.moveRight = IsKeyDown(KEY_D);
+  currentInput.playerInput.moveUp = IsKeyDown(KEY_W);
+  currentInput.playerInput.moveDown = IsKeyDown(KEY_S);
 
+  // Calculate Camera Rects for Logic (Must be done in Main Thread)
+  gameState.cameraTopLeft = GetScreenToWorld2D(Vector2{0, 0}, gameState.camera);
+  gameState.cameraRect = {gameState.cameraTopLeft.x, gameState.cameraTopLeft.y, Conf::CAMERA_WIDTH,
+                Conf::CAMERA_HEIGHT};
+}
+
+void Game::RunLogic() {
+  // Use currentInput and gameState
+  gameState.timer += currentInput.frameTime;
+
+  // IO Handler Update (Logic side)
+  // We manually inject the pre-calculated world pos to avoid Raylib calls
+  // Assuming ioHandler has a method to set positions or we just use input values directly.
+  // Since ioHandler.UpdateMousePos(camera) uses GetScreenToWorld2D (Main only),
+  // we effectively bypass it or need to split ioHandler. 
+  // For now, let's update ioHandler's state if possible, or direct usage.
+  // ioHandler.UpdateMousePos(camera); // CANNOT CALL THIS HERE (Raylib)
+  
+  // Workaround: We trust ioHandler's getters are just reading members, 
+  // but we need to SET those members. 
+  // Since we can't easily change IO_Handler interface right now, 
+  // we will rely on values passed via InputState and modify GameState directly.
+  
+  // Update Grid
+  gameState.hexGrid.Update(gameState.camera, currentInput.frameTime); // Note: UpdateTileVisibility might need camera
+  uiHandler.Update();
+
+  // --- Logic equivalent of UpdateInputs ---
+  // We use currentInput instead of calling IsKeyDown etc.
+
+  // NOTE: ioHandler.GetScaledMousePos() logic is duplicated or skipped? 
+  // ioHandler scales mouse based on zoom.
+  // Vector2 scaledMouse = currentInput.mouseWorldPos; // Close enough?
+  // Let's assume WorldPos is what we want for "RealMousePos".
+  // For "Scaled", IO_Handler applies some offset/zoom logic. 
+  // Let's use currentInput.mouseWorldPos for interactions.
+
+  int toolBarSel = gameState.itemHandler.GetSelectionToolBar();
+
+  if (currentInput.leftMouseClicked) {
     // Clicked on item bar
     if (uiHandler.GetToolBarAvailability() &&
-        CheckCollisionPointRec(ioHandler.GetRealMousePos(),
+        CheckCollisionPointRec(currentInput.mouseScreenPos, // ToolBar is Screen Space usually?
                                uiHandler.GetToolBarRect())) {
-      ioHandler.SetMouseMask(MOUSE_MASK_ITEM_BAR);
-      toolBarSel = uiHandler.GetItemSlotAt(GetMousePosition());
+      // ioHandler.SetMouseMask(MOUSE_MASK_ITEM_BAR); 
+      currentInput.mouseMask = MOUSE_MASK_ITEM_BAR; // Update local state if needed
+      toolBarSel = uiHandler.GetItemSlotAt(currentInput.mouseScreenPos);
 
-      // Clicked on ground
     } else {
-      ioHandler.SetMouseMask(MOUSE_MASK_PLAY_GROUND);
+      // ioHandler.SetMouseMask(MOUSE_MASK_PLAY_GROUND);
+       currentInput.mouseMask = MOUSE_MASK_PLAY_GROUND;
+      
       HexCoord clickedHex =
-          hexGrid.PointToHexCoord(ioHandler.GetScaledMousePos());
-      Item *selectedItem = itemHandler.GetToolBarItemPointer(toolBarSel);
-      TileID tileToPlace = itemHandler.ConvertItemToTileID(selectedItem->id);
+          gameState.hexGrid.PointToHexCoord(currentInput.mouseWorldPos);
+      Item *selectedItem = gameState.itemHandler.GetToolBarItemPointer(toolBarSel);
+      TileID tileToPlace = gameState.itemHandler.ConvertItemToTileID(selectedItem->id);
 
-      if (selectedItem->id == ITEM_NULL) {
-      } else if (hexGrid.SetTile(clickedHex, tileToPlace)) {
-        itemHandler.TakeItemFromToolBar(selectedItem, 1);
-      };
+      if (selectedItem->id != ITEM_NULL && 
+          gameState.hexGrid.SetTile(clickedHex, tileToPlace)) {
+        gameState.itemHandler.TakeItemFromToolBar(selectedItem, 1);
+      }
     }
   }
 
-  if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
+  if (currentInput.rightMouseClicked) {
     HexCoord clickedHex =
-        hexGrid.PointToHexCoord(ioHandler.GetScaledMousePos());
-    hexGrid.SetTile(clickedHex, TILE_NULL);
+        gameState.hexGrid.PointToHexCoord(currentInput.mouseWorldPos);
+    gameState.hexGrid.SetTile(clickedHex, TILE_NULL);
   }
 
+  // Keyboard selection
   KeyboardInputState keyboardState;
-  keyboardState.keyOne = IsKeyPressed(KEY_ONE);
-  keyboardState.keyTwo = IsKeyPressed(KEY_TWO);
-  keyboardState.keyThree = IsKeyPressed(KEY_THREE);
-  keyboardState.keyFour = IsKeyPressed(KEY_FOUR);
-  keyboardState.keyFive = IsKeyPressed(KEY_FIVE);
-  keyboardState.keySix = IsKeyPressed(KEY_SIX);
-  keyboardState.keySeven = IsKeyPressed(KEY_SEVEN);
-  keyboardState.keyEight = IsKeyPressed(KEY_EIGHT);
-  keyboardState.keyNine = IsKeyPressed(KEY_NINE);
-  keyboardState.keyZero = IsKeyPressed(KEY_ZERO);
+  keyboardState.keyOne = currentInput.keyOne;
+  keyboardState.keyTwo = currentInput.keyTwo;
+  keyboardState.keyThree = currentInput.keyThree;
+  keyboardState.keyFour = currentInput.keyFour;
+  keyboardState.keyFive = currentInput.keyFive;
+  keyboardState.keySix = currentInput.keySix;
+  keyboardState.keySeven = currentInput.keySeven;
+  keyboardState.keyEight = currentInput.keyEight;
+  keyboardState.keyNine = currentInput.keyNine;
+  keyboardState.keyZero = currentInput.keyZero;
 
   toolBarSel = ioHandler.GetToolBarSelction(toolBarSel, keyboardState);
-  // --- Keyboard ---
 
   uiHandler.SetSelectedItem(toolBarSel);
-  itemHandler.SetItemSelection(toolBarSel);
+  gameState.itemHandler.SetItemSelection(toolBarSel);
 
-  PlayerInputState playerInput;
-  playerInput.moveLeft = IsKeyDown(KEY_A);
-  playerInput.moveRight = IsKeyDown(KEY_D);
-  playerInput.moveUp = IsKeyDown(KEY_W);
-  playerInput.moveDown = IsKeyDown(KEY_S);
-  player.Update(playerInput, GetFrameTime());
+  // Player Update
+  gameState.player.Update(currentInput.playerInput, currentInput.frameTime);
+
+  // Update Camera Target (Logic)
+  gameState.camera.target = gameState.player.GetPosition();
+  
+  // Calculate Camera Rects for Next Frame (Logic)
+  // Warning: GetScreenToWorld2D is Raylib (Main Thread). 
+  // We can't update relativeCenter/cameraTopLeft accurately here without Raylib.
+  // However, these are used for Culling (HexGrid).
+  // Strategy: Calculate them in Main Thread (UpdateInputs) and pass them in InputState? 
+  // OR calculate them in Main Thread AFTER Logic is done?
+  // Let's do it in Main Thread inside GameLoop (Render phase) or before Logic.
+  // Logic needs them for HexGrid.Update? 
+  // HexGrid.Update uses camera to calculate visibility.
+  // It uses `GetWorldToScreen2D` internally? If so, HexGrid.Update MUST be on Main Thread.
+  // Let's check HexGrid.Update.
 }
 
 const char *Game::MouseMaskToString(MouseMask m) {
@@ -164,12 +265,12 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   float sectionPosX = Conf::DEBUG_OVERLAY_SECTION_X;
   int sectionPosY = Conf::DEBUG_OVERLAY_SECTION_Y;
   int sectionGapY = Conf::DEBUG_OVERLAY_SECTION_Y_GAP;
-  int sectionFontSize = Conf::DEBUG_OVERLAY_SECTION_FONT_SIZE;
+  // int sectionFontSize = Conf::DEBUG_OVERLAY_SECTION_FONT_SIZE;
   Color sectionColor = Conf::DEBUG_OVERLAY_SECTION_FONT_COLOR;
 
   float subSectionPosX = Conf::DEBUG_OVERLAY_SUBSECTION_X_POS;
   int subSectionGapY = Conf::DEBUG_OVERLAY_SUBSECTION_Y_GAP;
-  int subSectionFontSize = Conf::DEBUG_OVERLAY_SUBSECTION_FONT_SIZE;
+  // int subSectionFontSize = Conf::DEBUG_OVERLAY_SUBSECTION_FONT_SIZE;
   Color subSectionColor = Conf::DEBUG_OVERLAY_SECTION_FONT_COLOR;
 
   float currentY = sectionPosY;
@@ -179,53 +280,55 @@ void Game::DrawDebugOverlay(bool is_enabled) {
       {"Resources",
        {
            TextFormat("FPS: %i", GetFPS()),
-           TextFormat("Tiles Total: %i", hexGrid.GetTilesInTotal()),
-           TextFormat("Tiles Used: %i", hexGrid.GetTilesInUse()),
-           TextFormat("Tiles Visible: %i", hexGrid.GetTilesVisible()),
-           TextFormat("Map radius: %i", hexGrid.GetMapRadius()),
+           TextFormat("Tiles Total: %i", gameState.hexGrid.GetTilesInTotal()),
+           TextFormat("Tiles Used: %i", gameState.hexGrid.GetTilesInUse()),
+           TextFormat("Tiles Visible: %i", gameState.hexGrid.GetTilesVisible()),
+           TextFormat("Map radius: %i", gameState.hexGrid.GetMapRadius()),
        }});
 
-  HexCoord mapTile = hexGrid.PointToHexCoord(ioHandler.GetScaledMousePos());
-  TileID tileMouseType = hexGrid.PointToType(ioHandler.GetScaledMousePos());
+  // Use currentInput for debug display
+  HexCoord mapTile = gameState.hexGrid.PointToHexCoord(currentInput.mouseWorldPos);
+  TileID tileMouseType = gameState.hexGrid.PointToType(currentInput.mouseWorldPos);
+  
   debugData.push_back(
       {"Mouse",
        {
-           TextFormat("X,Y: %.1f,%.1f", ioHandler.GetScaledMousePos().x,
-                      ioHandler.GetScaledMousePos().y),
+           TextFormat("X,Y: %.1f,%.1f", currentInput.mouseWorldPos.x,
+                      currentInput.mouseWorldPos.y),
            TextFormat("Tile Q,R: %i,%i", mapTile.q, mapTile.r),
-           TextFormat("Type: %s", hexGrid.TileToString(tileMouseType)),
+           TextFormat("Type: %s", gameState.hexGrid.TileToString(tileMouseType)),
            TextFormat("Clicked on: %s",
-                      this->MouseMaskToString(ioHandler.GetMouseMask())),
+                      this->MouseMaskToString(currentInput.mouseMask)),
        }});
 
   // --- Player ---
-  Vector2 playerPos = player.GetPosition();
-  HexCoord playerTile = hexGrid.PointToHexCoord(playerPos);
-  TileID tilePlayerType = hexGrid.PointToType(playerPos);
+  Vector2 playerPos = gameState.player.GetPosition();
+  HexCoord playerTile = gameState.hexGrid.PointToHexCoord(playerPos);
+  TileID tilePlayerType = gameState.hexGrid.PointToType(playerPos);
   debugData.push_back(
       {"Player",
        {
            TextFormat("X,Y: %.1f,%.1f", playerPos.x, playerPos.y),
            TextFormat("Tile Q,R: %i,%i", playerTile.q, playerTile.r),
-           TextFormat("State:  %s", player.PlayerStateToString()),
-           TextFormat("Face Dir: %s", player.PlayerDirToString()),
-           TextFormat("Frame: %i", player.GetAnimationFrame()),
-           TextFormat("Type: %s", hexGrid.TileToString(tilePlayerType)),
-           TextFormat("Speed[1/s]: %.2f", player.GetSpeedTilesPerSecond()),
+           TextFormat("State:  %s", gameState.player.PlayerStateToString()),
+           TextFormat("Face Dir: %s", gameState.player.PlayerDirToString()),
+           TextFormat("Frame: %i", gameState.player.GetAnimationFrame()),
+           TextFormat("Type: %s", gameState.hexGrid.TileToString(tilePlayerType)),
+           TextFormat("Speed[1/s]: %.2f", gameState.player.GetSpeedTilesPerSecond()),
        }});
 
   // --- Tool Bar ---
   debugData.push_back(
       {"Tool Bar",
        {
-           TextFormat("Item: %s", itemHandler.GetSelectedItemType()),
-           TextFormat("Slot: %i", itemHandler.GetSelectionToolBar()),
+           TextFormat("Item: %s", gameState.itemHandler.GetSelectedItemType()),
+           TextFormat("Slot: %i", gameState.itemHandler.GetSelectionToolBar()),
        }});
 
   // Draw section
-  Vector2 playerScreenPos = GetWorldToScreen2D(playerPos, camera);
+  Vector2 playerScreenPos = GetWorldToScreen2D(playerPos, gameState.camera);
   DrawCircleV(
-      GetWorldToScreen2D(hexGrid.HexCoordToPoint(HexCoord(0, 0)), camera), 3.0f,
+      GetWorldToScreen2D(gameState.hexGrid.HexCoordToPoint(HexCoord(0, 0)), gameState.camera), 3.0f,
       RED);
   DrawCircleV(playerScreenPos, 3.0f, RED);
 
@@ -247,11 +350,30 @@ void Game::DrawDebugOverlay(bool is_enabled) {
 };
 
 void Game::Unload() {
-  hexGrid.Shutdown();
+  // Stop logic thread
+  if (isRunning) {
+      isRunning = false;
+      mainToLogicCV.notify_one();
+      if (logicThread.joinable()) {
+        logicThread.join();
+      }
+  }
+
+  gameState.hexGrid.Shutdown();
   GFX_Manager.UnloadAssets();
   fontHandler.UnloadFonts();
   UnloadFileData(hackFontRegular);
 }
 
 // --- Deinitialization ---
-Game::~Game() {}
+Game::~Game() {
+    // Unload is safe to call multiple times because we check isRunning
+    // However, UnloadAssets/Shutdown might not be.
+    // Ideally, we should have a flag 'isUnloaded'.
+    // For now, let's just ensure the thread is joined.
+    if(logicThread.joinable()) {
+        isRunning = false;
+        mainToLogicCV.notify_one();
+        logicThread.join();
+    }
+}

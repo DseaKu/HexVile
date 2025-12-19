@@ -55,7 +55,7 @@ HexGrid::HexGrid() {
   randomEngine = std::mt19937(rd());
 
   const float mean = (TA::DETAILS_X + TA::DETAILS_X_MAX - 1) / 2.0f;
-  const float stddev = (TA::DETAILS_X_MAX - TA::DETAILS_X) / 6.0f;
+  const float stddev = (TA::DETAILS_X_MAX - TA::DETAILS_X) / TA::GAUSIAN_EFFECT;
   typeDistribution = std::normal_distribution<float>(mean, stddev);
 
   size_t estimated_hits = Conf::ESTIMATED_VISIBLE_TILES;
@@ -81,7 +81,7 @@ void HexGrid::InitGrid(float radius) {
         MapTile initTile = {.type = TILE_GRASS};
 
         for (TerrainDetail &d : initTile.detail) {
-          d = GetRandomTerainDetail();
+          d = GetRandomTerainDetail(initTile.type);
         }
 
         tileData[gridR][gridQ] = initTile;
@@ -94,7 +94,7 @@ void HexGrid::InitGrid(float radius) {
   CalcVisibleTiles();
 }
 
-TerrainDetail HexGrid::GetRandomTerainDetail() {
+TerrainDetail HexGrid::GetRandomTerainDetail(TileID id) {
   float x = GetRandomValue(-TA::RES16 / 2, TA::RES16 / 2);
   float y = GetRandomValue(-TA::RES16 / 2, TA::RES16 / 2);
 
@@ -106,6 +106,13 @@ TerrainDetail HexGrid::GetRandomTerainDetail() {
 
   // Clamp the value to the valid range
   int type = std::clamp(generated_type, TA::DETAILS_X, TA::DETAILS_X_MAX - 1);
+
+  // Determine if detail is null and skip render process
+  int renderBitMask = TA::RENDER_BIT_MASK_DETAIL.at(id);
+  int detailShift = type - TA::DETAILS_X;
+  if (!(renderBitMask >> detailShift & 1)) {
+    type = TA::SKIP_RENDER;
+  }
 
   return TerrainDetail{.x = x, .y = y, .type = type};
 }
@@ -359,7 +366,7 @@ void HexGrid::LoadTileGFX() {
 
     // Draw details for this tile
     for (const TerrainDetail &d : t.detail) {
-      if (d.type != 0) {
+      if (d.type != TA::SKIP_RENDER) {
         LoadDetailGFX(d, pos.x, pos.y, t.type);
       }
     }
@@ -397,7 +404,7 @@ bool HexGrid::SetTile(HexCoord h, TileID id) {
     MapTile &t = GetTile(h);
     t.type = id;
     for (TerrainDetail &d : t.detail) {
-      d = GetRandomTerainDetail();
+      d = GetRandomTerainDetail(id);
     }
     return true;
   }

@@ -1,11 +1,11 @@
 #include "ui_handler.h"
 #include "defines.h"
-#include "texture_atlas.h"
 #include "enums.h"
 #include "font_handler.h"
 #include "hex_tile_grid.h"
 #include "io_handler.h"
 #include "raylib.h"
+#include "texture_atlas.h"
 #include <string>
 
 UI_Handler::UI_Handler() {
@@ -120,10 +120,6 @@ void UI_Handler::LoadItemGFX(int x, int y) {
     float slotPosX = barPosX + padding + (x * slotSize);
     float slotPosY = barPosY + padding;
     Rectangle dstRec = {slotPosX, slotPosY, (float)itemSize, (float)itemSize};
-    // Rectangle srcRec = {(float)TA::ITEM_X_OFFSET_TILE,
-    //                     (float)TA::ASSEST_RESOLUTION * item->id,
-    //                     (float)TA::ASSEST_RESOLUTION,
-    //                     (float)Conf::TILE_RESOLUTION};
 
     // Shrink item
     float newWidth = dstRec.width * toolBarItemSize;

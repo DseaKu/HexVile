@@ -100,7 +100,7 @@ private:
   HexCoord HexRound(FractionalHex h) const;
   const MapTile &GetTile(HexCoord h) const;
   MapTile &GetTile(HexCoord h);
-  TerrainDetail GetRandomTerainDetail();
+  TerrainDetail GetRandomTerainDetail(TileID id);
   void CalcRenderRect();
   void CalcVisibleTiles();
   void UpdateTileVisibility(float totalTime);

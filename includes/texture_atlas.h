@@ -2,6 +2,7 @@
 #define TEXTURE_ATLAS_H
 
 #include "defines.h"
+#include <map>
 
 // ==========================================
 //               32x32 Resolution
@@ -46,6 +47,20 @@ constexpr float RES16_F = RES16;
 // ==========================================
 constexpr int RES8 = RES16 / 2;
 constexpr float RES8_F = RES8;
+
+// ==========================================
+//               Details Render Bit Mask
+// ==========================================
+constexpr float GAUSIAN_EFFECT = 1.0f;
+constexpr int GRASS_DETAILS = 0b110000000011;
+constexpr int WATER_DETAILS = 0b000000000010;
+constexpr int DIRT_DETAILS = 0b010000000001;
+constexpr int SKIP_RENDER = -1;
+inline const std::map<TileID, int> RENDER_BIT_MASK_DETAIL = {
+    {TILE_GRASS, GRASS_DETAILS},
+    {TILE_WATER, WATER_DETAILS},
+    {TILE_DIRT, DIRT_DETAILS},
+};
 
 // ==========================================
 //               Animation

@@ -53,8 +53,8 @@ constexpr float RES8_F = RES8;
 // ==========================================
 constexpr float GAUSIAN_EFFECT = 6.0f;
 constexpr int GRASS_DETAILS = 0b110000000011;
-constexpr int WATER_DETAILS = 0b000000000010;
-constexpr int DIRT_DETAILS = 0b010000000001;
+constexpr int WATER_DETAILS = 0b000000000100;
+constexpr int DIRT_DETAILS = 0b001000000010;
 constexpr int SKIP_RENDER = -1;
 constexpr int UNINITIALIZED = -2;
 inline const std::map<TileID, int> RENDER_BIT_MASK_DETAIL = {

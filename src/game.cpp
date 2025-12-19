@@ -8,9 +8,10 @@
 
 // --- Initialization ---
 Game::Game()
-    : isRunning(true), logicUpdateReady(false), logicUpdateDone(true),
-      logicExecutionTime(0.0), renderExecutionTime(0.0), debugUpdateTimer(0.0f),
-      displayRenderTime(0.0), displayLogicTime(0.0), displayVisTime(0.0) {
+    : isRunning(true), isFullscreenMode(false), logicUpdateReady(false),
+      logicUpdateDone(true), logicExecutionTime(0.0), renderExecutionTime(0.0),
+      debugUpdateTimer(0.0f), displayRenderTime(0.0), displayLogicTime(0.0),
+      displayVisTime(0.0) {
   gfxManager.LoadAssets(Conf::TEXTURE_ATLAS_PATH);
 
   gameState.timer = 0.0f;
@@ -43,6 +44,9 @@ Game::Game()
 
   // Start the logic thread
   logicThread = std::thread(&Game::LogicLoop, this);
+
+  // Set mouse to center by default
+  SetMousePosition(GetScreenWidth() / 2, GetScreenHeight() / 2);
 }
 
 // --- Main Loop (Rendering Thread) ---
@@ -128,19 +132,21 @@ void Game::LogicLoop() {
 
 void Game::UpdateInputs() {
   if (IsKeyPressed(KEY_F)) {
-    if (IsWindowFullscreen()) {
-      ToggleFullscreen();
-      SetWindowSize(Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT);
-    } else {
+    isFullscreenMode = !isFullscreenMode;
+    if (isFullscreenMode) {
       int monitor = GetCurrentMonitor();
       SetWindowSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
       ToggleFullscreen();
+    } else {
+      ToggleFullscreen();
+      SetWindowSize(Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT);
     }
   }
 
   // Populate currentInput struct
   currentInput.frameTime = GetFrameTime();
-  if (IsWindowFullscreen()) {
+
+  if (isFullscreenMode) {
     int monitor = GetCurrentMonitor();
     currentInput.screenWidth = GetMonitorWidth(monitor);
     currentInput.screenHeight = GetMonitorHeight(monitor);
@@ -152,14 +158,6 @@ void Game::UpdateInputs() {
   // Update Camera Offset to match new screen size
   gameState.camera.offset = Vector2{(float)currentInput.screenWidth / 2.0f,
                                     (float)currentInput.screenHeight / 2.0f};
-                                    
-  // Debug output for screen resize
-  static int oldW = 0;
-  if (oldW != currentInput.screenWidth) {
-      printf("DEBUG: Screen Resize detected: %d x %d\n", currentInput.screenWidth, currentInput.screenHeight);
-      printf("DEBUG: Camera Offset updated to: %.1f, %.1f\n", gameState.camera.offset.x, gameState.camera.offset.y);
-      oldW = currentInput.screenWidth;
-  }
 
   currentInput.mouseScreenPos = GetMousePosition();
 

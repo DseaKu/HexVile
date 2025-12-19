@@ -75,6 +75,7 @@ private:
   std::condition_variable mainToLogicCV;
   std::condition_variable logicToMainCV;
   std::atomic<bool> isRunning;
+  bool isFullscreenMode = false;
   bool logicUpdateReady; // Input ready for logic
   bool logicUpdateDone;  // Logic finished for this frame
   

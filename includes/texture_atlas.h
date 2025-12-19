@@ -51,7 +51,7 @@ constexpr float RES8_F = RES8;
 // ==========================================
 //               Details Render Bit Mask
 // ==========================================
-constexpr float GAUSIAN_EFFECT = 1.0f;
+constexpr float GAUSIAN_EFFECT = 7.0f;
 constexpr int GRASS_DETAILS = 0b110000000011;
 constexpr int WATER_DETAILS = 0b000000000010;
 constexpr int DIRT_DETAILS = 0b010000000001;

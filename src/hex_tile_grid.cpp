@@ -86,6 +86,7 @@ void HexGrid::InitGrid(float radius) {
 
         tileData[gridR][gridQ] = initTile;
         this->tilesInUse++;
+
       } else {
         tileData[gridR][gridQ] = (MapTile){.type = TILE_NULL};
       }

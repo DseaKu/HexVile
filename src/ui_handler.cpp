@@ -164,6 +164,9 @@ void UI_Handler::LoadItemNumGFX(int x, int y) {
     int i = 0;
     for (auto it = num_str.rbegin(); it != num_str.rend(); ++it) {
       int digit = *it - '0';
+      if (digit == 0) {
+        digit = 10;
+      }
 
       Vector2 rbCorner =
           Vector2{.x = dstRec.x + dstRec.width, .y = dstRec.y + dstRec.height};

@@ -20,27 +20,22 @@ class IO_Handler {
 private:
   MouseMask mouseMask;
   Vector2 scaledMousePos;
-  Vector2 realMousePos;
 
 public:
   IO_Handler();
   void Init();
-  void UpdateMousePos(Camera2D cam);
+  void UpdateMousePos(Vector2 pos);
+  Vector2 GetScaledMousePos();
 
   // --- Conversion ---
   const char *MouseMaskToString(MouseMask m);
 
   // --- Get ---
-  Vector2 GetScaledMousePos();
-  Vector2 GetRealMousePos();
   int GetToolBarSelction(int curToolBarSel, KeyboardInputState keyboardState);
   MouseMask GetMouseMask();
 
   // --- Set ---
-  void SetMousePointer(Vector2 *mousePointer);
   void SetMouseMask(MouseMask mask);
-  void SetScaledMousePos(Vector2 pos);
-  void SetRealMousePos(Vector2 pos);
 };
 
 #endif // !IO_HANDLER_H

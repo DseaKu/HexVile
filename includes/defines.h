@@ -15,8 +15,8 @@ constexpr int MAX_FPS = 8000;
 constexpr const char *WINDOW_TITLE = "HexVile";
 constexpr const char *TEXTURE_ATLAS_PATH = "assets/images/texture_atlas.png";
 constexpr const char *FONT_HACK_REGULAR_PATH = "assets/font/hack_regular.ttf";
-constexpr const int MAX_TERRAIN_DETAILS_PER_TILE = 2;
 constexpr const int VISIBLE_TILE_CALC_PERIOD = 20;
+constexpr float GRID_UPDATE_PLAYER_MOVE_THRESHOLD = 3.0f;
 constexpr const int RENDER_VIEW_CULLING_MARGIN = 150;
 constexpr const int RENDER_VIEW_CULLING_EXPANSION =
     Conf::RENDER_VIEW_CULLING_MARGIN * 2;
@@ -34,7 +34,8 @@ constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
 // --- Game ---
 constexpr int TOOLBAR_SLOTS = 8;
 constexpr int INVENTORY_SLOTS = 30;
-constexpr float GRID_UPDATE_PLAYER_MOVE_THRESHOLD = 3.0f;
+constexpr const int TERRAIN_DETAILS_MAX = 2;
+constexpr const int TERRAIN_OBJECTS_MAX = 1;
 
 // --- Tile ---
 constexpr int TILE_RESOLUTION = 32;

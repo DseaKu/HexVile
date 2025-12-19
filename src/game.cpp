@@ -197,30 +197,15 @@ void Game::UpdateInputs() {
 void Game::RunLogic() {
   // Use currentInput and gameState
   gameState.timer += currentInput.frameTime;
+  ioHandler.UpdateMousePos(currentInput.mouseWorldPos);
 
   // Update UI Layout
   uiHandler.UpdateScreenSize(currentInput.screenWidth,
                              currentInput.screenHeight);
 
-  // IO Handler Update (Logic side)
-  ioHandler.SetScaledMousePos(currentInput.mouseWorldPos);
-  ioHandler.SetRealMousePos(currentInput.mouseScreenPos);
-
   // Update Grid
-  gameState.hexGrid.Update(
-      gameState.camera,
-      currentInput.frameTime); // Note: UpdateTileVisibility might need camera
+  gameState.hexGrid.Update(gameState.camera, currentInput.frameTime);
   uiHandler.Update();
-
-  // --- Logic equivalent of UpdateInputs ---
-  // We use currentInput instead of calling IsKeyDown etc.
-
-  // NOTE: ioHandler.GetScaledMousePos() logic is duplicated or skipped?
-  // ioHandler scales mouse based on zoom.
-  // Vector2 scaledMouse = currentInput.mouseWorldPos; // Close enough?
-  // Let's assume WorldPos is what we want for "RealMousePos".
-  // For "Scaled", IO_Handler applies some offset/zoom logic.
-  // Let's use currentInput.mouseWorldPos for interactions.
 
   int toolBarSel = gameState.itemHandler.GetSelectionToolBar();
 
@@ -282,17 +267,6 @@ void Game::RunLogic() {
 
   // Update Camera Target (Logic)
   gameState.camera.target = gameState.player.GetPosition();
-
-  // Calculate Camera Rects for Next Frame (Logic)
-  // Warning: GetScreenToWorld2D is Raylib (Main Thread).
-  // We can't update relativeCenter/cameraTopLeft accurately here without
-  // Raylib. However, these are used for Culling (HexGrid). Strategy: Calculate
-  // them in Main Thread (UpdateInputs) and pass them in InputState? OR
-  // calculate them in Main Thread AFTER Logic is done? Let's do it in Main
-  // Thread inside GameLoop (Render phase) or before Logic. Logic needs them for
-  // HexGrid.Update? HexGrid.Update uses camera to calculate visibility. It uses
-  // `GetWorldToScreen2D` internally? If so, HexGrid.Update MUST be on Main
-  // Thread. Let's check HexGrid.Update.
 }
 
 const char *Game::MouseMaskToString(MouseMask m) {
@@ -345,9 +319,9 @@ void Game::DrawDebugOverlay(bool is_enabled) {
            TextFormat("Tiles Used: %i", gameState.hexGrid.GetTilesInUse()),
            TextFormat("Tiles Visible: %i", gameState.hexGrid.GetTilesVisible()),
            TextFormat("Map radius: %i", gameState.hexGrid.GetMapRadius()),
-           TextFormat("Render Time: %.3f ms", displayRenderTime),
-           TextFormat("Logic Time: %.3f ms", displayLogicTime),
-           TextFormat("Culling Time: %.3f ms", displayVisTime),
+           TextFormat("Render Time: %.2f ms", displayRenderTime),
+           TextFormat("Logic Time: %.2f ms", displayLogicTime),
+           TextFormat("Culling Time: %.2f ms", displayVisTime),
        }});
 
   // Use currentInput for debug display

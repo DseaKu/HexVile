@@ -43,14 +43,22 @@ struct TerrainDetail {
   int type;
 };
 
+// --- Terrain Object ---UpdateTilesProperties
+struct TerrainObject {
+  float x;
+  float y;
+  int type;
+};
+
 // --- Map Tile ---
 struct MapTile {
   TileID type;
-  TerrainDetail detail[Conf::MAX_TERRAIN_DETAILS_PER_TILE];
+  TerrainDetail detail[Conf::TERRAIN_DETAILS_MAX];
+  TerrainObject objects[Conf::TERRAIN_OBJECTS_MAX];
 };
 
-/* Grid parts and relationships: https://www.redblobgames.com/grids/parts/
- *
+/* Grid parts and relationships:
+ * https://www.redblobgames.com/grids/parts/
  *
  * --- HEX TILE GRID ---
  *   |q  ,r-1|q+1,r-1|
@@ -77,7 +85,7 @@ private:
 
   // Flag indicating if visiCacheNext has new data ready to be swapped.
   bool visiCacheReady;
-  
+
   // Profiling
   std::atomic<double> calcVisTime;
 

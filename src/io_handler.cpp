@@ -1,23 +1,20 @@
 #include "io_handler.h"
 #include "enums.h"
-#include "raylib.h"
 
-IO_Handler::IO_Handler() {}
+IO_Handler::IO_Handler() { scaledMousePos = {0.0f, 0.0f}; }
 
 void IO_Handler::Init() {}
 
-void IO_Handler::UpdateMousePos(Camera2D cam) {
-  realMousePos = GetMousePosition();
-  scaledMousePos = GetScreenToWorld2D(realMousePos, cam);
-}
-// --- Conversion ---
-
-// --- Get ---
-Vector2 IO_Handler::GetRealMousePos() { return realMousePos; }
+void IO_Handler::UpdateMousePos(Vector2 pos) { scaledMousePos = pos; }
 
 Vector2 IO_Handler::GetScaledMousePos() { return scaledMousePos; }
 
-int IO_Handler::GetToolBarSelction(int curToolBarSel, KeyboardInputState keyboardState) {
+// --- Conversion ---
+
+// --- Get ---
+
+int IO_Handler::GetToolBarSelction(int curToolBarSel,
+                                   KeyboardInputState keyboardState) {
 
   int toolBarSel = -1;
 
@@ -52,5 +49,3 @@ MouseMask IO_Handler::GetMouseMask() { return mouseMask; }
 
 // --- Set ---
 void IO_Handler::SetMouseMask(MouseMask mask) { mouseMask = mask; }
-void IO_Handler::SetScaledMousePos(Vector2 pos) { scaledMousePos = pos; }
-void IO_Handler::SetRealMousePos(Vector2 pos) { realMousePos = pos; }

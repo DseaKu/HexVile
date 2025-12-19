@@ -18,7 +18,7 @@ constexpr int PLAYER_X_MAX = PLAYER_X + 12;
 
 // --- Tile ---
 constexpr int TILE_X = PLAYER_X_MAX;
-constexpr int TILES_X_MAX = TILE_X + 8;
+constexpr int TILES_X_MAX = TILE_X + 7;
 
 // --- Item ---
 constexpr int ITEM_X = TILES_X_MAX;
@@ -29,7 +29,7 @@ constexpr int DETAILS_X = ITEM_X_MAX;
 constexpr int DETAILS_X_MAX = DETAILS_X + 12;
 
 // --- UI ---
-constexpr int UI_X = DETAILS_X_MAX;
+constexpr int UI_X = 50;
 constexpr int UI_X_MAX = UI_X + 1;
 
 // --- Number ---
@@ -49,7 +49,7 @@ constexpr int RES8 = RES16 / 2;
 constexpr float RES8_F = RES8;
 
 // ==========================================
-//               Details Render Bit Mask
+//               Details & Objects
 // ==========================================
 constexpr float GAUSIAN_EFFECT = 6.0f;
 constexpr int GRASS_DETAILS = 0b110000000011;
@@ -61,6 +61,15 @@ inline const std::map<TileID, int> RENDER_BIT_MASK_DETAIL = {
     {TILE_GRASS, GRASS_DETAILS},
     {TILE_WATER, WATER_DETAILS},
     {TILE_DIRT, DIRT_DETAILS},
+};
+
+constexpr int GRASS_OBJECTS = 0b000000100000;
+constexpr int WATER_OBJECTS = 0b000000000000;
+constexpr int DIRT_OBJECTS = 0b000000000000;
+inline const std::map<TileID, int> RENDER_BIT_MASK_OBJECT = {
+    {TILE_GRASS, GRASS_OBJECTS},
+    {TILE_WATER, WATER_OBJECTS},
+    {TILE_DIRT, DIRT_OBJECTS},
 };
 
 // ==========================================

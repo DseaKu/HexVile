@@ -113,6 +113,7 @@ private:
   const MapTile &GetTile(HexCoord h) const;
   MapTile &GetTile(HexCoord h);
   TerrainDetail GetRandomTerainDetail(TileID id);
+  TerrainObject GetRandomTerainObject(TileID id);
   void CalcRenderRect();
   void CalcVisibleTiles();
   void UpdateTileVisibility(float totalTime);

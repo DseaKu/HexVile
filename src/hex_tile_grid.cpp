@@ -61,7 +61,7 @@ HexGrid::HexGrid() {
   size_t estimated_hits = Conf::ESTIMATED_VISIBLE_TILES;
   currentVisibleTiles.reserve(estimated_hits);
   nextVisibleTiles.reserve(estimated_hits);
-  
+
   calcVisTime = 0.0;
 }
 
@@ -98,8 +98,8 @@ void HexGrid::InitGrid(float radius) {
 }
 
 TerrainDetail HexGrid::GetRandomTerainDetail(TileID id) {
-  float x = GetRandomValue(-TA::RES16 / 2, TA::RES16 / 2);
-  float y = GetRandomValue(-TA::RES16 / 2, TA::RES16 / 2);
+  float x = GetRandomValue(-TA::RES8_F, TA::RES8_F);
+  float y = GetRandomValue(-TA::RES8_F, TA::RES8_F);
 
   // Generate a value from the normal distribution
   float generated_type_float = typeDistribution(randomEngine);
@@ -118,6 +118,29 @@ TerrainDetail HexGrid::GetRandomTerainDetail(TileID id) {
   }
 
   return TerrainDetail{.x = x, .y = y, .type = type};
+}
+
+TerrainObject HexGrid::GetRandomTerainObject(TileID id) {
+  float x = GetRandomValue(-TA::RES8_F, TA::RES8_F);
+  float y = GetRandomValue(-TA::RES8_F, TA::RES8_F);
+
+  // Generate a value from the normal distribution
+  float generated_type_float = typeDistribution(randomEngine);
+
+  // Round to nearest integer
+  int generated_type = static_cast<int>(std::round(generated_type_float));
+
+  // Clamp the value to the valid range
+  int type = std::clamp(generated_type, TA::DETAILS_X, TA::DETAILS_X_MAX - 1);
+
+  // Determine if detail is null and skip render process
+  int renderBitMask = TA::RENDER_BIT_MASK_OBJECT.at(id);
+  int detailShift = type - TA::DETAILS_X;
+  if (!(renderBitMask >> detailShift & 1)) {
+    type = TA::SKIP_RENDER;
+  }
+
+  return TerrainObject{.x = x, .y = y, .type = type};
 }
 
 void HexGrid::SetGFX_Manager(GFX_Manager *graphicsManager) {
@@ -283,7 +306,7 @@ void HexGrid::CalcVisibleTiles() {
   nextVisibleTiles =
       std::move(newVisiCache); // Move the new data to the back buffer.
   visiCacheReady = true; // Signal that new data is ready for the main thread.
-  
+
   auto end = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double, std::milli> elapsed = end - start;
   calcVisTime = elapsed.count();

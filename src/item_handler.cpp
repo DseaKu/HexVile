@@ -15,7 +15,7 @@ ItemDataBase::ItemDataBase() {
       .name = "Set Dirt", .maxStack = 32, .value = 8, .placeableTile = true};
 }
 
-ItemProperties ItemDataBase::GetItemProperties(ItemID id) {
+const ItemProperties& ItemDataBase::GetItemProperties(ItemID id) {
   return propeties[id];
 }
 
@@ -74,9 +74,7 @@ ItemID ItemHandler::GetToolBarItemType(int pos) { return toolBar[pos].id; }
 
 const char *ItemHandler::GetSelectedItemType() {
   ItemID id = toolBar[selectedToolBarSlot].id;
-  std::string str = itemDataBase.GetItemProperties(id).name;
-  const char *txt = str.c_str();
-  return txt;
+  return itemDataBase.GetItemProperties(id).name.c_str();
 }
 
 // --- Set ---

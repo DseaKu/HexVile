@@ -11,7 +11,7 @@ Game::Game()
     : isRunning(true), logicUpdateReady(false), logicUpdateDone(true),
       logicExecutionTime(0.0), renderExecutionTime(0.0), debugUpdateTimer(0.0f),
       displayRenderTime(0.0), displayLogicTime(0.0), displayVisTime(0.0) {
-  GFX_Manager.LoadAssets(Conf::TEXTURE_ATLAS_PATH);
+  gfxManager.LoadAssets(Conf::TEXTURE_ATLAS_PATH);
 
   gameState.timer = 0.0f;
   gameState.updateGridTreshold = Conf::GRID_UPDATE_PLAYER_MOVE_THRESHOLD;
@@ -19,11 +19,11 @@ Game::Game()
   hackFontRegular = LoadFileData(Conf::FONT_HACK_REGULAR_PATH, &fileSize);
 
   gameState.hexGrid.InitGrid(Conf::MAP_RADIUS);
-  gameState.hexGrid.SetGFX_Manager(&GFX_Manager);
+  gameState.hexGrid.SetGFX_Manager(&gfxManager);
   gameState.hexGrid.SetCamRectPointer(&gameState.cameraRect);
 
   gameState.player.SetHexGrid(&gameState.hexGrid);
-  gameState.player.SetGFX_Manager(&GFX_Manager);
+  gameState.player.SetGFX_Manager(&gfxManager);
 
   gameState.camera.target = Conf::SCREEN_CENTER;
   gameState.camera.offset = Conf::SCREEN_CENTER;
@@ -34,7 +34,7 @@ Game::Game()
 
   fontHandler.LoadFonts();
 
-  uiHandler.SetGFX_Manager(&GFX_Manager);
+  uiHandler.SetGFX_Manager(&gfxManager);
   uiHandler.SetItemHandler(&gameState.itemHandler);
   uiHandler.SetFontHandler(&fontHandler);
   uiHandler.SetIO_Handler(&ioHandler);
@@ -66,14 +66,14 @@ void Game::GameLoop() {
       ClearBackground(WHITE);
 
       BeginMode2D(gameState.camera);
-      GFX_Manager.RenderLayer(DRAW_MASK_GROUND_0);
-      GFX_Manager.RenderLayer(DRAW_MASK_GROUND_1);
-      GFX_Manager.RenderLayer(DRAW_MASK_SHADOW);
-      GFX_Manager.RenderLayer(DRAW_MASK_ON_GROUND);
+      gfxManager.RenderLayer(DRAW_MASK_GROUND_0);
+      gfxManager.RenderLayer(DRAW_MASK_GROUND_1);
+      gfxManager.RenderLayer(DRAW_MASK_SHADOW);
+      gfxManager.RenderLayer(DRAW_MASK_ON_GROUND);
       EndMode2D();
 
-      GFX_Manager.RenderLayer(DRAW_MASK_UI_0);
-      GFX_Manager.RenderLayer(DRAW_MASK_UI_1);
+      gfxManager.RenderLayer(DRAW_MASK_UI_0);
+      gfxManager.RenderLayer(DRAW_MASK_UI_1);
 
       DrawDebugOverlay(Conf::IS_DEBUG_OVERLAY_ENABLED);
 
@@ -93,7 +93,7 @@ void Game::GameLoop() {
       logicToMainCV.wait(lock, [this] { return logicUpdateDone; });
     }
 
-    GFX_Manager.SwapBuffers();
+    gfxManager.SwapBuffers();
   }
 
   // Signal logic thread to stop
@@ -403,7 +403,7 @@ void Game::Unload() {
   }
 
   gameState.hexGrid.Shutdown();
-  GFX_Manager.UnloadAssets();
+  gfxManager.UnloadAssets();
   fontHandler.UnloadFonts();
   UnloadFileData(hackFontRegular);
 }

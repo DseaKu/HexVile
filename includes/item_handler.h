@@ -5,6 +5,7 @@
 #include <map>
 #include <utility>
 #include <vector>
+#include <string>
 
 typedef struct ItemProperties {
   std::string name;
@@ -32,7 +33,7 @@ private:
 
 public:
   ItemDataBase();
-  ItemProperties GetItemProperties(ItemID id);
+  const ItemProperties& GetItemProperties(ItemID id);
 };
 
 // --- Item Handler ---

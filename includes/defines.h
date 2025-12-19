@@ -15,9 +15,9 @@ constexpr int MAX_FPS = 8000;
 constexpr const char *WINDOW_TITLE = "HexVile";
 constexpr const char *TEXTURE_ATLAS_PATH = "assets/images/texture_atlas.png";
 constexpr const char *FONT_HACK_REGULAR_PATH = "assets/font/hack_regular.ttf";
-constexpr const int MAX_TERRAIN_DETAILS_PER_TILE = 1;
+constexpr const int MAX_TERRAIN_DETAILS_PER_TILE = 2;
 constexpr const int VISIBLE_TILE_CALC_PERIOD = 20;
-constexpr const int RENDER_VIEW_CULLING_MARGIN = 50;
+constexpr const int RENDER_VIEW_CULLING_MARGIN = 150;
 constexpr const int RENDER_VIEW_CULLING_EXPANSION =
     Conf::RENDER_VIEW_CULLING_MARGIN * 2;
 

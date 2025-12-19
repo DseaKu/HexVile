@@ -62,7 +62,7 @@ private:
   InputState currentInput;
 
   // Rendering/System
-  GFX_Manager GFX_Manager;
+  GFX_Manager gfxManager;
   FontHandler fontHandler;
   UI_Handler uiHandler;
   IO_Handler ioHandler;

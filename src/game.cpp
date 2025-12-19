@@ -127,6 +127,10 @@ void Game::LogicLoop() {
 }
 
 void Game::UpdateInputs() {
+  if (IsKeyPressed(KEY_O)) {
+    ToggleFullscreen();
+  }
+
   // Populate currentInput struct
   currentInput.frameTime = GetFrameTime();
   currentInput.mouseScreenPos = GetMousePosition();

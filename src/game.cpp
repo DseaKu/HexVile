@@ -149,27 +149,14 @@ void Game::LogicLoop() {
 void Game::UpdateInputs() {
   if (IsKeyPressed(KEY_F)) {
     isFullscreenMode = !isFullscreenMode;
-    if (isFullscreenMode) {
-      int monitor = GetCurrentMonitor();
-      SetWindowSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
-      ToggleFullscreen();
-    } else {
-      ToggleFullscreen();
-      SetWindowSize(Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT);
-    }
+    ToggleBorderlessWindowed();
   }
 
   // Populate currentInput struct
   currentInput.frameTime = GetFrameTime();
 
-  if (isFullscreenMode) {
-    int monitor = GetCurrentMonitor();
-    currentInput.screenWidth = GetMonitorWidth(monitor);
-    currentInput.screenHeight = GetMonitorHeight(monitor);
-  } else {
-    currentInput.screenWidth = GetScreenWidth();
-    currentInput.screenHeight = GetScreenHeight();
-  }
+  currentInput.screenWidth = GetScreenWidth();
+  currentInput.screenHeight = GetScreenHeight();
 
   // Update Camera Offset to match new screen size
   gameState.camera.offset = Vector2{(float)currentInput.screenWidth / 2.0f,

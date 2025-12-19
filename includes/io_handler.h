@@ -39,6 +39,8 @@ public:
   // --- Set ---
   void SetMousePointer(Vector2 *mousePointer);
   void SetMouseMask(MouseMask mask);
+  void SetScaledMousePos(Vector2 pos);
+  void SetRealMousePos(Vector2 pos);
 };
 
 #endif // !IO_HANDLER_H

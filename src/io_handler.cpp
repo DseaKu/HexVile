@@ -52,3 +52,5 @@ MouseMask IO_Handler::GetMouseMask() { return mouseMask; }
 
 // --- Set ---
 void IO_Handler::SetMouseMask(MouseMask mask) { mouseMask = mask; }
+void IO_Handler::SetScaledMousePos(Vector2 pos) { scaledMousePos = pos; }
+void IO_Handler::SetRealMousePos(Vector2 pos) { realMousePos = pos; }

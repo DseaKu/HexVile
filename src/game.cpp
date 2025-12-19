@@ -148,17 +148,8 @@ void Game::RunLogic() {
   gameState.timer += currentInput.frameTime;
 
   // IO Handler Update (Logic side)
-  // We manually inject the pre-calculated world pos to avoid Raylib calls
-  // Assuming ioHandler has a method to set positions or we just use input values directly.
-  // Since ioHandler.UpdateMousePos(camera) uses GetScreenToWorld2D (Main only),
-  // we effectively bypass it or need to split ioHandler. 
-  // For now, let's update ioHandler's state if possible, or direct usage.
-  // ioHandler.UpdateMousePos(camera); // CANNOT CALL THIS HERE (Raylib)
-  
-  // Workaround: We trust ioHandler's getters are just reading members, 
-  // but we need to SET those members. 
-  // Since we can't easily change IO_Handler interface right now, 
-  // we will rely on values passed via InputState and modify GameState directly.
+  ioHandler.SetScaledMousePos(currentInput.mouseWorldPos);
+  ioHandler.SetRealMousePos(currentInput.mouseScreenPos);
   
   // Update Grid
   gameState.hexGrid.Update(gameState.camera, currentInput.frameTime); // Note: UpdateTileVisibility might need camera

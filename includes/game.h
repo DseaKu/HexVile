@@ -87,6 +87,7 @@ private:
   double displayRenderTime;
   double displayLogicTime;
   double displayVisTime;
+  double displayRamUsage;
 
   // Methods
   void UpdateInputs(); // Gathers inputs from Raylib

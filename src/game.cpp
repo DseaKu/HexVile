@@ -6,12 +6,28 @@
 #include "raylib.h"
 #include <string>
 
+#ifdef __APPLE__
+#include <mach/mach.h>
+#endif
+
+double GetRamUsageMB() {
+#ifdef __APPLE__
+  struct mach_task_basic_info info;
+  mach_msg_type_number_t infoCount = MACH_TASK_BASIC_INFO_COUNT;
+  if (task_info(mach_task_self(), MACH_TASK_BASIC_INFO, (task_info_t)&info,
+                &infoCount) == KERN_SUCCESS) {
+    return (double)info.resident_size / (1024 * 1024);
+  }
+#endif
+  return 0.0;
+}
+
 // --- Initialization ---
 Game::Game()
     : isRunning(true), isFullscreenMode(false), logicUpdateReady(false),
       logicUpdateDone(true), logicExecutionTime(0.0), renderExecutionTime(0.0),
       debugUpdateTimer(0.0f), displayRenderTime(0.0), displayLogicTime(0.0),
-      displayVisTime(0.0) {
+      displayVisTime(0.0), displayRamUsage(0.0) {
   gfxManager.LoadAssets(Conf::TEXTURE_ATLAS_PATH);
 
   gameState.timer = 0.0f;
@@ -305,6 +321,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
     displayRenderTime = renderExecutionTime.load();
     displayLogicTime = logicExecutionTime.load();
     displayVisTime = gameState.hexGrid.GetVisCalcTime();
+    displayRamUsage = GetRamUsageMB();
     debugUpdateTimer = 0.0f;
   }
 
@@ -313,6 +330,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
       {"Resources",
        {
            TextFormat("FPS: %i", GetFPS()),
+           TextFormat("RAM: %.2f MB", displayRamUsage),
            TextFormat("Screen: %ix%i", GetScreenWidth(), GetScreenHeight()),
            TextFormat("Render: %ix%i", GetRenderWidth(), GetRenderHeight()),
            TextFormat("Tiles Total: %i", gameState.hexGrid.GetTilesInTotal()),

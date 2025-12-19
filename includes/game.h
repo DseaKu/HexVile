@@ -77,6 +77,11 @@ private:
   // Profiling
   std::atomic<double> logicExecutionTime;
   std::atomic<double> renderExecutionTime;
+  
+  float debugUpdateTimer;
+  double displayRenderTime;
+  double displayLogicTime;
+  double displayVisTime;
 
   // Methods
   void UpdateInputs(); // Gathers inputs from Raylib

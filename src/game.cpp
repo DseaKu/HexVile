@@ -128,11 +128,33 @@ void Game::LogicLoop() {
 
 void Game::UpdateInputs() {
   if (IsKeyPressed(KEY_F)) {
-    ToggleFullscreen();
+    if (IsWindowFullscreen()) {
+      ToggleFullscreen();
+      SetWindowSize(Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT);
+    } else {
+      int monitor = GetCurrentMonitor();
+      SetWindowSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
+      ToggleFullscreen();
+    }
   }
 
   // Populate currentInput struct
   currentInput.frameTime = GetFrameTime();
+  currentInput.screenWidth = GetScreenWidth();
+  currentInput.screenHeight = GetScreenHeight();
+
+  // Update Camera Offset to match new screen size
+  gameState.camera.offset = Vector2{(float)currentInput.screenWidth / 2.0f,
+                                    (float)currentInput.screenHeight / 2.0f};
+                                    
+  // Debug output for screen resize
+  static int oldW = 0;
+  if (oldW != currentInput.screenWidth) {
+      printf("DEBUG: Screen Resize detected: %d x %d\n", currentInput.screenWidth, currentInput.screenHeight);
+      printf("DEBUG: Camera Offset updated to: %.1f, %.1f\n", gameState.camera.offset.x, gameState.camera.offset.y);
+      oldW = currentInput.screenWidth;
+  }
+
   currentInput.mouseScreenPos = GetMousePosition();
 
   // Calculate World Position here (Main Thread)
@@ -160,11 +182,12 @@ void Game::UpdateInputs() {
 
   // Calculate Camera Rects for Logic (Must be done in Main Thread)
   gameState.cameraTopLeft = GetScreenToWorld2D(Vector2{0, 0}, gameState.camera);
-  gameState.cameraRect = {gameState.cameraTopLeft.x, gameState.cameraTopLeft.y,
-                          Conf::CAMERA_WIDTH, Conf::CAMERA_HEIGHT};
 
-  currentInput.screenWidth = GetScreenWidth();
-  currentInput.screenHeight = GetScreenHeight();
+  float camWidth = (float)currentInput.screenWidth / gameState.camera.zoom;
+  float camHeight = (float)currentInput.screenHeight / gameState.camera.zoom;
+
+  gameState.cameraRect = {gameState.cameraTopLeft.x, gameState.cameraTopLeft.y,
+                          camWidth, camHeight};
 }
 
 void Game::RunLogic() {

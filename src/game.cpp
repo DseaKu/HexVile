@@ -140,8 +140,14 @@ void Game::UpdateInputs() {
 
   // Populate currentInput struct
   currentInput.frameTime = GetFrameTime();
-  currentInput.screenWidth = GetScreenWidth();
-  currentInput.screenHeight = GetScreenHeight();
+  if (IsWindowFullscreen()) {
+    int monitor = GetCurrentMonitor();
+    currentInput.screenWidth = GetMonitorWidth(monitor);
+    currentInput.screenHeight = GetMonitorHeight(monitor);
+  } else {
+    currentInput.screenWidth = GetScreenWidth();
+    currentInput.screenHeight = GetScreenHeight();
+  }
 
   // Update Camera Offset to match new screen size
   gameState.camera.offset = Vector2{(float)currentInput.screenWidth / 2.0f,

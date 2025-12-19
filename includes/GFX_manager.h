@@ -6,7 +6,6 @@
 #include "enums.h"
 #include <map>
 #include <vector>
-#include <mutex>
 
 struct GFX_Props {
   Rectangle srcRec;
@@ -20,7 +19,7 @@ private:
   int TA_Height;
   Texture2D textureAtlas;
   std::vector<std::vector<Rectangle>> textureRecData;
-  
+
   // Double buffering for thread safety
   // 0: Front (Render), 1: Back (Logic)
   std::vector<std::multimap<float, GFX_Props>> GFX_Data_Buffers[2];
@@ -37,7 +36,7 @@ public:
                     Rectangle dstRec, Color Color);
   void RenderLayer(DrawMaskID maskID);
   Rectangle GetTileRec(TileID tileID, int frame);
-  
+
   void SwapBuffers();
 };
 

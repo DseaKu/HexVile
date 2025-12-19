@@ -5,6 +5,7 @@
 #include "defines.h"
 #include "enums.h"
 #include "raylib.h"
+#include <atomic>
 #include <future>
 #include <mutex>
 #include <random>
@@ -76,6 +77,9 @@ private:
 
   // Flag indicating if visiCacheNext has new data ready to be swapped.
   bool visiCacheReady;
+  
+  // Profiling
+  std::atomic<double> calcVisTime;
 
   float tileGapX;
   float tileGapY;
@@ -146,6 +150,7 @@ public:
   TileID HexCoordToType(HexCoord h) const;
   const char *TileToString(TileID type) const;
   HexCoord GetNeighbor(HexCoord h, int directionIndex) const;
+  double GetVisCalcTime() const;
 
   // --- Direct Drawing (for debugging/special cases) ---
   void DrawTile(HexCoord h, int TA_X, int TA_Y, DrawMaskID layer);

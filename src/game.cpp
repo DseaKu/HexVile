@@ -7,7 +7,7 @@
 #include <string>
 
 // --- Initialization ---
-Game::Game() : isRunning(true), logicUpdateReady(false), logicUpdateDone(true) {
+Game::Game() : isRunning(true), logicUpdateReady(false), logicUpdateDone(true), logicExecutionTime(0.0), renderExecutionTime(0.0) {
   GFX_Manager.LoadAssets(Conf::TEXTURE_ATLAS_PATH);
 
   gameState.timer = 0.0f;
@@ -57,22 +57,28 @@ void Game::GameLoop() {
     mainToLogicCV.notify_one();
 
     // 3. Render (Main Thread) - Uses current GameState
-    BeginDrawing();
-    ClearBackground(WHITE);
+    {
+        auto startRender = std::chrono::high_resolution_clock::now();
+        BeginDrawing();
+        ClearBackground(WHITE);
 
-    BeginMode2D(gameState.camera);
-    GFX_Manager.RenderLayer(DRAW_MASK_GROUND_0);
-    GFX_Manager.RenderLayer(DRAW_MASK_GROUND_1);
-    GFX_Manager.RenderLayer(DRAW_MASK_SHADOW);
-    GFX_Manager.RenderLayer(DRAW_MASK_ON_GROUND);
-    EndMode2D();
+        BeginMode2D(gameState.camera);
+        GFX_Manager.RenderLayer(DRAW_MASK_GROUND_0);
+        GFX_Manager.RenderLayer(DRAW_MASK_GROUND_1);
+        GFX_Manager.RenderLayer(DRAW_MASK_SHADOW);
+        GFX_Manager.RenderLayer(DRAW_MASK_ON_GROUND);
+        EndMode2D();
 
-    GFX_Manager.RenderLayer(DRAW_MASK_UI_0);
-    GFX_Manager.RenderLayer(DRAW_MASK_UI_1);
+        GFX_Manager.RenderLayer(DRAW_MASK_UI_0);
+        GFX_Manager.RenderLayer(DRAW_MASK_UI_1);
 
-    DrawDebugOverlay(Conf::IS_DEBUG_OVERLAY_ENABLED);
+        DrawDebugOverlay(Conf::IS_DEBUG_OVERLAY_ENABLED);
 
-    EndDrawing();
+        EndDrawing();
+        auto endRender = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> elapsedRender = endRender - startRender;
+        renderExecutionTime = elapsedRender.count();
+    }
 
     // 4. Sync: Wait for Logic to finish (Barrier)
     // We wait here to ensure we don't start the next frame's input gathering
@@ -101,7 +107,11 @@ void Game::LogicLoop() {
 
     // Copy input to local variable to minimize locking time if we wanted to
     // but here we just process it.
+    auto startLogic = std::chrono::high_resolution_clock::now();
     RunLogic();
+    auto endLogic = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> elapsedLogic = endLogic - startLogic;
+    logicExecutionTime = elapsedLogic.count();
 
     logicUpdateReady = false;
     logicUpdateDone = true;
@@ -275,6 +285,9 @@ void Game::DrawDebugOverlay(bool is_enabled) {
            TextFormat("Tiles Used: %i", gameState.hexGrid.GetTilesInUse()),
            TextFormat("Tiles Visible: %i", gameState.hexGrid.GetTilesVisible()),
            TextFormat("Map radius: %i", gameState.hexGrid.GetMapRadius()),
+           TextFormat("Render Time: %.3f ms", renderExecutionTime.load()),
+           TextFormat("Logic Time: %.3f ms", logicExecutionTime.load()),
+           TextFormat("Vis Calc Time: %.3f ms", gameState.hexGrid.GetVisCalcTime()),
        }});
 
   // Use currentInput for debug display

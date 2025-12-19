@@ -73,6 +73,10 @@ private:
   std::atomic<bool> isRunning;
   bool logicUpdateReady; // Input ready for logic
   bool logicUpdateDone;  // Logic finished for this frame
+  
+  // Profiling
+  std::atomic<double> logicExecutionTime;
+  std::atomic<double> renderExecutionTime;
 
   // Methods
   void UpdateInputs(); // Gathers inputs from Raylib

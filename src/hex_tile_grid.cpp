@@ -61,6 +61,8 @@ HexGrid::HexGrid() {
   size_t estimated_hits = Conf::ESTIMATED_VISIBLE_TILES;
   currentVisibleTiles.reserve(estimated_hits);
   nextVisibleTiles.reserve(estimated_hits);
+  
+  calcVisTime = 0.0;
 }
 
 void HexGrid::InitGrid(float radius) {
@@ -238,6 +240,7 @@ void HexGrid::ToggleTile(HexCoord h) {
 }
 
 void HexGrid::CalcVisibleTiles() {
+  auto start = std::chrono::high_resolution_clock::now();
   if (camRect == nullptr) {
     return;
   }
@@ -280,6 +283,10 @@ void HexGrid::CalcVisibleTiles() {
   nextVisibleTiles =
       std::move(newVisiCache); // Move the new data to the back buffer.
   visiCacheReady = true; // Signal that new data is ready for the main thread.
+  
+  auto end = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double, std::milli> elapsed = end - start;
+  calcVisTime = elapsed.count();
 }
 
 bool HexGrid::CheckSurrounded(HexCoord target) const {
@@ -396,6 +403,8 @@ int HexGrid::GetMapRadius() const { return mapRadius; }
 HexCoord HexGrid::GetNeighbor(HexCoord h, int directionIndex) const {
   return h + DIRECTIONS[directionIndex];
 }
+
+double HexGrid::GetVisCalcTime() const { return calcVisTime; }
 
 // --- Set ---
 void HexGrid::SetCamRectPointer(Rectangle *camRect) { this->camRect = camRect; }

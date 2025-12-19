@@ -50,6 +50,7 @@ public:
   bool GetToolBarAvailability();
   Rectangle GetToolBarRect();
   int GetItemSlotAt(Vector2 point);
+  void UpdateScreenSize(int width, int height);
 };
 
 #endif // UI_HANDLER_H

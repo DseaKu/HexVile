@@ -127,7 +127,7 @@ void Game::LogicLoop() {
 }
 
 void Game::UpdateInputs() {
-  if (IsKeyPressed(KEY_O)) {
+  if (IsKeyPressed(KEY_F)) {
     ToggleFullscreen();
   }
 
@@ -162,11 +162,18 @@ void Game::UpdateInputs() {
   gameState.cameraTopLeft = GetScreenToWorld2D(Vector2{0, 0}, gameState.camera);
   gameState.cameraRect = {gameState.cameraTopLeft.x, gameState.cameraTopLeft.y,
                           Conf::CAMERA_WIDTH, Conf::CAMERA_HEIGHT};
+
+  currentInput.screenWidth = GetScreenWidth();
+  currentInput.screenHeight = GetScreenHeight();
 }
 
 void Game::RunLogic() {
   // Use currentInput and gameState
   gameState.timer += currentInput.frameTime;
+
+  // Update UI Layout
+  uiHandler.UpdateScreenSize(currentInput.screenWidth,
+                             currentInput.screenHeight);
 
   // IO Handler Update (Logic side)
   ioHandler.SetScaledMousePos(currentInput.mouseWorldPos);
@@ -305,6 +312,8 @@ void Game::DrawDebugOverlay(bool is_enabled) {
       {"Resources",
        {
            TextFormat("FPS: %i", GetFPS()),
+           TextFormat("Screen: %ix%i", GetScreenWidth(), GetScreenHeight()),
+           TextFormat("Render: %ix%i", GetRenderWidth(), GetRenderHeight()),
            TextFormat("Tiles Total: %i", gameState.hexGrid.GetTilesInTotal()),
            TextFormat("Tiles Used: %i", gameState.hexGrid.GetTilesInUse()),
            TextFormat("Tiles Visible: %i", gameState.hexGrid.GetTilesVisible()),

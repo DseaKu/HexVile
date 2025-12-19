@@ -35,6 +35,10 @@ struct InputState {
 
   PlayerInputState playerInput;
   float frameTime; // Delta time
+  
+  // Screen
+  int screenWidth;
+  int screenHeight;
 };
 
 struct GameState {

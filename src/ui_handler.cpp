@@ -78,6 +78,12 @@ int UI_Handler::GetItemSlotAt(Vector2 point) {
   return -1;
 }
 
+void UI_Handler::UpdateScreenSize(int width, int height) {
+  barPosX = (width / 2.0f) - (barWidth / 2.0f);
+  barPosY = height - barHeight - Conf::TOOLBAR_BOTTOM_MARGIN;
+  toolBarRec = {barPosX, barPosY, barWidth, barHeight};
+}
+
 // --- Render ---
 void UI_Handler::LoadToolBarGFX() {
   if (!isToolBarActive) {

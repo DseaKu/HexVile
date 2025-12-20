@@ -10,6 +10,22 @@ typedef enum TileID {
   TILE_ID_SIZE,
 } TileID;
 
+// --- Detail Indices  ---
+enum DetailIndex {
+  DETAIL_IDX_0 = 0,
+  DETAIL_IDX_1 = 1,
+  DETAIL_IDX_2 = 2,
+  DETAIL_IDX_3 = 3,
+  DETAIL_IDX_4 = 4,
+  DETAIL_IDX_5 = 5,
+  DETAIL_IDX_6 = 6,
+  DETAIL_IDX_7 = 7,
+  DETAIL_IDX_8 = 8,
+  DETAIL_IDX_9 = 9,
+  DETAIL_IDX_10 = 10,
+  DETAIL_IDX_11 = 11
+};
+
 typedef enum PlayerStateID {
   PLAYER_STATE_NULL = 0,
   PLAYER_STATE_WALK,

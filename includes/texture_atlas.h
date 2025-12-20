@@ -51,12 +51,21 @@ constexpr float RES8_F = RES8;
 // ==========================================
 //               Details & Objects
 // ==========================================
-constexpr float GAUSIAN_EFFECT = 6.0f;
-constexpr int GRASS_DETAILS = 0b11000000001;
-constexpr int WATER_DETAILS = 0b00000000100;
-constexpr int DIRT_DETAILS = 0b00100000010;
 constexpr int SKIP_RENDER = -1;
 constexpr int UNINITIALIZED = -2;
+
+// --- Detail Masks ---
+constexpr int GRASS_DETAILS =
+    BIT(DETAIL_IDX_0) | BIT(DETAIL_IDX_10) | BIT(DETAIL_IDX_11);
+
+// Original: 0b00000000100 (Bit 2)
+constexpr int WATER_DETAILS = BIT(DETAIL_IDX_2);
+
+// Original: 0b00100000010 (Bits 1, 9) -> Wait, 0b00100000010 is Bit 1 and Bit
+// 9? 0b00100000010
+//   ^ Bit 9   ^ Bit 1
+constexpr int DIRT_DETAILS = BIT(DETAIL_IDX_1) | BIT(DETAIL_IDX_9);
+
 inline const std::map<TileID, int> RENDER_BIT_MASK_DETAIL = {
     {TILE_NULL, 0},
     {TILE_GRASS, GRASS_DETAILS},
@@ -64,9 +73,17 @@ inline const std::map<TileID, int> RENDER_BIT_MASK_DETAIL = {
     {TILE_DIRT, DIRT_DETAILS},
 };
 
-constexpr int GRASS_OBJECTS = 0b00000100000;
-constexpr int WATER_OBJECTS = 0b00000000000;
-constexpr int DIRT_OBJECTS = 0b00000000000;
+// --- Object Indices ---
+enum ObjectIndex {
+  OBJ_IDX_5 = 5 // Bit 5
+};
+
+// --- Object Masks ---
+// Original: 0b00000100000 (Bit 5)
+constexpr int GRASS_OBJECTS = BIT(OBJ_IDX_5);
+constexpr int WATER_OBJECTS = 0;
+constexpr int DIRT_OBJECTS = 0;
+
 inline const std::map<TileID, int> RENDER_BIT_MASK_OBJECT = {
     {TILE_NULL, 0},
     {TILE_GRASS, GRASS_OBJECTS},

@@ -10,13 +10,13 @@
 // --- Initialization ---
 UI_Handler::UI_Handler() {
   // Initialize Layout Configuration
-  toolBarLayout.maxSlots = Conf::TOOLBAR_SLOTS;
-  toolBarLayout.padding = Conf::TOOLBAR_PADDING;
-  toolBarLayout.contentSize = Conf::TOOLBAR_SLOT_CONTENT_SIZE;
-  toolBarLayout.slotSize = Conf::TOOLBAR_SLOT_SIZE;
-  toolBarLayout.itemScale = Conf::TOOLBAR_ITEM_ICON_SCALE;
-  toolBarLayout.scale = Conf::UI_SCALE;
-  toolBarLayout.bottomMargin = Conf::TOOLBAR_BOTTOM_MARGIN;
+  toolBarLayout.maxSlots = conf::TOOLBAR_SLOTS;
+  toolBarLayout.padding = conf::TOOLBAR_PADDING;
+  toolBarLayout.contentSize = conf::TOOLBAR_SLOT_CONTENT_SIZE;
+  toolBarLayout.slotSize = conf::TOOLBAR_SLOT_SIZE;
+  toolBarLayout.itemScale = conf::TOOLBAR_ITEM_ICON_SCALE;
+  toolBarLayout.scale = conf::UI_SCALE;
+  toolBarLayout.bottomMargin = conf::TOOLBAR_BOTTOM_MARGIN;
 
   // Calculate Geometry
   toolBarLayout.width =
@@ -25,9 +25,9 @@ UI_Handler::UI_Handler() {
       toolBarLayout.contentSize + (2 * toolBarLayout.padding);
 
   // Initial Position (centered horizontally, bottom of screen)
-  toolBarLayout.posX = Conf::SCREEN_CENTER.x - (toolBarLayout.width / 2.0f);
+  toolBarLayout.posX = conf::SCREEN_CENTER.x - (toolBarLayout.width / 2.0f);
   toolBarLayout.posY =
-      Conf::SCREEN_HEIGHT - toolBarLayout.height - toolBarLayout.bottomMargin;
+      conf::SCREEN_HEIGHT - toolBarLayout.height - toolBarLayout.bottomMargin;
 
   toolBarLayout.rect = {toolBarLayout.posX, toolBarLayout.posY,
                         toolBarLayout.width, toolBarLayout.height};
@@ -122,7 +122,7 @@ void UI_Handler::DrawHighlighedTile(Vector2 mouseWorldPos) {
   if (!hexGrid)
     return;
   HexCoord coord = hexGrid->PointToHexCoord(mouseWorldPos);
-  hexGrid->DrawTile(coord, TA::UI_X, ui::TILE_H, drawMask::GROUND_1);
+  hexGrid->DrawTile(coord, ta::UI_X, ui::TILE_H, drawMask::GROUND_1);
 }
 
 void UI_Handler::DrawToolBar() {
@@ -143,10 +143,10 @@ void UI_Handler::DrawToolBarSlot(int slotIndex) {
                         (float)toolBarLayout.contentSize};
 
   // 1. Draw Background
-  graphicsManager->LoadGFX_Data(drawMask::UI_0, slotRect.y, TA::UI_X,
+  graphicsManager->LoadGFX_Data(drawMask::UI_0, slotRect.y, ta::UI_X,
                                 ui::ITEM_BAR_BG, slotRect, WHITE);
   if (slotIndex == itemHandler->GetSelectionToolBar()) {
-    graphicsManager->LoadGFX_Data(drawMask::UI_0, slotRect.y, TA::UI_X,
+    graphicsManager->LoadGFX_Data(drawMask::UI_0, slotRect.y, ta::UI_X,
                                   ui::ITEM_BAR_BG_H, slotRect, WHITE);
   }
 
@@ -170,7 +170,7 @@ void UI_Handler::DrawItemIcon(int slotIndex, Rectangle slotRect) {
   Rectangle iconRect = {slotRect.x + offsetX, slotRect.y + offsetY, newWidth,
                         newHeight};
 
-  graphicsManager->LoadGFX_Data(drawMask::UI_0, iconRect.y, TA::ITEM_X,
+  graphicsManager->LoadGFX_Data(drawMask::UI_0, iconRect.y, ta::ITEM_X,
                                 itemStack->itemID, iconRect, WHITE);
 }
 
@@ -202,14 +202,14 @@ void UI_Handler::DrawItemCount(int slotIndex, Rectangle slotRect) {
                         iconRect.y + iconRect.height};
 
     Rectangle digitRect = {
-        rbCorner.x - (digitIndex * TA::NUMBER_SCALE), rbCorner.y,
-        -TA::NUMBER_SCALE, // Negative width/height implies flip? Or just
+        rbCorner.x - (digitIndex * ta::NUMBER_SCALE), rbCorner.y,
+        -ta::NUMBER_SCALE, // Negative width/height implies flip? Or just
                            // anchor?
-        -TA::NUMBER_SCALE // Original code had negative. Assuming it means "draw
+        -ta::NUMBER_SCALE // Original code had negative. Assuming it means "draw
                           // up/left from anchor"
     };
 
-    graphicsManager->LoadGFX_Data(drawMask::UI_1, digitRect.y, TA::NUMBER_X,
+    graphicsManager->LoadGFX_Data(drawMask::UI_1, digitRect.y, ta::NUMBER_X,
                                   digit, digitRect, WHITE);
     digitIndex++;
   }

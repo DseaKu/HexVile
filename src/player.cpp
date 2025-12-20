@@ -7,7 +7,7 @@
 #include "texture_atlas.h"
 
 Player::Player() {
-  position = Conf::SCREEN_CENTER;
+  position = conf::SCREEN_CENTER;
   previousPosition = position;
   speedTilesPerSecond = 0.0f;
   dirID = dir::S;
@@ -58,7 +58,7 @@ void Player::Update(const KeyboardInput *keyboardInput, float deltaTime) {
   // Calculate Speed
   float distance = Vector2Distance(position, previousPosition);
   if (deltaTime > 0) {
-    speedTilesPerSecond = distance / deltaTime / Conf::TILE_RESOLUTION;
+    speedTilesPerSecond = distance / deltaTime / conf::TILE_RESOLUTION;
   } else {
     speedTilesPerSecond = 0;
   }
@@ -82,7 +82,7 @@ void Player::Idle() {
 }
 
 void Player::Walk(Vector2 dir, float deltaTime) {
-  float speed = Conf::PLAYER_MOVE_SPEED;
+  float speed = conf::PLAYER_MOVE_SPEED;
 
   if (stateID != playerState::WALK) {
     animationFrame = 0;
@@ -97,8 +97,8 @@ void Player::Walk(Vector2 dir, float deltaTime) {
   Vector2 nextPos = {position.x + dir.x * deltaTime * speed,
                      position.y + dir.y * deltaTime * speed};
 
-  float offsetX = dir.x * Conf::PLAYER_COLLISION_CHECK_OFFSET;
-  float offsetY = dir.y * Conf::PLAYER_COLLISION_CHECK_OFFSET;
+  float offsetX = dir.x * conf::PLAYER_COLLISION_CHECK_OFFSET;
+  float offsetY = dir.y * conf::PLAYER_COLLISION_CHECK_OFFSET;
   Vector2 checkPos = {nextPos.x + offsetX, nextPos.y + offsetY};
 
   // Check if destination is walkable
@@ -114,20 +114,20 @@ void Player::InitAnimations() {
   // Default init
   for (int i = 0; i < playerState::SIZE; i++) {
     for (int j = 0; j < dir::SIZE; j++) {
-      animationData[i][j] = {.frameCount = TA::PLAYER_X_MAX,
-                             .speed = TA::PLAYER_ANIMATION_SPEED,
+      animationData[i][j] = {.frameCount = ta::PLAYER_X_MAX,
+                             .speed = ta::PLAYER_ANIMATION_SPEED,
                              .loop = true};
     }
   }
 
   // Walk Specifics
   for (int i = 0; i < dir::SIZE; i++) {
-    animationData[playerState::WALK][i].frameCount = TA::PLAYER_WALK_MAX;
+    animationData[playerState::WALK][i].frameCount = ta::PLAYER_WALK_MAX;
   }
 
   // Idle Specifics
   for (int i = 0; i < dir::SIZE; i++) {
-    animationData[playerState::IDLE][i].speed = TA::PLAYER_ANIMATION_SPEED_IDLE;
+    animationData[playerState::IDLE][i].speed = ta::PLAYER_ANIMATION_SPEED_IDLE;
   }
 }
 
@@ -188,12 +188,12 @@ const char *Player::PlayerDirToString() const {
 // --- Rendering ---
 void Player::GenerateDrawData() {
   Vector2 drawPos = position;
-  drawPos.x -= TA::RES16;
-  drawPos.y -= TA::RES16 - Conf::PLAYER_SPRITE_Y_OFFSET;
+  drawPos.x -= ta::RES16;
+  drawPos.y -= ta::RES16 - conf::PLAYER_SPRITE_Y_OFFSET;
 
-  float resolution = TA::RES;
+  float resolution = ta::RES;
 
-  int TA_X = animationFrame + TA::PLAYER_X;
+  int TA_X = animationFrame + ta::PLAYER_X;
   int TA_Y = (stateID - 1) * (dir::SIZE - 1) + dirID;
 
   Rectangle dstRect = {drawPos.x, drawPos.y, resolution, resolution};

@@ -9,7 +9,7 @@
 constexpr Rectangle nullRec = Rectangle{0, 0, 0, 0};
 constexpr int BIT(int index) { return 1 << index; }
 
-namespace Conf {
+namespace conf {
 
 // ==========================================
 //               Core
@@ -23,7 +23,7 @@ constexpr const int VISIBLE_TILE_CALC_PERIOD = 20;
 constexpr float GRID_UPDATE_PLAYER_MOVE_THRESHOLD = 3.0f;
 constexpr const int RENDER_VIEW_CULLING_MARGIN = 150;
 constexpr const int RENDER_VIEW_CULLING_EXPANSION =
-    Conf::RENDER_VIEW_CULLING_MARGIN * 2;
+    conf::RENDER_VIEW_CULLING_MARGIN * 2;
 
 constexpr const int ESTIMATED_VISIBLE_TILES = 3000;
 
@@ -109,7 +109,7 @@ constexpr int DEBUG_OVERLAY_SUBSECTION_Y_GAP =
     DEBUG_OVERLAY_SUBSECTION_FONT_SIZE + 3;
 constexpr int DEBUG_OVERLAY_SUBSECTION_Y_POS =
     DEBUG_OVERLAY_SECTION_Y + DEBUG_OVERLAY_SUBSECTION_Y_GAP;
-} // namespace Conf
+} // namespace conf
 
 // --- Unsigned Integer Aliases ---
 using u8 = std::uint8_t;

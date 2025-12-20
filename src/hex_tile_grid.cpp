@@ -41,10 +41,10 @@ bool HexCoord::operator<(const HexCoord &other) const {
 HexGrid::HexGrid() {
 
   animationFrame = 0;
-  tileGapX = Conf::TILE_SPACING_X;
-  tileGapY = Conf::TILE_SPACING_Y;
-  origin = Conf::SCREEN_CENTER;
-  mapRadius = Conf::MAP_RADIUS;
+  tileGapX = conf::TILE_SPACING_X;
+  tileGapY = conf::TILE_SPACING_Y;
+  origin = conf::SCREEN_CENTER;
+  mapRadius = conf::MAP_RADIUS;
   gridSize = 0;
   tilesInUse = 0;
   tilesInTotal = 0;
@@ -55,12 +55,12 @@ HexGrid::HexGrid() {
   std::random_device rd;
   randomEngine = std::mt19937(rd());
 
-  const float mean = (TA::DETAILS_X + TA::DETAILS_X_MAX - 1) / 2.0f;
+  const float mean = (ta::DETAILS_X + ta::DETAILS_X_MAX - 1) / 2.0f;
   const float stddev =
-      (TA::DETAILS_X_MAX - TA::DETAILS_X) / Conf::GAUSIAN_EFFECT;
+      (ta::DETAILS_X_MAX - ta::DETAILS_X) / conf::GAUSIAN_EFFECT;
   typeDistribution = std::normal_distribution<float>(mean, stddev);
 
-  size_t estimated_hits = Conf::ESTIMATED_VISIBLE_TILES;
+  size_t estimated_hits = conf::ESTIMATED_VISIBLE_TILES;
   currentVisibleTiles.reserve(estimated_hits);
   nextVisibleTiles.reserve(estimated_hits);
 
@@ -85,7 +85,7 @@ void HexGrid::InitGrid(float radius) {
         MapTile initTile = {.tileID = tile::GRASS};
 
         for (TerrainDetail &d : initTile.detail) {
-          d.type = TA::UNINITIALIZED;
+          d.type = ta::UNINITIALIZED;
         }
 
         tileData[gridR * gridSize + gridQ] = initTile;
@@ -100,8 +100,8 @@ void HexGrid::InitGrid(float radius) {
 }
 
 TerrainDetail HexGrid::GetRandomTerainDetail(tile::id tileID) {
-  float x = GetRandomValue(-TA::RES8_F, TA::RES8_F);
-  float y = GetRandomValue(-TA::RES8_F, TA::RES8_F);
+  float x = GetRandomValue(-ta::RES8_F, ta::RES8_F);
+  float y = GetRandomValue(-ta::RES8_F, ta::RES8_F);
 
   // Generate a value from the normal distribution
   float generated_type_float = typeDistribution(randomEngine);
@@ -110,21 +110,21 @@ TerrainDetail HexGrid::GetRandomTerainDetail(tile::id tileID) {
   int generated_type = static_cast<int>(std::round(generated_type_float));
 
   // Clamp the value to the valid range
-  int type = std::clamp(generated_type, TA::DETAILS_X, TA::DETAILS_X_MAX - 1);
+  int type = std::clamp(generated_type, ta::DETAILS_X, ta::DETAILS_X_MAX - 1);
 
   // Determine if detail is null and skip render process
-  int renderBitMask = TA::RENDER_BIT_MASK_DETAIL.at(tileID);
-  int detailShift = type - TA::DETAILS_X;
+  int renderBitMask = ta::RENDER_BIT_MASK_DETAIL.at(tileID);
+  int detailShift = type - ta::DETAILS_X;
   if (!(renderBitMask >> detailShift & 1)) {
-    type = TA::SKIP_RENDER;
+    type = ta::SKIP_RENDER;
   }
 
   return TerrainDetail{.x = x, .y = y, .type = type};
 }
 
 TerrainObject HexGrid::GetRandomTerainObject(tile::id tileID) {
-  float x = GetRandomValue(-TA::RES8_F, TA::RES8_F);
-  float y = GetRandomValue(-TA::RES8_F, TA::RES8_F);
+  float x = GetRandomValue(-ta::RES8_F, ta::RES8_F);
+  float y = GetRandomValue(-ta::RES8_F, ta::RES8_F);
 
   // Generate a value from the normal distribution
   float generated_type_float = typeDistribution(randomEngine);
@@ -133,13 +133,13 @@ TerrainObject HexGrid::GetRandomTerainObject(tile::id tileID) {
   int generated_type = static_cast<int>(std::round(generated_type_float));
 
   // Clamp the value to the valid range
-  int type = std::clamp(generated_type, TA::DETAILS_X, TA::DETAILS_X_MAX - 1);
+  int type = std::clamp(generated_type, ta::DETAILS_X, ta::DETAILS_X_MAX - 1);
 
   // Determine if detail is null and skip render process
-  int renderBitMask = TA::RENDER_BIT_MASK_OBJECT.at(tileID);
-  int detailShift = type - TA::DETAILS_X;
+  int renderBitMask = ta::RENDER_BIT_MASK_OBJECT.at(tileID);
+  int detailShift = type - ta::DETAILS_X;
   if (!(renderBitMask >> detailShift & 1)) {
-    type = TA::SKIP_RENDER;
+    type = ta::SKIP_RENDER;
   }
 
   return TerrainObject{.x = x, .y = y, .type = type};
@@ -167,8 +167,8 @@ bool HexGrid::IsWalkable(HexCoord h) const {
   }
   MapTile tile = HexCoordToTile(h);
   tile::id type = tile.tileID;
-  for (int i = 0; i < Conf::WALKABLE_TILE_IDS.size(); i++) {
-    if (type == Conf::WALKABLE_TILE_IDS[i]) {
+  for (int i = 0; i < conf::WALKABLE_TILE_IDS.size(); i++) {
+    if (type == conf::WALKABLE_TILE_IDS[i]) {
       return true;
     }
   }
@@ -271,15 +271,15 @@ void HexGrid::CalcVisibleTiles() {
   }
   // Define the rendering view rectangle, expanded by an offset for culling.
   Rectangle renderView = {
-      .x = camRect->x - Conf::RENDER_VIEW_CULLING_MARGIN,
-      .y = camRect->y - Conf::RENDER_VIEW_CULLING_MARGIN,
-      .width = camRect->width + Conf::RENDER_VIEW_CULLING_EXPANSION,
-      .height = camRect->height + Conf::RENDER_VIEW_CULLING_EXPANSION};
+      .x = camRect->x - conf::RENDER_VIEW_CULLING_MARGIN,
+      .y = camRect->y - conf::RENDER_VIEW_CULLING_MARGIN,
+      .width = camRect->width + conf::RENDER_VIEW_CULLING_EXPANSION,
+      .height = camRect->height + conf::RENDER_VIEW_CULLING_EXPANSION};
 
   int gridSize = mapRadius * 2 + 1;
 
   std::vector<HexCoord> newVisiCache;
-  newVisiCache.reserve(Conf::ESTIMATED_VISIBLE_TILES); // Pre-allocate memory
+  newVisiCache.reserve(conf::ESTIMATED_VISIBLE_TILES); // Pre-allocate memory
                                                        // for efficiency.
 
   // Iterate over all tiles in the grid.
@@ -292,9 +292,9 @@ void HexGrid::CalcVisibleTiles() {
       // Convert grid coordinates to HexCoord and then to screen coordinates.
       HexCoord h(q - mapRadius, r - mapRadius);
       Vector2 pos = HexCoordToPoint(h);
-      pos.x -= Conf::TILE_RESOLUTION_HALF;
-      pos.y -= Conf::TILE_RESOLUTION_HALF;
-      Rectangle dest_rect = {pos.x, pos.y, TA::RES, TA::RES};
+      pos.x -= conf::TILE_RESOLUTION_HALF;
+      pos.y -= conf::TILE_RESOLUTION_HALF;
+      Rectangle dest_rect = {pos.x, pos.y, ta::RES, ta::RES};
       // Check if the tile's bounding box intersects with the render view.
       if (CheckCollisionRecs(renderView, dest_rect)) {
         newVisiCache.push_back(h);
@@ -339,9 +339,9 @@ void HexGrid::DrawTile(HexCoord h, int TA_X, int TA_Y, drawMask::id layerID) {
     return;
   }
   Vector2 pos = HexCoordToPoint(h);
-  pos.x -= Conf::TILE_RESOLUTION_HALF;
-  pos.y -= Conf::TILE_RESOLUTION_HALF;
-  Rectangle destRect = {pos.x, pos.y, TA::RES, TA::RES};
+  pos.x -= conf::TILE_RESOLUTION_HALF;
+  pos.y -= conf::TILE_RESOLUTION_HALF;
+  Rectangle destRect = {pos.x, pos.y, ta::RES, ta::RES};
 
   const MapTile &tile = GetTile(h);
   Vector2 origin = {0.0f, 0.0f};
@@ -372,7 +372,7 @@ void HexGrid::UpdateTileVisibility(float totalTime) {
   }
 
   // Update animation frame based on game time for animated tiles.
-  animationFrame = (int)(totalTime * TA::TILES_ANIMATION_SPEED) % 1;
+  animationFrame = (int)(totalTime * ta::TILES_ANIMATION_SPEED) % 1;
 }
 
 void HexGrid::Update(const Camera2D &camera, float totalTime) {
@@ -387,9 +387,9 @@ void HexGrid::LoadTileGFX() {
   for (int i = 0; i < currentVisibleTiles.size(); i++) {
     HexCoord h = currentVisibleTiles[i];
     Vector2 pos = HexCoordToPoint(h);
-    pos.x -= Conf::TILE_RESOLUTION_HALF;
-    pos.y -= Conf::TILE_RESOLUTION_HALF;
-    Rectangle destRec = {pos.x, pos.y, TA::RES, TA::RES};
+    pos.x -= conf::TILE_RESOLUTION_HALF;
+    pos.y -= conf::TILE_RESOLUTION_HALF;
+    Rectangle destRec = {pos.x, pos.y, ta::RES, ta::RES};
 
     MapTile &t = GetTile(h);
     int x = animationFrame + 12;
@@ -400,10 +400,10 @@ void HexGrid::LoadTileGFX() {
 
     // Draw details for this tile
     for (TerrainDetail &d : t.detail) {
-      if (d.type == TA::UNINITIALIZED) {
+      if (d.type == ta::UNINITIALIZED) {
         d = GetRandomTerainDetail(t.tileID);
       }
-      if (d.type != TA::SKIP_RENDER) {
+      if (d.type != ta::SKIP_RENDER) {
         LoadDetailGFX(d, pos.x, pos.y, t.tileID);
       }
     }
@@ -413,9 +413,9 @@ void HexGrid::LoadTileGFX() {
 void HexGrid::LoadDetailGFX(const TerrainDetail d, float x, float y,
                             tile::id tileID) {
 
-  Rectangle destRec = {x + d.x, y + d.y - TA::RES16_F, TA::RES, TA::RES};
+  Rectangle destRec = {x + d.x, y + d.y - ta::RES16_F, ta::RES, ta::RES};
 
-  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, y - TA::RES16_F, d.type,
+  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, y - ta::RES16_F, d.type,
                                 tileID, destRec, WHITE);
 }
 

@@ -8,9 +8,9 @@
 // ==========================================
 //               32x32 Resolution
 // ==========================================
-namespace TA {
+namespace ta {
 constexpr int RES32_OFFSET = 100;
-constexpr int RES = Conf::TILE_RESOLUTION;
+constexpr int RES = conf::TILE_RESOLUTION;
 constexpr float RES_F = RES;
 
 // --- Player ---
@@ -37,6 +37,10 @@ constexpr int UI_X_MAX = UI_X + 1;
 constexpr int NUMBER_X = UI_X_MAX;
 constexpr int NUMBER_X_MAX = 1;
 
+// --- Tree
+constexpr int TREE_X = UI_X_MAX;
+constexpr int TREE_X_MAX = 1;
+
 // ==========================================
 //               16x16 Resolution
 // ==========================================
@@ -50,12 +54,11 @@ constexpr int RES8 = RES16 / 2;
 constexpr float RES8_F = RES8;
 
 // ==========================================
-//               Details & Objects
+//               Details
 // ==========================================
 constexpr int SKIP_RENDER = -1;
 constexpr int UNINITIALIZED = -2;
 
-// --- Detail Masks ---
 constexpr int GRASS_DETAILS =
     BIT(detail::IDX_0) | BIT(detail::IDX_1) | BIT(detail::IDX_10);
 
@@ -100,6 +103,6 @@ constexpr float TILES_ANIMATION_SPEED = 0.3f;
 
 // Don't go to low, it can corruped the font
 constexpr float NUMBER_SCALE = RES * 0.5f;
-} // namespace TA
+} // namespace ta
 
 #endif // TEXTURE_ATLAS_H

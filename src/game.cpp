@@ -36,23 +36,23 @@ Game::Game() {
   displayVisTime = 0.0;
   displayRamUsage = 0.0;
 
-  gfxManager.LoadAssets(Conf::TEXTURE_ATLAS_PATH);
+  gfxManager.LoadAssets(conf::TEXTURE_ATLAS_PATH);
 
   worldState.timer = 0.0f;
-  worldState.updateGridTreshold = Conf::GRID_UPDATE_PLAYER_MOVE_THRESHOLD;
+  worldState.updateGridTreshold = conf::GRID_UPDATE_PLAYER_MOVE_THRESHOLD;
   int fileSize = 0;
-  hackFontRegular = LoadFileData(Conf::FONT_HACK_REGULAR_PATH, &fileSize);
+  hackFontRegular = LoadFileData(conf::FONT_HACK_REGULAR_PATH, &fileSize);
 
-  worldState.hexGrid.InitGrid(Conf::MAP_RADIUS);
+  worldState.hexGrid.InitGrid(conf::MAP_RADIUS);
   worldState.hexGrid.SetGFX_Manager(&gfxManager);
   worldState.hexGrid.SetCamRectPointer(&worldState.cameraRect);
 
   worldState.player.SetHexGrid(&worldState.hexGrid);
   worldState.player.SetGFX_Manager(&gfxManager);
 
-  worldState.camera.target = Conf::SCREEN_CENTER;
-  worldState.camera.offset = Conf::SCREEN_CENTER;
-  worldState.camera.zoom = Conf::INITIAL_CAMERA_ZOOM;
+  worldState.camera.target = conf::SCREEN_CENTER;
+  worldState.camera.offset = conf::SCREEN_CENTER;
+  worldState.camera.zoom = conf::INITIAL_CAMERA_ZOOM;
   worldState.camera.rotation = 0.0f;
   worldState.cameraRect = {0, 0, 0, 0};
   worldState.cameraTopLeft = {0, 0};
@@ -104,7 +104,7 @@ void Game::GameLoop() {
       gfxManager.RenderLayer(drawMask::UI_0);
       gfxManager.RenderLayer(drawMask::UI_1);
 
-      DrawDebugOverlay(Conf::IS_DEBUG_OVERLAY_ENABLED);
+      DrawDebugOverlay(conf::IS_DEBUG_OVERLAY_ENABLED);
 
       EndDrawing();
       auto endRender = std::chrono::high_resolution_clock::now();
@@ -316,16 +316,16 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   if (!is_enabled)
     return;
 
-  float sectionPosX = Conf::DEBUG_OVERLAY_SECTION_X;
-  int sectionPosY = Conf::DEBUG_OVERLAY_SECTION_Y;
-  int sectionGapY = Conf::DEBUG_OVERLAY_SECTION_Y_GAP;
-  // int sectionFontSize = Conf::DEBUG_OVERLAY_SECTION_FONT_SIZE;
-  Color sectionColor = Conf::DEBUG_OVERLAY_SECTION_FONT_COLOR;
+  float sectionPosX = conf::DEBUG_OVERLAY_SECTION_X;
+  int sectionPosY = conf::DEBUG_OVERLAY_SECTION_Y;
+  int sectionGapY = conf::DEBUG_OVERLAY_SECTION_Y_GAP;
+  // int sectionFontSize = conf::DEBUG_OVERLAY_SECTION_FONT_SIZE;
+  Color sectionColor = conf::DEBUG_OVERLAY_SECTION_FONT_COLOR;
 
-  float subSectionPosX = Conf::DEBUG_OVERLAY_SUBSECTION_X_POS;
-  int subSectionGapY = Conf::DEBUG_OVERLAY_SUBSECTION_Y_GAP;
-  // int subSectionFontSize = Conf::DEBUG_OVERLAY_SUBSECTION_FONT_SIZE;
-  Color subSectionColor = Conf::DEBUG_OVERLAY_SECTION_FONT_COLOR;
+  float subSectionPosX = conf::DEBUG_OVERLAY_SUBSECTION_X_POS;
+  int subSectionGapY = conf::DEBUG_OVERLAY_SUBSECTION_Y_GAP;
+  // int subSectionFontSize = conf::DEBUG_OVERLAY_SUBSECTION_FONT_SIZE;
+  Color subSectionColor = conf::DEBUG_OVERLAY_SECTION_FONT_COLOR;
 
   float currentY = sectionPosY;
 

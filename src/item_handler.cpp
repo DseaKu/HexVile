@@ -27,8 +27,8 @@ ItemHandler::ItemHandler() {
 
 void ItemHandler::Init() {
   ItemStack itemNull = {.itemID = item::NULL_ID, .count = 0};
-  inventory.assign(Conf::INVENTORY_SLOTS, itemNull);
-  toolBar.assign(Conf::TOOLBAR_SLOTS, itemNull);
+  inventory.assign(conf::INVENTORY_SLOTS, itemNull);
+  toolBar.assign(conf::TOOLBAR_SLOTS, itemNull);
 
   ItemStack grass = {.itemID = item::SET_GRASS, .count = 32};
   ItemStack water = {.itemID = item::SET_WATER, .count = 51};

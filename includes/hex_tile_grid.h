@@ -53,8 +53,8 @@ struct TerrainObject {
 // --- Map Tile ---
 struct MapTile {
   tile::id tileID;
-  TerrainDetail detail[Conf::TERRAIN_DETAILS_MAX];
-  TerrainObject objects[Conf::TERRAIN_OBJECTS_MAX];
+  TerrainDetail detail[conf::TERRAIN_DETAILS_MAX];
+  TerrainObject objects[conf::TERRAIN_OBJECTS_MAX];
 };
 
 /* Grid parts and relationships:

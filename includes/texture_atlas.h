@@ -58,6 +58,7 @@ constexpr int DIRT_DETAILS = 0b00100000010;
 constexpr int SKIP_RENDER = -1;
 constexpr int UNINITIALIZED = -2;
 inline const std::map<TileID, int> RENDER_BIT_MASK_DETAIL = {
+    {TILE_NULL, 0},
     {TILE_GRASS, GRASS_DETAILS},
     {TILE_WATER, WATER_DETAILS},
     {TILE_DIRT, DIRT_DETAILS},
@@ -67,6 +68,7 @@ constexpr int GRASS_OBJECTS = 0b00000100000;
 constexpr int WATER_OBJECTS = 0b00000000000;
 constexpr int DIRT_OBJECTS = 0b00000000000;
 inline const std::map<TileID, int> RENDER_BIT_MASK_OBJECT = {
+    {TILE_NULL, 0},
     {TILE_GRASS, GRASS_OBJECTS},
     {TILE_WATER, WATER_OBJECTS},
     {TILE_DIRT, DIRT_OBJECTS},

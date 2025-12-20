@@ -7,23 +7,23 @@
 #include "texture_atlas.h"
 
 Player::Player() {
-  this->position = Conf::SCREEN_CENTER;
-  this->previousPosition = this->position;
-  this->speedTilesPerSecond = 0.0f;
-  this->faceDir = S;
-  this->state = PLAYER_STATE_IDLE;
-  this->animationFrame = 0.0f;
-  this->animationDelta = 0;
-  this->position = Conf::SCREEN_CENTER;
-  this->playerTile = {0, 0};
+  position = Conf::SCREEN_CENTER;
+  previousPosition = position;
+  speedTilesPerSecond = 0.0f;
+  faceDir = S;
+  state = PLAYER_STATE_IDLE;
+  animationFrame = 0;
+  animationDelta = 0.0f;
+  playerTile = {0, 0};
+  
   InitAnimations();
 }
 
 void Player::Update(const KeyboardInput *keyboardInput, float deltaTime) {
-  this->animationDelta += deltaTime;
-  this->playerTile = this->hexGrid->PointToHexCoord(this->position);
+  animationDelta += deltaTime;
+  playerTile = hexGrid->PointToHexCoord(position);
 
-  Vector2 dir;
+  Vector2 dir = {0, 0};
   dir.x = -keyboardInput->Left + keyboardInput->Right;
   dir.y = -keyboardInput->Up + keyboardInput->Down;
 
@@ -47,147 +47,149 @@ void Player::Update(const KeyboardInput *keyboardInput, float deltaTime) {
       faceDir = NW;
     }
   }
+  
   // Determine player state
   if (dir.x == 0 && dir.y == 0) {
     Idle();
-  } else if (dir.x != 0 || dir.y != 0) {
-    Walk(dir, deltaTime);
   } else {
-    this->state = PLAYER_STATE_NULL;
+    Walk(dir, deltaTime);
   }
 
   // Calculate Speed
-  float distance = Vector2Distance(this->position, this->previousPosition);
+  float distance = Vector2Distance(position, previousPosition);
   if (deltaTime > 0) {
-    this->speedTilesPerSecond = distance / deltaTime / Conf::TILE_RESOLUTION;
+    speedTilesPerSecond = distance / deltaTime / Conf::TILE_RESOLUTION;
   } else {
-    this->speedTilesPerSecond = 0;
+    speedTilesPerSecond = 0;
   }
-  this->previousPosition = this->position;
+  previousPosition = position;
 
   // Calculate animation frame
-  float animationSpeed =
-      this->animationDelta * animationData[this->state][faceDir].speed;
-  this->animationFrame =
-      (int)animationSpeed % animationData[this->state][faceDir].frameCount;
+  float currentSpeed = animationData[state][faceDir].speed;
+  float frameCount = (float)animationData[state][faceDir].frameCount;
+  
+  float animationProgress = animationDelta * currentSpeed;
+  animationFrame = (int)animationProgress % (int)frameCount;
 
   GenerateDrawData();
 }
 
-HexCoord Player::GetTile() { return this->playerTile; }
-
 void Player::GenerateDrawData() {
-  Vector2 playerPosition = this->position;
-  playerPosition.x -= TA::RES16;
-  playerPosition.y -= TA::RES16 - Conf::PLAYER_SPRITE_Y_OFFSET;
+  Vector2 drawPos = position;
+  drawPos.x -= TA::RES16;
+  drawPos.y -= TA::RES16 - Conf::PLAYER_SPRITE_Y_OFFSET;
+  
   float resolution = TA::RES;
 
-  int TA_X = this->animationFrame + TA::PLAYER_X;
+  int TA_X = animationFrame + TA::PLAYER_X;
   int TA_Y = (state - 1) * (DIR_LABELS_SIZE - 1) + faceDir;
 
-  Rectangle dstRect = {playerPosition.x, playerPosition.y, resolution,
-                       resolution};
+  Rectangle dstRect = {drawPos.x, drawPos.y, resolution, resolution};
 
-  graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, playerPosition.y, TA_X,
+  graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, drawPos.y, TA_X,
                                 TA_Y, dstRect, WHITE);
 }
 
-Vector2 Player::GetPosition() { return position; }
-
-const char *Player::PlayerStateToString() {
-  switch (this->state) {
-  case PLAYER_STATE_NULL:
-    return "NULL";
-  case PLAYER_STATE_IDLE:
-    return "IDLE";
-  case PLAYER_STATE_WALK:
-    return "WALK";
-  default:
-    return "Unknown State";
-  }
-}
-
-const char *Player::PlayerDirToString() {
-  switch (this->faceDir) {
-  case DIR_NULL:
-    return "NULL";
-  case NW:
-    return "NW";
-  case W:
-    return "W";
-  case SW:
-    return "SW";
-  case S:
-    return "S";
-  case SE:
-    return "SE";
-  case E:
-    return "E";
-  case NE:
-    return "NE";
-  case N:
-    return "N";
-  default:
-    return "Unknown Direction";
-  }
-}
-
-int Player::GetAnimationFrame() { return this->animationFrame; }
-
-float Player::GetSpeedTilesPerSecond() { return this->speedTilesPerSecond; }
-
-void Player::SetGFX_Manager(GFX_Manager *graphicsManager) {
-
-  this->graphicsManager = graphicsManager;
-}
-
 void Player::Idle() {
-  if (this->state != PlayerStateID::PLAYER_STATE_IDLE) {
-    this->animationFrame = 0.0f;
-    this->state = PlayerStateID::PLAYER_STATE_IDLE;
+  if (state != PlayerStateID::PLAYER_STATE_IDLE) {
+    animationFrame = 0;
+    state = PlayerStateID::PLAYER_STATE_IDLE;
   }
 }
 
 void Player::Walk(Vector2 dir, float deltaTime) {
-
   float speed = Conf::PLAYER_MOVE_SPEED;
 
-  if (this->state != PLAYER_STATE_WALK) {
-    animationFrame = 0.0f;
-    this->state = PLAYER_STATE_WALK;
+  if (state != PLAYER_STATE_WALK) {
+    animationFrame = 0;
+    state = PLAYER_STATE_WALK;
   }
+  
   // Normalize diagonal movement
   if (Vector2Length(dir) > 0) {
     dir = Vector2Normalize(dir);
   }
-  Vector2 nextPos = {this->position.x + dir.x * deltaTime * speed,
-                     this->position.y + dir.y * deltaTime * speed};
+  
+  Vector2 nextPos = {position.x + dir.x * deltaTime * speed,
+                     position.y + dir.y * deltaTime * speed};
 
   float offsetX = dir.x * Conf::PLAYER_COLLISION_CHECK_OFFSET;
   float offsetY = dir.y * Conf::PLAYER_COLLISION_CHECK_OFFSET;
-  Vector2 a = {nextPos.x + offsetX, nextPos.y + offsetY};
+  Vector2 checkPos = {nextPos.x + offsetX, nextPos.y + offsetY};
+  
   // Check if destination is walkable
-  if (this->hexGrid->IsWalkable(this->hexGrid->PointToHexCoord(a))) {
-    this->position = nextPos;
+  if (hexGrid->IsWalkable(hexGrid->PointToHexCoord(checkPos))) {
+    position = nextPos;
   } else {
-    Idle();
+    // If blocked, fallback to idle? Or just slide?
+    // For now, staying consistent with previous logic
+    // But calling Idle() inside Walk() if blocked feels weird.
+    // It's technically "trying to walk but blocked".
+    // I'll keep the logic but maybe we should still play walk anim?
+    // For now, keep original behavior.
+    Idle(); 
   }
 }
 
 void Player::InitAnimations() {
+  // Default init
   for (int i = 0; i < PLAYER_STATE_ID_SIZE; i++) {
     for (int j = 0; j < DIR_LABELS_SIZE; j++) {
-      this->animationData[i][j] = {.frameCount = TA::PLAYER_X_MAX,
-                                   .speed = TA::PLAYER_ANIMATION_SPEED,
-                                   .loop = true};
+      animationData[i][j] = {.frameCount = TA::PLAYER_X_MAX,
+                             .speed = TA::PLAYER_ANIMATION_SPEED,
+                             .loop = true};
     }
   }
+  
+  // Walk Specifics
   for (int i = 0; i < DIR_LABELS_SIZE; i++) {
-    this->animationData[PLAYER_STATE_WALK][i].frameCount = TA::PLAYER_WALK_MAX;
+    animationData[PLAYER_STATE_WALK][i].frameCount = TA::PLAYER_WALK_MAX;
   }
+  
+  // Idle Specifics
   for (int i = 0; i < DIR_LABELS_SIZE; i++) {
-    this->animationData[PLAYER_STATE_IDLE][i].speed =
-        TA::PLAYER_ANIMATION_SPEED_IDLE;
+    animationData[PLAYER_STATE_IDLE][i].speed = TA::PLAYER_ANIMATION_SPEED_IDLE;
   }
 }
-void Player::SetHexGrid(HexGrid *grid) { this->hexGrid = grid; }
+
+// --- Setters ---
+void Player::SetGFX_Manager(GFX_Manager *graphicsManager) {
+  this->graphicsManager = graphicsManager;
+}
+
+void Player::SetHexGrid(HexGrid *grid) { 
+  this->hexGrid = grid; 
+}
+
+// --- Getters ---
+Vector2 Player::GetPosition() const { return position; }
+
+HexCoord Player::GetTile() const { return playerTile; }
+
+int Player::GetAnimationFrame() const { return animationFrame; }
+
+float Player::GetSpeedTilesPerSecond() const { return speedTilesPerSecond; }
+
+const char *Player::PlayerStateToString() const {
+  switch (state) {
+  case PLAYER_STATE_NULL: return "NULL";
+  case PLAYER_STATE_IDLE: return "IDLE";
+  case PLAYER_STATE_WALK: return "WALK";
+  default: return "Unknown State";
+  }
+}
+
+const char *Player::PlayerDirToString() const {
+  switch (faceDir) {
+  case DIR_NULL: return "NULL";
+  case NW: return "NW";
+  case W:  return "W";
+  case SW: return "SW";
+  case S:  return "S";
+  case SE: return "SE";
+  case E:  return "E";
+  case NE: return "NE";
+  case N:  return "N";
+  default: return "Unknown Direction";
+  }
+}

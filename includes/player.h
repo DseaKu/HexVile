@@ -15,18 +15,24 @@ struct PlayerAnimationData {
 
 class Player {
 private:
-  int animationFrame;
-  float animationDelta;
-  DirLabels faceDir;
+  // --- Dependencies ---
+  GFX_Manager *graphicsManager = nullptr;
+  HexGrid *hexGrid = nullptr;
+
+  // --- State ---
   Vector2 position;
   Vector2 previousPosition;
-  float speedTilesPerSecond;
-  GFX_Manager *graphicsManager;
-  PlayerStateID state;
-  PlayerAnimationData animationData[PLAYER_STATE_ID_SIZE][DIR_LABELS_SIZE];
-  HexGrid *hexGrid;
   HexCoord playerTile;
+  PlayerStateID state;
+  DirLabels faceDir;
+  float speedTilesPerSecond;
 
+  // --- Animation ---
+  int animationFrame;
+  float animationDelta;
+  PlayerAnimationData animationData[PLAYER_STATE_ID_SIZE][DIR_LABELS_SIZE];
+
+  // --- Helpers ---
   void Idle();
   void Walk(Vector2 dir, float deltaTime);
   void InitAnimations();
@@ -34,14 +40,20 @@ private:
 
 public:
   Player();
+
+  // --- Core ---
   void Update(const KeyboardInput *keyboardInput, float deltaTime);
+
+  // --- Setters ---
   void SetHexGrid(HexGrid *grid);
-  Vector2 GetPosition();
   void SetGFX_Manager(GFX_Manager *graphicsManager);
-  int GetAnimationFrame();
-  HexCoord GetTile();
-  const char *PlayerStateToString();
-  const char *PlayerDirToString();
-  float GetSpeedTilesPerSecond();
+
+  // --- Getters ---
+  Vector2 GetPosition() const;
+  HexCoord GetTile() const;
+  int GetAnimationFrame() const;
+  float GetSpeedTilesPerSecond() const;
+  const char *PlayerStateToString() const;
+  const char *PlayerDirToString() const;
 };
 #endif // !PLAYER_H

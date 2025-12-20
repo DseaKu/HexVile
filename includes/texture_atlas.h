@@ -56,15 +56,11 @@ constexpr int SKIP_RENDER = -1;
 constexpr int UNINITIALIZED = -2;
 
 // --- Detail Masks ---
-constexpr int GRASS_DETAILS =
-    BIT(detail::IDX_0) | BIT(detail::IDX_10) | BIT(detail::IDX_11);
+constexpr int GRASS_DETAILS = BIT(detail::IDX_0) | BIT(detail::IDX_1) |
+                              BIT(detail::IDX_10) | BIT(detail::IDX_11);
 
-// Original: 0b00000000100 (Bit 2)
-constexpr int WATER_DETAILS = BIT(detail::IDX_2);
+constexpr int WATER_DETAILS = BIT(detail::IDX_8);
 
-// Original: 0b00100000010 (Bits 1, 9) -> Wait, 0b00100000010 is Bit 1 and Bit
-// 9? 0b00100000010
-//   ^ Bit 9   ^ Bit 1
 constexpr int DIRT_DETAILS = BIT(detail::IDX_1) | BIT(detail::IDX_9);
 
 inline const std::map<tile::id, int> RENDER_BIT_MASK_DETAIL = {

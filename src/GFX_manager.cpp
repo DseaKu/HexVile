@@ -5,8 +5,8 @@
 #include <iostream>
 
 GFX_Manager::GFX_Manager() {
-  GFX_Data_Buffers[0].resize(DRAW_MASK_SIZE);
-  GFX_Data_Buffers[1].resize(DRAW_MASK_SIZE);
+  GFX_Data_Buffers[0].resize(drawMask::SIZE);
+  GFX_Data_Buffers[1].resize(drawMask::SIZE);
   backBufferIndex = 1; // Start writing to 1
   textureAtlas = {0, 0, 0, 0, 0};
 }
@@ -45,14 +45,15 @@ Rectangle GFX_Manager::GetSrcRec(int x, int y) { return textureRecData[y][x]; }
 
 void GFX_Manager::UnloadAssets() { UnloadTexture(this->textureAtlas); }
 
-void GFX_Manager::LoadGFX_Data(DrawMaskID maskID, float y, int TA_X, int TA_Y,
+void GFX_Manager::LoadGFX_Data(drawMask::id maskID, float y, int TA_X, int TA_Y,
                                Rectangle dstRec, Color col) {
   Rectangle srcRec = GetSrcRec(TA_X, TA_Y);
   // Write to Back Buffer
-  GFX_Data_Buffers[backBufferIndex][static_cast<int>(maskID)].emplace(y, GFX_Props{srcRec, dstRec, col});
+  GFX_Data_Buffers[backBufferIndex][static_cast<int>(maskID)].emplace(
+      y, GFX_Props{srcRec, dstRec, col});
 }
 
-void GFX_Manager::RenderLayer(DrawMaskID maskID) {
+void GFX_Manager::RenderLayer(drawMask::id maskID) {
   // Read from Front Buffer (1 - backBufferIndex)
   int frontIndex = 1 - backBufferIndex;
   auto &layer = GFX_Data_Buffers[frontIndex][static_cast<int>(maskID)];
@@ -65,20 +66,20 @@ void GFX_Manager::RenderLayer(DrawMaskID maskID) {
 }
 
 void GFX_Manager::SwapBuffers() {
-    // Check if the NEW back buffer (old front) is clear?
-    // RenderLayer clears it, so it should be fine. 
-    // Just to be safe, we could clear it here, but it's O(N) redundant if Render cleared it.
-    // However, if we missed rendering a layer, it might persist.
-    // Safety clear:
-    int nextBack = 1 - backBufferIndex;
-    for(auto &layer : GFX_Data_Buffers[nextBack]) {
-        layer.clear();
-    }
-    
-    backBufferIndex = nextBack;
+  // Check if the NEW back buffer (old front) is clear?
+  // RenderLayer clears it, so it should be fine.
+  // Just to be safe, we could clear it here, but it's O(N) redundant if Render
+  // cleared it. However, if we missed rendering a layer, it might persist.
+  // Safety clear:
+  int nextBack = 1 - backBufferIndex;
+  for (auto &layer : GFX_Data_Buffers[nextBack]) {
+    layer.clear();
+  }
+
+  backBufferIndex = nextBack;
 }
 
-Rectangle GFX_Manager::GetTileRec(TileID tileID, int frame) {
+Rectangle GFX_Manager::GetTileRec(tile::id tileID, int frame) {
   int x_idx = (TA::TILE_X / TA::RES) + frame;
   int y_idx = static_cast<int>(tileID);
   return textureRecData[y_idx][x_idx];

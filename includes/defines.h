@@ -52,7 +52,7 @@ constexpr int TILE_RESOLUTION = 32;
 constexpr int TILE_RESOLUTION_HALF = TILE_RESOLUTION / 2;
 constexpr float TILE_SPACING_X = 18.30f;
 constexpr float TILE_SPACING_Y = 15.95f;
-const std::vector<TileID> WALKABLE_TILE_IDS = {TILE_GRASS, TILE_DIRT};
+const std::vector<tile::id> WALKABLE_TILE_IDS = {tile::GRASS, tile::DIRT};
 
 // ==========================================
 //               Camera

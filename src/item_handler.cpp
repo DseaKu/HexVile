@@ -4,19 +4,19 @@
 
 // --- Item Data Base ---
 ItemDataBase::ItemDataBase() {
-  properties.resize(ITEM_ID_SIZE);
-  properties[ITEM_NULL] = {
+  properties.resize(item::SIZE);
+  properties[item::NULL_ID] = {
       .name = "Null", .maxStack = 0, .value = 0, .placeableTile = false};
-  properties[ITEM_SET_GRASS] = {
+  properties[item::SET_GRASS] = {
       .name = "Set Grass", .maxStack = 32, .value = 5, .placeableTile = true};
-  properties[ITEM_SET_WATER] = {
+  properties[item::SET_WATER] = {
       .name = "Set Water", .maxStack = 32, .value = 8, .placeableTile = true};
-  properties[ITEM_SET_DIRT] = {
+  properties[item::SET_DIRT] = {
       .name = "Set Dirt", .maxStack = 32, .value = 8, .placeableTile = true};
 }
 
-const ItemProperties &ItemDataBase::GetItemProperties(ItemID id) const {
-  return properties[id];
+const ItemProperties &ItemDataBase::GetItemProperties(item::id itemid) const {
+  return properties[itemid];
 }
 
 // --- Item Handler ---
@@ -26,14 +26,14 @@ ItemHandler::ItemHandler() {
 }
 
 void ItemHandler::Init() {
-  Item itemNull = {.id = ITEM_NULL, .count = 0};
+  ItemStack itemNull = {.itemID = item::NULL_ID, .count = 0};
   inventory.assign(Conf::INVENTORY_SLOTS, itemNull);
   toolBar.assign(Conf::TOOLBAR_SLOTS, itemNull);
 
-  Item grass = {.id = ITEM_SET_GRASS, .count = 32};
-  Item water = {.id = ITEM_SET_WATER, .count = 51};
-  Item dirt = {.id = ITEM_SET_DIRT, .count = 8};
-  Item dirt2 = {.id = ITEM_SET_DIRT, .count = 24};
+  ItemStack grass = {.itemID = item::SET_GRASS, .count = 32};
+  ItemStack water = {.itemID = item::SET_WATER, .count = 51};
+  ItemStack dirt = {.itemID = item::SET_DIRT, .count = 8};
+  ItemStack dirt2 = {.itemID = item::SET_DIRT, .count = 24};
   toolBar[0] = dirt;
   toolBar[1] = water;
   toolBar[2] = dirt2;
@@ -41,11 +41,11 @@ void ItemHandler::Init() {
   toolBar[5] = grass;
 }
 
-bool ItemHandler::TakeItemFromToolBar(Item *item, int amount) {
-  if (item->count >= amount) {
-    item->count -= amount;
-    if (item->count == 0) {
-      item->id = ITEM_NULL;
+bool ItemHandler::TakeItemFromToolBar(ItemStack *itemStack, int amount) {
+  if (itemStack->count >= amount) {
+    itemStack->count -= amount;
+    if (itemStack->count == 0) {
+      itemStack->itemID = item::NULL_ID;
     }
     return true;
   }
@@ -53,27 +53,29 @@ bool ItemHandler::TakeItemFromToolBar(Item *item, int amount) {
 }
 
 // --- Conversion ---
-ItemID ItemHandler::ToolBarSelectionToItemId(int sel) const {
-  return toolBar[sel].id;
+item::id ItemHandler::ToolBarSelectionToItemID(int sel) const {
+  return toolBar[sel].itemID;
 };
 
-TileID ItemHandler::ConvertItemToTileID(ItemID item_id) const {
-  auto it = item_to_tile_map.find(item_id);
+tile::id ItemHandler::ConvertItemToTileID(item::id itemid) const {
+  auto it = item_to_tile_map.find(itemid);
   if (it != item_to_tile_map.end()) {
     return it->second;
   }
-  return TILE_NULL;
+  return tile::NULL_ID;
 }
 
 // --- Get ---
 int ItemHandler::GetSelectionToolBar() const { return selectedToolBarSlot; }
 
-Item *ItemHandler::GetToolBarItemPointer(int pos) { return &toolBar[pos]; }
+ItemStack *ItemHandler::GetToolBarItemPointer(int pos) { return &toolBar[pos]; }
 
-ItemID ItemHandler::GetToolBarItemType(int pos) const { return toolBar[pos].id; }
+item::id ItemHandler::GetToolBarItemType(int pos) const {
+  return toolBar[pos].itemID;
+}
 
 const char *ItemHandler::GetSelectedItemType() const {
-  ItemID id = toolBar[selectedToolBarSlot].id;
+  item::id id = toolBar[selectedToolBarSlot].itemID;
   return itemDataBase.GetItemProperties(id).name.c_str();
 }
 

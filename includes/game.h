@@ -37,7 +37,7 @@ struct FrameContext {
   Inputs inputs;
   Vector2 mouseScreenPos;
   Vector2 mouseWorldPos;
-  MouseMask mouseMask;
+  mouseMask::id mouseMask;
 
   // Screen
   int screenWidth;
@@ -58,12 +58,12 @@ struct RenderState {
 
   // Mouse Hover
   HexCoord mouseTileCoord;
-  TileID mouseTileType;
+  tile::id mouseTileType;
 
   // Player
   Vector2 playerPos;
   HexCoord playerTileCoord;
-  TileID playerTileType;
+  tile::id playerTileID;
   std::string playerStateStr;
   std::string playerDirStr;
   int playerFrame;
@@ -123,7 +123,7 @@ public:
   ~Game();
   void GameLoop();
   void Unload();
-  const char *MouseMaskToString(MouseMask m);
+  const char *MouseMaskToString(mouseMask::id maskID);
 };
 
 #endif // !GAME_H

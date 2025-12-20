@@ -56,7 +56,8 @@ HexGrid::HexGrid() {
   randomEngine = std::mt19937(rd());
 
   const float mean = (TA::DETAILS_X + TA::DETAILS_X_MAX - 1) / 2.0f;
-  const float stddev = (TA::DETAILS_X_MAX - TA::DETAILS_X) / TA::GAUSIAN_EFFECT;
+  const float stddev =
+      (TA::DETAILS_X_MAX - TA::DETAILS_X) / Conf::GAUSIAN_EFFECT;
   typeDistribution = std::normal_distribution<float>(mean, stddev);
 
   size_t estimated_hits = Conf::ESTIMATED_VISIBLE_TILES;
@@ -81,7 +82,7 @@ void HexGrid::InitGrid(float radius) {
 
       if (abs(q) + abs(r) + abs(-q - r) <= mapRadius * 2) {
 
-        MapTile initTile = {.type = TILE_GRASS};
+        MapTile initTile = {.tileID = tile::GRASS};
 
         for (TerrainDetail &d : initTile.detail) {
           d.type = TA::UNINITIALIZED;
@@ -91,14 +92,14 @@ void HexGrid::InitGrid(float radius) {
         this->tilesInUse++;
 
       } else {
-        tileData[gridR * gridSize + gridQ] = (MapTile){.type = TILE_NULL};
+        tileData[gridR * gridSize + gridQ] = (MapTile){.tileID = tile::NULL_ID};
       }
     }
   }
   CalcVisibleTiles();
 }
 
-TerrainDetail HexGrid::GetRandomTerainDetail(TileID id) {
+TerrainDetail HexGrid::GetRandomTerainDetail(tile::id tileID) {
   float x = GetRandomValue(-TA::RES8_F, TA::RES8_F);
   float y = GetRandomValue(-TA::RES8_F, TA::RES8_F);
 
@@ -112,7 +113,7 @@ TerrainDetail HexGrid::GetRandomTerainDetail(TileID id) {
   int type = std::clamp(generated_type, TA::DETAILS_X, TA::DETAILS_X_MAX - 1);
 
   // Determine if detail is null and skip render process
-  int renderBitMask = TA::RENDER_BIT_MASK_DETAIL.at(id);
+  int renderBitMask = TA::RENDER_BIT_MASK_DETAIL.at(tileID);
   int detailShift = type - TA::DETAILS_X;
   if (!(renderBitMask >> detailShift & 1)) {
     type = TA::SKIP_RENDER;
@@ -121,7 +122,7 @@ TerrainDetail HexGrid::GetRandomTerainDetail(TileID id) {
   return TerrainDetail{.x = x, .y = y, .type = type};
 }
 
-TerrainObject HexGrid::GetRandomTerainObject(TileID id) {
+TerrainObject HexGrid::GetRandomTerainObject(tile::id tileID) {
   float x = GetRandomValue(-TA::RES8_F, TA::RES8_F);
   float y = GetRandomValue(-TA::RES8_F, TA::RES8_F);
 
@@ -135,7 +136,7 @@ TerrainObject HexGrid::GetRandomTerainObject(TileID id) {
   int type = std::clamp(generated_type, TA::DETAILS_X, TA::DETAILS_X_MAX - 1);
 
   // Determine if detail is null and skip render process
-  int renderBitMask = TA::RENDER_BIT_MASK_OBJECT.at(id);
+  int renderBitMask = TA::RENDER_BIT_MASK_OBJECT.at(tileID);
   int detailShift = type - TA::DETAILS_X;
   if (!(renderBitMask >> detailShift & 1)) {
     type = TA::SKIP_RENDER;
@@ -157,7 +158,7 @@ bool HexGrid::HasTile(HexCoord h) const {
   if (!IsInBounds(h)) {
     return false;
   }
-  return GetTile(h).type != TILE_NULL;
+  return GetTile(h).tileID != tile::NULL_ID;
 }
 
 bool HexGrid::IsWalkable(HexCoord h) const {
@@ -165,7 +166,7 @@ bool HexGrid::IsWalkable(HexCoord h) const {
     return false;
   }
   MapTile tile = HexCoordToTile(h);
-  TileID type = tile.type;
+  tile::id type = tile.tileID;
   for (int i = 0; i < Conf::WALKABLE_TILE_IDS.size(); i++) {
     if (type == Conf::WALKABLE_TILE_IDS[i]) {
       return true;
@@ -207,18 +208,18 @@ Vector2 HexGrid::CoordToPoint(int q, int r) const {
   return {x + origin.x, y + origin.y};
 }
 
-TileID HexGrid::PointToType(Vector2 point) const {
-  return PointToTile(point).type;
+tile::id HexGrid::PointToType(Vector2 point) const {
+  return PointToTile(point).tileID;
 }
 
-TileID HexGrid::HexCoordToType(HexCoord h) const {
+tile::id HexGrid::HexCoordToType(HexCoord h) const {
   MapTile m = HexCoordToTile(h);
-  return m.type;
+  return m.tileID;
 }
 
 MapTile HexGrid::HexCoordToTile(HexCoord h) const {
   if (!IsInBounds(h)) {
-    return (MapTile){.type = TILE_NULL};
+    return (MapTile){.tileID = tile::NULL_ID};
   }
   return GetTile(h);
 }
@@ -236,15 +237,15 @@ HexCoord HexGrid::PointToHexCoord(Vector2 point) const {
   return HexRound({q, r, -q - r});
 }
 
-const char *HexGrid::TileToString(TileID type) const {
-  switch (type) {
-  case TILE_NULL:
+const char *HexGrid::TileToString(tile::id tileID) const {
+  switch (tileID) {
+  case tile::NULL_ID:
     return "NULL";
-  case TILE_GRASS:
+  case tile::GRASS:
     return "Grass";
-  case TILE_WATER:
+  case tile::WATER:
     return "Water";
-  case TILE_DIRT:
+  case tile::DIRT:
     return "Dirt";
   default:
     return "Undefined";
@@ -255,10 +256,10 @@ const char *HexGrid::TileToString(TileID type) const {
 void HexGrid::ToggleTile(HexCoord h) {
   if (HasTile(h)) {
     MapTile &tile = GetTile(h);
-    if (tile.type == TILE_GRASS) {
-      tile.type = TILE_WATER;
-    } else if (tile.type == TILE_WATER) {
-      tile.type = TILE_GRASS;
+    if (tile.tileID == tile::GRASS) {
+      tile.tileID = tile::WATER;
+    } else if (tile.tileID == tile::WATER) {
+      tile.tileID = tile::GRASS;
     }
   }
 }
@@ -285,7 +286,7 @@ void HexGrid::CalcVisibleTiles() {
   for (u16 r = 0; r < gridSize; r++) {
     for (u16 q = 0; q < gridSize; q++) {
 
-      if (tileData[r * gridSize + q].type == TILE_NULL) {
+      if (tileData[r * gridSize + q].tileID == tile::NULL_ID) {
         continue;
       }
       // Convert grid coordinates to HexCoord and then to screen coordinates.
@@ -325,7 +326,7 @@ bool HexGrid::CheckSurrounded(HexCoord target) const {
     HexCoord n = GetNeighbor(target, i);
     if (IsInBounds(n)) {
       neighborCount++;
-      if (GetTile(n).type == TILE_NULL) {
+      if (GetTile(n).tileID == tile::NULL_ID) {
         wallCount++;
       }
     }
@@ -333,7 +334,7 @@ bool HexGrid::CheckSurrounded(HexCoord target) const {
   return (neighborCount > 0 && wallCount == neighborCount);
 }
 
-void HexGrid::DrawTile(HexCoord h, int TA_X, int TA_Y, DrawMaskID layer) {
+void HexGrid::DrawTile(HexCoord h, int TA_X, int TA_Y, drawMask::id layerID) {
   if (!HasTile(h)) {
     return;
   }
@@ -345,7 +346,8 @@ void HexGrid::DrawTile(HexCoord h, int TA_X, int TA_Y, DrawMaskID layer) {
   const MapTile &tile = GetTile(h);
   Vector2 origin = {0.0f, 0.0f};
 
-  graphicsManager->LoadGFX_Data(layer, destRect.y, TA_X, TA_Y, destRect, WHITE);
+  graphicsManager->LoadGFX_Data(layerID, destRect.y, TA_X, TA_Y, destRect,
+                                WHITE);
 }
 
 void HexGrid::UpdateTileVisibility(float totalTime) {
@@ -391,30 +393,30 @@ void HexGrid::LoadTileGFX() {
 
     MapTile &t = GetTile(h);
     int x = animationFrame + 12;
-    int y = t.type;
+    int y = t.tileID;
 
-    graphicsManager->LoadGFX_Data(DRAW_MASK_GROUND_0, destRec.y, x, y, destRec,
+    graphicsManager->LoadGFX_Data(drawMask::GROUND_0, destRec.y, x, y, destRec,
                                   WHITE);
 
     // Draw details for this tile
     for (TerrainDetail &d : t.detail) {
       if (d.type == TA::UNINITIALIZED) {
-        d = GetRandomTerainDetail(t.type);
+        d = GetRandomTerainDetail(t.tileID);
       }
       if (d.type != TA::SKIP_RENDER) {
-        LoadDetailGFX(d, pos.x, pos.y, t.type);
+        LoadDetailGFX(d, pos.x, pos.y, t.tileID);
       }
     }
   }
 }
 
 void HexGrid::LoadDetailGFX(const TerrainDetail d, float x, float y,
-                            TileID type) {
+                            tile::id tileID) {
 
   Rectangle destRec = {x + d.x, y + d.y - TA::RES16_F, TA::RES, TA::RES};
 
-  graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, y - TA::RES16_F, d.type,
-                                type, destRec, WHITE);
+  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, y - TA::RES16_F, d.type,
+                                tileID, destRec, WHITE);
 }
 
 // --- Get ---
@@ -433,15 +435,15 @@ double HexGrid::GetVisCalcTime() const { return calcVisTime; }
 // --- Set ---
 void HexGrid::SetCamRectPointer(Rectangle *camRect) { this->camRect = camRect; }
 
-bool HexGrid::SetTile(HexCoord h, TileID id) {
-  if (!IsInBounds(h) || HexCoordToType(h) == id) {
+bool HexGrid::SetTile(HexCoord h, tile::id tileID) {
+  if (!IsInBounds(h) || HexCoordToType(h) == tileID) {
     return false;
 
   } else {
     MapTile &t = GetTile(h);
-    t.type = id;
+    t.tileID = tileID;
     for (TerrainDetail &d : t.detail) {
-      d = GetRandomTerainDetail(id);
+      d = GetRandomTerainDetail(tileID);
     }
     return true;
   }

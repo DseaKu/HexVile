@@ -2,39 +2,49 @@
 #define ENUMS_H
 #include <map>
 
-typedef enum TileID {
-  TILE_NULL = 0,
-  TILE_GRASS,
-  TILE_WATER,
-  TILE_DIRT,
-  TILE_ID_SIZE,
-} TileID;
-
-// --- Detail Indices  ---
-enum DetailIndex {
-  DETAIL_IDX_0 = 0,
-  DETAIL_IDX_1 = 1,
-  DETAIL_IDX_2 = 2,
-  DETAIL_IDX_3 = 3,
-  DETAIL_IDX_4 = 4,
-  DETAIL_IDX_5 = 5,
-  DETAIL_IDX_6 = 6,
-  DETAIL_IDX_7 = 7,
-  DETAIL_IDX_8 = 8,
-  DETAIL_IDX_9 = 9,
-  DETAIL_IDX_10 = 10,
-  DETAIL_IDX_11 = 11
+// --- Tile ---
+namespace tile {
+enum id {
+  NULL_ID = 0,
+  GRASS,
+  WATER,
+  DIRT,
+  SIZE,
 };
+}
 
-typedef enum PlayerStateID {
-  PLAYER_STATE_NULL = 0,
-  PLAYER_STATE_WALK,
-  PLAYER_STATE_IDLE,
-  PLAYER_STATE_ID_SIZE,
-} PlayerStateID;
+// --- Detail Indices ---
+namespace detail {
+enum id {
+  IDX_0 = 0,
+  IDX_1 = 1,
+  IDX_2 = 2,
+  IDX_3 = 3,
+  IDX_4 = 4,
+  IDX_5 = 5,
+  IDX_6 = 6,
+  IDX_7 = 7,
+  IDX_8 = 8,
+  IDX_9 = 9,
+  IDX_10 = 10,
+  IDX_11 = 11
+};
+}
 
-typedef enum DirLabels {
-  DIR_NULL = 0,
+// --- Player State ---
+namespace playerState {
+enum id {
+  NULL_ID = 0,
+  WALK,
+  IDLE,
+  SIZE,
+};
+}
+
+// --- Directions ---
+namespace dir {
+enum id {
+  NULL_ID = 0,
   NW,
   W,
   SW,
@@ -43,54 +53,72 @@ typedef enum DirLabels {
   E,
   NE,
   N,
-  DIR_LABELS_SIZE,
-} DirLabels;
-
-typedef enum ItemID {
-  ITEM_NULL = 0,
-  ITEM_SET_GRASS,
-  ITEM_SET_WATER,
-  ITEM_SET_DIRT,
-  ITEM_ID_SIZE,
-} ItemID;
-
-typedef enum ItemPosition {
-  ITEM_POSITION_NULL = 0,
-  ITEM_POSTIION_TOOL_BAR,
-  ITEM_POSTIION_INVENTORY,
-  ITEM_POSITION_CHEST,
-  ITEM_POSITION_SIZE,
-} ItemPosition;
-
-typedef enum MouseMask {
-  MOUSE_MASK_NULL = 0,
-  MOUSE_MASK_PLAY_GROUND,
-  MOUSE_MASK_ITEM_BAR,
-  MOUSE_MASK_SIZE,
-} MouseMask;
-
-static const std::map<ItemID, TileID> item_to_tile_map = {
-    {ITEM_SET_GRASS, TILE_GRASS},
-    {ITEM_SET_WATER, TILE_WATER},
-    {ITEM_SET_DIRT, TILE_DIRT},
+  SIZE,
 };
-enum DrawMaskID {
-  DRAW_MASK_NULL = 0,
-  DRAW_MASK_GROUND_0, // Tiles,
-  DRAW_MASK_GROUND_1, // Highlighted Tiles,
-  DRAW_MASK_SHADOW,
-  DRAW_MASK_ON_GROUND, // Player, Terrain Details,
-  DRAW_MASK_UI_0,      // Toolbar, Item BG,
-  DRAW_MASK_UI_1,      // Items, ItemsNum,
-  DRAW_MASK_SIZE,
-};
+}
 
-enum UI_ID {
-  UI_ID_NULL = 0,
-  UI_ID_TILE_H,
-  UI_ID_ITEM_BAR_BG,
-  UI_ID_ITEM_BAR_BG_H,
-  UI_ID_SIZE,
+// --- Items ---
+namespace item {
+enum id {
+  NULL_ID = 0,
+  SET_GRASS,
+  SET_WATER,
+  SET_DIRT,
+  SIZE,
+};
+}
+
+// --- Item Positions ---
+namespace itemPos {
+enum id {
+  NULL_ID = 0,
+  TOOL_BAR,
+  INVENTORY,
+  CHEST,
+  SIZE,
+};
+}
+
+// --- Mouse ---
+namespace mouseMask {
+enum id {
+  NULL_ID = 0,
+  PLAY_GROUND,
+  ITEM_BAR,
+  SIZE,
+};
+}
+
+// --- Draw Masks ---
+namespace drawMask {
+enum id {
+  NULL_ID = 0,
+  GROUND_0, // Tiles
+  GROUND_1, // Highlighted Tiles
+  SHADOW,
+  ON_GROUND, // Player, Terrain Details
+  UI_0,      // Toolbar, Item BG
+  UI_1,      // Items, ItemsNum
+  SIZE,
+};
+}
+
+// --- UI IDs ---
+namespace ui {
+enum id {
+  NULL_ID = 0,
+  TILE_H,
+  ITEM_BAR_BG,
+  ITEM_BAR_BG_H,
+  SIZE,
+};
+}
+
+// --- Mappings ---
+static const std::map<item::id, tile::id> item_to_tile_map = {
+    {item::SET_GRASS, tile::GRASS},
+    {item::SET_WATER, tile::WATER},
+    {item::SET_DIRT, tile::DIRT},
 };
 
 #endif // !ENUMS_H

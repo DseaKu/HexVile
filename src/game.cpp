@@ -94,14 +94,14 @@ void Game::GameLoop() {
       ClearBackground(WHITE);
 
       BeginMode2D(renderStates[renderStateIndex].camera);
-      gfxManager.RenderLayer(DRAW_MASK_GROUND_0);
-      gfxManager.RenderLayer(DRAW_MASK_GROUND_1);
-      gfxManager.RenderLayer(DRAW_MASK_SHADOW);
-      gfxManager.RenderLayer(DRAW_MASK_ON_GROUND);
+      gfxManager.RenderLayer(drawMask::GROUND_0);
+      gfxManager.RenderLayer(drawMask::GROUND_1);
+      gfxManager.RenderLayer(drawMask::SHADOW);
+      gfxManager.RenderLayer(drawMask::ON_GROUND);
       EndMode2D();
 
-      gfxManager.RenderLayer(DRAW_MASK_UI_0);
-      gfxManager.RenderLayer(DRAW_MASK_UI_1);
+      gfxManager.RenderLayer(drawMask::UI_0);
+      gfxManager.RenderLayer(drawMask::UI_1);
 
       DrawDebugOverlay(Conf::IS_DEBUG_OVERLAY_ENABLED);
 
@@ -113,6 +113,10 @@ void Game::GameLoop() {
     }
 
     // 4. Sync: Wait for Logic to finish (Barrier)
+    // We wait here to ensure we don't start the next frame's input gathering
+    // until the logic is done with the current frame's input.
+    // Also, this ensures that the WorldState is consistent before we loop
+    // again.
     {
       std::unique_lock<std::mutex> lock(logicMutex);
       logicToMainCV.wait(lock, [this] { return logicUpdateDone; });
@@ -219,23 +223,23 @@ void Game::RunLogic() {
         CheckCollisionPointRec(
             frameContext.mouseScreenPos, // ToolBar is Screen Space usually?
             uiHandler.GetToolBarRect())) {
-      // inputHandler.SetMouseMask(MOUSE_MASK_ITEM_BAR);
+      // inputHandler.SetMouseMask(Mouse::ITEM_BAR);
       frameContext.mouseMask =
-          MOUSE_MASK_ITEM_BAR; // Update local state if needed
+          mouseMask::ITEM_BAR; // Update local state if needed
       toolBarSel = uiHandler.GetItemSlotAt(frameContext.mouseScreenPos);
 
     } else {
-      // inputHandler.SetMouseMask(MOUSE_MASK_PLAY_GROUND);
-      frameContext.mouseMask = MOUSE_MASK_PLAY_GROUND;
+      // inputHandler.SetMouseMask(Mouse::PLAY_GROUND);
+      frameContext.mouseMask = mouseMask::PLAY_GROUND;
 
       HexCoord clickedHex =
           worldState.hexGrid.PointToHexCoord(frameContext.mouseWorldPos);
-      Item *selectedItem =
+      ItemStack *selectedItem =
           worldState.itemHandler.GetToolBarItemPointer(toolBarSel);
-      TileID tileToPlace =
-          worldState.itemHandler.ConvertItemToTileID(selectedItem->id);
+      tile::id tileToPlace =
+          worldState.itemHandler.ConvertItemToTileID(selectedItem->itemID);
 
-      if (selectedItem->id != ITEM_NULL &&
+      if (selectedItem->itemID != item::NULL_ID &&
           worldState.hexGrid.SetTile(clickedHex, tileToPlace)) {
         worldState.itemHandler.TakeItemFromToolBar(selectedItem, 1);
       }
@@ -245,7 +249,7 @@ void Game::RunLogic() {
   if (frameContext.inputs.mousePress.right) {
     HexCoord clickedHex =
         worldState.hexGrid.PointToHexCoord(frameContext.mouseWorldPos);
-    worldState.hexGrid.SetTile(clickedHex, TILE_NULL);
+    worldState.hexGrid.SetTile(clickedHex, tile::NULL_ID);
   }
 
   toolBarSel =
@@ -277,7 +281,7 @@ void Game::RunLogic() {
 
   rs.playerPos = worldState.player.GetPosition();
   rs.playerTileCoord = worldState.hexGrid.PointToHexCoord(rs.playerPos);
-  rs.playerTileType = worldState.hexGrid.PointToType(rs.playerPos);
+  rs.playerTileID = worldState.hexGrid.PointToType(rs.playerPos);
   rs.playerStateStr = worldState.player.PlayerStateToString();
   rs.playerDirStr = worldState.player.PlayerDirToString();
   rs.playerFrame = worldState.player.GetAnimationFrame();
@@ -293,13 +297,13 @@ void Game::RunLogic() {
   logicExecutionTime = elapsedLogic.count();
 }
 
-const char *Game::MouseMaskToString(MouseMask m) {
+const char *Game::MouseMaskToString(mouseMask::id m) {
   switch (m) {
-  case MOUSE_MASK_NULL:
+  case mouseMask::NULL_ID:
     return "Null";
-  case MOUSE_MASK_PLAY_GROUND:
+  case mouseMask::PLAY_GROUND:
     return "Ground";
-  case MOUSE_MASK_ITEM_BAR:
+  case mouseMask::ITEM_BAR:
     return "Tool Bar";
   default:
     return "Undefined";
@@ -385,7 +389,7 @@ void Game::DrawDebugOverlay(bool is_enabled) {
            TextFormat("Face Dir: %s", rs.playerDirStr.c_str()),
            TextFormat("Frame: %i", rs.playerFrame),
            TextFormat("Type: %s",
-                      worldState.hexGrid.TileToString(rs.playerTileType)),
+                      worldState.hexGrid.TileToString(rs.playerTileID)),
            TextFormat("Speed[1/s]: %.2f", rs.playerSpeed),
        }});
 
@@ -420,32 +424,3 @@ void Game::DrawDebugOverlay(bool is_enabled) {
     currentY += sectionGapY;
   }
 };
-
-void Game::Unload() {
-  // Stop logic thread
-  if (isRunning) {
-    isRunning = false;
-    mainToLogicCV.notify_one();
-    if (logicThread.joinable()) {
-      logicThread.join();
-    }
-  }
-
-  worldState.hexGrid.Shutdown();
-  gfxManager.UnloadAssets();
-  fontHandler.UnloadFonts();
-  UnloadFileData(hackFontRegular);
-}
-
-// --- Deinitialization ---
-Game::~Game() {
-  // Unload is safe to call multiple times because we check isRunning
-  // However, UnloadAssets/Shutdown might not be.
-  // Ideally, we should have a flag 'isUnloaded'.
-  // For now, let's just ensure the thread is joined.
-  if (logicThread.joinable()) {
-    isRunning = false;
-    mainToLogicCV.notify_one();
-    logicThread.join();
-  }
-}

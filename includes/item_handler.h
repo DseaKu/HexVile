@@ -15,16 +15,17 @@ struct ItemProperties {
   bool placeableTile;
 };
 
-struct Item {
-  ItemID id;
+struct ItemStack {
+  item::id itemID;
   int count;
 };
 
 struct Chest {
-  std::vector<Item> contents;
+  std::vector<ItemStack> contents;
 };
 
-// Global chest map (Consider moving this to a dedicated World/ChestHandler later)
+// Global chest map (Consider moving this to a dedicated World/ChestHandler
+// later)
 extern std::map<std::pair<int, int>, Chest> gridChests;
 
 // --- Item Database ---
@@ -34,14 +35,14 @@ private:
 
 public:
   ItemDataBase();
-  const ItemProperties &GetItemProperties(ItemID id) const;
+  const ItemProperties &GetItemProperties(item::id itemID) const;
 };
 
 // --- Item Handler ---
 class ItemHandler {
 private:
-  std::vector<Item> inventory;
-  std::vector<Item> toolBar;
+  std::vector<ItemStack> inventory;
+  std::vector<ItemStack> toolBar;
   ItemDataBase itemDataBase;
   int selectedToolBarSlot;
 
@@ -51,20 +52,20 @@ public:
   ItemHandler();
 
   // Actions
-  bool TakeItemFromToolBar(Item *item, int amount);
+  bool TakeItemFromToolBar(ItemStack *itemStack, int amount);
 
   // Setters
   void SetItemSelection(int pos);
 
   // Getters
-  Item *GetToolBarItemPointer(int pos);
+  ItemStack *GetToolBarItemPointer(int pos);
   int GetSelectionToolBar() const;
-  ItemID GetToolBarItemType(int pos) const;
+  item::id GetToolBarItemType(int pos) const;
   const char *GetSelectedItemType() const;
 
   // Conversion / Helpers
-  ItemID ToolBarSelectionToItemId(int sel) const;
-  TileID ConvertItemToTileID(ItemID item_id) const;
+  item::id ToolBarSelectionToItemID(int sel) const;
+  tile::id ConvertItemToTileID(item::id itemID) const;
 };
 
 #endif // !ITEM_HANDLER_H

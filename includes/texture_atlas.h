@@ -2,6 +2,7 @@
 #define TEXTURE_ATLAS_H
 
 #include "defines.h"
+#include "enums.h"
 #include <map>
 
 // ==========================================
@@ -56,21 +57,21 @@ constexpr int UNINITIALIZED = -2;
 
 // --- Detail Masks ---
 constexpr int GRASS_DETAILS =
-    BIT(DETAIL_IDX_0) | BIT(DETAIL_IDX_10) | BIT(DETAIL_IDX_11);
+    BIT(detail::IDX_0) | BIT(detail::IDX_10) | BIT(detail::IDX_11);
 
 // Original: 0b00000000100 (Bit 2)
-constexpr int WATER_DETAILS = BIT(DETAIL_IDX_2);
+constexpr int WATER_DETAILS = BIT(detail::IDX_2);
 
 // Original: 0b00100000010 (Bits 1, 9) -> Wait, 0b00100000010 is Bit 1 and Bit
 // 9? 0b00100000010
 //   ^ Bit 9   ^ Bit 1
-constexpr int DIRT_DETAILS = BIT(DETAIL_IDX_1) | BIT(DETAIL_IDX_9);
+constexpr int DIRT_DETAILS = BIT(detail::IDX_1) | BIT(detail::IDX_9);
 
-inline const std::map<TileID, int> RENDER_BIT_MASK_DETAIL = {
-    {TILE_NULL, 0},
-    {TILE_GRASS, GRASS_DETAILS},
-    {TILE_WATER, WATER_DETAILS},
-    {TILE_DIRT, DIRT_DETAILS},
+inline const std::map<tile::id, int> RENDER_BIT_MASK_DETAIL = {
+    {tile::NULL_ID, 0},
+    {tile::GRASS, GRASS_DETAILS},
+    {tile::WATER, WATER_DETAILS},
+    {tile::DIRT, DIRT_DETAILS},
 };
 
 // --- Object Indices ---
@@ -84,13 +85,12 @@ constexpr int GRASS_OBJECTS = BIT(OBJ_IDX_5);
 constexpr int WATER_OBJECTS = 0;
 constexpr int DIRT_OBJECTS = 0;
 
-inline const std::map<TileID, int> RENDER_BIT_MASK_OBJECT = {
-    {TILE_NULL, 0},
-    {TILE_GRASS, GRASS_OBJECTS},
-    {TILE_WATER, WATER_OBJECTS},
-    {TILE_DIRT, DIRT_OBJECTS},
+inline const std::map<tile::id, int> RENDER_BIT_MASK_OBJECT = {
+    {tile::NULL_ID, 0},
+    {tile::GRASS, GRASS_OBJECTS},
+    {tile::WATER, WATER_OBJECTS},
+    {tile::DIRT, DIRT_OBJECTS},
 };
-
 // ==========================================
 //               Animation
 // ==========================================

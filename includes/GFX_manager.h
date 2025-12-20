@@ -32,10 +32,10 @@ public:
   GFX_Manager();
   int LoadAssets(const char *);
   void UnloadAssets();
-  void LoadGFX_Data(DrawMaskID maskID, float y, int TA_X, int TA_Y,
+  void LoadGFX_Data(drawMask::id layer, float y, int TA_X, int TA_Y,
                     Rectangle dstRec, Color Color);
-  void RenderLayer(DrawMaskID maskID);
-  Rectangle GetTileRec(TileID tileID, int frame);
+  void RenderLayer(drawMask::id layer);
+  Rectangle GetTileRec(tile::id id, int frame);
 
   void SwapBuffers();
 };

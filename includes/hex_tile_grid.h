@@ -1,5 +1,5 @@
-#ifndef HEX_TILE_GRID_H
-#define HEX_TILE_GRID_H
+#ifndef HEX_TILE_GRid_H
+#define HEX_TILE_GRid_H
 
 #include "GFX_manager.h"
 #include "defines.h"
@@ -52,7 +52,7 @@ struct TerrainObject {
 
 // --- Map Tile ---
 struct MapTile {
-  TileID type;
+  tile::id tileID;
   TerrainDetail detail[Conf::TERRAIN_DETAILS_MAX];
   TerrainObject objects[Conf::TERRAIN_OBJECTS_MAX];
 };
@@ -60,7 +60,7 @@ struct MapTile {
 /* Grid parts and relationships:
  * https://www.redblobgames.com/grids/parts/
  *
- * --- HEX TILE GRID ---
+ * --- HEX TILE GRid ---
  *   |q  ,r-1|q+1,r-1|
  * ---------------------
 |* q-1,r |q  ,r  |q+1, r|
@@ -107,14 +107,14 @@ private:
 
   // Lookup Tables
   static const std::vector<HexCoord> DIRECTIONS;
-  static const std::vector<TileID> WALKABLE_TILES;
+  static const std::vector<tile::id> WALKABLE_TILES;
 
   // --- Internal Helpers ---
   HexCoord HexRound(FractionalHex h) const;
   const MapTile &GetTile(HexCoord h) const;
   MapTile &GetTile(HexCoord h);
-  TerrainDetail GetRandomTerainDetail(TileID id);
-  TerrainObject GetRandomTerainObject(TileID id);
+  TerrainDetail GetRandomTerainDetail(tile::id tileID);
+  TerrainObject GetRandomTerainObject(tile::id tileID);
   void CalcRenderRect();
   void CalcVisibleTiles();
   void UpdateTileVisibility(float totalTime);
@@ -124,7 +124,7 @@ private:
 
   // --- Render ---
   void LoadTileGFX();
-  void LoadDetailGFX(const TerrainDetail d, float x, float y, TileID type);
+  void LoadDetailGFX(const TerrainDetail d, float x, float y, tile::id tileID);
 
 public:
   HexGrid();
@@ -137,7 +137,7 @@ public:
   // --- Setters ---
   void SetGFX_Manager(GFX_Manager *graphicsManager);
   void SetCamRectPointer(Rectangle *camRect);
-  bool SetTile(HexCoord h, TileID ID);
+  bool SetTile(HexCoord h, tile::id tileID);
   void ToggleTile(HexCoord h);
 
   // --- Getters & State Checks ---
@@ -156,14 +156,14 @@ public:
   Vector2 CoordToPoint(int q, int r) const;
   MapTile HexCoordToTile(HexCoord h) const;
   MapTile PointToTile(Vector2 point) const;
-  TileID PointToType(Vector2 point) const;
-  TileID HexCoordToType(HexCoord h) const;
-  const char *TileToString(TileID type) const;
+  tile::id PointToType(Vector2 point) const;
+  tile::id HexCoordToType(HexCoord h) const;
+  const char *TileToString(tile::id tileID) const;
   HexCoord GetNeighbor(HexCoord h, int directionIndex) const;
   double GetVisCalcTime() const;
 
   // --- Direct Drawing (for debugging/special cases) ---
-  void DrawTile(HexCoord h, int TA_X, int TA_Y, DrawMaskID layer);
+  void DrawTile(HexCoord h, int TA_X, int TA_Y, drawMask::id layerID);
 };
 
-#endif // HEX_TILE_GRID_H
+#endif // HEX_TILE_GRid_H

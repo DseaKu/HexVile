@@ -10,8 +10,8 @@ Player::Player() {
   position = Conf::SCREEN_CENTER;
   previousPosition = position;
   speedTilesPerSecond = 0.0f;
-  faceDir = S;
-  state = PLAYER_STATE_IDLE;
+  dirID = dir::S;
+  stateID = playerState::IDLE;
   animationFrame = 0;
   animationDelta = 0.0f;
   playerTile = {0, 0};
@@ -30,21 +30,21 @@ void Player::Update(const KeyboardInput *keyboardInput, float deltaTime) {
   // Determine player face direction
   if (dir.x != 0 || dir.y != 0) {
     if (dir.x == 0 && dir.y == -1) {
-      faceDir = N;
+      dirID = dir::N;
     } else if (dir.x == 1 && dir.y == -1) {
-      faceDir = NE;
+      dirID = dir::NE;
     } else if (dir.x == 1 && dir.y == 0) {
-      faceDir = E;
+      dirID = dir::E;
     } else if (dir.x == 1 && dir.y == 1) {
-      faceDir = SE;
+      dirID = dir::SE;
     } else if (dir.x == 0 && dir.y == 1) {
-      faceDir = S;
+      dirID = dir::S;
     } else if (dir.x == -1 && dir.y == 1) {
-      faceDir = SW;
+      dirID = dir::SW;
     } else if (dir.x == -1 && dir.y == 0) {
-      faceDir = W;
+      dirID = dir::W;
     } else if (dir.x == -1 && dir.y == -1) {
-      faceDir = NW;
+      dirID = dir::NW;
     }
   }
 
@@ -65,8 +65,8 @@ void Player::Update(const KeyboardInput *keyboardInput, float deltaTime) {
   previousPosition = position;
 
   // Calculate animation frame
-  float currentSpeed = animationData[state][faceDir].speed;
-  float frameCount = (float)animationData[state][faceDir].frameCount;
+  float currentSpeed = animationData[stateID][dirID].speed;
+  float frameCount = (float)animationData[stateID][dirID].frameCount;
 
   float animationProgress = animationDelta * currentSpeed;
   animationFrame = (int)animationProgress % (int)frameCount;
@@ -75,18 +75,18 @@ void Player::Update(const KeyboardInput *keyboardInput, float deltaTime) {
 }
 
 void Player::Idle() {
-  if (state != PlayerStateID::PLAYER_STATE_IDLE) {
+  if (stateID != playerState::IDLE) {
     animationFrame = 0;
-    state = PlayerStateID::PLAYER_STATE_IDLE;
+    stateID = playerState::IDLE;
   }
 }
 
 void Player::Walk(Vector2 dir, float deltaTime) {
   float speed = Conf::PLAYER_MOVE_SPEED;
 
-  if (state != PLAYER_STATE_WALK) {
+  if (stateID != playerState::WALK) {
     animationFrame = 0;
-    state = PLAYER_STATE_WALK;
+    stateID = playerState::WALK;
   }
 
   // Normalize diagonal movement
@@ -112,8 +112,8 @@ void Player::Walk(Vector2 dir, float deltaTime) {
 
 void Player::InitAnimations() {
   // Default init
-  for (int i = 0; i < PLAYER_STATE_ID_SIZE; i++) {
-    for (int j = 0; j < DIR_LABELS_SIZE; j++) {
+  for (int i = 0; i < playerState::SIZE; i++) {
+    for (int j = 0; j < dir::SIZE; j++) {
       animationData[i][j] = {.frameCount = TA::PLAYER_X_MAX,
                              .speed = TA::PLAYER_ANIMATION_SPEED,
                              .loop = true};
@@ -121,13 +121,13 @@ void Player::InitAnimations() {
   }
 
   // Walk Specifics
-  for (int i = 0; i < DIR_LABELS_SIZE; i++) {
-    animationData[PLAYER_STATE_WALK][i].frameCount = TA::PLAYER_WALK_MAX;
+  for (int i = 0; i < dir::SIZE; i++) {
+    animationData[playerState::WALK][i].frameCount = TA::PLAYER_WALK_MAX;
   }
 
   // Idle Specifics
-  for (int i = 0; i < DIR_LABELS_SIZE; i++) {
-    animationData[PLAYER_STATE_IDLE][i].speed = TA::PLAYER_ANIMATION_SPEED_IDLE;
+  for (int i = 0; i < dir::SIZE; i++) {
+    animationData[playerState::IDLE][i].speed = TA::PLAYER_ANIMATION_SPEED_IDLE;
   }
 }
 
@@ -148,12 +148,12 @@ int Player::GetAnimationFrame() const { return animationFrame; }
 float Player::GetSpeedTilesPerSecond() const { return speedTilesPerSecond; }
 
 const char *Player::PlayerStateToString() const {
-  switch (state) {
-  case PLAYER_STATE_NULL:
+  switch (stateID) {
+  case playerState::NULL_ID:
     return "NULL";
-  case PLAYER_STATE_IDLE:
+  case playerState::IDLE:
     return "IDLE";
-  case PLAYER_STATE_WALK:
+  case playerState::WALK:
     return "WALK";
   default:
     return "Unknown State";
@@ -161,24 +161,24 @@ const char *Player::PlayerStateToString() const {
 }
 
 const char *Player::PlayerDirToString() const {
-  switch (faceDir) {
-  case DIR_NULL:
+  switch (dirID) {
+  case dir::NULL_ID:
     return "NULL";
-  case NW:
+  case dir::NW:
     return "NW";
-  case W:
+  case dir::W:
     return "W";
-  case SW:
+  case dir::SW:
     return "SW";
-  case S:
+  case dir::S:
     return "S";
-  case SE:
+  case dir::SE:
     return "SE";
-  case E:
+  case dir::E:
     return "E";
-  case NE:
+  case dir::NE:
     return "NE";
-  case N:
+  case dir::N:
     return "N";
   default:
     return "Unknown Direction";
@@ -194,10 +194,10 @@ void Player::GenerateDrawData() {
   float resolution = TA::RES;
 
   int TA_X = animationFrame + TA::PLAYER_X;
-  int TA_Y = (state - 1) * (DIR_LABELS_SIZE - 1) + faceDir;
+  int TA_Y = (stateID - 1) * (dir::SIZE - 1) + dirID;
 
   Rectangle dstRect = {drawPos.x, drawPos.y, resolution, resolution};
 
-  graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, drawPos.y, TA_X, TA_Y,
+  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, drawPos.y, TA_X, TA_Y,
                                 dstRect, WHITE);
 }

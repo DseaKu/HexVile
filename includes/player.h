@@ -23,14 +23,14 @@ private:
   Vector2 position;
   Vector2 previousPosition;
   HexCoord playerTile;
-  PlayerStateID state;
-  DirLabels faceDir;
+  playerState::id stateID;
+  dir::id dirID;
   float speedTilesPerSecond;
 
   // --- Animation ---
   int animationFrame;
   float animationDelta;
-  PlayerAnimationData animationData[PLAYER_STATE_ID_SIZE][DIR_LABELS_SIZE];
+  PlayerAnimationData animationData[playerState::SIZE][dir::SIZE];
 
   // --- Helpers ---
   void Idle();

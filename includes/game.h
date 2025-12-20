@@ -21,26 +21,6 @@ struct DebugData {
   std::vector<std::string> subSection;
 };
 
-struct InputState {
-  // Mouse
-  Vector2 mouseScreenPos;
-  Vector2 mouseWorldPos;
-  bool leftMouseClicked;
-  bool rightMouseClicked;
-  MouseMask mouseMask;
-
-  // Keyboard
-  bool keyOne, keyTwo, keyThree, keyFour, keyFive;
-  bool keySix, keySeven, keyEight, keyNine, keyZero;
-
-  PlayerInputState playerInput;
-  float frameTime; // Delta time
-  
-  // Screen
-  int screenWidth;
-  int screenHeight;
-};
-
 struct GameState {
   HexGrid hexGrid;
   Player player;
@@ -56,7 +36,7 @@ struct GameState {
 class Game {
 private:
   unsigned char *hackFontRegular;
-  
+
   // Logic/State
   GameState gameState;
   InputState currentInput;
@@ -66,7 +46,7 @@ private:
   FontHandler fontHandler;
   UI_Handler uiHandler;
   IO_Handler ioHandler;
-  
+
   std::vector<DebugData> debugData;
 
   // Threading
@@ -78,11 +58,11 @@ private:
   bool isFullscreenMode = false;
   bool logicUpdateReady; // Input ready for logic
   bool logicUpdateDone;  // Logic finished for this frame
-  
+
   // Profiling
   std::atomic<double> logicExecutionTime;
   std::atomic<double> renderExecutionTime;
-  
+
   float debugUpdateTimer;
   double displayRenderTime;
   double displayLogicTime;

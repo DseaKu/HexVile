@@ -99,4 +99,31 @@ using s16 = std::int16_t;
 using s32 = std::int32_t;
 using s64 = std::int64_t;
 
+struct PlayerInputState {
+  bool moveUp;
+  bool moveDown;
+  bool moveLeft;
+  bool moveRight;
+};
+
+struct InputState {
+  // Mouse
+  Vector2 mouseScreenPos;
+  Vector2 mouseWorldPos;
+  bool leftMouseClicked;
+  bool rightMouseClicked;
+  MouseMask mouseMask;
+
+  // Keyboard
+  bool keyOne, keyTwo, keyThree, keyFour, keyFive;
+  bool keySix, keySeven, keyEight, keyNine, keyZero;
+
+  PlayerInputState playerInput;
+  float frameTime; // Delta time
+
+  // Screen
+  int screenWidth;
+  int screenHeight;
+};
+
 #endif // !DEFINES_H

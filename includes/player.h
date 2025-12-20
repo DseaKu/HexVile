@@ -12,13 +12,6 @@ struct PlayerAnimationData {
   bool loop;
 };
 
-struct PlayerInputState {
-  bool moveUp;
-  bool moveDown;
-  bool moveLeft;
-  bool moveRight;
-};
-
 class Player {
 private:
   int animationFrame;

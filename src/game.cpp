@@ -69,6 +69,8 @@ Game::Game() {
 
   // Initialise logic thread
   logicThread = std::thread(&Game::LogicLoop, this);
+
+  renderStateIndex = 0;
 }
 
 // --- Main Loop -> Render Thread ---
@@ -91,7 +93,7 @@ void Game::GameLoop() {
       BeginDrawing();
       ClearBackground(WHITE);
 
-      BeginMode2D(worldState.camera);
+      BeginMode2D(renderStates[renderStateIndex].camera);
       gfxManager.RenderLayer(DRAW_MASK_GROUND_0);
       gfxManager.RenderLayer(DRAW_MASK_GROUND_1);
       gfxManager.RenderLayer(DRAW_MASK_SHADOW);
@@ -119,6 +121,9 @@ void Game::GameLoop() {
       std::unique_lock<std::mutex> lock(logicMutex);
       logicToMainCV.wait(lock, [this] { return logicUpdateDone; });
     }
+
+    // Swap Render State Buffers
+    renderStateIndex = !renderStateIndex;
 
     gfxManager.SwapBuffers();
   }
@@ -248,7 +253,7 @@ void Game::RunLogic() {
   }
 
   toolBarSel =
-      uiHandler.GetToolBarSelction(frameContext.inputs.keyPress, toolBarSel);
+      uiHandler.GetToolBarSelection(frameContext.inputs.keyPress, toolBarSel);
 
   uiHandler.SetSelectedItem(toolBarSel);
   worldState.itemHandler.SetItemSelection(toolBarSel);
@@ -257,8 +262,33 @@ void Game::RunLogic() {
   worldState.player.Update(&frameContext.inputs.keyPress,
                            frameContext.deltaTime);
 
-  // Update Camera Target
+  // Update Camera Target (Logic)
   worldState.camera.target = worldState.player.GetPosition();
+
+  // --- Update Render State Snapshot (Back Buffer) ---
+  RenderState &rs = renderStates[!renderStateIndex];
+  rs.camera = worldState.camera;
+
+  rs.tilesTotal = worldState.hexGrid.GetTilesInTotal();
+  rs.tilesUsed = worldState.hexGrid.GetTilesInUse();
+  rs.tilesVisible = worldState.hexGrid.GetTilesVisible();
+  rs.mapRadius = worldState.hexGrid.GetMapRadius();
+  rs.visCalcTime = worldState.hexGrid.GetVisCalcTime();
+
+  rs.mouseTileCoord =
+      worldState.hexGrid.PointToHexCoord(frameContext.mouseWorldPos);
+  rs.mouseTileType = worldState.hexGrid.PointToType(frameContext.mouseWorldPos);
+
+  rs.playerPos = worldState.player.GetPosition();
+  rs.playerTileCoord = worldState.hexGrid.PointToHexCoord(rs.playerPos);
+  rs.playerTileType = worldState.hexGrid.PointToType(rs.playerPos);
+  rs.playerStateStr = worldState.player.PlayerStateToString();
+  rs.playerDirStr = worldState.player.PlayerDirToString();
+  rs.playerFrame = worldState.player.GetAnimationFrame();
+  rs.playerSpeed = worldState.player.GetSpeedTilesPerSecond();
+
+  rs.selectedItemType = worldState.itemHandler.GetSelectedItemType();
+  rs.selectedToolBarSlot = worldState.itemHandler.GetSelectionToolBar();
 
   // Count passed time
   auto endLogic = std::chrono::high_resolution_clock::now();
@@ -302,10 +332,12 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   if (debugUpdateTimer >= 1.0f) {
     displayRenderTime = renderExecutionTime.load();
     displayLogicTime = logicExecutionTime.load();
-    displayVisTime = worldState.hexGrid.GetVisCalcTime();
+    displayVisTime = renderStates[renderStateIndex].visCalcTime;
     displayRamUsage = GetRamUsageMB();
     debugUpdateTimer = 0.0f;
   }
+
+  const RenderState &rs = renderStates[renderStateIndex];
 
   debugData.clear();
   debugData.push_back(
@@ -315,65 +347,63 @@ void Game::DrawDebugOverlay(bool is_enabled) {
            TextFormat("RAM: %.2f MB", displayRamUsage),
            TextFormat("Screen: %ix%i", GetScreenWidth(), GetScreenHeight()),
            TextFormat("Render: %ix%i", GetRenderWidth(), GetRenderHeight()),
-           TextFormat("Tiles Total: %i", worldState.hexGrid.GetTilesInTotal()),
-           TextFormat("Tiles Used: %i", worldState.hexGrid.GetTilesInUse()),
-           TextFormat("Tiles Visible: %i",
-                      worldState.hexGrid.GetTilesVisible()),
-           TextFormat("Map radius: %i", worldState.hexGrid.GetMapRadius()),
+           TextFormat("Tiles Total: %i", rs.tilesTotal),
+           TextFormat("Tiles Used: %i", rs.tilesUsed),
+           TextFormat("Tiles Visible: %i", rs.tilesVisible),
+           TextFormat("Map radius: %i", rs.mapRadius),
            TextFormat("Render Time: %.2f ms", displayRenderTime),
            TextFormat("Logic Time: %.2f ms", displayLogicTime),
            TextFormat("Culling Time: %.2f ms", displayVisTime),
        }});
 
   // Use currentInput for debug display
-  HexCoord mapTile =
-      worldState.hexGrid.PointToHexCoord(frameContext.mouseWorldPos);
-  TileID tileMouseType =
-      worldState.hexGrid.PointToType(frameContext.mouseWorldPos);
+  // HexCoord mapTile =
+  //     worldState.hexGrid.PointToHexCoord(frameContext.mouseWorldPos);
+  // TileID tileMouseType =
+  //     worldState.hexGrid.PointToType(frameContext.mouseWorldPos);
 
   debugData.push_back(
       {"Mouse",
        {
            TextFormat("X,Y: %.1f,%.1f", frameContext.mouseWorldPos.x,
                       frameContext.mouseWorldPos.y),
-           TextFormat("Tile Q,R: %i,%i", mapTile.q, mapTile.r),
+           TextFormat("Tile Q,R: %i,%i", rs.mouseTileCoord.q, rs.mouseTileCoord.r),
            TextFormat("Type: %s",
-                      worldState.hexGrid.TileToString(tileMouseType)),
+                      worldState.hexGrid.TileToString(rs.mouseTileType)),
            TextFormat("Clicked on: %s",
                       this->MouseMaskToString(frameContext.mouseMask)),
        }});
 
   // --- Player ---
-  Vector2 playerPos = worldState.player.GetPosition();
-  HexCoord playerTile = worldState.hexGrid.PointToHexCoord(playerPos);
-  TileID tilePlayerType = worldState.hexGrid.PointToType(playerPos);
+  // Vector2 playerPos = worldState.player.GetPosition();
+  // HexCoord playerTile = worldState.hexGrid.PointToHexCoord(playerPos);
+  // TileID tilePlayerType = worldState.hexGrid.PointToType(playerPos);
   debugData.push_back(
       {"Player",
        {
-           TextFormat("X,Y: %.1f,%.1f", playerPos.x, playerPos.y),
-           TextFormat("Tile Q,R: %i,%i", playerTile.q, playerTile.r),
-           TextFormat("State:  %s", worldState.player.PlayerStateToString()),
-           TextFormat("Face Dir: %s", worldState.player.PlayerDirToString()),
-           TextFormat("Frame: %i", worldState.player.GetAnimationFrame()),
+           TextFormat("X,Y: %.1f,%.1f", rs.playerPos.x, rs.playerPos.y),
+           TextFormat("Tile Q,R: %i,%i", rs.playerTileCoord.q, rs.playerTileCoord.r),
+           TextFormat("State:  %s", rs.playerStateStr.c_str()),
+           TextFormat("Face Dir: %s", rs.playerDirStr.c_str()),
+           TextFormat("Frame: %i", rs.playerFrame),
            TextFormat("Type: %s",
-                      worldState.hexGrid.TileToString(tilePlayerType)),
-           TextFormat("Speed[1/s]: %.2f",
-                      worldState.player.GetSpeedTilesPerSecond()),
+                      worldState.hexGrid.TileToString(rs.playerTileType)),
+           TextFormat("Speed[1/s]: %.2f", rs.playerSpeed),
        }});
 
   // --- Tool Bar ---
   debugData.push_back(
       {"Tool Bar",
        {
-           TextFormat("Item: %s", worldState.itemHandler.GetSelectedItemType()),
-           TextFormat("Slot: %i", worldState.itemHandler.GetSelectionToolBar()),
+           TextFormat("Item: %s", rs.selectedItemType.c_str()),
+           TextFormat("Slot: %i", rs.selectedToolBarSlot),
        }});
 
   // Draw section
-  Vector2 playerScreenPos = GetWorldToScreen2D(playerPos, worldState.camera);
+  Vector2 playerScreenPos = GetWorldToScreen2D(rs.playerPos, rs.camera);
   DrawCircleV(
       GetWorldToScreen2D(worldState.hexGrid.HexCoordToPoint(HexCoord(0, 0)),
-                         worldState.camera),
+                         rs.camera),
       3.0f, RED);
   DrawCircleV(playerScreenPos, 3.0f, RED);
 

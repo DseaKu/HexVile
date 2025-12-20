@@ -46,6 +46,34 @@ struct FrameContext {
   float deltaTime;
 };
 
+struct RenderState {
+  Camera2D camera;
+
+  // Resources / Stats
+  int tilesTotal;
+  int tilesUsed;
+  int tilesVisible;
+  int mapRadius;
+  double visCalcTime;
+
+  // Mouse Hover
+  HexCoord mouseTileCoord;
+  TileID mouseTileType;
+
+  // Player
+  Vector2 playerPos;
+  HexCoord playerTileCoord;
+  TileID playerTileType;
+  std::string playerStateStr;
+  std::string playerDirStr;
+  int playerFrame;
+  float playerSpeed;
+
+  // ToolBar
+  std::string selectedItemType;
+  int selectedToolBarSlot;
+};
+
 class Game {
 private:
   unsigned char *hackFontRegular;
@@ -53,6 +81,8 @@ private:
   // Logic/State
   WorldState worldState;
   FrameContext frameContext;
+  RenderState renderStates[2];
+  int renderStateIndex = 0; // Index of the front buffer (used for rendering)
 
   // Rendering/System
   GFX_Manager gfxManager;

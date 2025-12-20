@@ -143,11 +143,12 @@ void UI_Handler::DrawToolBarSlot(int slotIndex) {
                         (float)toolBarLayout.contentSize};
 
   // 1. Draw Background
-  int uiId = (slotIndex == itemHandler->GetSelectionToolBar())
-                 ? ui::ITEM_BAR_BG_H
-                 : ui::ITEM_BAR_BG;
-  graphicsManager->LoadGFX_Data(drawMask::UI_0, slotRect.y, TA::UI_X, uiId,
-                                slotRect, WHITE);
+  graphicsManager->LoadGFX_Data(drawMask::UI_0, slotRect.y, TA::UI_X,
+                                ui::ITEM_BAR_BG, slotRect, WHITE);
+  if (slotIndex == itemHandler->GetSelectionToolBar()) {
+    graphicsManager->LoadGFX_Data(drawMask::UI_0, slotRect.y, TA::UI_X,
+                                  ui::ITEM_BAR_BG_H, slotRect, WHITE);
+  }
 
   // 2. Draw Content
   ItemStack *itemStack = itemHandler->GetToolBarItemPointer(slotIndex);

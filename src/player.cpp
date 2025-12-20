@@ -1,10 +1,10 @@
 #include "player.h"
 #include "defines.h"
-#include "texture_atlas.h"
 #include "enums.h"
 #include "hex_tile_grid.h"
 #include "raylib.h"
 #include "raymath.h"
+#include "texture_atlas.h"
 
 Player::Player() {
   this->position = Conf::SCREEN_CENTER;
@@ -19,13 +19,13 @@ Player::Player() {
   InitAnimations();
 }
 
-void Player::Update(PlayerInputState input, float deltaTime) {
+void Player::Update(const KeyboardInput *keyboardInput, float deltaTime) {
   this->animationDelta += deltaTime;
   this->playerTile = this->hexGrid->PointToHexCoord(this->position);
 
   Vector2 dir;
-  dir.x = -input.moveLeft + input.moveRight;
-  dir.y = -input.moveUp + input.moveDown;
+  dir.x = -keyboardInput->Left + keyboardInput->Right;
+  dir.y = -keyboardInput->Up + keyboardInput->Down;
 
   // Determine player face direction
   if (dir.x != 0 || dir.y != 0) {

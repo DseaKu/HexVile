@@ -99,46 +99,38 @@ using s16 = std::int16_t;
 using s32 = std::int32_t;
 using s64 = std::int64_t;
 
-struct PlayerInputState {
-  bool moveUp;
-  bool moveDown;
-  bool moveLeft;
-  bool moveRight;
+struct KeyboardInput {
+  bool One;
+  bool Two;
+  bool Three;
+  bool Four;
+  bool Five;
+  bool Six;
+  bool Seven;
+  bool Eight;
+  bool Nine;
+  bool Zero;
+  bool Up;
+  bool Down;
+  bool Left;
+  bool Right;
 };
 
-struct KeyboardInputState {
-  bool keyOne;
-  bool keyTwo;
-  bool keyThree;
-  bool keyFour;
-  bool keyFive;
-  bool keySix;
-  bool keySeven;
-  bool keyEight;
-  bool keyNine;
-  bool keyZero;
+struct MouseInput {
+  bool left;
+  bool right;
 };
 
-struct InputState {
-  // Mouse
-  Vector2 mouseScreenPos;
-  Vector2 mouseWorldPos;
-  bool leftMouseClicked;
-  bool rightMouseClicked;
-  MouseMask mouseMask;
-
-  KeyboardInputState keyboardInput;
-  PlayerInputState playerInput;
-
-  float frameTime; // Delta time
-
-  // Screen
-  int screenWidth;
-  int screenHeight;
+struct Inputs {
+  MouseInput mousePress;
+  KeyboardInput keyPress;
 };
 
 struct GameContext {
-  InputState inputs;
+  Inputs inputs;
+  Vector2 mouseScreenPos;
+  Vector2 mouseWorldPos;
+  MouseMask mouseMask;
 
   // Screen
   int screenWidth;

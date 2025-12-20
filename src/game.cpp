@@ -54,7 +54,6 @@ Game::Game()
   uiHandler.SetGFX_Manager(&gfxManager);
   uiHandler.SetItemHandler(&gameState.itemHandler);
   uiHandler.SetFontHandler(&fontHandler);
-  uiHandler.SetInputHandler(&inputHandler);
   uiHandler.SetHexGrid(&gameState.hexGrid);
   uiHandler.SetToolBarActive(true);
 
@@ -70,7 +69,7 @@ void Game::GameLoop() {
   while (!WindowShouldClose()) {
     // 1. Gather Input (Main Thread)
     UpdateInputs();
-    inputHandler.SetInputState(&currentInput);
+    // inputHandler.SetInputState(&gameContext);
 
     // 2. Sync: Send Input to Logic
     {
@@ -153,79 +152,79 @@ void Game::UpdateInputs() {
     ToggleBorderlessWindowed();
   }
 
-  currentInput.frameTime = GetFrameTime();
+  gameContext.frameTime = GetFrameTime();
 
-  currentInput.screenWidth = GetScreenWidth();
-  currentInput.screenHeight = GetScreenHeight();
+  gameContext.screenWidth = GetScreenWidth();
+  gameContext.screenHeight = GetScreenHeight();
 
   // Update Camera Offset to match new screen size
-  gameState.camera.offset = Vector2{(float)currentInput.screenWidth / 2.0f,
-                                    (float)currentInput.screenHeight / 2.0f};
+  gameState.camera.offset = Vector2{(float)gameContext.screenWidth / 2.0f,
+                                    (float)gameContext.screenHeight / 2.0f};
 
-  currentInput.mouseScreenPos = GetMousePosition();
+  gameContext.mouseScreenPos = GetMousePosition();
 
-  currentInput.mouseWorldPos =
-      GetScreenToWorld2D(currentInput.mouseScreenPos, gameState.camera);
+  gameContext.mouseWorldPos =
+      GetScreenToWorld2D(gameContext.mouseScreenPos, gameState.camera);
 
-  currentInput.leftMouseClicked = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
-  currentInput.rightMouseClicked = IsMouseButtonPressed(MOUSE_BUTTON_RIGHT);
+  gameContext.inputs.mousePress.left = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+  gameContext.inputs.mousePress.right =
+      IsMouseButtonPressed(MOUSE_BUTTON_RIGHT);
 
-  currentInput.keyboardInput.keyOne = IsKeyPressed(KEY_ONE);
-  currentInput.keyboardInput.keyTwo = IsKeyPressed(KEY_TWO);
-  currentInput.keyboardInput.keyThree = IsKeyPressed(KEY_THREE);
-  currentInput.keyboardInput.keyFour = IsKeyPressed(KEY_FOUR);
-  currentInput.keyboardInput.keyFive = IsKeyPressed(KEY_FIVE);
-  currentInput.keyboardInput.keySix = IsKeyPressed(KEY_SIX);
-  currentInput.keyboardInput.keySeven = IsKeyPressed(KEY_SEVEN);
-  currentInput.keyboardInput.keyEight = IsKeyPressed(KEY_EIGHT);
-  currentInput.keyboardInput.keyNine = IsKeyPressed(KEY_NINE);
-  currentInput.keyboardInput.keyZero = IsKeyPressed(KEY_ZERO);
+  gameContext.inputs.keyPress.One = IsKeyPressed(KEY_ONE);
+  gameContext.inputs.keyPress.Two = IsKeyPressed(KEY_TWO);
+  gameContext.inputs.keyPress.Three = IsKeyPressed(KEY_THREE);
+  gameContext.inputs.keyPress.Four = IsKeyPressed(KEY_FOUR);
+  gameContext.inputs.keyPress.Five = IsKeyPressed(KEY_FIVE);
+  gameContext.inputs.keyPress.Six = IsKeyPressed(KEY_SIX);
+  gameContext.inputs.keyPress.Seven = IsKeyPressed(KEY_SEVEN);
+  gameContext.inputs.keyPress.Eight = IsKeyPressed(KEY_EIGHT);
+  gameContext.inputs.keyPress.Nine = IsKeyPressed(KEY_NINE);
+  gameContext.inputs.keyPress.Zero = IsKeyPressed(KEY_ZERO);
 
-  currentInput.playerInput.moveLeft = IsKeyDown(KEY_A);
-  currentInput.playerInput.moveRight = IsKeyDown(KEY_D);
-  currentInput.playerInput.moveUp = IsKeyDown(KEY_W);
-  currentInput.playerInput.moveDown = IsKeyDown(KEY_S);
+  gameContext.inputs.keyPress.Left = IsKeyDown(KEY_A);
+  gameContext.inputs.keyPress.Right = IsKeyDown(KEY_D);
+  gameContext.inputs.keyPress.Up = IsKeyDown(KEY_W);
+  gameContext.inputs.keyPress.Down = IsKeyDown(KEY_S);
 
   gameState.cameraTopLeft = GetScreenToWorld2D(Vector2{0, 0}, gameState.camera);
 
-  float camWidth = (float)currentInput.screenWidth / gameState.camera.zoom;
-  float camHeight = (float)currentInput.screenHeight / gameState.camera.zoom;
+  float camWidth = (float)gameContext.screenWidth / gameState.camera.zoom;
+  float camHeight = (float)gameContext.screenHeight / gameState.camera.zoom;
 
   gameState.cameraRect = {gameState.cameraTopLeft.x, gameState.cameraTopLeft.y,
                           camWidth, camHeight};
 }
 
 void Game::RunLogic() {
-  // Use currentInput and gameState
-  gameState.timer += currentInput.frameTime;
+  // Use gameContext and gameState
+  gameState.timer += gameContext.frameTime;
 
   // Update UI Layout
-  uiHandler.UpdateScreenSize(currentInput.screenWidth,
-                             currentInput.screenHeight);
+  uiHandler.UpdateScreenSize(gameContext.screenWidth, gameContext.screenHeight);
 
   // Update Grid
-  gameState.hexGrid.Update(gameState.camera, currentInput.frameTime);
-  uiHandler.Update();
+  gameState.hexGrid.Update(gameState.camera, gameContext.frameTime);
+  uiHandler.Update(gameContext.mouseWorldPos);
 
   int toolBarSel = gameState.itemHandler.GetSelectionToolBar();
 
-  if (currentInput.leftMouseClicked) {
+  if (gameContext.inputs.mousePress.left) {
     // Clicked on item bar
     if (uiHandler.GetToolBarAvailability() &&
         CheckCollisionPointRec(
-            currentInput.mouseScreenPos, // ToolBar is Screen Space usually?
+            gameContext.mouseScreenPos, // ToolBar is Screen Space usually?
             uiHandler.GetToolBarRect())) {
       // inputHandler.SetMouseMask(MOUSE_MASK_ITEM_BAR);
-      currentInput.mouseMask =
+      gameContext.mouseMask =
           MOUSE_MASK_ITEM_BAR; // Update local state if needed
-      toolBarSel = uiHandler.GetItemSlotAt(currentInput.mouseScreenPos);
+      toolBarSel = uiHandler.GetItemSlotAt(gameContext.mouseScreenPos);
 
     } else {
       // inputHandler.SetMouseMask(MOUSE_MASK_PLAY_GROUND);
-      currentInput.mouseMask = MOUSE_MASK_PLAY_GROUND;
+      gameContext.mouseMask = MOUSE_MASK_PLAY_GROUND;
 
       HexCoord clickedHex =
-          gameState.hexGrid.PointToHexCoord(currentInput.mouseWorldPos);
+          gameState.hexGrid.PointToHexCoord(gameContext.mouseWorldPos);
       Item *selectedItem =
           gameState.itemHandler.GetToolBarItemPointer(toolBarSel);
       TileID tileToPlace =
@@ -238,19 +237,20 @@ void Game::RunLogic() {
     }
   }
 
-  if (currentInput.rightMouseClicked) {
+  if (gameContext.inputs.mousePress.right) {
     HexCoord clickedHex =
-        gameState.hexGrid.PointToHexCoord(currentInput.mouseWorldPos);
+        gameState.hexGrid.PointToHexCoord(gameContext.mouseWorldPos);
     gameState.hexGrid.SetTile(clickedHex, TILE_NULL);
   }
 
-  toolBarSel = inputHandler.GetToolBarSelction(toolBarSel);
+  toolBarSel =
+      uiHandler.GetToolBarSelction(gameContext.inputs.keyPress, toolBarSel);
 
   uiHandler.SetSelectedItem(toolBarSel);
   gameState.itemHandler.SetItemSelection(toolBarSel);
 
   // Player Update
-  gameState.player.Update(currentInput.playerInput, currentInput.frameTime);
+  gameState.player.Update(&gameContext.inputs.keyPress, gameContext.frameTime);
 
   // Update Camera Target (Logic)
   gameState.camera.target = gameState.player.GetPosition();
@@ -315,20 +315,20 @@ void Game::DrawDebugOverlay(bool is_enabled) {
 
   // Use currentInput for debug display
   HexCoord mapTile =
-      gameState.hexGrid.PointToHexCoord(currentInput.mouseWorldPos);
+      gameState.hexGrid.PointToHexCoord(gameContext.mouseWorldPos);
   TileID tileMouseType =
-      gameState.hexGrid.PointToType(currentInput.mouseWorldPos);
+      gameState.hexGrid.PointToType(gameContext.mouseWorldPos);
 
   debugData.push_back(
       {"Mouse",
        {
-           TextFormat("X,Y: %.1f,%.1f", currentInput.mouseWorldPos.x,
-                      currentInput.mouseWorldPos.y),
+           TextFormat("X,Y: %.1f,%.1f", gameContext.mouseWorldPos.x,
+                      gameContext.mouseWorldPos.y),
            TextFormat("Tile Q,R: %i,%i", mapTile.q, mapTile.r),
            TextFormat("Type: %s",
                       gameState.hexGrid.TileToString(tileMouseType)),
            TextFormat("Clicked on: %s",
-                      this->MouseMaskToString(currentInput.mouseMask)),
+                      this->MouseMaskToString(gameContext.mouseMask)),
        }});
 
   // --- Player ---

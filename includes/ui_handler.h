@@ -4,7 +4,6 @@
 #include "GFX_manager.h"
 #include "font_handler.h"
 #include "hex_tile_grid.h"
-#include "input_handler.h"
 #include "item_handler.h"
 #include "raylib.h"
 
@@ -25,24 +24,22 @@ private:
   GFX_Manager *graphicsManager;
   ItemHandler *itemHandler;
   FontHandler *fontHandler;
-  InputHandler *inputHandler;
   HexGrid *hexGrid;
   int selectedItemIndex;
   bool isToolBarActive;
-  void GenerateDrawData();
+  void GenerateDrawData(Vector2 mouseWorldPos);
   void LoadToolBarGFX();
-  void LoadHiTileGFX();
+  void LoadHiTileGFX(Vector2 mouseWorldPos);
   void LoadItemBgGFX(int x, int y);
   void LoadItemGFX(int x, int y);
   void LoadItemNumGFX(int x, int y);
 
 public:
   UI_Handler();
-  void Update();
+  void Update(Vector2 mouseWorldPos);
   void SetGFX_Manager(GFX_Manager *p);
   void SetItemHandler(ItemHandler *p);
   void SetFontHandler(FontHandler *p);
-  void SetInputHandler(InputHandler *p);
   void SetHexGrid(HexGrid *p);
   void SetSelectedItem(int index);
   void SetToolBarActive(bool is_active);
@@ -51,6 +48,7 @@ public:
   Rectangle GetToolBarRect();
   int GetItemSlotAt(Vector2 point);
   void UpdateScreenSize(int width, int height);
+  int GetToolBarSelction(KeyboardInput keyPress, int curSel);
 };
 
 #endif // UI_HANDLER_H

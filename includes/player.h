@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include "GFX_manager.h"
+#include "defines.h"
 #include "enums.h"
 #include "hex_tile_grid.h"
 #include "raylib.h"
@@ -33,7 +34,7 @@ private:
 
 public:
   Player();
-  void Update(PlayerInputState input, float deltaTime);
+  void Update(const KeyboardInput *keyboardInput, float deltaTime);
   void SetHexGrid(HexGrid *grid);
   Vector2 GetPosition();
   void SetGFX_Manager(GFX_Manager *graphicsManager);

@@ -2,10 +2,10 @@
 #define GAME_H
 
 #include "GFX_manager.h"
+#include "defines.h"
 #include "enums.h"
 #include "font_handler.h"
 #include "hex_tile_grid.h"
-#include "input_handler.h"
 #include "item_handler.h"
 #include "player.h"
 #include "raylib.h"
@@ -39,13 +39,12 @@ private:
 
   // Logic/State
   GameState gameState;
-  InputState currentInput;
+  GameContext gameContext;
 
   // Rendering/System
   GFX_Manager gfxManager;
   FontHandler fontHandler;
   UI_Handler uiHandler;
-  InputHandler inputHandler;
 
   std::vector<DebugData> debugData;
 

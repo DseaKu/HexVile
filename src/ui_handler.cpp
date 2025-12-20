@@ -3,7 +3,6 @@
 #include "enums.h"
 #include "font_handler.h"
 #include "hex_tile_grid.h"
-#include "input_handler.h"
 #include "raylib.h"
 #include "texture_atlas.h"
 #include <string>
@@ -28,10 +27,12 @@ UI_Handler::UI_Handler() {
   toolBarRec = {barPosX, barPosY, barWidth, barHeight};
 }
 
-void UI_Handler::Update() { GenerateDrawData(); }
-void UI_Handler::GenerateDrawData() {
+void UI_Handler::Update(Vector2 mouseWorldPos) {
+  GenerateDrawData(mouseWorldPos);
+}
+void UI_Handler::GenerateDrawData(Vector2 mouseWorldPos) {
 
-  LoadHiTileGFX();
+  LoadHiTileGFX(mouseWorldPos);
   LoadToolBarGFX();
 }
 
@@ -41,7 +42,6 @@ void UI_Handler::SetGFX_Manager(GFX_Manager *graphicsManager) {
 }
 void UI_Handler::SetItemHandler(ItemHandler *p) { this->itemHandler = p; }
 void UI_Handler::SetFontHandler(FontHandler *p) { this->fontHandler = p; }
-void UI_Handler::SetInputHandler(InputHandler *p) { this->inputHandler = p; }
 void UI_Handler::SetHexGrid(HexGrid *p) { this->hexGrid = p; }
 
 void UI_Handler::SetSelectedItem(int index) {
@@ -188,8 +188,38 @@ void UI_Handler::LoadItemNumGFX(int x, int y) {
     }
   }
 }
-void UI_Handler::LoadHiTileGFX() {
-  Vector2 mousePos = inputHandler->GetMouseWorldPos();
-  HexCoord coord = hexGrid->PointToHexCoord(mousePos);
+void UI_Handler::LoadHiTileGFX(Vector2 mouseWorldPos) {
+  HexCoord coord = hexGrid->PointToHexCoord(mouseWorldPos);
   hexGrid->DrawTile(coord, TA::UI_X, UI_ID_TILE_H, DRAW_MASK_GROUND_1);
+}
+
+int UI_Handler::GetToolBarSelction(KeyboardInput keyPress, int curSel) {
+
+  int toolBarSel = -1;
+
+  if (keyPress.One) {
+    toolBarSel = 0;
+  } else if (keyPress.Two) {
+    toolBarSel = 1;
+  } else if (keyPress.Three) {
+    toolBarSel = 2;
+  } else if (keyPress.Four) {
+    toolBarSel = 3;
+  } else if (keyPress.Five) {
+    toolBarSel = 4;
+  } else if (keyPress.Six) {
+    toolBarSel = 5;
+  } else if (keyPress.Seven) {
+    toolBarSel = 6;
+  } else if (keyPress.Eight) {
+    toolBarSel = 7;
+  } else if (keyPress.Nine) {
+    toolBarSel = 8;
+  } else if (keyPress.Zero) {
+    toolBarSel = 9;
+  }
+
+  if (toolBarSel != -1)
+    return toolBarSel;
+  return curSel;
 }

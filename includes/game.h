@@ -21,7 +21,7 @@ struct DebugData {
   std::vector<std::string> subSection;
 };
 
-struct GameState {
+struct WorldState {
   HexGrid hexGrid;
   Player player;
   ItemHandler itemHandler;
@@ -33,7 +33,7 @@ struct GameState {
   float updateGridTreshold;
 };
 
-struct GameContext {
+struct FrameContext {
   Inputs inputs;
   Vector2 mouseScreenPos;
   Vector2 mouseWorldPos;
@@ -51,8 +51,8 @@ private:
   unsigned char *hackFontRegular;
 
   // Logic/State
-  GameState gameState;
-  GameContext gameContext;
+  WorldState worldState;
+  FrameContext frameContext;
 
   // Rendering/System
   GFX_Manager gfxManager;
@@ -84,7 +84,7 @@ private:
   // Methods
   void UpdateInputs(); // Gathers inputs from Raylib
   void LogicLoop();    // The function running in the separate thread
-  void RunLogic();     // Calls the update functions on gameState
+  void RunLogic();     // Calls the update functions on worldState
 
   void DrawDebugOverlay(bool is_enabled);
 

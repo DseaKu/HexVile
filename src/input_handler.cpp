@@ -1,21 +1,21 @@
-#include "io_handler.h"
+#include "input_handler.h"
 #include "defines.h"
 #include "enums.h"
 
-IO_Handler::IO_Handler() {
+InputHandler::InputHandler() {
   currentInput = nullptr;
   scaledMousePos = {0.0f, 0.0f};
 }
 
-void IO_Handler::Init() {}
+void InputHandler::Init() {}
 
-Vector2 IO_Handler::GetMouseWorldPos() { return currentInput->mouseWorldPos; }
+Vector2 InputHandler::GetMouseWorldPos() { return currentInput->mouseWorldPos; }
 
 // --- Conversion ---
 
 // --- Get ---
 
-int IO_Handler::GetToolBarSelction(int curToolBarSel) {
+int InputHandler::GetToolBarSelction(int curToolBarSel) {
 
   int toolBarSel = -1;
 
@@ -46,11 +46,11 @@ int IO_Handler::GetToolBarSelction(int curToolBarSel) {
   return curToolBarSel;
 }
 
-MouseMask IO_Handler::GetMouseMask() { return mouseMask; }
+MouseMask InputHandler::GetMouseMask() { return mouseMask; }
 
 // --- Set ---
-void IO_Handler::SetMouseMask(MouseMask mask) { mouseMask = mask; }
+void InputHandler::SetMouseMask(MouseMask mask) { mouseMask = mask; }
 
-void IO_Handler::SetInputState(InputState *inputState) {
+void InputHandler::SetInputState(InputState *inputState) {
   this->currentInput = inputState;
 }

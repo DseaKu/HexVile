@@ -127,17 +127,24 @@ struct InputState {
   bool rightMouseClicked;
   MouseMask mouseMask;
 
-  // Keyboard
   KeyboardInputState keyboardInput;
-  // bool keyOne, keyTwo, keyThree, keyFour, keyFive;
-  // bool keySix, keySeven, keyEight, keyNine, keyZero;
-
   PlayerInputState playerInput;
+
   float frameTime; // Delta time
 
   // Screen
   int screenWidth;
   int screenHeight;
+};
+
+struct GameContext {
+  InputState inputs;
+
+  // Screen
+  int screenWidth;
+  int screenHeight;
+
+  float frameTime; // Delta time
 };
 
 #endif // !DEFINES_H

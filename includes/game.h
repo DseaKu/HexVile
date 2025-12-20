@@ -5,7 +5,7 @@
 #include "enums.h"
 #include "font_handler.h"
 #include "hex_tile_grid.h"
-#include "io_handler.h"
+#include "input_handler.h"
 #include "item_handler.h"
 #include "player.h"
 #include "raylib.h"
@@ -45,7 +45,7 @@ private:
   GFX_Manager gfxManager;
   FontHandler fontHandler;
   UI_Handler uiHandler;
-  IO_Handler ioHandler;
+  InputHandler inputHandler;
 
   std::vector<DebugData> debugData;
 

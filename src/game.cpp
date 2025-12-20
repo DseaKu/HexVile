@@ -54,7 +54,7 @@ Game::Game()
   uiHandler.SetGFX_Manager(&gfxManager);
   uiHandler.SetItemHandler(&gameState.itemHandler);
   uiHandler.SetFontHandler(&fontHandler);
-  uiHandler.SetIO_Handler(&ioHandler);
+  uiHandler.SetInputHandler(&inputHandler);
   uiHandler.SetHexGrid(&gameState.hexGrid);
   uiHandler.SetToolBarActive(true);
 
@@ -70,7 +70,7 @@ void Game::GameLoop() {
   while (!WindowShouldClose()) {
     // 1. Gather Input (Main Thread)
     UpdateInputs();
-    ioHandler.SetInputState(&currentInput);
+    inputHandler.SetInputState(&currentInput);
 
     // 2. Sync: Send Input to Logic
     {
@@ -215,13 +215,13 @@ void Game::RunLogic() {
         CheckCollisionPointRec(
             currentInput.mouseScreenPos, // ToolBar is Screen Space usually?
             uiHandler.GetToolBarRect())) {
-      // ioHandler.SetMouseMask(MOUSE_MASK_ITEM_BAR);
+      // inputHandler.SetMouseMask(MOUSE_MASK_ITEM_BAR);
       currentInput.mouseMask =
           MOUSE_MASK_ITEM_BAR; // Update local state if needed
       toolBarSel = uiHandler.GetItemSlotAt(currentInput.mouseScreenPos);
 
     } else {
-      // ioHandler.SetMouseMask(MOUSE_MASK_PLAY_GROUND);
+      // inputHandler.SetMouseMask(MOUSE_MASK_PLAY_GROUND);
       currentInput.mouseMask = MOUSE_MASK_PLAY_GROUND;
 
       HexCoord clickedHex =
@@ -244,7 +244,7 @@ void Game::RunLogic() {
     gameState.hexGrid.SetTile(clickedHex, TILE_NULL);
   }
 
-  toolBarSel = ioHandler.GetToolBarSelction(toolBarSel);
+  toolBarSel = inputHandler.GetToolBarSelction(toolBarSel);
 
   uiHandler.SetSelectedItem(toolBarSel);
   gameState.itemHandler.SetItemSelection(toolBarSel);

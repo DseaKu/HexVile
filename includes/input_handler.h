@@ -1,18 +1,18 @@
-#ifndef IO_HANDLER_H
-#define IO_HANDLER_H
+#ifndef INPUT_HANDLER_H
+#define INPUT_HANDLER_H
 
 #include "defines.h"
 #include "enums.h"
 #include "raylib.h"
 
-class IO_Handler {
+class InputHandler {
 private:
   MouseMask mouseMask;
   Vector2 scaledMousePos;
   InputState *currentInput;
 
 public:
-  IO_Handler();
+  InputHandler();
   void Init();
   Vector2 GetMouseWorldPos();
 
@@ -28,4 +28,4 @@ public:
   void SetInputState(InputState *InputState);
 };
 
-#endif // !IO_HANDLER_H
+#endif // !INPUT_HANDLER_H

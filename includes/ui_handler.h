@@ -4,7 +4,7 @@
 #include "GFX_manager.h"
 #include "font_handler.h"
 #include "hex_tile_grid.h"
-#include "io_handler.h"
+#include "input_handler.h"
 #include "item_handler.h"
 #include "raylib.h"
 
@@ -25,7 +25,7 @@ private:
   GFX_Manager *graphicsManager;
   ItemHandler *itemHandler;
   FontHandler *fontHandler;
-  IO_Handler *io_Handler;
+  InputHandler *inputHandler;
   HexGrid *hexGrid;
   int selectedItemIndex;
   bool isToolBarActive;
@@ -39,10 +39,10 @@ private:
 public:
   UI_Handler();
   void Update();
-  void SetGFX_Manager(GFX_Manager *graphicsManager);
+  void SetGFX_Manager(GFX_Manager *p);
   void SetItemHandler(ItemHandler *p);
   void SetFontHandler(FontHandler *p);
-  void SetIO_Handler(IO_Handler *p);
+  void SetInputHandler(InputHandler *p);
   void SetHexGrid(HexGrid *p);
   void SetSelectedItem(int index);
   void SetToolBarActive(bool is_active);

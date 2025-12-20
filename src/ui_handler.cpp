@@ -3,7 +3,7 @@
 #include "enums.h"
 #include "font_handler.h"
 #include "hex_tile_grid.h"
-#include "io_handler.h"
+#include "input_handler.h"
 #include "raylib.h"
 #include "texture_atlas.h"
 #include <string>
@@ -41,7 +41,7 @@ void UI_Handler::SetGFX_Manager(GFX_Manager *graphicsManager) {
 }
 void UI_Handler::SetItemHandler(ItemHandler *p) { this->itemHandler = p; }
 void UI_Handler::SetFontHandler(FontHandler *p) { this->fontHandler = p; }
-void UI_Handler::SetIO_Handler(IO_Handler *p) { this->io_Handler = p; }
+void UI_Handler::SetInputHandler(InputHandler *p) { this->inputHandler = p; }
 void UI_Handler::SetHexGrid(HexGrid *p) { this->hexGrid = p; }
 
 void UI_Handler::SetSelectedItem(int index) {
@@ -189,7 +189,7 @@ void UI_Handler::LoadItemNumGFX(int x, int y) {
   }
 }
 void UI_Handler::LoadHiTileGFX() {
-  Vector2 mousePos = io_Handler->GetMouseWorldPos();
+  Vector2 mousePos = inputHandler->GetMouseWorldPos();
   HexCoord coord = hexGrid->PointToHexCoord(mousePos);
   hexGrid->DrawTile(coord, TA::UI_X, UI_ID_TILE_H, DRAW_MASK_GROUND_1);
 }

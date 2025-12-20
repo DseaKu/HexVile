@@ -100,6 +100,7 @@ private:
   bool isFullscreenMode = false;
   bool logicUpdateReady; // Input ready for logic
   bool logicUpdateDone;  // Logic finished for this frame
+  bool isUnloaded = false;
 
   // Profiling
   std::atomic<double> logicExecutionTime;

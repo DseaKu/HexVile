@@ -71,6 +71,7 @@ Game::Game() {
   logicThread = std::thread(&Game::LogicLoop, this);
 
   renderStateIndex = 0;
+  isUnloaded = false;
 }
 
 // --- Main Loop -> Render Thread ---
@@ -428,6 +429,10 @@ void Game::DrawDebugOverlay(bool is_enabled) {
 Game::~Game() { Unload(); }
 
 void Game::Unload() {
+  if (isUnloaded)
+    return;
+  isUnloaded = true;
+
   isRunning = false;
   mainToLogicCV.notify_all();
   if (logicThread.joinable()) {

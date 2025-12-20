@@ -424,3 +424,21 @@ void Game::DrawDebugOverlay(bool is_enabled) {
     currentY += sectionGapY;
   }
 };
+
+Game::~Game() { Unload(); }
+
+void Game::Unload() {
+  isRunning = false;
+  mainToLogicCV.notify_all();
+  if (logicThread.joinable()) {
+    logicThread.join();
+  }
+
+  gfxManager.UnloadAssets();
+  fontHandler.UnloadFonts();
+
+  if (hackFontRegular != nullptr) {
+    UnloadFileData(hackFontRegular);
+    hackFontRegular = nullptr;
+  }
+}

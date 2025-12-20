@@ -84,7 +84,7 @@ void HexGrid::InitGrid(float radius) {
 
         MapTile initTile = {.tileID = tile::GRASS};
 
-        for (TerrainDetail &d : initTile.detail) {
+        for (TerDet &d : initTile.det) {
           d.type = ta::UNINITIALIZED;
         }
 
@@ -99,7 +99,7 @@ void HexGrid::InitGrid(float radius) {
   CalcVisibleTiles();
 }
 
-TerrainDetail HexGrid::GetRandomTerainDetail(tile::id tileID) {
+TerDet HexGrid::GetRandomTerainDetail(tile::id tileID) {
   float x = GetRandomValue(-ta::RES8_F, ta::RES8_F);
   float y = GetRandomValue(-ta::RES8_F, ta::RES8_F);
 
@@ -119,10 +119,10 @@ TerrainDetail HexGrid::GetRandomTerainDetail(tile::id tileID) {
     type = ta::SKIP_RENDER;
   }
 
-  return TerrainDetail{.x = x, .y = y, .type = type};
+  return TerDet{.x = x, .y = y, .type = type};
 }
 
-TerrainObject HexGrid::GetRandomTerainObject(tile::id tileID) {
+TerRes HexGrid::GetRandomTerainResource(tile::id tileID) {
   float x = GetRandomValue(-ta::RES8_F, ta::RES8_F);
   float y = GetRandomValue(-ta::RES8_F, ta::RES8_F);
 
@@ -142,7 +142,7 @@ TerrainObject HexGrid::GetRandomTerainObject(tile::id tileID) {
     type = ta::SKIP_RENDER;
   }
 
-  return TerrainObject{.x = x, .y = y, .type = type};
+  return TerRes{.x = x, .y = y, .resID = res::TREE};
 }
 
 void HexGrid::SetGFX_Manager(GFX_Manager *graphicsManager) {
@@ -378,7 +378,6 @@ void HexGrid::UpdateTileVisibility(float totalTime) {
 void HexGrid::Update(const Camera2D &camera, float totalTime) {
   UpdateTileVisibility(totalTime);
   LoadTileGFX();
-  // AddGrassDetails(200);
 }
 
 // --- Render ---
@@ -399,7 +398,7 @@ void HexGrid::LoadTileGFX() {
                                   WHITE);
 
     // Draw details for this tile
-    for (TerrainDetail &d : t.detail) {
+    for (TerDet &d : t.det) {
       if (d.type == ta::UNINITIALIZED) {
         d = GetRandomTerainDetail(t.tileID);
       }
@@ -410,8 +409,7 @@ void HexGrid::LoadTileGFX() {
   }
 }
 
-void HexGrid::LoadDetailGFX(const TerrainDetail d, float x, float y,
-                            tile::id tileID) {
+void HexGrid::LoadDetailGFX(const TerDet d, float x, float y, tile::id tileID) {
 
   Rectangle destRec = {x + d.x, y + d.y - ta::RES16_F, ta::RES, ta::RES};
 
@@ -442,7 +440,7 @@ bool HexGrid::SetTile(HexCoord h, tile::id tileID) {
   } else {
     MapTile &t = GetTile(h);
     t.tileID = tileID;
-    for (TerrainDetail &d : t.detail) {
+    for (TerDet &d : t.det) {
       d = GetRandomTerainDetail(tileID);
     }
     return true;

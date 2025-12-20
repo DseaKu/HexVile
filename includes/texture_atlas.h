@@ -29,6 +29,10 @@ constexpr int ITEM_X_MAX = ITEM_X + 1;
 constexpr int DETAILS_X = ITEM_X_MAX;
 constexpr int DETAILS_X_MAX = DETAILS_X + 12;
 
+// --- Tree
+constexpr int TREE_X = DETAILS_X_MAX;
+constexpr int TREE_X_MAX = 1;
+
 // --- UI ---
 constexpr int UI_X = 50;
 constexpr int UI_X_MAX = UI_X + 1;
@@ -36,10 +40,6 @@ constexpr int UI_X_MAX = UI_X + 1;
 // --- Number ---
 constexpr int NUMBER_X = UI_X_MAX;
 constexpr int NUMBER_X_MAX = 1;
-
-// --- Tree
-constexpr int TREE_X = UI_X_MAX;
-constexpr int TREE_X_MAX = 1;
 
 // ==========================================
 //               16x16 Resolution

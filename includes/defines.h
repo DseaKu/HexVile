@@ -43,7 +43,7 @@ constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
 constexpr int TOOLBAR_SLOTS = 8;
 constexpr int INVENTORY_SLOTS = 30;
 constexpr const int TERRAIN_DETAILS_MAX = 2;
-constexpr const int TERRAIN_OBJECTS_MAX = 1;
+constexpr const int TERRAIN_RESOURCE_MAX = 1;
 
 // ==========================================
 //               Hex Tile

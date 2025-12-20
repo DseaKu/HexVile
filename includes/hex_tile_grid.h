@@ -36,25 +36,25 @@ struct FractionalHex {
   double q, r, s;
 };
 
-// --- Terrain Detail --- TD = Terrain Detail
-struct TerrainDetail {
+// --- Terrain Detail ---
+struct TerDet {
   float x;
   float y;
   int type;
 };
 
-// --- Terrain Object ---UpdateTilesProperties
-struct TerrainObject {
+// --- Terrain Resource ---
+struct TerRes {
   float x;
   float y;
-  int type;
+  res::id resID;
 };
 
 // --- Map Tile ---
 struct MapTile {
   tile::id tileID;
-  TerrainDetail detail[conf::TERRAIN_DETAILS_MAX];
-  TerrainObject objects[conf::TERRAIN_OBJECTS_MAX];
+  TerDet det[conf::TERRAIN_DETAILS_MAX];
+  TerRes res[conf::TERRAIN_RESOURCE_MAX];
 };
 
 /* Grid parts and relationships:
@@ -113,8 +113,8 @@ private:
   HexCoord HexRound(FractionalHex h) const;
   const MapTile &GetTile(HexCoord h) const;
   MapTile &GetTile(HexCoord h);
-  TerrainDetail GetRandomTerainDetail(tile::id tileID);
-  TerrainObject GetRandomTerainObject(tile::id tileID);
+  TerDet GetRandomTerainDetail(tile::id tileID);
+  TerRes GetRandomTerainResource(tile::id tileID);
   void CalcRenderRect();
   void CalcVisibleTiles();
   void UpdateTileVisibility(float totalTime);
@@ -124,7 +124,7 @@ private:
 
   // --- Render ---
   void LoadTileGFX();
-  void LoadDetailGFX(const TerrainDetail d, float x, float y, tile::id tileID);
+  void LoadDetailGFX(const TerDet d, float x, float y, tile::id tileID);
 
 public:
   HexGrid();

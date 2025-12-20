@@ -31,6 +31,15 @@ enum id {
 };
 }
 
+// --- Resourcen ---
+namespace res {
+enum id {
+  NULL_ID = 0,
+  TREE,
+  SIZE,
+};
+}
+
 // --- Player State ---
 namespace playerState {
 enum id {

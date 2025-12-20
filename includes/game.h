@@ -33,6 +33,19 @@ struct GameState {
   float updateGridTreshold;
 };
 
+struct GameContext {
+  Inputs inputs;
+  Vector2 mouseScreenPos;
+  Vector2 mouseWorldPos;
+  MouseMask mouseMask;
+
+  // Screen
+  int screenWidth;
+  int screenHeight;
+
+  float deltaTime;
+};
+
 class Game {
 private:
   unsigned char *hackFontRegular;

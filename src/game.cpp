@@ -152,7 +152,7 @@ void Game::UpdateInputs() {
     ToggleBorderlessWindowed();
   }
 
-  gameContext.frameTime = GetFrameTime();
+  gameContext.deltaTime = GetFrameTime();
 
   gameContext.screenWidth = GetScreenWidth();
   gameContext.screenHeight = GetScreenHeight();
@@ -197,13 +197,13 @@ void Game::UpdateInputs() {
 
 void Game::RunLogic() {
   // Use gameContext and gameState
-  gameState.timer += gameContext.frameTime;
+  gameState.timer += gameContext.deltaTime;
 
   // Update UI Layout
   uiHandler.UpdateScreenSize(gameContext.screenWidth, gameContext.screenHeight);
 
   // Update Grid
-  gameState.hexGrid.Update(gameState.camera, gameContext.frameTime);
+  gameState.hexGrid.Update(gameState.camera, gameContext.deltaTime);
   uiHandler.Update(gameContext.mouseWorldPos);
 
   int toolBarSel = gameState.itemHandler.GetSelectionToolBar();
@@ -250,7 +250,7 @@ void Game::RunLogic() {
   gameState.itemHandler.SetItemSelection(toolBarSel);
 
   // Player Update
-  gameState.player.Update(&gameContext.inputs.keyPress, gameContext.frameTime);
+  gameState.player.Update(&gameContext.inputs.keyPress, gameContext.deltaTime);
 
   // Update Camera Target (Logic)
   gameState.camera.target = gameState.player.GetPosition();

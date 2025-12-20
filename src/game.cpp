@@ -70,6 +70,7 @@ void Game::GameLoop() {
   while (!WindowShouldClose()) {
     // 1. Gather Input (Main Thread)
     UpdateInputs();
+    ioHandler.SetInputState(&currentInput);
 
     // 2. Sync: Send Input to Logic
     {
@@ -152,7 +153,6 @@ void Game::UpdateInputs() {
     ToggleBorderlessWindowed();
   }
 
-  // Populate currentInput struct
   currentInput.frameTime = GetFrameTime();
 
   currentInput.screenWidth = GetScreenWidth();
@@ -164,30 +164,28 @@ void Game::UpdateInputs() {
 
   currentInput.mouseScreenPos = GetMousePosition();
 
-  // Calculate World Position here (Main Thread)
   currentInput.mouseWorldPos =
       GetScreenToWorld2D(currentInput.mouseScreenPos, gameState.camera);
 
   currentInput.leftMouseClicked = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
   currentInput.rightMouseClicked = IsMouseButtonPressed(MOUSE_BUTTON_RIGHT);
 
-  currentInput.keyOne = IsKeyPressed(KEY_ONE);
-  currentInput.keyTwo = IsKeyPressed(KEY_TWO);
-  currentInput.keyThree = IsKeyPressed(KEY_THREE);
-  currentInput.keyFour = IsKeyPressed(KEY_FOUR);
-  currentInput.keyFive = IsKeyPressed(KEY_FIVE);
-  currentInput.keySix = IsKeyPressed(KEY_SIX);
-  currentInput.keySeven = IsKeyPressed(KEY_SEVEN);
-  currentInput.keyEight = IsKeyPressed(KEY_EIGHT);
-  currentInput.keyNine = IsKeyPressed(KEY_NINE);
-  currentInput.keyZero = IsKeyPressed(KEY_ZERO);
+  currentInput.keyboardInput.keyOne = IsKeyPressed(KEY_ONE);
+  currentInput.keyboardInput.keyTwo = IsKeyPressed(KEY_TWO);
+  currentInput.keyboardInput.keyThree = IsKeyPressed(KEY_THREE);
+  currentInput.keyboardInput.keyFour = IsKeyPressed(KEY_FOUR);
+  currentInput.keyboardInput.keyFive = IsKeyPressed(KEY_FIVE);
+  currentInput.keyboardInput.keySix = IsKeyPressed(KEY_SIX);
+  currentInput.keyboardInput.keySeven = IsKeyPressed(KEY_SEVEN);
+  currentInput.keyboardInput.keyEight = IsKeyPressed(KEY_EIGHT);
+  currentInput.keyboardInput.keyNine = IsKeyPressed(KEY_NINE);
+  currentInput.keyboardInput.keyZero = IsKeyPressed(KEY_ZERO);
 
   currentInput.playerInput.moveLeft = IsKeyDown(KEY_A);
   currentInput.playerInput.moveRight = IsKeyDown(KEY_D);
   currentInput.playerInput.moveUp = IsKeyDown(KEY_W);
   currentInput.playerInput.moveDown = IsKeyDown(KEY_S);
 
-  // Calculate Camera Rects for Logic (Must be done in Main Thread)
   gameState.cameraTopLeft = GetScreenToWorld2D(Vector2{0, 0}, gameState.camera);
 
   float camWidth = (float)currentInput.screenWidth / gameState.camera.zoom;
@@ -200,7 +198,6 @@ void Game::UpdateInputs() {
 void Game::RunLogic() {
   // Use currentInput and gameState
   gameState.timer += currentInput.frameTime;
-  ioHandler.UpdateMousePos(currentInput.mouseWorldPos);
 
   // Update UI Layout
   uiHandler.UpdateScreenSize(currentInput.screenWidth,
@@ -247,20 +244,7 @@ void Game::RunLogic() {
     gameState.hexGrid.SetTile(clickedHex, TILE_NULL);
   }
 
-  // Keyboard selection
-  KeyboardInputState keyboardState;
-  keyboardState.keyOne = currentInput.keyOne;
-  keyboardState.keyTwo = currentInput.keyTwo;
-  keyboardState.keyThree = currentInput.keyThree;
-  keyboardState.keyFour = currentInput.keyFour;
-  keyboardState.keyFive = currentInput.keyFive;
-  keyboardState.keySix = currentInput.keySix;
-  keyboardState.keySeven = currentInput.keySeven;
-  keyboardState.keyEight = currentInput.keyEight;
-  keyboardState.keyNine = currentInput.keyNine;
-  keyboardState.keyZero = currentInput.keyZero;
-
-  toolBarSel = ioHandler.GetToolBarSelction(toolBarSel, keyboardState);
+  toolBarSel = ioHandler.GetToolBarSelction(toolBarSel);
 
   uiHandler.SetSelectedItem(toolBarSel);
   gameState.itemHandler.SetItemSelection(toolBarSel);

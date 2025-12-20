@@ -106,6 +106,19 @@ struct PlayerInputState {
   bool moveRight;
 };
 
+struct KeyboardInputState {
+  bool keyOne;
+  bool keyTwo;
+  bool keyThree;
+  bool keyFour;
+  bool keyFive;
+  bool keySix;
+  bool keySeven;
+  bool keyEight;
+  bool keyNine;
+  bool keyZero;
+};
+
 struct InputState {
   // Mouse
   Vector2 mouseScreenPos;
@@ -115,8 +128,9 @@ struct InputState {
   MouseMask mouseMask;
 
   // Keyboard
-  bool keyOne, keyTwo, keyThree, keyFour, keyFive;
-  bool keySix, keySeven, keyEight, keyNine, keyZero;
+  KeyboardInputState keyboardInput;
+  // bool keyOne, keyTwo, keyThree, keyFour, keyFive;
+  // bool keySix, keySeven, keyEight, keyNine, keyZero;
 
   PlayerInputState playerInput;
   float frameTime; // Delta time

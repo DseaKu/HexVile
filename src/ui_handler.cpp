@@ -189,7 +189,7 @@ void UI_Handler::LoadItemNumGFX(int x, int y) {
   }
 }
 void UI_Handler::LoadHiTileGFX() {
-  Vector2 mousePos = io_Handler->GetScaledMousePos();
+  Vector2 mousePos = io_Handler->GetMouseWorldPos();
   HexCoord coord = hexGrid->PointToHexCoord(mousePos);
   hexGrid->DrawTile(coord, TA::UI_X, UI_ID_TILE_H, DRAW_MASK_GROUND_1);
 }

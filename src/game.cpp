@@ -130,14 +130,7 @@ void Game::LogicLoop() {
     if (!isRunning)
       break;
 
-    // Copy input to local variable to minimize locking time if we wanted to
-    // but here we just process it.
-    auto startLogic = std::chrono::high_resolution_clock::now();
     RunLogic();
-    auto endLogic = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double, std::milli> elapsedLogic =
-        endLogic - startLogic;
-    logicExecutionTime = elapsedLogic.count();
 
     logicUpdateReady = false;
     logicUpdateDone = true;
@@ -196,6 +189,8 @@ void Game::UpdateInputs() {
 }
 
 void Game::RunLogic() {
+  auto startLogic = std::chrono::high_resolution_clock::now();
+
   // Use gameContext and gameState
   gameState.timer += gameContext.deltaTime;
 
@@ -254,6 +249,12 @@ void Game::RunLogic() {
 
   // Update Camera Target (Logic)
   gameState.camera.target = gameState.player.GetPosition();
+
+  // Count passed time
+  auto endLogic = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double, std::milli> elapsedLogic =
+      endLogic - startLogic;
+  logicExecutionTime = elapsedLogic.count();
 }
 
 const char *Game::MouseMaskToString(MouseMask m) {

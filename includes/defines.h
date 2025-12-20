@@ -82,7 +82,7 @@ constexpr float TOOLBAR_ITEM_ICON_SCALE = 0.8f * UI_SCALE;
 // ==========================================
 //               Details & Objects
 // ==========================================
-constexpr float GAUSIAN_EFFECT = 7.0f;
+constexpr float GAUSIAN_EFFECT = 6.5f;
 
 // ==========================================
 //               Font

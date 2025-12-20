@@ -378,6 +378,19 @@ void HexGrid::UpdateTileVisibility(float totalTime) {
 void HexGrid::Update(const Camera2D &camera, float totalTime) {
   UpdateTileVisibility(totalTime);
   LoadTileGFX();
+
+  // TODO: Update tile;for each loop for tile; sepereate LoadTileGFX and draw
+  // details; add init details and resource function; draw resource
+  for (const HexCoord &h : currentVisibleTiles) {
+    Vector2 tileCenter = HexCoordToPoint(h);
+    Vector2 renderPos =
+        Vector2{tileCenter.x - ta::RES16_F, tileCenter.y - ta::RES16_F};
+
+    Rectangle destRec = Rectangle{.x = renderPos.x,
+                                  .y = renderPos.y,
+                                  .width = ta::RES32_F,
+                                  .height = ta::RES32_F};
+  }
 }
 
 // --- Render ---

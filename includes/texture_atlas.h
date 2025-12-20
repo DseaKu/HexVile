@@ -10,8 +10,8 @@
 // ==========================================
 namespace ta {
 constexpr int RES32_OFFSET = 100;
-constexpr int RES = conf::TILE_RESOLUTION;
-constexpr float RES_F = RES;
+constexpr int RES32 = conf::TILE_RESOLUTION;
+constexpr float RES32_F = RES32;
 
 // --- Player ---
 constexpr int PLAYER_X = 0;
@@ -44,8 +44,9 @@ constexpr int NUMBER_X_MAX = 1;
 // ==========================================
 //               16x16 Resolution
 // ==========================================
-constexpr int RES16 = RES / 2;
-constexpr float RES16_F = RES16;
+constexpr int RES16 = RES32 / 2;
+// TODO: complter
+constexpr float RES16_F = static_cast<float>(RES16);
 
 // ==========================================
 //               8x8 Resolution

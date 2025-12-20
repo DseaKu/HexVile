@@ -69,7 +69,8 @@ struct MapTile {
  */
 class HexGrid {
 private:
-  std::vector<std::vector<MapTile>> tileData;
+  std::vector<MapTile> tileData;
+  int gridSize;
 
   // Stores currently visible tiles for rendering.
   std::vector<HexCoord> currentVisibleTiles;

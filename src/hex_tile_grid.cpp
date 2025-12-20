@@ -45,6 +45,7 @@ HexGrid::HexGrid() {
   tileGapY = Conf::TILE_SPACING_Y;
   origin = Conf::SCREEN_CENTER;
   mapRadius = Conf::MAP_RADIUS;
+  gridSize = 0;
   tilesInUse = 0;
   tilesInTotal = 0;
   camRect = nullptr;
@@ -67,8 +68,8 @@ HexGrid::HexGrid() {
 
 void HexGrid::InitGrid(float radius) {
 
-  int gridSize = mapRadius * 2 + 1;
-  tileData.assign(gridSize, std::vector<MapTile>(gridSize));
+  gridSize = mapRadius * 2 + 1;
+  tileData.resize(gridSize * gridSize);
 
   // Init tile data
   for (int r = -mapRadius; r <= mapRadius; r++) {
@@ -86,11 +87,11 @@ void HexGrid::InitGrid(float radius) {
           d.type = TA::UNINITIALIZED;
         }
 
-        tileData[gridR][gridQ] = initTile;
+        tileData[gridR * gridSize + gridQ] = initTile;
         this->tilesInUse++;
 
       } else {
-        tileData[gridR][gridQ] = (MapTile){.type = TILE_NULL};
+        tileData[gridR * gridSize + gridQ] = (MapTile){.type = TILE_NULL};
       }
     }
   }
@@ -174,11 +175,11 @@ bool HexGrid::IsWalkable(HexCoord h) const {
 }
 
 const MapTile &HexGrid::GetTile(HexCoord h) const {
-  return tileData[h.r + mapRadius][h.q + mapRadius];
+  return tileData[(h.r + mapRadius) * gridSize + (h.q + mapRadius)];
 }
 
 MapTile &HexGrid::GetTile(HexCoord h) {
-  return tileData[h.r + mapRadius][h.q + mapRadius];
+  return tileData[(h.r + mapRadius) * gridSize + (h.q + mapRadius)];
 }
 
 // --- Conversions ---
@@ -284,7 +285,7 @@ void HexGrid::CalcVisibleTiles() {
   for (u16 r = 0; r < gridSize; r++) {
     for (u16 q = 0; q < gridSize; q++) {
 
-      if (tileData[r][q].type == TILE_NULL) {
+      if (tileData[r * gridSize + q].type == TILE_NULL) {
         continue;
       }
       // Convert grid coordinates to HexCoord and then to screen coordinates.

@@ -3,37 +3,38 @@
 
 #include "enums.h"
 #include <map>
+#include <string>
 #include <utility>
 #include <vector>
-#include <string>
 
-typedef struct ItemProperties {
+// --- Structs ---
+struct ItemProperties {
   std::string name;
   int maxStack;
   int value;
   bool placeableTile;
-} ItemProperties;
+};
 
-typedef struct Item {
+struct Item {
   ItemID id;
   int count;
-} Item;
+};
 
 struct Chest {
-  // std::string name;
   std::vector<Item> contents;
 };
 
+// Global chest map (Consider moving this to a dedicated World/ChestHandler later)
 extern std::map<std::pair<int, int>, Chest> gridChests;
 
-// --- Item Data Base ---
+// --- Item Database ---
 class ItemDataBase {
 private:
-  std::vector<ItemProperties> propeties;
+  std::vector<ItemProperties> properties;
 
 public:
   ItemDataBase();
-  const ItemProperties& GetItemProperties(ItemID id);
+  const ItemProperties &GetItemProperties(ItemID id) const;
 };
 
 // --- Item Handler ---
@@ -43,24 +44,27 @@ private:
   std::vector<Item> toolBar;
   ItemDataBase itemDataBase;
   int selectedToolBarSlot;
+
   void Init();
 
 public:
   ItemHandler();
+
+  // Actions
   bool TakeItemFromToolBar(Item *item, int amount);
 
-  // --- Conversion ---
-  ItemID ToolBarSelctionToItemId(int sel);
-  TileID ConvertItemToTileID(ItemID item_id);
-
-  // --- Get ---
-  Item *GetToolBarItemPointer(int pos);
-  int GetSelectionToolBar();
-  ItemID GetToolBarItemType(int pos);
-  const char *GetSelectedItemType();
-
-  // --- Set ---
+  // Setters
   void SetItemSelection(int pos);
+
+  // Getters
+  Item *GetToolBarItemPointer(int pos);
+  int GetSelectionToolBar() const;
+  ItemID GetToolBarItemType(int pos) const;
+  const char *GetSelectedItemType() const;
+
+  // Conversion / Helpers
+  ItemID ToolBarSelectionToItemId(int sel) const;
+  TileID ConvertItemToTileID(ItemID item_id) const;
 };
 
 #endif // !ITEM_HANDLER_H

@@ -4,19 +4,19 @@
 
 // --- Item Data Base ---
 ItemDataBase::ItemDataBase() {
-  propeties.resize(ITEM_ID_SIZE);
-  propeties[ITEM_NULL] = {
+  properties.resize(ITEM_ID_SIZE);
+  properties[ITEM_NULL] = {
       .name = "Null", .maxStack = 0, .value = 0, .placeableTile = false};
-  propeties[ITEM_SET_GRASS] = {
+  properties[ITEM_SET_GRASS] = {
       .name = "Set Grass", .maxStack = 32, .value = 5, .placeableTile = true};
-  propeties[ITEM_SET_WATER] = {
+  properties[ITEM_SET_WATER] = {
       .name = "Set Water", .maxStack = 32, .value = 8, .placeableTile = true};
-  propeties[ITEM_SET_DIRT] = {
+  properties[ITEM_SET_DIRT] = {
       .name = "Set Dirt", .maxStack = 32, .value = 8, .placeableTile = true};
 }
 
-const ItemProperties& ItemDataBase::GetItemProperties(ItemID id) {
-  return propeties[id];
+const ItemProperties &ItemDataBase::GetItemProperties(ItemID id) const {
+  return properties[id];
 }
 
 // --- Item Handler ---
@@ -53,11 +53,11 @@ bool ItemHandler::TakeItemFromToolBar(Item *item, int amount) {
 }
 
 // --- Conversion ---
-ItemID ItemHandler::ToolBarSelctionToItemId(int sel) {
+ItemID ItemHandler::ToolBarSelectionToItemId(int sel) const {
   return toolBar[sel].id;
 };
 
-TileID ItemHandler::ConvertItemToTileID(ItemID item_id) {
+TileID ItemHandler::ConvertItemToTileID(ItemID item_id) const {
   auto it = item_to_tile_map.find(item_id);
   if (it != item_to_tile_map.end()) {
     return it->second;
@@ -66,13 +66,13 @@ TileID ItemHandler::ConvertItemToTileID(ItemID item_id) {
 }
 
 // --- Get ---
-int ItemHandler::GetSelectionToolBar() { return selectedToolBarSlot; }
+int ItemHandler::GetSelectionToolBar() const { return selectedToolBarSlot; }
 
 Item *ItemHandler::GetToolBarItemPointer(int pos) { return &toolBar[pos]; }
 
-ItemID ItemHandler::GetToolBarItemType(int pos) { return toolBar[pos].id; }
+ItemID ItemHandler::GetToolBarItemType(int pos) const { return toolBar[pos].id; }
 
-const char *ItemHandler::GetSelectedItemType() {
+const char *ItemHandler::GetSelectedItemType() const {
   ItemID id = toolBar[selectedToolBarSlot].id;
   return itemDataBase.GetItemProperties(id).name.c_str();
 }

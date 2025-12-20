@@ -15,7 +15,7 @@ Player::Player() {
   animationFrame = 0;
   animationDelta = 0.0f;
   playerTile = {0, 0};
-  
+
   InitAnimations();
 }
 
@@ -47,7 +47,7 @@ void Player::Update(const KeyboardInput *keyboardInput, float deltaTime) {
       faceDir = NW;
     }
   }
-  
+
   // Determine player state
   if (dir.x == 0 && dir.y == 0) {
     Idle();
@@ -67,27 +67,11 @@ void Player::Update(const KeyboardInput *keyboardInput, float deltaTime) {
   // Calculate animation frame
   float currentSpeed = animationData[state][faceDir].speed;
   float frameCount = (float)animationData[state][faceDir].frameCount;
-  
+
   float animationProgress = animationDelta * currentSpeed;
   animationFrame = (int)animationProgress % (int)frameCount;
 
   GenerateDrawData();
-}
-
-void Player::GenerateDrawData() {
-  Vector2 drawPos = position;
-  drawPos.x -= TA::RES16;
-  drawPos.y -= TA::RES16 - Conf::PLAYER_SPRITE_Y_OFFSET;
-  
-  float resolution = TA::RES;
-
-  int TA_X = animationFrame + TA::PLAYER_X;
-  int TA_Y = (state - 1) * (DIR_LABELS_SIZE - 1) + faceDir;
-
-  Rectangle dstRect = {drawPos.x, drawPos.y, resolution, resolution};
-
-  graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, drawPos.y, TA_X,
-                                TA_Y, dstRect, WHITE);
 }
 
 void Player::Idle() {
@@ -104,30 +88,25 @@ void Player::Walk(Vector2 dir, float deltaTime) {
     animationFrame = 0;
     state = PLAYER_STATE_WALK;
   }
-  
+
   // Normalize diagonal movement
   if (Vector2Length(dir) > 0) {
     dir = Vector2Normalize(dir);
   }
-  
+
   Vector2 nextPos = {position.x + dir.x * deltaTime * speed,
                      position.y + dir.y * deltaTime * speed};
 
   float offsetX = dir.x * Conf::PLAYER_COLLISION_CHECK_OFFSET;
   float offsetY = dir.y * Conf::PLAYER_COLLISION_CHECK_OFFSET;
   Vector2 checkPos = {nextPos.x + offsetX, nextPos.y + offsetY};
-  
+
   // Check if destination is walkable
   if (hexGrid->IsWalkable(hexGrid->PointToHexCoord(checkPos))) {
     position = nextPos;
   } else {
-    // If blocked, fallback to idle? Or just slide?
-    // For now, staying consistent with previous logic
-    // But calling Idle() inside Walk() if blocked feels weird.
-    // It's technically "trying to walk but blocked".
-    // I'll keep the logic but maybe we should still play walk anim?
-    // For now, keep original behavior.
-    Idle(); 
+    // Idle if blocked
+    Idle();
   }
 }
 
@@ -140,12 +119,12 @@ void Player::InitAnimations() {
                              .loop = true};
     }
   }
-  
+
   // Walk Specifics
   for (int i = 0; i < DIR_LABELS_SIZE; i++) {
     animationData[PLAYER_STATE_WALK][i].frameCount = TA::PLAYER_WALK_MAX;
   }
-  
+
   // Idle Specifics
   for (int i = 0; i < DIR_LABELS_SIZE; i++) {
     animationData[PLAYER_STATE_IDLE][i].speed = TA::PLAYER_ANIMATION_SPEED_IDLE;
@@ -157,9 +136,7 @@ void Player::SetGFX_Manager(GFX_Manager *graphicsManager) {
   this->graphicsManager = graphicsManager;
 }
 
-void Player::SetHexGrid(HexGrid *grid) { 
-  this->hexGrid = grid; 
-}
+void Player::SetHexGrid(HexGrid *grid) { this->hexGrid = grid; }
 
 // --- Getters ---
 Vector2 Player::GetPosition() const { return position; }
@@ -172,24 +149,55 @@ float Player::GetSpeedTilesPerSecond() const { return speedTilesPerSecond; }
 
 const char *Player::PlayerStateToString() const {
   switch (state) {
-  case PLAYER_STATE_NULL: return "NULL";
-  case PLAYER_STATE_IDLE: return "IDLE";
-  case PLAYER_STATE_WALK: return "WALK";
-  default: return "Unknown State";
+  case PLAYER_STATE_NULL:
+    return "NULL";
+  case PLAYER_STATE_IDLE:
+    return "IDLE";
+  case PLAYER_STATE_WALK:
+    return "WALK";
+  default:
+    return "Unknown State";
   }
 }
 
 const char *Player::PlayerDirToString() const {
   switch (faceDir) {
-  case DIR_NULL: return "NULL";
-  case NW: return "NW";
-  case W:  return "W";
-  case SW: return "SW";
-  case S:  return "S";
-  case SE: return "SE";
-  case E:  return "E";
-  case NE: return "NE";
-  case N:  return "N";
-  default: return "Unknown Direction";
+  case DIR_NULL:
+    return "NULL";
+  case NW:
+    return "NW";
+  case W:
+    return "W";
+  case SW:
+    return "SW";
+  case S:
+    return "S";
+  case SE:
+    return "SE";
+  case E:
+    return "E";
+  case NE:
+    return "NE";
+  case N:
+    return "N";
+  default:
+    return "Unknown Direction";
   }
+}
+
+// --- Rendering ---
+void Player::GenerateDrawData() {
+  Vector2 drawPos = position;
+  drawPos.x -= TA::RES16;
+  drawPos.y -= TA::RES16 - Conf::PLAYER_SPRITE_Y_OFFSET;
+
+  float resolution = TA::RES;
+
+  int TA_X = animationFrame + TA::PLAYER_X;
+  int TA_Y = (state - 1) * (DIR_LABELS_SIZE - 1) + faceDir;
+
+  Rectangle dstRect = {drawPos.x, drawPos.y, resolution, resolution};
+
+  graphicsManager->LoadGFX_Data(DRAW_MASK_ON_GROUND, drawPos.y, TA_X, TA_Y,
+                                dstRect, WHITE);
 }

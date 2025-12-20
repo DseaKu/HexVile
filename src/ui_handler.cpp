@@ -117,7 +117,7 @@ void UI_Handler::SetToolBarActive(bool is_active) {
   isToolBarActive = is_active;
 }
 
-// --- Rendering Helpers ---
+// --- Rendering ---
 void UI_Handler::DrawHighlighedTile(Vector2 mouseWorldPos) {
   if (!hexGrid)
     return;

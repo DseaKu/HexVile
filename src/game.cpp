@@ -113,10 +113,6 @@ void Game::GameLoop() {
     }
 
     // 4. Sync: Wait for Logic to finish (Barrier)
-    // We wait here to ensure we don't start the next frame's input gathering
-    // until the logic is done with the current frame's input.
-    // Also, this ensures that the WorldState is consistent before we loop
-    // again.
     {
       std::unique_lock<std::mutex> lock(logicMutex);
       logicToMainCV.wait(lock, [this] { return logicUpdateDone; });
@@ -367,7 +363,8 @@ void Game::DrawDebugOverlay(bool is_enabled) {
        {
            TextFormat("X,Y: %.1f,%.1f", frameContext.mouseWorldPos.x,
                       frameContext.mouseWorldPos.y),
-           TextFormat("Tile Q,R: %i,%i", rs.mouseTileCoord.q, rs.mouseTileCoord.r),
+           TextFormat("Tile Q,R: %i,%i", rs.mouseTileCoord.q,
+                      rs.mouseTileCoord.r),
            TextFormat("Type: %s",
                       worldState.hexGrid.TileToString(rs.mouseTileType)),
            TextFormat("Clicked on: %s",
@@ -382,7 +379,8 @@ void Game::DrawDebugOverlay(bool is_enabled) {
       {"Player",
        {
            TextFormat("X,Y: %.1f,%.1f", rs.playerPos.x, rs.playerPos.y),
-           TextFormat("Tile Q,R: %i,%i", rs.playerTileCoord.q, rs.playerTileCoord.r),
+           TextFormat("Tile Q,R: %i,%i", rs.playerTileCoord.q,
+                      rs.playerTileCoord.r),
            TextFormat("State:  %s", rs.playerStateStr.c_str()),
            TextFormat("Face Dir: %s", rs.playerDirStr.c_str()),
            TextFormat("Frame: %i", rs.playerFrame),
@@ -392,12 +390,11 @@ void Game::DrawDebugOverlay(bool is_enabled) {
        }});
 
   // --- Tool Bar ---
-  debugData.push_back(
-      {"Tool Bar",
-       {
-           TextFormat("Item: %s", rs.selectedItemType.c_str()),
-           TextFormat("Slot: %i", rs.selectedToolBarSlot),
-       }});
+  debugData.push_back({"Tool Bar",
+                       {
+                           TextFormat("Item: %s", rs.selectedItemType.c_str()),
+                           TextFormat("Slot: %i", rs.selectedToolBarSlot),
+                       }});
 
   // Draw section
   Vector2 playerScreenPos = GetWorldToScreen2D(rs.playerPos, rs.camera);

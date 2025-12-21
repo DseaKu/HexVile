@@ -146,7 +146,7 @@ TerRes HexGrid::GetRandomTerainResource(tile::id tileID) {
     type = conf::SKIP_RENDER;
   }
 
-  return TerRes{.x = x, .y = y, .resID = res::TREE};
+  return TerRes{.x = x, .y = y, .resID = type};
 }
 
 void HexGrid::SetGFX_Manager(GFX_Manager *graphicsManager) {
@@ -441,8 +441,8 @@ void HexGrid::LoadDetailGFX(Rectangle destRec, const TerDet d,
 
 void HexGrid::LoadResourceGFX(Rectangle destRec, const TerRes r,
                               tile::id tileID) {
-  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, destRec.y,
-                                r.resID + ta::TREE_X, tileID, destRec, WHITE);
+  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, destRec.y, r.resID, tileID,
+                                destRec, WHITE);
 }
 // --- Get ---
 int HexGrid::GetTilesInUse() const { return tilesInUse; }

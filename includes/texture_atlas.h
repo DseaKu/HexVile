@@ -31,7 +31,7 @@ constexpr int DETAILS_X_MAX = DETAILS_X + 12;
 
 // --- Tree
 constexpr int TREE_X = DETAILS_X_MAX;
-constexpr int TREE_X_MAX = 8;
+constexpr int TREE_X_MAX = TREE_X + 8;
 
 // --- UI ---
 constexpr int UI_X = 50;

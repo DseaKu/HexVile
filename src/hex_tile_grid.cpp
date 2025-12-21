@@ -60,6 +60,11 @@ HexGrid::HexGrid() {
       (ta::DETAILS_X_MAX - ta::DETAILS_X) / conf::GAUSIAN_EFFECT;
   typeDistribution = std::normal_distribution<float>(mean, stddev);
 
+  const float meanRes = (ta::TREE_X + ta::TREE_X_MAX - 1) / 2.0f;
+  const float stddevRes =
+      (ta::TREE_X_MAX - ta::TREE_X) / conf::GAUSIAN_EFFECT;
+  resourceDistribution = std::normal_distribution<float>(meanRes, stddevRes);
+
   size_t estimated_hits = conf::ESTIMATED_VISIBLE_TILES;
   currentVisibleTiles.reserve(estimated_hits);
   nextVisibleTiles.reserve(estimated_hits);
@@ -131,7 +136,7 @@ TerRes HexGrid::GetRandomTerainResource(tile::id tileID) {
   float y = GetRandomValue(-ta::RES8_F, ta::RES8_F);
 
   // Generate a value from the normal distribution
-  float generated_type_float = typeDistribution(randomEngine);
+  float generated_type_float = resourceDistribution(randomEngine);
 
   // Round to nearest integer
   int generated_type = static_cast<int>(std::round(generated_type_float));

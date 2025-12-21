@@ -32,7 +32,7 @@ enum id {
 }
 
 // --- Resourcen ---
-namespace res {
+namespace rsrc {
 enum id {
   NULL_ID = 0,
   TREE,

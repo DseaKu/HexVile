@@ -97,8 +97,8 @@ void HexGrid::InitGrid(float radius) {
           d.detID = conf::UNINITIALIZED;
         }
 
-        for (TerRes &r : initTile.res) {
-          r.resID = conf::UNINITIALIZED;
+        for (TerRsrc &r : initTile.res) {
+          r.rsrcID = conf::UNINITIALIZED;
         }
 
         tileData[gridR * gridSize + gridQ] = initTile;
@@ -135,7 +135,7 @@ TerDet HexGrid::GetRandomTerainDetail(tile::id tileID) {
   return TerDet{.x = x, .y = y, .detID = type};
 }
 
-TerRes HexGrid::GetRandomTerainResource(tile::id tileID) {
+TerRsrc HexGrid::GetRandomTerainResource(tile::id tileID) {
   float x = GetRandomValue(-ta::RES8_F, ta::RES8_F);
   float y = GetRandomValue(-ta::RES8_F, ta::RES8_F);
 
@@ -155,7 +155,7 @@ TerRes HexGrid::GetRandomTerainResource(tile::id tileID) {
     type = conf::SKIP_RENDER;
   }
 
-  return TerRes{.x = x, .y = y, .resID = type};
+  return TerRsrc{.x = x, .y = y, .rsrcID = type};
 }
 
 void HexGrid::SetGFX_Manager(GFX_Manager *graphicsManager) {
@@ -270,16 +270,6 @@ const char *HexGrid::TileToString(tile::id tileID) const {
 // ==========================================
 //               Logic
 // ==========================================
-void HexGrid::ToggleTile(HexCoord h) {
-  if (HasTile(h)) {
-    MapTile &tile = GetTile(h);
-    if (tile.tileID == tile::GRASS) {
-      tile.tileID = tile::WATER;
-    } else if (tile.tileID == tile::WATER) {
-      tile.tileID = tile::GRASS;
-    }
-  }
-}
 
 void HexGrid::CalcVisibleTiles() {
   auto start = std::chrono::high_resolution_clock::now();
@@ -426,11 +416,11 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
     }
 
     // Initialise if undiscoverd and draw resource
-    for (TerRes &r : t.res) {
-      if (r.resID == conf::UNINITIALIZED) {
+    for (TerRsrc &r : t.res) {
+      if (r.rsrcID == conf::UNINITIALIZED) {
         r = GetRandomTerainResource(t.tileID);
       }
-      if (r.resID != conf::SKIP_RENDER) {
+      if (r.rsrcID != conf::SKIP_RENDER) {
         LoadResourceGFX(destRec, r, t.tileID);
       }
     }
@@ -452,19 +442,19 @@ void HexGrid::LoadDetailGFX(Rectangle destRec, const TerDet d,
                                 WHITE);
 }
 
-void HexGrid::LoadResourceGFX(Rectangle destRec, const TerRes r,
+void HexGrid::LoadResourceGFX(Rectangle destRec, const TerRsrc r,
                               tile::id tileID) {
 
   destRec.x += r.x;
   destRec.y += r.y;
-  if (r.resID - ta::RESOURCE_X == res::TREE) {
+  if (r.rsrcID - ta::RESOURCE_X == rsrc::TREE) {
     destRec.height += ta::RES32_F;
     destRec.y -= ta::RES32_F;
-    graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND, r.resID, tileID,
+    graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND, r.rsrcID, tileID,
                                         destRec, WHITE);
   } else {
-    graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, r.resID, tileID, destRec,
-                                  WHITE);
+    graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, r.rsrcID, tileID,
+                                  destRec, WHITE);
   }
 }
 
@@ -500,9 +490,9 @@ bool HexGrid::CheckObstacleCollision(Vector2 worldPos, float radius) {
     const MapTile &tile = GetTile(h);
     Vector2 tileCenter = HexCoordToPoint(h);
 
-    for (const TerRes &r : tile.res) {
-      if (r.resID != conf::UNINITIALIZED && r.resID != conf::SKIP_RENDER) {
-        if (r.resID - ta::RESOURCE_X == res::TREE) {
+    for (const TerRsrc &r : tile.res) {
+      if (r.rsrcID != conf::UNINITIALIZED && r.rsrcID != conf::SKIP_RENDER) {
+        if (r.rsrcID - ta::RESOURCE_X == rsrc::TREE) {
           // Calculate tree world position.
           // Resource offset (r.x, r.y) is relative to the tile's visual center.
           // In DrawTile/LoadResourceGFX:
@@ -543,6 +533,8 @@ bool HexGrid::SetTile(HexCoord h, tile::id tileID) {
     for (TerDet &d : t.det) {
       d = GetRandomTerainDetail(tileID);
     }
+    // for (TerRes : range - expression) {
+    // }
     return true;
   }
   return false;

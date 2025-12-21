@@ -44,17 +44,17 @@ struct TerDet {
 };
 
 // --- Terrain Resource ---
-struct TerRes {
+struct TerRsrc {
   float x;
   float y;
-  int resID;
+  int rsrcID;
 };
 
 // --- Map Tile ---
 struct MapTile {
   tile::id tileID;
   TerDet det[conf::TERRAIN_DETAILS_MAX];
-  TerRes res[conf::TERRAIN_RESOURCE_MAX];
+  TerRsrc res[conf::TERRAIN_RESOURCE_MAX];
 };
 
 /* Grid parts and relationships:
@@ -115,7 +115,7 @@ private:
   const MapTile &GetTile(HexCoord h) const;
   MapTile &GetTile(HexCoord h);
   TerDet GetRandomTerainDetail(tile::id tileID);
-  TerRes GetRandomTerainResource(tile::id tileID);
+  TerRsrc GetRandomTerainResource(tile::id tileID);
   void CalcRenderRect();
   void CalcVisibleTiles();
   void UpdateTileVisibility(float totalTime);
@@ -126,7 +126,7 @@ private:
   // --- Render ---
   void LoadTileGFX(Rectangle destRec, int x, int y);
   void LoadDetailGFX(Rectangle destRec, const TerDet d, tile::id tileID);
-  void LoadResourceGFX(Rectangle destRec, const TerRes r, tile::id tileID);
+  void LoadResourceGFX(Rectangle destRec, const TerRsrc r, tile::id tileID);
 
 public:
   HexGrid();

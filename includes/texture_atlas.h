@@ -71,7 +71,7 @@ inline const std::map<tile::id, int> RENDER_BIT_MASK_DETAIL = {
 // ==========================================
 //               Resource
 // ==========================================
-constexpr int GRASS_RESOURCE = BIT(res::TREE);
+constexpr int GRASS_RESOURCE = BIT(rsrc::TREE);
 constexpr int WATER_RESOURCE = 0;
 constexpr int DIRT_RESOURCE = 0;
 

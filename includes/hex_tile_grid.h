@@ -164,6 +164,8 @@ public:
   HexCoord GetNeighbor(HexCoord h, int directionIndex) const;
   double GetVisCalcTime() const;
 
+  bool CheckObstacleCollision(Vector2 worldPos, float radius);
+
   // --- Direct Drawing (for debugging/special cases) ---
   void DrawTile(HexCoord h, int TA_X, int TA_Y, drawMask::id layerID);
 };

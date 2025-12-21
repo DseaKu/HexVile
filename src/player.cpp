@@ -101,9 +101,15 @@ void Player::Walk(Vector2 dir, float deltaTime) {
   float offsetY = dir.y * conf::PLAYER_COLLISION_CHECK_OFFSET;
   Vector2 checkPos = {nextPos.x + offsetX, nextPos.y + offsetY};
 
-  // Check if destination is walkable
+  // Check if destination tile is walkable
   if (hexGrid->IsWalkable(hexGrid->PointToHexCoord(checkPos))) {
-    position = nextPos;
+    // Check for collision with obstacles (e.g., trees)
+    if (!hexGrid->CheckObstacleCollision(checkPos,
+                                         conf::PLAYER_COLLISION_CHECK_OFFSET)) {
+      position = nextPos;
+    } else {
+      Idle();
+    }
   } else {
     // Idle if blocked
     Idle();

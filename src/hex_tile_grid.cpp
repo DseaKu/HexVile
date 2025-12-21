@@ -483,6 +483,51 @@ HexCoord HexGrid::GetNeighbor(HexCoord h, int directionIndex) const {
 
 double HexGrid::GetVisCalcTime() const { return calcVisTime; }
 
+bool HexGrid::CheckObstacleCollision(Vector2 worldPos, float radius) {
+  HexCoord centerHex = PointToHexCoord(worldPos);
+
+  // Check the center tile and all 6 neighbors
+  std::vector<HexCoord> neighbors;
+  neighbors.push_back(centerHex);
+  for (int i = 0; i < 6; i++) {
+    neighbors.push_back(GetNeighbor(centerHex, i));
+  }
+
+  for (const HexCoord &h : neighbors) {
+    if (!HasTile(h))
+      continue;
+
+    const MapTile &tile = GetTile(h);
+    Vector2 tileCenter = HexCoordToPoint(h);
+
+    for (const TerRes &r : tile.res) {
+      if (r.resID != conf::UNINITIALIZED && r.resID != conf::SKIP_RENDER) {
+        if (r.resID - ta::RESOURCE_X == res::TREE) {
+          // Calculate tree world position.
+          // Resource offset (r.x, r.y) is relative to the tile's visual center.
+          // In DrawTile/LoadResourceGFX:
+          // Tile Render Pos (Top-Left) = TileCenter - RES16
+          // Resource Render Pos = Tile Render Pos + (r.x, r.y)
+          //                     = TileCenter - RES16 + (r.x, r.y)
+          // The collision center should be the center of the resource sprite's
+          // base tile area. Since r.x, r.y are offsets from the top-left of the
+          // 32x32 base, we add RES16 to get the center.
+          // Resource Center = TileCenter - RES16 + (r.x, r.y) + RES16
+          //                 = TileCenter + (r.x, r.y)
+
+          Vector2 treePos = {tileCenter.x + r.x, tileCenter.y + r.y};
+
+          if (CheckCollisionCircles(worldPos, radius, treePos,
+                                    conf::TREE_COLLISION_RADIUS)) {
+            return true;
+          }
+        }
+      }
+    }
+  }
+  return false;
+}
+
 // ==========================================
 //               Setter
 // ==========================================

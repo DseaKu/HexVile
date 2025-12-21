@@ -97,7 +97,7 @@ void HexGrid::InitGrid(float radius) {
           d.detID = conf::UNINITIALIZED;
         }
 
-        for (TerRsrc &r : initTile.res) {
+        for (TerRsrc &r : initTile.rsrc) {
           r.rsrcID = conf::UNINITIALIZED;
         }
 
@@ -416,7 +416,7 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
     }
 
     // Initialise if undiscoverd and draw resource
-    for (TerRsrc &r : t.res) {
+    for (TerRsrc &r : t.rsrc) {
       if (r.rsrcID == conf::UNINITIALIZED) {
         r = GetRandomTerainResource(t.tileID);
       }
@@ -490,7 +490,7 @@ bool HexGrid::CheckObstacleCollision(Vector2 worldPos, float radius) {
     const MapTile &tile = GetTile(h);
     Vector2 tileCenter = HexCoordToPoint(h);
 
-    for (const TerRsrc &r : tile.res) {
+    for (const TerRsrc &r : tile.rsrc) {
       if (r.rsrcID != conf::UNINITIALIZED && r.rsrcID != conf::SKIP_RENDER) {
         if (r.rsrcID - ta::RESOURCE_X == rsrc::TREE) {
           // Calculate tree world position.
@@ -533,8 +533,10 @@ bool HexGrid::SetTile(HexCoord h, tile::id tileID) {
     for (TerDet &d : t.det) {
       d = GetRandomTerainDetail(tileID);
     }
-    // for (TerRes : range - expression) {
-    // }
+    for (TerRsrc &r : t.rsrc) {
+      r = GetRandomTerainResource(tileID);
+    }
+
     return true;
   }
   return false;

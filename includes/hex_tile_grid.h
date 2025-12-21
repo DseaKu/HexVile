@@ -54,7 +54,7 @@ struct TerRsrc {
 struct MapTile {
   tile::id tileID;
   TerDet det[conf::TERRAIN_DETAILS_MAX];
-  TerRsrc res[conf::TERRAIN_RESOURCE_MAX];
+  TerRsrc rsrc[conf::TERRAIN_RESOURCE_MAX];
 };
 
 /* Grid parts and relationships:
@@ -140,7 +140,6 @@ public:
   void SetGFX_Manager(GFX_Manager *graphicsManager);
   void SetCamRectPointer(Rectangle *camRect);
   bool SetTile(HexCoord h, tile::id tileID);
-  void ToggleTile(HexCoord h);
 
   // --- Getters & State Checks ---
   int GetTilesInUse() const;

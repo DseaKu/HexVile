@@ -435,9 +435,8 @@ void HexGrid::LoadTileGFX(Rectangle destRec, int x, int y) {
 
 void HexGrid::LoadDetailGFX(Rectangle destRec, const TerDet d,
                             tile::id tileID) {
-  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, destRec.y,
-                                d.detID + ta::DETAILS_X, tileID, destRec,
-                                WHITE);
+  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, destRec.y, d.detID, tileID,
+                                destRec, WHITE);
 }
 
 void HexGrid::LoadResourceGFX(Rectangle destRec, const TerRes r,

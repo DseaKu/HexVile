@@ -11,7 +11,9 @@ const std::vector<HexCoord> HexGrid::DIRECTIONS = {
     HexCoord(1, 0),  HexCoord(0, 1),  HexCoord(-1, 1),
     HexCoord(-1, 0), HexCoord(0, -1), HexCoord(1, -1)};
 
-// --- Hex ---
+// ==========================================
+//               Hex Coordinates
+// ==========================================
 HexCoord::HexCoord() : q(0), r(0) {}
 HexCoord::HexCoord(int q, int r) : q(q), r(r) {}
 
@@ -37,7 +39,9 @@ bool HexCoord::operator<(const HexCoord &other) const {
   return r < other.r;
 }
 
-// --- Hex Grid ---
+// ==========================================
+//               Hex Grid
+// ==========================================
 HexGrid::HexGrid() {
 
   animationFrame = 0;
@@ -192,7 +196,9 @@ MapTile &HexGrid::GetTile(HexCoord h) {
   return tileData[(h.r + mapRadius) * gridSize + (h.q + mapRadius)];
 }
 
-// --- Conversions ---
+// ==========================================
+//               Conversion
+// ==========================================
 HexCoord HexGrid::HexRound(FractionalHex h) const {
   int q = round(h.q);
   int r = round(h.r);
@@ -261,7 +267,9 @@ const char *HexGrid::TileToString(tile::id tileID) const {
   }
 }
 
-// --- Logic ---
+// ==========================================
+//               Logic
+// ==========================================
 void HexGrid::ToggleTile(HexCoord h) {
   if (HasTile(h)) {
     MapTile &tile = GetTile(h);
@@ -429,19 +437,26 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
   }
 }
 
-// --- Render ---
+// ==========================================
+//               Render
+// ==========================================
 void HexGrid::LoadTileGFX(Rectangle destRec, int x, int y) {
   graphicsManager->LoadGFX_Data(drawMask::GROUND_0, x, y, destRec, WHITE);
 }
 
 void HexGrid::LoadDetailGFX(Rectangle destRec, const TerDet d,
                             tile::id tileID) {
+  destRec.x += d.x;
+  destRec.y += d.y;
   graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, d.detID, tileID, destRec,
                                 WHITE);
 }
 
 void HexGrid::LoadResourceGFX(Rectangle destRec, const TerRes r,
                               tile::id tileID) {
+
+  destRec.x += r.x;
+  destRec.y += r.y;
   if (r.resID - ta::RESOURCE_X == res::TREE) {
     destRec.height += ta::RES32_F;
     destRec.y -= ta::RES32_F;
@@ -452,7 +467,10 @@ void HexGrid::LoadResourceGFX(Rectangle destRec, const TerRes r,
                                   WHITE);
   }
 }
-// --- Get ---
+
+// ==========================================
+//               Getter
+// ==========================================
 int HexGrid::GetTilesInUse() const { return tilesInUse; }
 int HexGrid::GetTilesInTotal() const { return tilesInTotal; }
 int HexGrid::GetTilesVisible() const { return currentVisibleTiles.size(); }
@@ -465,7 +483,9 @@ HexCoord HexGrid::GetNeighbor(HexCoord h, int directionIndex) const {
 
 double HexGrid::GetVisCalcTime() const { return calcVisTime; }
 
-// --- Set ---
+// ==========================================
+//               Setter
+// ==========================================
 void HexGrid::SetCamRectPointer(Rectangle *camRect) { this->camRect = camRect; }
 
 bool HexGrid::SetTile(HexCoord h, tile::id tileID) {

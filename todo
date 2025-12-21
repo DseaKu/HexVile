@@ -1,0 +1,9 @@
+- Check if position from tree is random;
+- Collision tree. If destTile res = 0 skip. Else:
+  Check if the distance between posRes and pos player is certain threshold
+
+- disable culling if no movement 
+
+- try to chop tree
+
+

@@ -40,14 +40,14 @@ struct FractionalHex {
 struct TerDet {
   float x;
   float y;
-  int type;
+  int detID;
 };
 
 // --- Terrain Resource ---
 struct TerRes {
   float x;
   float y;
-  res::id resID;
+  int resID;
 };
 
 // --- Map Tile ---
@@ -123,8 +123,9 @@ private:
   void UpdateTilesProperties();
 
   // --- Render ---
-  void LoadTileGFX();
-  void LoadDetailGFX(const TerDet d, float x, float y, tile::id tileID);
+  void LoadTileGFX(Rectangle destRec, int x, int y);
+  void LoadDetailGFX(Rectangle destRec, const TerDet d, tile::id tileID);
+  void LoadResourceGFX(Rectangle destRec, const TerRes r, tile::id tileID);
 
 public:
   HexGrid();

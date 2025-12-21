@@ -13,7 +13,7 @@ GFX_Manager::GFX_Manager() {
 
 void GFX_Manager::InitTextureRec() {
 
-  float reso = static_cast<float>(ta::RES);
+  float reso = static_cast<float>(ta::RES32);
   textureRecData.resize(TA_Height);
 
   for (int y = 0; y < TA_Height; y++) {
@@ -35,8 +35,8 @@ int GFX_Manager::LoadAssets(const char *pathToAssest) {
     std::cout << "Error loading texture atlas" << std::endl;
     return 1;
   }
-  this->TA_Width = this->textureAtlas.width / ta::RES;
-  this->TA_Height = this->textureAtlas.height / ta::RES;
+  this->TA_Width = this->textureAtlas.width / ta::RES32;
+  this->TA_Height = this->textureAtlas.height / ta::RES32;
   InitTextureRec();
   return 0;
 }
@@ -80,7 +80,7 @@ void GFX_Manager::SwapBuffers() {
 }
 
 Rectangle GFX_Manager::GetTileRec(tile::id tileID, int frame) {
-  int x_idx = (ta::TILE_X / ta::RES) + frame;
+  int x_idx = (ta::TILE_X / ta::RES32) + frame;
   int y_idx = static_cast<int>(tileID);
   return textureRecData[y_idx][x_idx];
 }

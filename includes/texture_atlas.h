@@ -31,7 +31,7 @@ constexpr int DETAILS_X_MAX = DETAILS_X + 12;
 
 // --- Tree
 constexpr int TREE_X = DETAILS_X_MAX;
-constexpr int TREE_X_MAX = 1;
+constexpr int TREE_X_MAX = 8;
 
 // --- UI ---
 constexpr int UI_X = 50;
@@ -57,14 +57,9 @@ constexpr float RES8_F = RES8;
 // ==========================================
 //               Details
 // ==========================================
-constexpr int SKIP_RENDER = -1;
-constexpr int UNINITIALIZED = -2;
-
 constexpr int GRASS_DETAILS =
     BIT(detail::IDX_0) | BIT(detail::IDX_1) | BIT(detail::IDX_10);
-
 constexpr int WATER_DETAILS = BIT(detail::IDX_8);
-
 constexpr int DIRT_DETAILS = BIT(detail::IDX_10);
 
 inline const std::map<tile::id, int> RENDER_BIT_MASK_DETAIL = {
@@ -74,23 +69,20 @@ inline const std::map<tile::id, int> RENDER_BIT_MASK_DETAIL = {
     {tile::DIRT, DIRT_DETAILS},
 };
 
-// --- Object Indices ---
-enum ObjectIndex {
-  OBJ_IDX_5 = 5 // Bit 5
-};
+// ==========================================
+//               Resource
+// ==========================================
+constexpr int GRASS_RESOURCE = BIT(detail::IDX_0);
+constexpr int WATER_RESOURCE = 0;
+constexpr int DIRT_RESOURCE = 0;
 
-// --- Object Masks ---
-// Original: 0b00000100000 (Bit 5)
-constexpr int GRASS_OBJECTS = BIT(OBJ_IDX_5);
-constexpr int WATER_OBJECTS = 0;
-constexpr int DIRT_OBJECTS = 0;
-
-inline const std::map<tile::id, int> RENDER_BIT_MASK_OBJECT = {
+inline const std::map<tile::id, int> RENDER_BIT_MASK_RESOURCE = {
     {tile::NULL_ID, 0},
-    {tile::GRASS, GRASS_OBJECTS},
-    {tile::WATER, WATER_OBJECTS},
-    {tile::DIRT, DIRT_OBJECTS},
+    {tile::GRASS, GRASS_RESOURCE},
+    {tile::WATER, WATER_RESOURCE},
+    {tile::DIRT, DIRT_RESOURCE},
 };
+
 // ==========================================
 //               Animation
 // ==========================================
@@ -103,7 +95,7 @@ constexpr int PLAYER_WALK_MAX = 8;
 constexpr float TILES_ANIMATION_SPEED = 0.3f;
 
 // Don't go to low, it can corruped the font
-constexpr float NUMBER_SCALE = RES * 0.5f;
+constexpr float NUMBER_SCALE = RES32 * 0.5f;
 } // namespace ta
 
 #endif // TEXTURE_ATLAS_H

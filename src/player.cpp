@@ -191,7 +191,7 @@ void Player::GenerateDrawData() {
   drawPos.x -= ta::RES16;
   drawPos.y -= ta::RES16 - conf::PLAYER_SPRITE_Y_OFFSET;
 
-  float resolution = ta::RES;
+  float resolution = ta::RES32;
 
   int TA_X = animationFrame + ta::PLAYER_X;
   int TA_Y = (stateID - 1) * (dir::SIZE - 1) + dirID;

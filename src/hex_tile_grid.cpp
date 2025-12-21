@@ -85,7 +85,11 @@ void HexGrid::InitGrid(float radius) {
         MapTile initTile = {.tileID = tile::GRASS};
 
         for (TerDet &d : initTile.det) {
-          d.type = ta::UNINITIALIZED;
+          d.detID = conf::UNINITIALIZED;
+        }
+
+        for (TerRes &r : initTile.res) {
+          r.resID = conf::UNINITIALIZED;
         }
 
         tileData[gridR * gridSize + gridQ] = initTile;
@@ -116,10 +120,10 @@ TerDet HexGrid::GetRandomTerainDetail(tile::id tileID) {
   int renderBitMask = ta::RENDER_BIT_MASK_DETAIL.at(tileID);
   int detailShift = type - ta::DETAILS_X;
   if (!(renderBitMask >> detailShift & 1)) {
-    type = ta::SKIP_RENDER;
+    type = conf::SKIP_RENDER;
   }
 
-  return TerDet{.x = x, .y = y, .type = type};
+  return TerDet{.x = x, .y = y, .detID = type};
 }
 
 TerRes HexGrid::GetRandomTerainResource(tile::id tileID) {
@@ -133,13 +137,13 @@ TerRes HexGrid::GetRandomTerainResource(tile::id tileID) {
   int generated_type = static_cast<int>(std::round(generated_type_float));
 
   // Clamp the value to the valid range
-  int type = std::clamp(generated_type, ta::DETAILS_X, ta::DETAILS_X_MAX - 1);
+  int type = std::clamp(generated_type, ta::TREE_X, ta::TREE_X_MAX - 1);
 
-  // Determine if detail is null and skip render process
-  int renderBitMask = ta::RENDER_BIT_MASK_OBJECT.at(tileID);
-  int detailShift = type - ta::DETAILS_X;
-  if (!(renderBitMask >> detailShift & 1)) {
-    type = ta::SKIP_RENDER;
+  // Determine if resource is null and skip render process
+  int renderBitMask = ta::RENDER_BIT_MASK_RESOURCE.at(tileID);
+  int resourceShift = type - ta::TREE_X;
+  if (!(renderBitMask >> resourceShift & 1)) {
+    type = conf::SKIP_RENDER;
   }
 
   return TerRes{.x = x, .y = y, .resID = res::TREE};
@@ -294,7 +298,7 @@ void HexGrid::CalcVisibleTiles() {
       Vector2 pos = HexCoordToPoint(h);
       pos.x -= conf::TILE_RESOLUTION_HALF;
       pos.y -= conf::TILE_RESOLUTION_HALF;
-      Rectangle dest_rect = {pos.x, pos.y, ta::RES, ta::RES};
+      Rectangle dest_rect = {pos.x, pos.y, ta::RES32, ta::RES32};
       // Check if the tile's bounding box intersects with the render view.
       if (CheckCollisionRecs(renderView, dest_rect)) {
         newVisiCache.push_back(h);
@@ -341,7 +345,7 @@ void HexGrid::DrawTile(HexCoord h, int TA_X, int TA_Y, drawMask::id layerID) {
   Vector2 pos = HexCoordToPoint(h);
   pos.x -= conf::TILE_RESOLUTION_HALF;
   pos.y -= conf::TILE_RESOLUTION_HALF;
-  Rectangle destRect = {pos.x, pos.y, ta::RES, ta::RES};
+  Rectangle destRect = {pos.x, pos.y, ta::RES32, ta::RES32};
 
   const MapTile &tile = GetTile(h);
   Vector2 origin = {0.0f, 0.0f};
@@ -377,11 +381,14 @@ void HexGrid::UpdateTileVisibility(float totalTime) {
 
 void HexGrid::Update(const Camera2D &camera, float totalTime) {
   UpdateTileVisibility(totalTime);
-  LoadTileGFX();
 
   // TODO: Update tile;for each loop for tile; sepereate LoadTileGFX and draw
   // details; add init details and resource function; draw resource
   for (const HexCoord &h : currentVisibleTiles) {
+
+    MapTile &t = GetTile(h);
+    tile::id id = t.tileID;
+
     Vector2 tileCenter = HexCoordToPoint(h);
     Vector2 renderPos =
         Vector2{tileCenter.x - ta::RES16_F, tileCenter.y - ta::RES16_F};
@@ -390,46 +397,54 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
                                   .y = renderPos.y,
                                   .width = ta::RES32_F,
                                   .height = ta::RES32_F};
-  }
-}
 
-// --- Render ---
-void HexGrid::LoadTileGFX() {
-  // Draw chached visible tiles
-  for (int i = 0; i < currentVisibleTiles.size(); i++) {
-    HexCoord h = currentVisibleTiles[i];
-    Vector2 pos = HexCoordToPoint(h);
-    pos.x -= conf::TILE_RESOLUTION_HALF;
-    pos.y -= conf::TILE_RESOLUTION_HALF;
-    Rectangle destRec = {pos.x, pos.y, ta::RES, ta::RES};
+    // Draw chached visible tiles
+    LoadTileGFX(destRec, animationFrame + 12, id);
 
-    MapTile &t = GetTile(h);
-    int x = animationFrame + 12;
-    int y = t.tileID;
+    // 'destRec' needs to be repostion because, details and resource assets are
+    // begining at the bottom
+    destRec.y -= ta::RES16_F;
 
-    graphicsManager->LoadGFX_Data(drawMask::GROUND_0, destRec.y, x, y, destRec,
-                                  WHITE);
-
-    // Draw details for this tile
+    // Initialise if undiscoverd and draw details
     for (TerDet &d : t.det) {
-      if (d.type == ta::UNINITIALIZED) {
+      if (d.detID == conf::UNINITIALIZED) {
         d = GetRandomTerainDetail(t.tileID);
       }
-      if (d.type != ta::SKIP_RENDER) {
-        LoadDetailGFX(d, pos.x, pos.y, t.tileID);
+      if (d.detID != conf::SKIP_RENDER) {
+        LoadDetailGFX(destRec, d, t.tileID);
+      }
+    }
+
+    // Initialise if undiscoverd and draw resource
+    for (TerRes &r : t.res) {
+      if (r.resID == conf::UNINITIALIZED) {
+        r = GetRandomTerainResource(t.tileID);
+      }
+      if (r.resID != conf::SKIP_RENDER) {
+        LoadResourceGFX(destRec, r, t.tileID);
       }
     }
   }
 }
 
-void HexGrid::LoadDetailGFX(const TerDet d, float x, float y, tile::id tileID) {
-
-  Rectangle destRec = {x + d.x, y + d.y - ta::RES16_F, ta::RES, ta::RES};
-
-  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, y - ta::RES16_F, d.type,
-                                tileID, destRec, WHITE);
+// --- Render ---
+void HexGrid::LoadTileGFX(Rectangle destRec, int x, int y) {
+  graphicsManager->LoadGFX_Data(drawMask::GROUND_0, destRec.y, x, y, destRec,
+                                WHITE);
 }
 
+void HexGrid::LoadDetailGFX(Rectangle destRec, const TerDet d,
+                            tile::id tileID) {
+  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, destRec.y,
+                                d.detID + ta::DETAILS_X, tileID, destRec,
+                                WHITE);
+}
+
+void HexGrid::LoadResourceGFX(Rectangle destRec, const TerRes r,
+                              tile::id tileID) {
+  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, destRec.y,
+                                r.resID + ta::TREE_X, tileID, destRec, WHITE);
+}
 // --- Get ---
 int HexGrid::GetTilesInUse() const { return tilesInUse; }
 int HexGrid::GetTilesInTotal() const { return tilesInTotal; }

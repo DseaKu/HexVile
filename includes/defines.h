@@ -82,6 +82,8 @@ constexpr float TOOLBAR_ITEM_ICON_SCALE = 0.8f * UI_SCALE;
 // ==========================================
 //               Details & Objects
 // ==========================================
+constexpr int SKIP_RENDER = -1;
+constexpr int UNINITIALIZED = -2;
 constexpr float GAUSIAN_EFFECT = 6.5f;
 
 // ==========================================

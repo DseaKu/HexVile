@@ -11,7 +11,7 @@
 namespace ta {
 constexpr int RES32_OFFSET = 100;
 constexpr int RES32 = conf::TILE_RESOLUTION;
-constexpr float RES32_F = RES32;
+constexpr float RES32_F = static_cast<float>(RES32);
 
 // --- Player ---
 constexpr int PLAYER_X = 0;
@@ -29,9 +29,9 @@ constexpr int ITEM_X_MAX = ITEM_X + 1;
 constexpr int DETAILS_X = ITEM_X_MAX;
 constexpr int DETAILS_X_MAX = DETAILS_X + 12;
 
-// --- Tree
-constexpr int TREE_X = DETAILS_X_MAX;
-constexpr int TREE_X_MAX = TREE_X + 8;
+// --- Resource ---
+constexpr int RESOURCE_X = DETAILS_X_MAX;
+constexpr int RESOURCE_X_MAX = RESOURCE_X + 8;
 
 // --- UI ---
 constexpr int UI_X = 50;
@@ -45,14 +45,13 @@ constexpr int NUMBER_X_MAX = 1;
 //               16x16 Resolution
 // ==========================================
 constexpr int RES16 = RES32 / 2;
-// TODO: complter
 constexpr float RES16_F = static_cast<float>(RES16);
 
 // ==========================================
 //               8x8 Resolution
 // ==========================================
 constexpr int RES8 = RES16 / 2;
-constexpr float RES8_F = RES8;
+constexpr float RES8_F = static_cast<float>(RES8);
 
 // ==========================================
 //               Details
@@ -72,7 +71,7 @@ inline const std::map<tile::id, int> RENDER_BIT_MASK_DETAIL = {
 // ==========================================
 //               Resource
 // ==========================================
-constexpr int GRASS_RESOURCE = BIT(detail::IDX_0);
+constexpr int GRASS_RESOURCE = BIT(res::TREE);
 constexpr int WATER_RESOURCE = 0;
 constexpr int DIRT_RESOURCE = 0;
 

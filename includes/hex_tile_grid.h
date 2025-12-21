@@ -101,7 +101,7 @@ private:
 
   // Gaussian distribution for terrain detail generation
   std::mt19937 randomEngine;
-  std::normal_distribution<float> typeDistribution;
+  std::normal_distribution<float> detailDistribution;
   std::normal_distribution<float> resourceDistribution;
 
   GFX_Manager *graphicsManager;

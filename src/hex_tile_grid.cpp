@@ -58,11 +58,11 @@ HexGrid::HexGrid() {
   const float mean = (ta::DETAILS_X + ta::DETAILS_X_MAX - 1) / 2.0f;
   const float stddev =
       (ta::DETAILS_X_MAX - ta::DETAILS_X) / conf::GAUSIAN_EFFECT;
-  typeDistribution = std::normal_distribution<float>(mean, stddev);
+  detailDistribution = std::normal_distribution<float>(mean, stddev);
 
-  const float meanRes = (ta::TREE_X + ta::TREE_X_MAX - 1) / 2.0f;
+  const float meanRes = (ta::RESOURCE_X + ta::RESOURCE_X_MAX - 1) / 2.0f;
   const float stddevRes =
-      (ta::TREE_X_MAX - ta::TREE_X) / conf::GAUSIAN_EFFECT;
+      (ta::RESOURCE_X_MAX - ta::RESOURCE_X) / conf::GAUSIAN_EFFECT;
   resourceDistribution = std::normal_distribution<float>(meanRes, stddevRes);
 
   size_t estimated_hits = conf::ESTIMATED_VISIBLE_TILES;
@@ -113,7 +113,7 @@ TerDet HexGrid::GetRandomTerainDetail(tile::id tileID) {
   float y = GetRandomValue(-ta::RES8_F, ta::RES8_F);
 
   // Generate a value from the normal distribution
-  float generated_type_float = typeDistribution(randomEngine);
+  float generated_type_float = detailDistribution(randomEngine);
 
   // Round to nearest integer
   int generated_type = static_cast<int>(std::round(generated_type_float));
@@ -142,11 +142,11 @@ TerRes HexGrid::GetRandomTerainResource(tile::id tileID) {
   int generated_type = static_cast<int>(std::round(generated_type_float));
 
   // Clamp the value to the valid range
-  int type = std::clamp(generated_type, ta::TREE_X, ta::TREE_X_MAX - 1);
+  int type = std::clamp(generated_type, ta::RESOURCE_X, ta::RESOURCE_X_MAX - 1);
 
   // Determine if resource is null and skip render process
   int renderBitMask = ta::RENDER_BIT_MASK_RESOURCE.at(tileID);
-  int resourceShift = type - ta::TREE_X;
+  int resourceShift = type - ta::RESOURCE_X;
   if (!(renderBitMask >> resourceShift & 1)) {
     type = conf::SKIP_RENDER;
   }
@@ -387,8 +387,6 @@ void HexGrid::UpdateTileVisibility(float totalTime) {
 void HexGrid::Update(const Camera2D &camera, float totalTime) {
   UpdateTileVisibility(totalTime);
 
-  // TODO: Update tile;for each loop for tile; sepereate LoadTileGFX and draw
-  // details; add init details and resource function; draw resource
   for (const HexCoord &h : currentVisibleTiles) {
 
     MapTile &t = GetTile(h);
@@ -406,7 +404,7 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
     // Draw chached visible tiles
     LoadTileGFX(destRec, animationFrame + 12, id);
 
-    // 'destRec' needs to be repostion because, details and resource assets are
+    // 'destRec' needs to be repostion, details and resource assets are
     // begining at the bottom
     destRec.y -= ta::RES16_F;
 
@@ -446,8 +444,14 @@ void HexGrid::LoadDetailGFX(Rectangle destRec, const TerDet d,
 
 void HexGrid::LoadResourceGFX(Rectangle destRec, const TerRes r,
                               tile::id tileID) {
-  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, destRec.y, r.resID, tileID,
-                                destRec, WHITE);
+  if (r.resID - ta::RESOURCE_X == res::TREE) {
+    destRec.height += ta::RES32_F;
+    graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND, destRec.y, r.resID,
+                                        tileID, destRec, WHITE);
+  } else {
+    graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, destRec.y, r.resID,
+                                  tileID, destRec, WHITE);
+  }
 }
 // --- Get ---
 int HexGrid::GetTilesInUse() const { return tilesInUse; }

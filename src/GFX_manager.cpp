@@ -48,6 +48,7 @@ void GFX_Manager::UnloadAssets() { UnloadTexture(this->textureAtlas); }
 void GFX_Manager::LoadGFX_Data(drawMask::id layerID, float y, int TA_X,
                                int TA_Y, Rectangle dstRec, Color col) {
   Rectangle srcRec = GetSrcRec(TA_X, TA_Y);
+
   // Write to Back Buffer
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
       y, GFX_Props{srcRec, dstRec, col});
@@ -57,6 +58,8 @@ void GFX_Manager::LoadGFX_Data_32x64(drawMask::id layerID, float y, int TA_X,
                                      int TA_Y, Rectangle dstRec, Color col) {
 
   Rectangle srcRec = GetSrcRec(TA_X, TA_Y);
+  srcRec.height += ta::RES32_F;
+
   // Write to Back Buffer
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
       y, GFX_Props{srcRec, dstRec, col});

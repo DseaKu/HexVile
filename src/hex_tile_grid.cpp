@@ -355,8 +355,7 @@ void HexGrid::DrawTile(HexCoord h, int TA_X, int TA_Y, drawMask::id layerID) {
   const MapTile &tile = GetTile(h);
   Vector2 origin = {0.0f, 0.0f};
 
-  graphicsManager->LoadGFX_Data(layerID, destRect.y, TA_X, TA_Y, destRect,
-                                WHITE);
+  graphicsManager->LoadGFX_Data(layerID, TA_X, TA_Y, destRect, WHITE);
 }
 
 void HexGrid::UpdateTileVisibility(float totalTime) {
@@ -432,14 +431,13 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
 
 // --- Render ---
 void HexGrid::LoadTileGFX(Rectangle destRec, int x, int y) {
-  graphicsManager->LoadGFX_Data(drawMask::GROUND_0, destRec.y, x, y, destRec,
-                                WHITE);
+  graphicsManager->LoadGFX_Data(drawMask::GROUND_0, x, y, destRec, WHITE);
 }
 
 void HexGrid::LoadDetailGFX(Rectangle destRec, const TerDet d,
                             tile::id tileID) {
-  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, destRec.y, d.detID, tileID,
-                                destRec, WHITE);
+  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, d.detID, tileID, destRec,
+                                WHITE);
 }
 
 void HexGrid::LoadResourceGFX(Rectangle destRec, const TerRes r,
@@ -447,11 +445,11 @@ void HexGrid::LoadResourceGFX(Rectangle destRec, const TerRes r,
   if (r.resID - ta::RESOURCE_X == res::TREE) {
     destRec.height += ta::RES32_F;
     destRec.y -= ta::RES32_F;
-    graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND, destRec.y, r.resID,
-                                        tileID, destRec, WHITE);
+    graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND, r.resID, tileID,
+                                        destRec, WHITE);
   } else {
-    graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, destRec.y, r.resID,
-                                  tileID, destRec, WHITE);
+    graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, r.resID, tileID, destRec,
+                                  WHITE);
   }
 }
 // --- Get ---

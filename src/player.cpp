@@ -198,6 +198,6 @@ void Player::GenerateDrawData() {
 
   Rectangle dstRect = {drawPos.x, drawPos.y, resolution, resolution};
 
-  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, drawPos.y, TA_X, TA_Y,
-                                dstRect, WHITE);
+  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, TA_X, TA_Y, dstRect,
+                                WHITE);
 }

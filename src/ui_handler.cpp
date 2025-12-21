@@ -143,11 +143,11 @@ void UI_Handler::DrawToolBarSlot(int slotIndex) {
                         (float)toolBarLayout.contentSize};
 
   // 1. Draw Background
-  graphicsManager->LoadGFX_Data(drawMask::UI_0, slotRect.y, ta::UI_X,
-                                ui::ITEM_BAR_BG, slotRect, WHITE);
+  graphicsManager->LoadGFX_Data(drawMask::UI_0, ta::UI_X, ui::ITEM_BAR_BG,
+                                slotRect, WHITE);
   if (slotIndex == itemHandler->GetSelectionToolBar()) {
-    graphicsManager->LoadGFX_Data(drawMask::UI_0, slotRect.y, ta::UI_X,
-                                  ui::ITEM_BAR_BG_H, slotRect, WHITE);
+    graphicsManager->LoadGFX_Data(drawMask::UI_0, ta::UI_X, ui::ITEM_BAR_BG_H,
+                                  slotRect, WHITE);
   }
 
   // 2. Draw Content
@@ -170,8 +170,8 @@ void UI_Handler::DrawItemIcon(int slotIndex, Rectangle slotRect) {
   Rectangle iconRect = {slotRect.x + offsetX, slotRect.y + offsetY, newWidth,
                         newHeight};
 
-  graphicsManager->LoadGFX_Data(drawMask::UI_0, iconRect.y, ta::ITEM_X,
-                                itemStack->itemID, iconRect, WHITE);
+  graphicsManager->LoadGFX_Data(drawMask::UI_0, ta::ITEM_X, itemStack->itemID,
+                                iconRect, WHITE);
 }
 
 void UI_Handler::DrawItemCount(int slotIndex, Rectangle slotRect) {
@@ -209,8 +209,8 @@ void UI_Handler::DrawItemCount(int slotIndex, Rectangle slotRect) {
                           // up/left from anchor"
     };
 
-    graphicsManager->LoadGFX_Data(drawMask::UI_1, digitRect.y, ta::NUMBER_X,
-                                  digit, digitRect, WHITE);
+    graphicsManager->LoadGFX_Data(drawMask::UI_1, ta::NUMBER_X, digit,
+                                  digitRect, WHITE);
     digitIndex++;
   }
 }

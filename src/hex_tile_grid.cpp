@@ -53,6 +53,7 @@ HexGrid::HexGrid() {
   tilesInUse = 0;
   tilesInTotal = 0;
   camRect = nullptr;
+  lastCamRect = {0, 0, 0, 0};
   visiCacheReady = false;
 
   // Gaussian distribution for terrain detail generation
@@ -371,10 +372,27 @@ void HexGrid::UpdateTileVisibility(float totalTime) {
   // If not valid (first run) or finished, launch a new one.
   if (!visiCalcFuture.valid() || visiCalcFuture.wait_for(std::chrono::seconds(
                                      0)) == std::future_status::ready) {
-    // Launch CalcVisibleTiles asynchronously in a separate thread.
-    // std::launch::async ensures it runs on a new thread immediately.
-    visiCalcFuture =
-        std::async(std::launch::async, &HexGrid::CalcVisibleTiles, this);
+
+    bool cameraMoved = false;
+    if (camRect != nullptr) {
+      if (camRect->x != lastCamRect.x || camRect->y != lastCamRect.y ||
+          camRect->width != lastCamRect.width ||
+          camRect->height != lastCamRect.height) {
+        cameraMoved = true;
+      }
+    }
+
+    if (cameraMoved || !visiCalcFuture.valid()) {
+      if (camRect != nullptr) {
+        lastCamRect = *camRect;
+      }
+      // Launch CalcVisibleTiles asynchronously in a separate thread.
+      // std::launch::async ensures it runs on a new thread immediately.
+      visiCalcFuture =
+          std::async(std::launch::async, &HexGrid::CalcVisibleTiles, this);
+    } else {
+      calcVisTime = 0.0;
+    }
   }
 
   // Update animation frame based on game time for animated tiles.

@@ -97,6 +97,7 @@ private:
   int tilesInUse;
   int tilesInTotal;
   Rectangle *camRect;
+  Rectangle lastCamRect;
   Vector2 origin;
 
   // Gaussian distribution for terrain detail generation

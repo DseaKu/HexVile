@@ -53,6 +53,7 @@ public:
 
   // Actions
   bool TakeItemFromToolBar(ItemStack *itemStack, int amount);
+  bool AddItem(item::id itemID, int count);
 
   // Setters
   void SetItemSelection(int pos);

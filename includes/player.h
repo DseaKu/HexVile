@@ -43,6 +43,7 @@ public:
 
   // --- Core ---
   void Update(const KeyboardInput *keyboardInput, float deltaTime);
+  void Chop(HexCoord target);
 
   // --- Setters ---
   void SetHexGrid(HexGrid *grid);

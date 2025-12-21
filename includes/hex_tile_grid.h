@@ -152,6 +152,8 @@ public:
   bool IsWalkable(HexCoord h) const;
   bool CheckSurrounded(HexCoord target) const;
 
+  bool RemoveResource(HexCoord h, int rsrcID);
+
   // --- Conversions & Helpers ---
   HexCoord PointToHexCoord(Vector2 point) const;
   Vector2 HexCoordToPoint(HexCoord h) const;

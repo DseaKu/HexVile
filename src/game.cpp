@@ -4,6 +4,7 @@
 #include "font_handler.h"
 #include "hex_tile_grid.h"
 #include "raylib.h"
+#include "raymath.h"
 #include <string>
 
 #ifdef __APPLE__
@@ -237,12 +238,26 @@ void Game::RunLogic() {
           worldState.hexGrid.PointToHexCoord(frameContext.mouseWorldPos);
       ItemStack *selectedItem =
           worldState.itemHandler.GetToolBarItemPointer(toolBarSel);
-      tile::id tileToPlace =
-          worldState.itemHandler.ConvertItemToTileID(selectedItem->itemID);
 
-      if (selectedItem->itemID != item::NULL_ID &&
-          worldState.hexGrid.SetTile(clickedHex, tileToPlace)) {
-        worldState.itemHandler.TakeItemFromToolBar(selectedItem, 1);
+      if (selectedItem->itemID == item::AXE) {
+        Vector2 playerPos = worldState.player.GetPosition();
+        Vector2 clickPos = worldState.hexGrid.HexCoordToPoint(clickedHex);
+
+        if (Vector2Distance(playerPos, clickPos) <
+            conf::TILE_RESOLUTION * 2.5f) {
+          if (worldState.hexGrid.RemoveResource(clickedHex, rsrc::TREE)) {
+            worldState.player.Chop(clickedHex);
+            worldState.itemHandler.AddItem(item::WOOD, 1);
+          }
+        }
+      } else {
+        tile::id tileToPlace =
+            worldState.itemHandler.ConvertItemToTileID(selectedItem->itemID);
+
+        if (tileToPlace != tile::NULL_ID &&
+            worldState.hexGrid.SetTile(clickedHex, tileToPlace)) {
+          worldState.itemHandler.TakeItemFromToolBar(selectedItem, 1);
+        }
       }
     }
   }

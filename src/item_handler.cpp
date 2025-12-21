@@ -13,6 +13,10 @@ ItemDataBase::ItemDataBase() {
       .name = "Set Water", .maxStack = 32, .value = 8, .placeableTile = true};
   properties[item::SET_DIRT] = {
       .name = "Set Dirt", .maxStack = 32, .value = 8, .placeableTile = true};
+  properties[item::AXE] = {
+      .name = "Axe", .maxStack = 1, .value = 10, .placeableTile = false};
+  properties[item::WOOD] = {
+      .name = "Wood", .maxStack = 64, .value = 2, .placeableTile = false};
 }
 
 const ItemProperties &ItemDataBase::GetItemProperties(item::id itemid) const {
@@ -34,10 +38,13 @@ void ItemHandler::Init() {
   ItemStack water = {.itemID = item::SET_WATER, .count = 51};
   ItemStack dirt = {.itemID = item::SET_DIRT, .count = 8};
   ItemStack dirt2 = {.itemID = item::SET_DIRT, .count = 24};
+  ItemStack axe = {.itemID = item::AXE, .count = 1};
+
   toolBar[0] = dirt;
   toolBar[1] = water;
   toolBar[2] = dirt2;
   toolBar[3] = grass;
+  toolBar[4] = axe;
   toolBar[5] = grass;
 }
 
@@ -48,6 +55,44 @@ bool ItemHandler::TakeItemFromToolBar(ItemStack *itemStack, int amount) {
       itemStack->itemID = item::NULL_ID;
     }
     return true;
+  }
+  return false;
+}
+
+bool ItemHandler::AddItem(item::id itemID, int count) {
+  // Try to stack in toolbar first
+  for (auto &stack : toolBar) {
+    if (stack.itemID == itemID) {
+      if (stack.count + count <= itemDataBase.GetItemProperties(itemID).maxStack) {
+        stack.count += count;
+        return true;
+      }
+    }
+  }
+  // Try to find empty slot in toolbar
+  for (auto &stack : toolBar) {
+    if (stack.itemID == item::NULL_ID) {
+      stack.itemID = itemID;
+      stack.count = count;
+      return true;
+    }
+  }
+  // Try to stack in inventory (not fully implemented in UI but data exists)
+  for (auto &stack : inventory) {
+    if (stack.itemID == itemID) {
+      if (stack.count + count <= itemDataBase.GetItemProperties(itemID).maxStack) {
+        stack.count += count;
+        return true;
+      }
+    }
+  }
+    // Try to find empty slot in inventory
+  for (auto &stack : inventory) {
+    if (stack.itemID == item::NULL_ID) {
+      stack.itemID = itemID;
+      stack.count = count;
+      return true;
+    }
   }
   return false;
 }

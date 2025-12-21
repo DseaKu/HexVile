@@ -46,6 +46,7 @@ enum id {
   NULL_ID = 0,
   WALK,
   IDLE,
+  CHOP,
   SIZE,
 };
 }
@@ -73,6 +74,8 @@ enum id {
   SET_GRASS,
   SET_WATER,
   SET_DIRT,
+  AXE,
+  WOOD,
   SIZE,
 };
 }

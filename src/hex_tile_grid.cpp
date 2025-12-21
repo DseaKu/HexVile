@@ -342,6 +342,22 @@ bool HexGrid::CheckSurrounded(HexCoord target) const {
   return (neighborCount > 0 && wallCount == neighborCount);
 }
 
+bool HexGrid::RemoveResource(HexCoord h, int rsrcID) {
+  if (!HasTile(h)) {
+    return false;
+  }
+  MapTile &t = GetTile(h);
+  for (TerRsrc &r : t.rsrc) {
+    if (r.rsrcID != conf::UNINITIALIZED && r.rsrcID != conf::SKIP_RENDER) {
+      if (r.rsrcID - ta::RESOURCE_X == rsrcID) {
+        r.rsrcID = conf::SKIP_RENDER;
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 void HexGrid::DrawTile(HexCoord h, int TA_X, int TA_Y, drawMask::id layerID) {
   if (!HasTile(h)) {
     return;

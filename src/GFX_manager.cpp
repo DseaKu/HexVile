@@ -51,7 +51,7 @@ void GFX_Manager::LoadGFX_Data(drawMask::id layerID, float y, int TA_X,
 
   // Write to Back Buffer
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
-      y, GFX_Props{srcRec, dstRec, col});
+      dstRec.y, GFX_Props{srcRec, dstRec, col});
 }
 
 void GFX_Manager::LoadGFX_Data_32x64(drawMask::id layerID, float y, int TA_X,
@@ -62,7 +62,7 @@ void GFX_Manager::LoadGFX_Data_32x64(drawMask::id layerID, float y, int TA_X,
 
   // Write to Back Buffer
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
-      y, GFX_Props{srcRec, dstRec, col});
+      dstRec.y + ta::RES32_F, GFX_Props{srcRec, dstRec, col});
 }
 
 void GFX_Manager::RenderLayer(drawMask::id maskID) {

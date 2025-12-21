@@ -446,6 +446,7 @@ void HexGrid::LoadResourceGFX(Rectangle destRec, const TerRes r,
                               tile::id tileID) {
   if (r.resID - ta::RESOURCE_X == res::TREE) {
     destRec.height += ta::RES32_F;
+    destRec.y -= ta::RES32_F;
     graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND, destRec.y, r.resID,
                                         tileID, destRec, WHITE);
   } else {

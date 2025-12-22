@@ -6,6 +6,7 @@
 #include "raylib.h"
 #include "texture_atlas.h"
 #include <string>
+#include <utility>
 
 // --- Initialization ---
 UI_Handler::UI_Handler() {
@@ -161,17 +162,20 @@ void UI_Handler::DrawToolBarSlot(int slotIndex) {
 void UI_Handler::DrawItemIcon(int slotIndex, Rectangle slotRect) {
   ItemStack *itemStack = itemHandler->GetToolBarItemPointer(slotIndex);
 
+  item::id itemID = itemStack->itemID;
+  std::pair<float, float> textCoords = ta::ITEM_TEXTURE_COORDS.at(itemID);
+
   // Calculate shrunk rect for icon
   float newWidth = slotRect.width * toolBarLayout.itemScale;
   float newHeight = slotRect.height * toolBarLayout.itemScale;
   float offsetX = (slotRect.width - newWidth) / 2.0f;
   float offsetY = (slotRect.height - newHeight) / 2.0f;
 
-  Rectangle iconRect = {slotRect.x + offsetX, slotRect.y + offsetY, newWidth,
-                        newHeight};
+  Rectangle dstRec = {slotRect.x + offsetX, slotRect.y + offsetY, newWidth,
+                      newHeight};
 
-  graphicsManager->LoadGFX_Data(drawMask::UI_0, ta::ITEM_X, itemStack->itemID,
-                                iconRect, WHITE);
+  graphicsManager->LoadGFX_Data(drawMask::UI_0, textCoords.first,
+                                textCoords.second, dstRec, WHITE);
 }
 
 void UI_Handler::DrawItemCount(int slotIndex, Rectangle slotRect) {

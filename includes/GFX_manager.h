@@ -35,6 +35,8 @@ public:
   void LoadGFX_Data(drawMask::id layerID, int TA_X, int TA_Y, Rectangle dstRec,
                     Color col);
 
+  void LoadGFX_Data(drawMask::id layerID, int TA_X, int TA_Y, Color col);
+
   // Combine 2 assets rectangle and load as one render object
   void LoadGFX_Data_32x64(drawMask::id layerID, int TA_X, int TA_Y,
                           Rectangle dstRec, Color col);

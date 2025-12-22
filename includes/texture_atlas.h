@@ -4,10 +4,12 @@
 #include "defines.h"
 #include "enums.h"
 #include <map>
+#include <utility>
 
 // ==========================================
 //               32x32 Resolution
 // ==========================================
+// y = 0
 namespace ta {
 constexpr int RES32_OFFSET = 100;
 constexpr int RES32 = conf::TILE_RESOLUTION;
@@ -19,14 +21,10 @@ constexpr int PLAYER_X_MAX = PLAYER_X + 12;
 
 // --- Tile ---
 constexpr int TILE_X = PLAYER_X_MAX;
-constexpr int TILES_X_MAX = TILE_X + 7;
-
-// --- Item ---
-constexpr int ITEM_X = TILES_X_MAX;
-constexpr int ITEM_X_MAX = ITEM_X + 1;
+constexpr int TILES_X_MAX = TILE_X + 8;
 
 // --- Details ---
-constexpr int DETAILS_X = ITEM_X_MAX;
+constexpr int DETAILS_X = TILES_X_MAX;
 constexpr int DETAILS_X_MAX = DETAILS_X + 12;
 
 // --- Resource ---
@@ -40,6 +38,12 @@ constexpr int UI_X_MAX = UI_X + 1;
 // --- Number ---
 constexpr int NUMBER_X = UI_X_MAX;
 constexpr int NUMBER_X_MAX = 1;
+
+// y = 50
+// --- Item ---
+constexpr int ITEM_X = 0;
+constexpr int ITEM_Y = 50;
+constexpr int ITEM_X_MAX = 10;
 
 // ==========================================
 //               16x16 Resolution
@@ -95,6 +99,24 @@ constexpr float TILES_ANIMATION_SPEED = 0.3f;
 
 // Don't go to low, it can corruped the font
 constexpr float NUMBER_SCALE = RES32 * 0.5f;
+
+// ==========================================
+//               Items
+// ==========================================
+constexpr std::pair<float, float> ITEM_SET_GRASS = {ITEM_X + 0, ITEM_Y + 0};
+constexpr std::pair<float, float> ITEM_SET_WATER = {ITEM_X + 1, ITEM_Y + 0};
+constexpr std::pair<float, float> ITEM_SET_DIRT = {ITEM_X + 2, ITEM_Y + 0};
+
+constexpr std::pair<float, float> ITEM_AXE_STONE = {ITEM_X + 0, ITEM_Y + 1};
+constexpr std::pair<float, float> ITEM_WOOD_LOG = {ITEM_X + 1, ITEM_Y + 1};
+
+inline const std::map<item::id, std::pair<float, float>> ITEM_TEXTURE_COORDS = {
+    {item::SET_GRASS, ITEM_SET_GRASS},
+    {item::SET_WATER, ITEM_SET_WATER},
+    {item::SET_DIRT, ITEM_SET_DIRT},
+    {item::AXE, ITEM_AXE_STONE},
+    {item::WOOD, ITEM_WOOD_LOG},
+};
 } // namespace ta
 
 #endif // TEXTURE_ATLAS_H

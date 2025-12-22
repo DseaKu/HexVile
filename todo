@@ -2,3 +2,26 @@
 - try to chop tree
 
 
+ The tree chopping functionality has been implemented.
+
+  Key Features Added:
+   * Axe Item: Added an Axe to the toolbar (Slot 5).
+   * Chop Action: Left-clicking on a tree while holding the Axe (within a reasonable range) triggers the chop.
+   * Visuals: The player character turns towards the tree and plays an animation (currently using the walk animation as a placeholder) before returning to idle.
+   * Tree Removal: The tree resource is removed from the map upon chopping.
+   * Resource Collection: "Wood" is added to the player's inventory/toolbar.
+
+  Files Modified:
+   * includes/enums.h: Added CHOP state, AXE and WOOD items.
+   * includes/item_handler.h / src/item_handler.cpp: Registered items, added AddItem logic, and placed Axe in starting gear.
+   * includes/hex_tile_grid.h / src/hex_tile_grid.cpp: Added RemoveResource capability.
+   * includes/player.h / src/player.cpp: Implemented Chop method, state handling, and animation logic.
+   * src/game.cpp: Hooked up input (Left Click with Axe) to the chop logic.
+
+  How to Use:
+   1. Select the Axe from the toolbar (Slot 5, press 5).
+   2. Walk up to a tree (distance check is approx. 2 tiles).
+   3. Left Click on the tree.
+   4. The player will chop, the tree will vanish, and you will gain Wood.
+
+> can you analize my project?

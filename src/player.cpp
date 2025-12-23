@@ -69,7 +69,7 @@ void Player::Update(const KeyboardInput *keyboardInput, float deltaTime) {
   float frameCount = (float)animationData[stateID][dirID].frameCount;
 
   float animationProgress = animationDelta * currentSpeed;
-  
+
   if (animationData[stateID][dirID].loop) {
     animationFrame = (int)animationProgress % (int)frameCount;
   } else {
@@ -89,7 +89,7 @@ void Player::Chop(HexCoord target) {
   if (stateID == playerState::CHOP) {
     return;
   }
-  
+
   stateID = playerState::CHOP;
   animationFrame = 0;
   animationDelta = 0.0f;
@@ -98,22 +98,39 @@ void Player::Chop(HexCoord target) {
   Vector2 targetPos = hexGrid->HexCoordToPoint(target);
   Vector2 diff = Vector2Subtract(targetPos, position);
   float angle = atan2(diff.y, diff.x) * RAD2DEG;
-  if (angle < 0) angle += 360;
+  if (angle < 0)
+    angle += 360;
 
   // Map angle to 8 directions (approximate)
   // E: 0, SE: 45, S: 90, SW: 135, W: 180, NW: 225, N: 270, NE: 315
   // Offset by 22.5 to center sectors
   int sector = (int)((angle + 22.5f) / 45.0f) % 8;
-  
+
   switch (sector) {
-    case 0: dirID = dir::E; break;
-    case 1: dirID = dir::SE; break;
-    case 2: dirID = dir::S; break;
-    case 3: dirID = dir::SW; break;
-    case 4: dirID = dir::W; break;
-    case 5: dirID = dir::NW; break;
-    case 6: dirID = dir::N; break;
-    case 7: dirID = dir::NE; break;
+  case 0:
+    dirID = dir::E;
+    break;
+  case 1:
+    dirID = dir::SE;
+    break;
+  case 2:
+    dirID = dir::S;
+    break;
+  case 3:
+    dirID = dir::SW;
+    break;
+  case 4:
+    dirID = dir::W;
+    break;
+  case 5:
+    dirID = dir::NW;
+    break;
+  case 6:
+    dirID = dir::N;
+    break;
+  case 7:
+    dirID = dir::NE;
+    break;
   }
 }
 
@@ -181,8 +198,10 @@ void Player::InitAnimations() {
 
   // Chop Specifics
   for (int i = 0; i < dir::SIZE; i++) {
-    animationData[playerState::CHOP][i].frameCount = ta::PLAYER_WALK_MAX; // Use walk frames for now
-    animationData[playerState::CHOP][i].speed = ta::PLAYER_ANIMATION_SPEED * 1.5f;
+    animationData[playerState::CHOP][i].frameCount =
+        ta::PLAYER_WALK_MAX; // Use walk frames for now
+    animationData[playerState::CHOP][i].speed =
+        ta::PLAYER_ANIMATION_SPEED * 1.5f;
     animationData[playerState::CHOP][i].loop = false;
   }
 }
@@ -243,23 +262,20 @@ const char *Player::PlayerDirToString() const {
 
 // --- Rendering ---
 void Player::GenerateDrawData() {
+
+  // Get texture atlas position
+  animationProperties aD = ad::playerLUT.at(this->stateID);
+  int taX = aD.x + this->animationFrame;
+  int taY = aD.y + this->dirID - 1;
+
+  // Get destination position
   Vector2 drawPos = position;
   drawPos.x -= ta::RES16;
-  drawPos.y -= ta::RES16 - conf::PLAYER_SPRITE_Y_OFFSET;
+  drawPos.y -=
+      ta::RES16 - conf::PLAYER_SPRITE_Y_OFFSET; // Player position shouldn't be
+                                                // below the sprite
+  Rectangle dstRect = {drawPos.x, drawPos.y, ta::RES32_F, ta::RES32_F};
 
-  float resolution = ta::RES32;
-
-  int TA_X = animationFrame + ta::PLAYER_X;
-  
-  // Fallback for CHOP to use WALK sprites if specific sprites are missing
-  int visualStateID = stateID;
-  if (stateID == playerState::CHOP) {
-      visualStateID = playerState::WALK; 
-  }
-  int TA_Y = (visualStateID - 1) * (dir::SIZE - 1) + dirID;
-
-  Rectangle dstRect = {drawPos.x, drawPos.y, resolution, resolution};
-
-  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, TA_X, TA_Y, dstRect,
-                                WHITE);
+  // Load texture to renderer
+  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, taX, taY, dstRect, WHITE);
 }

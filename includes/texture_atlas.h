@@ -116,7 +116,7 @@ struct animationProperties {
   float speed;
 };
 namespace ad {
-// --- Player ---
+// --- Player Animation Properties ---
 constexpr animationProperties PLAYER_WALK = {.x = ta::PLAYER_X,
                                              .y = ta::PLAYER_Y + dir::SIZE * 0,
                                              .frameCount = 8,
@@ -130,6 +130,13 @@ constexpr animationProperties PLAYER_ATTACK = {.x = ta::PLAYER_X,
                                                    ta::PLAYER_Y + dir::SIZE * 2,
                                                .frameCount = 8,
                                                .speed = 1.0f};
+
+// --- Player Animation LUT ---
+inline const std::map<playerState::id, animationProperties> playerLUT = {
+    {playerState::WALK, PLAYER_WALK},
+    {playerState::IDLE, PLAYER_IDLE},
+    {playerState::CHOP, PLAYER_ATTACK},
+};
 }; // namespace ad
 
 #endif // TEXTURE_ATLAS_H

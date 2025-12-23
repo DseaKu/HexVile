@@ -10,7 +10,7 @@ Player::Player() {
   position = conf::SCREEN_CENTER;
   previousPosition = position;
   speedTilesPerSecond = 0.0f;
-  dirID = dir::S;
+  faceDirID = faceDir::S;
   stateID = playerState::IDLE;
   animationFrame = 0;
   animationDelta = 0.0f;
@@ -19,68 +19,61 @@ Player::Player() {
   InitAnimations();
 }
 
-void Player::Update(const KeyboardInput *keyboardInput, float deltaTime) {
+// --- Logic ---
+void Player::UpdatePlayerState(const float deltaTime) {
+
+  if (moveDir.x == 0 && moveDir.y == 0) {
+    Idle();
+  } else {
+    Walk(moveDir, deltaTime);
+  }
+}
+
+void Player::UpdatePlayerFaceDir() {
+
+  // Determine player face direction
+  if (moveDir.x != 0 || moveDir.y != 0) {
+    if (moveDir.x == 0 && moveDir.y == -1) {
+      faceDirID = faceDir::N;
+    } else if (moveDir.x == 1 && moveDir.y == -1) {
+      faceDirID = faceDir::NE;
+    } else if (moveDir.x == 1 && moveDir.y == 0) {
+      faceDirID = faceDir::E;
+    } else if (moveDir.x == 1 && moveDir.y == 1) {
+      faceDirID = faceDir::SE;
+    } else if (moveDir.x == 0 && moveDir.y == 1) {
+      faceDirID = faceDir::S;
+    } else if (moveDir.x == -1 && moveDir.y == 1) {
+      faceDirID = faceDir::SW;
+    } else if (moveDir.x == -1 && moveDir.y == 0) {
+      faceDirID = faceDir::W;
+    } else if (moveDir.x == -1 && moveDir.y == -1) {
+      faceDirID = faceDir::NW;
+    }
+  }
+}
+
+void Player::Update(const KeyboardInput *keyboardInput, const float deltaTime) {
   animationDelta += deltaTime;
+
   playerTile = hexGrid->PointToHexCoord(position);
 
   Vector2 dir = {0, 0};
-  dir.x = -keyboardInput->Left + keyboardInput->Right;
-  dir.y = -keyboardInput->Up + keyboardInput->Down;
+  moveDir.x = -keyboardInput->Left + keyboardInput->Right;
+  moveDir.y = -keyboardInput->Up + keyboardInput->Down;
 
-  // Determine player face direction
-  if (dir.x != 0 || dir.y != 0) {
-    if (dir.x == 0 && dir.y == -1) {
-      dirID = dir::N;
-    } else if (dir.x == 1 && dir.y == -1) {
-      dirID = dir::NE;
-    } else if (dir.x == 1 && dir.y == 0) {
-      dirID = dir::E;
-    } else if (dir.x == 1 && dir.y == 1) {
-      dirID = dir::SE;
-    } else if (dir.x == 0 && dir.y == 1) {
-      dirID = dir::S;
-    } else if (dir.x == -1 && dir.y == 1) {
-      dirID = dir::SW;
-    } else if (dir.x == -1 && dir.y == 0) {
-      dirID = dir::W;
-    } else if (dir.x == -1 && dir.y == -1) {
-      dirID = dir::NW;
-    }
-  }
+  UpdatePlayerFaceDir();
 
-  // Determine player state
-  if (dir.x == 0 && dir.y == 0) {
-    Idle();
-  } else {
-    Walk(dir, deltaTime);
-  }
+  UpdatePlayerState(deltaTime);
 
-  // Calculate Speed
+  // Calculate move Speed
   float distance = Vector2Distance(position, previousPosition);
   if (deltaTime > 0) {
-    speedTilesPerSecond = distance / deltaTime / conf::TILE_RESOLUTION;
+    moveSpeed = distance / deltaTime / conf::TILE_RESOLUTION;
   } else {
-    speedTilesPerSecond = 0;
+    moveSpeed = 0;
   }
   previousPosition = position;
-
-  // Calculate animation frame
-  float currentSpeed = animationData[stateID][dirID].speed;
-  float frameCount = (float)animationData[stateID][dirID].frameCount;
-
-  float animationProgress = animationDelta * currentSpeed;
-
-  if (animationData[stateID][dirID].loop) {
-    animationFrame = (int)animationProgress % (int)frameCount;
-  } else {
-    animationFrame = (int)animationProgress;
-    if (animationFrame >= frameCount) {
-      animationFrame = (int)frameCount - 1;
-      if (stateID == playerState::CHOP) {
-        Idle();
-      }
-    }
-  }
 
   GenerateDrawData();
 }
@@ -108,28 +101,28 @@ void Player::Chop(HexCoord target) {
 
   switch (sector) {
   case 0:
-    dirID = dir::E;
+    faceDirID = faceDir::E;
     break;
   case 1:
-    dirID = dir::SE;
+    faceDirID = faceDir::SE;
     break;
   case 2:
-    dirID = dir::S;
+    faceDirID = faceDir::S;
     break;
   case 3:
-    dirID = dir::SW;
+    faceDirID = faceDir::SW;
     break;
   case 4:
-    dirID = dir::W;
+    faceDirID = faceDir::W;
     break;
   case 5:
-    dirID = dir::NW;
+    faceDirID = faceDir::NW;
     break;
   case 6:
-    dirID = dir::N;
+    faceDirID = faceDir::N;
     break;
   case 7:
-    dirID = dir::NE;
+    faceDirID = faceDir::NE;
     break;
   }
 }
@@ -179,7 +172,7 @@ void Player::Walk(Vector2 dir, float deltaTime) {
 void Player::InitAnimations() {
   // Default init
   for (int i = 0; i < playerState::SIZE; i++) {
-    for (int j = 0; j < dir::SIZE; j++) {
+    for (int j = 0; j < faceDir::SIZE; j++) {
       animationData[i][j] = {.frameCount = ta::PLAYER_X_MAX,
                              .speed = ta::PLAYER_ANIMATION_SPEED,
                              .loop = true};
@@ -187,17 +180,17 @@ void Player::InitAnimations() {
   }
 
   // Walk Specifics
-  for (int i = 0; i < dir::SIZE; i++) {
+  for (int i = 0; i < faceDir::SIZE; i++) {
     animationData[playerState::WALK][i].frameCount = ta::PLAYER_WALK_MAX;
   }
 
   // Idle Specifics
-  for (int i = 0; i < dir::SIZE; i++) {
+  for (int i = 0; i < faceDir::SIZE; i++) {
     animationData[playerState::IDLE][i].speed = ta::PLAYER_ANIMATION_SPEED_IDLE;
   }
 
   // Chop Specifics
-  for (int i = 0; i < dir::SIZE; i++) {
+  for (int i = 0; i < faceDir::SIZE; i++) {
     animationData[playerState::CHOP][i].frameCount =
         ta::PLAYER_WALK_MAX; // Use walk frames for now
     animationData[playerState::CHOP][i].speed =
@@ -220,7 +213,7 @@ HexCoord Player::GetTile() const { return playerTile; }
 
 int Player::GetAnimationFrame() const { return animationFrame; }
 
-float Player::GetSpeedTilesPerSecond() const { return speedTilesPerSecond; }
+float Player::GetSpeedTilesPerSecond() const { return moveSpeed; }
 
 const char *Player::PlayerStateToString() const {
   switch (stateID) {
@@ -236,24 +229,24 @@ const char *Player::PlayerStateToString() const {
 }
 
 const char *Player::PlayerDirToString() const {
-  switch (dirID) {
-  case dir::UNDEFINED:
+  switch (faceDirID) {
+  case faceDir::UNDEFINED:
     return "UNDEFINED";
-  case dir::NW:
+  case faceDir::NW:
     return "NW";
-  case dir::W:
+  case faceDir::W:
     return "W";
-  case dir::SW:
+  case faceDir::SW:
     return "SW";
-  case dir::S:
+  case faceDir::S:
     return "S";
-  case dir::SE:
+  case faceDir::SE:
     return "SE";
-  case dir::E:
+  case faceDir::E:
     return "E";
-  case dir::NE:
+  case faceDir::NE:
     return "NE";
-  case dir::N:
+  case faceDir::N:
     return "N";
   default:
     return "Unknown Direction";
@@ -263,10 +256,31 @@ const char *Player::PlayerDirToString() const {
 // --- Rendering ---
 void Player::GenerateDrawData() {
 
-  // Get texture atlas position
   animationProperties aD = ad::playerLUT.at(this->stateID);
+
+  // Calculate animation frame
+  float currentSpeed = aD.speed;
+
+  float frameCount = (float)animationData[stateID][faceDirID].frameCount;
+  float frameCount = (float)animationData[stateID][faceDirID].frameCount;
+
+  float animationProgress = animationDelta * currentSpeed;
+
+  if (animationData[stateID][faceDirID].loop) {
+    animationFrame = (int)animationProgress % (int)frameCount;
+  } else {
+    animationFrame = (int)animationProgress;
+    if (animationFrame >= frameCount) {
+      animationFrame = (int)frameCount - 1;
+      if (stateID == playerState::CHOP) {
+        Idle();
+      }
+    }
+  }
+
+  // Get texture atlas position
   int taX = aD.x + this->animationFrame;
-  int taY = aD.y + this->dirID;
+  int taY = aD.y + this->faceDirID;
 
   // Get destination position
   Vector2 drawPos = position;

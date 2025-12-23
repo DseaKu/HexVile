@@ -118,16 +118,18 @@ struct animationProperties {
 namespace ad {
 // --- Player Animation Properties ---
 constexpr animationProperties PLAYER_WALK = {.x = ta::PLAYER_X,
-                                             .y = ta::PLAYER_Y + dir::SIZE * 0,
+                                             .y = ta::PLAYER_Y +
+                                                  faceDir::SIZE * 0,
                                              .frameCount = 8,
-                                             .speed = 1.0f};
+                                             .speed = 9.0f};
 constexpr animationProperties PLAYER_IDLE = {.x = ta::PLAYER_X,
-                                             .y = ta::PLAYER_Y + dir::SIZE * 1,
+                                             .y = ta::PLAYER_Y +
+                                                  faceDir::SIZE * 1,
                                              .frameCount = 12,
-                                             .speed = 0.7f};
+                                             .speed = 5.0f};
 constexpr animationProperties PLAYER_ATTACK = {.x = ta::PLAYER_X,
-                                               .y =
-                                                   ta::PLAYER_Y + dir::SIZE * 2,
+                                               .y = ta::PLAYER_Y +
+                                                    faceDir::SIZE * 2,
                                                .frameCount = 8,
                                                .speed = 1.0f};
 

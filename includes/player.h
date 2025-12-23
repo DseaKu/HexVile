@@ -24,13 +24,19 @@ private:
   Vector2 previousPosition;
   HexCoord playerTile;
   playerState::id stateID;
-  dir::id dirID;
+  faceDir::id faceDirID;
+  Vector2 moveDir;
+  float moveSpeed;
   float speedTilesPerSecond;
+
+  // --- Logic ---
+  void UpdatePlayerState(const float delta);
+  void UpdatePlayerFaceDir();
 
   // --- Animation ---
   int animationFrame;
   float animationDelta;
-  PlayerAnimationData animationData[playerState::SIZE][dir::SIZE];
+  PlayerAnimationData animationData[playerState::SIZE][faceDir::SIZE];
 
   // --- Helpers ---
   void Idle();
@@ -41,8 +47,8 @@ private:
 public:
   Player();
 
-  // --- Core ---
-  void Update(const KeyboardInput *keyboardInput, float deltaTime);
+  // --- Logic ---
+  void Update(const KeyboardInput *keyboardInput, const float deltaTime);
   void Chop(HexCoord target);
 
   // --- Setters ---

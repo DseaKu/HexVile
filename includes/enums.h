@@ -52,7 +52,7 @@ enum id {
 }
 
 // --- Directions ---
-namespace dir {
+namespace faceDir {
 enum id {
   UNDEFINED = -1,
   NW = 0,

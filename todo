@@ -1,8 +1,10 @@
 
 
-rework enums: NULL_ID =0 -> UNDEFINED = -1
-rework get texture: Calc each texture -> LUT
-See player animation
+- rework enums: NULL_ID =0 -> UNDEFINED = -1
+  rework get texture: Calc each texture -> LUT
+  See player animation
+
+- player update -> new sub function, UpdatePlayerState()
 
 
 

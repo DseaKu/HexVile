@@ -1,9 +1,12 @@
 
+
+rework enums: NULL_ID =0 -> UNDEFINED = -1
+rework get texture: Calc each texture -> LUT
+See player animation
+
+
+
 - try to chop tree
-
-
- The tree chopping functionality has been implemented.
-
   Key Features Added:
    * Axe Item: Added an Axe to the toolbar (Slot 5).
    * Chop Action: Left-clicking on a tree while holding the Axe (within a reasonable range) triggers the chop.
@@ -24,4 +27,3 @@
    3. Left Click on the tree.
    4. The player will chop, the tree will vanish, and you will gain Wood.
 
-> can you analize my project?

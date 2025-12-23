@@ -54,8 +54,8 @@ enum id {
 // --- Directions ---
 namespace dir {
 enum id {
-  NULL_ID = 0,
-  NW,
+  UNDEFINED = -1,
+  NW = 0,
   W,
   SW,
   S,

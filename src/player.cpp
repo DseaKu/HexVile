@@ -237,8 +237,8 @@ const char *Player::PlayerStateToString() const {
 
 const char *Player::PlayerDirToString() const {
   switch (dirID) {
-  case dir::NULL_ID:
-    return "NULL";
+  case dir::UNDEFINED:
+    return "UNDEFINED";
   case dir::NW:
     return "NW";
   case dir::W:
@@ -266,7 +266,7 @@ void Player::GenerateDrawData() {
   // Get texture atlas position
   animationProperties aD = ad::playerLUT.at(this->stateID);
   int taX = aD.x + this->animationFrame;
-  int taY = aD.y + this->dirID - 1;
+  int taY = aD.y + this->dirID;
 
   // Get destination position
   Vector2 drawPos = position;

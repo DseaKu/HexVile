@@ -217,49 +217,12 @@ void Game::RunLogic() {
   worldState.hexGrid.Update(worldState.camera, frameContext.deltaTime);
   uiHandler.Update(frameContext.mouseWorldPos);
 
+  // Get selected tool bar slot
   int toolBarSel = worldState.itemHandler.GetSelectionToolBar();
 
+  // Process left mouse click
   if (frameContext.inputs.mousePress.left) {
-    // Clicked on item bar
-    if (uiHandler.GetToolBarAvailability() &&
-        CheckCollisionPointRec(
-            frameContext.mouseScreenPos, // ToolBar is Screen Space usually?
-            uiHandler.GetToolBarRect())) {
-      // inputHandler.SetMouseMask(Mouse::ITEM_BAR);
-      frameContext.mouseMask =
-          mouseMask::ITEM_BAR; // Update local state if needed
-      toolBarSel = uiHandler.GetItemSlotAt(frameContext.mouseScreenPos);
-
-    } else {
-      // inputHandler.SetMouseMask(Mouse::PLAY_GROUND);
-      frameContext.mouseMask = mouseMask::PLAY_GROUND;
-
-      HexCoord clickedHex =
-          worldState.hexGrid.PointToHexCoord(frameContext.mouseWorldPos);
-      ItemStack *selectedItem =
-          worldState.itemHandler.GetToolBarItemPointer(toolBarSel);
-
-      if (selectedItem->itemID == item::AXE) {
-        Vector2 playerPos = worldState.player.GetPosition();
-        Vector2 clickPos = worldState.hexGrid.HexCoordToPoint(clickedHex);
-
-        if (Vector2Distance(playerPos, clickPos) <
-            conf::TILE_RESOLUTION * 2.5f) {
-          if (worldState.hexGrid.RemoveResource(clickedHex, rsrc::TREE)) {
-            worldState.player.Chop(clickedHex);
-            worldState.itemHandler.AddItem(item::WOOD, 1);
-          }
-        }
-      } else {
-        tile::id tileToPlace =
-            worldState.itemHandler.ConvertItemToTileID(selectedItem->itemID);
-
-        if (tileToPlace != tile::NULL_ID &&
-            worldState.hexGrid.SetTile(clickedHex, tileToPlace)) {
-          worldState.itemHandler.TakeItemFromToolBar(selectedItem, 1);
-        }
-      }
-    }
+    toolBarSel = ProccesLeftMouseClick(toolBarSel);
   }
 
   if (frameContext.inputs.mousePress.right) {
@@ -313,11 +276,54 @@ void Game::RunLogic() {
   logicExecutionTime = elapsedLogic.count();
 }
 
+int Game::ProccesLeftMouseClick(int toolBarSel) {
+
+  // Clicked on item bar
+  if (uiHandler.GetToolBarAvailability() &&
+      CheckCollisionPointRec(
+          frameContext.mouseScreenPos, // ToolBar is Screen Space usually?
+          uiHandler.GetToolBarRect())) {
+    frameContext.mouseMask =
+        mouseMask::ITEM_BAR; // Update local state if needed
+    toolBarSel = uiHandler.GetItemSlotAt(frameContext.mouseScreenPos);
+
+    // Clicked on ground
+  } else {
+    frameContext.mouseMask = mouseMask::GROUND;
+
+    HexCoord clickedHex =
+        worldState.hexGrid.PointToHexCoord(frameContext.mouseWorldPos);
+    ItemStack *selectedItem =
+        worldState.itemHandler.GetToolBarItemPointer(toolBarSel);
+
+    if (selectedItem->itemID == item::AXE) {
+      Vector2 playerPos = worldState.player.GetPosition();
+      Vector2 clickPos = worldState.hexGrid.HexCoordToPoint(clickedHex);
+
+      if (Vector2Distance(playerPos, clickPos) < conf::TILE_RESOLUTION * 2.5f) {
+        if (worldState.hexGrid.RemoveResource(clickedHex, rsrc::TREE)) {
+          worldState.player.Chop(clickedHex);
+          worldState.itemHandler.AddItem(item::WOOD, 1);
+        }
+      }
+    } else {
+      tile::id tileToPlace =
+          worldState.itemHandler.ConvertItemToTileID(selectedItem->itemID);
+
+      if (tileToPlace != tile::NULL_ID &&
+          worldState.hexGrid.SetTile(clickedHex, tileToPlace)) {
+        worldState.itemHandler.TakeItemFromToolBar(selectedItem, 1);
+      }
+    }
+  }
+  return toolBarSel;
+}
+
 const char *Game::MouseMaskToString(mouseMask::id m) {
   switch (m) {
   case mouseMask::NULL_ID:
     return "Null";
-  case mouseMask::PLAY_GROUND:
+  case mouseMask::GROUND:
     return "Ground";
   case mouseMask::ITEM_BAR:
     return "Tool Bar";

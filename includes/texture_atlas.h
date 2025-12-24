@@ -9,7 +9,7 @@
 // ==========================================
 //               Texture atlas
 // ==========================================
-namespace ta {
+namespace tex_atlas {
 
 // --- Resolution ---
 constexpr int RES32_OFFSET = 100;
@@ -104,45 +104,45 @@ inline const std::map<item::id, std::pair<float, float>> ITEM_TEXTURE_COORDS = {
     {item::SET_WATER, ITEM_SET_WATER}, {item::SET_DIRT, ITEM_SET_DIRT},
     {item::AXE, ITEM_AXE_STONE},       {item::WOOD, ITEM_WOOD_LOG},
 };
-} // namespace ta
+} // namespace tex_atlas
 
 // ==========================================
-//               Animation Data
+//               Texture Look-Up-Table
 // ==========================================
-struct animationProperties {
+
+// Texture Data
+struct TexData {
   int x;
   int y;
+  int variation;
   int frameCount;
   float speed;
   bool isLooping;
 };
-namespace ad {
+namespace tex_lut {
 // --- Player Animation Properties ---
-constexpr animationProperties PLAYER_WALK = {.x = ta::PLAYER_X,
-                                             .y = ta::PLAYER_Y +
-                                                  faceDir::SIZE * 0,
-                                             .frameCount = 8,
-                                             .speed = 9.0f,
-                                             .isLooping = true};
-constexpr animationProperties PLAYER_IDLE = {.x = ta::PLAYER_X,
-                                             .y = ta::PLAYER_Y +
-                                                  faceDir::SIZE * 1,
-                                             .frameCount = 12,
-                                             .speed = 5.0f,
-                                             .isLooping = true};
-constexpr animationProperties PLAYER_ATTACK = {.x = ta::PLAYER_X,
-                                               .y = ta::PLAYER_Y +
-                                                    faceDir::SIZE * 2,
-                                               .frameCount = 8,
-                                               .speed = 8.0f,
-                                               .isLooping = true};
+constexpr TexData PLAYER_WALK = {.x = tex_atlas::PLAYER_X,
+                                 .y = tex_atlas::PLAYER_Y + faceDir::SIZE * 0,
+                                 .frameCount = 8,
+                                 .speed = 9.0f,
+                                 .isLooping = true};
+constexpr TexData PLAYER_IDLE = {.x = tex_atlas::PLAYER_X,
+                                 .y = tex_atlas::PLAYER_Y + faceDir::SIZE * 1,
+                                 .frameCount = 12,
+                                 .speed = 5.0f,
+                                 .isLooping = true};
+constexpr TexData PLAYER_ATTACK = {.x = tex_atlas::PLAYER_X,
+                                   .y = tex_atlas::PLAYER_Y + faceDir::SIZE * 2,
+                                   .frameCount = 8,
+                                   .speed = 8.0f,
+                                   .isLooping = true};
 
 // --- Player Animation LUT ---
-inline const std::map<playerState::id, animationProperties> playerLUT = {
+inline const std::map<playerState::id, TexData> playerLUT = {
     {playerState::WALK, PLAYER_WALK},
     {playerState::IDLE, PLAYER_IDLE},
     {playerState::CHOP, PLAYER_ATTACK},
 };
-}; // namespace ad
+}; // namespace tex_lut
 
 #endif // TEXTURE_ATLAS_H

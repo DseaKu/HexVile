@@ -2,9 +2,11 @@
 #include "defines.h"
 #include "enums.h"
 #include "hex_tile_grid.h"
+#include "item_handler.h"
 #include "raylib.h"
 #include "raymath.h"
 #include "texture_atlas.h"
+#include "ui_handler.h"
 
 Player::Player() {
   position = conf::SCREEN_CENTER;
@@ -20,12 +22,42 @@ Player::Player() {
 }
 
 // --- Logic ---
-void Player::UpdatePlayerState(const float deltaTime) {
+void Player::UpdatePlayerState(const FrameContext *frameContext) {
 
   if (moveDir.x == 0 && moveDir.y == 0) {
     Idle();
   } else {
-    Walk(moveDir, deltaTime);
+    Walk(moveDir, frameContext->deltaTime);
+  }
+
+  // Interact with enviorment
+  if (frameContext->mouseMask == mouseMask::GROUND) {
+    if (frameContext->inputs.mousePress.left) {
+      int selToolBarSlot = uiHandler->GetSelToolBarSlot();
+      HexCoord clickedTile =
+          hexGrid->PointToHexCoord(frameContext->mouseWorldPos);
+
+      ItemStack *selectedItem =
+          itemHandler->GetToolBarItemPointer(selToolBarSlot);
+
+      // Process tool interaction
+      if (selectedItem->itemID == item::AXE) {
+        Vector2 clickedPos = hexGrid->HexCoordToPoint(clickedTile);
+
+        if (Vector2Distance(this->position, clickedPos) <
+            conf::INTERACT_DISTANCE) {
+          Chop(clickedTile);
+        }
+        // Process tile setter
+      } else {
+        tile::id tileToPlace =
+            itemHandler->ConvertItemToTileID(selectedItem->itemID);
+        if (tileToPlace != tile::NULL_ID &&
+            hexGrid->SetTile(clickedTile, tileToPlace)) {
+          itemHandler->TakeItemFromToolBar(selectedItem, 1);
+        }
+      }
+    }
   }
 }
 
@@ -53,23 +85,25 @@ void Player::UpdatePlayerFaceDir() {
   }
 }
 
-void Player::Update(const KeyboardInput *keyboardInput, const float deltaTime) {
-  animationDelta += deltaTime;
+void Player::Update(const FrameContext *frameContext) {
+  animationDelta += frameContext->deltaTime;
 
   playerTile = hexGrid->PointToHexCoord(position);
 
   Vector2 dir = {0, 0};
-  moveDir.x = -keyboardInput->Left + keyboardInput->Right;
-  moveDir.y = -keyboardInput->Up + keyboardInput->Down;
+  moveDir.x =
+      -frameContext->inputs.keyPress.Left + frameContext->inputs.keyPress.Right;
+  moveDir.y =
+      -frameContext->inputs.keyPress.Up + frameContext->inputs.keyPress.Down;
 
   UpdatePlayerFaceDir();
 
-  UpdatePlayerState(deltaTime);
+  UpdatePlayerState(frameContext);
 
   // Calculate move Speed
   float distance = Vector2Distance(position, previousPosition);
-  if (deltaTime > 0) {
-    moveSpeed = distance / deltaTime / conf::TILE_RESOLUTION;
+  if (frameContext->deltaTime > 0) {
+    moveSpeed = distance / frameContext->deltaTime / conf::TILE_RESOLUTION;
   } else {
     moveSpeed = 0;
   }
@@ -125,6 +159,7 @@ void Player::Chop(HexCoord target) {
     faceDirID = faceDir::NE;
     break;
   }
+  itemHandler->AddItem(item::WOOD, 1);
 }
 
 void Player::Idle() {
@@ -173,28 +208,29 @@ void Player::InitAnimations() {
   // Default init
   for (int i = 0; i < playerState::SIZE; i++) {
     for (int j = 0; j < faceDir::SIZE; j++) {
-      animationData[i][j] = {.frameCount = ta::PLAYER_X_MAX,
-                             .speed = ta::PLAYER_ANIMATION_SPEED,
+      animationData[i][j] = {.frameCount = tex_atlas::PLAYER_X_MAX,
+                             .speed = tex_atlas::PLAYER_ANIMATION_SPEED,
                              .loop = true};
     }
   }
 
   // Walk Specifics
   for (int i = 0; i < faceDir::SIZE; i++) {
-    animationData[playerState::WALK][i].frameCount = ta::PLAYER_WALK_MAX;
+    animationData[playerState::WALK][i].frameCount = tex_atlas::PLAYER_WALK_MAX;
   }
 
   // Idle Specifics
   for (int i = 0; i < faceDir::SIZE; i++) {
-    animationData[playerState::IDLE][i].speed = ta::PLAYER_ANIMATION_SPEED_IDLE;
+    animationData[playerState::IDLE][i].speed =
+        tex_atlas::PLAYER_ANIMATION_SPEED_IDLE;
   }
 
   // Chop Specifics
   for (int i = 0; i < faceDir::SIZE; i++) {
     animationData[playerState::CHOP][i].frameCount =
-        ta::PLAYER_WALK_MAX; // Use walk frames for now
+        tex_atlas::PLAYER_WALK_MAX; // Use walk frames for now
     animationData[playerState::CHOP][i].speed =
-        ta::PLAYER_ANIMATION_SPEED * 1.5f;
+        tex_atlas::PLAYER_ANIMATION_SPEED * 1.5f;
     animationData[playerState::CHOP][i].loop = false;
   }
 }
@@ -206,6 +242,11 @@ void Player::SetGFX_Manager(GFX_Manager *graphicsManager) {
 
 void Player::SetHexGrid(HexGrid *grid) { this->hexGrid = grid; }
 
+void Player::SetUI_Handler(UI_Handler *uiHandler) { uiHandler = uiHandler; }
+
+void Player::SetItemHandler(ItemHandler *itemHandler) {
+  itemHandler = itemHandler;
+}
 // --- Getters ---
 Vector2 Player::GetPosition() const { return position; }
 
@@ -256,25 +297,26 @@ const char *Player::PlayerDirToString() const {
 // --- Rendering ---
 void Player::GenerateDrawData() {
 
-  animationProperties animData = ad::playerLUT.at(this->stateID);
+  TexData texData = tex_lut::playerLUT.at(this->stateID);
 
   // Calculate animation frame
-  float animSpeed = animData.speed;
-  int frameCount = animData.frameCount;
+  float animSpeed = texData.speed;
+  int frameCount = texData.frameCount;
   int animationProgress = this->animationDelta * animSpeed;
   this->animationFrame = animationProgress % frameCount;
 
   // Get texture atlas position
-  int taX = animData.x + this->animationFrame;
-  int taY = animData.y + this->faceDirID;
+  int taX = texData.x + this->animationFrame;
+  int taY = texData.y + this->faceDirID;
 
   // Get destination position
   Vector2 drawPos = position;
-  drawPos.x -= ta::RES16;
-  drawPos.y -=
-      ta::RES16 - conf::PLAYER_SPRITE_Y_OFFSET; // Player position shouldn't be
-                                                // below the sprite
-  Rectangle dstRect = {drawPos.x, drawPos.y, ta::RES32_F, ta::RES32_F};
+  drawPos.x -= tex_atlas::RES16;
+  drawPos.y -= tex_atlas::RES16 -
+               conf::PLAYER_SPRITE_Y_OFFSET; // Player position shouldn't be
+                                             // below the sprite
+  Rectangle dstRect = {drawPos.x, drawPos.y, tex_atlas::RES32_F,
+                       tex_atlas::RES32_F};
 
   // Load texture to renderer
   graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, taX, taY, dstRect, WHITE);

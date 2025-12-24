@@ -35,7 +35,7 @@ UI_Handler::UI_Handler() {
 
   // State
   isToolBarActive = false;
-  selectedItemIndex = 0;
+  selToolBarSlot = 0;
 
   // Dependencies
   graphicsManager = nullptr;
@@ -104,6 +104,7 @@ int UI_Handler::GetItemSlotAt(Vector2 screenPos) {
   }
   return -1;
 }
+int UI_Handler::GetSelToolBarSlot() { return selToolBarSlot; }
 
 bool UI_Handler::GetToolBarAvailability() { return isToolBarActive; }
 Rectangle UI_Handler::GetToolBarRect() { return toolBarLayout.rect; }
@@ -113,7 +114,7 @@ void UI_Handler::SetGFX_Manager(GFX_Manager *p) { graphicsManager = p; }
 void UI_Handler::SetItemHandler(ItemHandler *p) { itemHandler = p; }
 void UI_Handler::SetFontHandler(FontHandler *p) { fontHandler = p; }
 void UI_Handler::SetHexGrid(HexGrid *p) { hexGrid = p; }
-void UI_Handler::SetSelectedItem(int index) { selectedItemIndex = index; }
+void UI_Handler::SetSelToolBarSlot(int index) { selToolBarSlot = index; }
 void UI_Handler::SetToolBarActive(bool is_active) {
   isToolBarActive = is_active;
 }
@@ -123,7 +124,7 @@ void UI_Handler::DrawHighlighedTile(Vector2 mouseWorldPos) {
   if (!hexGrid)
     return;
   HexCoord coord = hexGrid->PointToHexCoord(mouseWorldPos);
-  hexGrid->DrawTile(coord, ta::UI_X, ui::TILE_H, drawMask::GROUND_1);
+  hexGrid->DrawTile(coord, tex_atlas::UI_X, ui::TILE_H, drawMask::GROUND_1);
 }
 
 void UI_Handler::DrawToolBar() {
@@ -144,11 +145,11 @@ void UI_Handler::DrawToolBarSlot(int slotIndex) {
                         (float)toolBarLayout.contentSize};
 
   // 1. Draw Background
-  graphicsManager->LoadGFX_Data(drawMask::UI_0, ta::UI_X, ui::ITEM_BAR_BG,
-                                slotRect, WHITE);
+  graphicsManager->LoadGFX_Data(drawMask::UI_0, tex_atlas::UI_X,
+                                ui::ITEM_BAR_BG, slotRect, WHITE);
   if (slotIndex == itemHandler->GetSelectionToolBar()) {
-    graphicsManager->LoadGFX_Data(drawMask::UI_0, ta::UI_X, ui::ITEM_BAR_BG_H,
-                                  slotRect, WHITE);
+    graphicsManager->LoadGFX_Data(drawMask::UI_0, tex_atlas::UI_X,
+                                  ui::ITEM_BAR_BG_H, slotRect, WHITE);
   }
 
   // 2. Draw Content
@@ -163,7 +164,8 @@ void UI_Handler::DrawItemIcon(int slotIndex, Rectangle slotRect) {
   ItemStack *itemStack = itemHandler->GetToolBarItemPointer(slotIndex);
 
   item::id itemID = itemStack->itemID;
-  std::pair<float, float> textCoords = ta::ITEM_TEXTURE_COORDS.at(itemID);
+  std::pair<float, float> textCoords =
+      tex_atlas::ITEM_TEXTURE_COORDS.at(itemID);
 
   // Calculate shrunk rect for icon
   float newWidth = slotRect.width * toolBarLayout.itemScale;
@@ -206,14 +208,14 @@ void UI_Handler::DrawItemCount(int slotIndex, Rectangle slotRect) {
                         iconRect.y + iconRect.height};
 
     Rectangle digitRect = {
-        rbCorner.x - (digitIndex * ta::NUMBER_SCALE), rbCorner.y,
-        -ta::NUMBER_SCALE, // Negative width/height implies flip? Or just
-                           // anchor?
-        -ta::NUMBER_SCALE // Original code had negative. Assuming it means "draw
-                          // up/left from anchor"
+        rbCorner.x - (digitIndex * tex_atlas::NUMBER_SCALE), rbCorner.y,
+        -tex_atlas::NUMBER_SCALE, // Negative width/height implies flip? Or just
+                                  // anchor?
+        -tex_atlas::NUMBER_SCALE  // Original code had negative. Assuming it
+                                  // means "draw up/left from anchor"
     };
 
-    graphicsManager->LoadGFX_Data(drawMask::UI_1, ta::NUMBER_X, digit,
+    graphicsManager->LoadGFX_Data(drawMask::UI_1, tex_atlas::NUMBER_X, digit,
                                   digitRect, WHITE);
     digitIndex++;
   }

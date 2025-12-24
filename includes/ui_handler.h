@@ -17,7 +17,7 @@ private:
     float bottomMargin;
     float scale;
     float itemScale;
-    
+
     // Calculated params
     float width;
     float height;
@@ -28,7 +28,7 @@ private:
 
   ToolBarLayout toolBarLayout;
   bool isToolBarActive;
-  int selectedItemIndex;
+  int selToolBarSlot;
 
   // Dependencies
   GFX_Manager *graphicsManager;
@@ -50,21 +50,22 @@ public:
   void Update(Vector2 mouseWorldPos);
   void UpdateScreenSize(int width, int height);
 
-  // Setters (Dependencies)
+  // Setters
   void SetGFX_Manager(GFX_Manager *p);
   void SetItemHandler(ItemHandler *p);
   void SetFontHandler(FontHandler *p);
   void SetHexGrid(HexGrid *p);
-  
-  // State Setters
-  void SetSelectedItem(int index);
+  void SetSelToolBarSlot(int index);
   void SetToolBarActive(bool is_active);
 
   // Queries
   bool GetToolBarAvailability();
   Rectangle GetToolBarRect();
+
+  // Getter
   int GetItemSlotAt(Vector2 screenPos);
-  
+  int GetSelToolBarSlot();
+
   // Input
   int GetToolBarSelection(KeyboardInput keyPress, int currentSelection);
 };

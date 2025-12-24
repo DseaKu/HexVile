@@ -5,7 +5,9 @@
 #include "defines.h"
 #include "enums.h"
 #include "hex_tile_grid.h"
+#include "item_handler.h"
 #include "raylib.h"
+#include "ui_handler.h"
 
 struct PlayerAnimationData {
   int frameCount;
@@ -18,6 +20,8 @@ private:
   // --- Dependencies ---
   GFX_Manager *graphicsManager = nullptr;
   HexGrid *hexGrid = nullptr;
+  UI_Handler *uiHandler = nullptr;
+  ItemHandler *itemHandler = nullptr;
 
   // --- State ---
   Vector2 position;
@@ -30,7 +34,7 @@ private:
   float speedTilesPerSecond;
 
   // --- Logic ---
-  void UpdatePlayerState(const float delta);
+  void UpdatePlayerState(const FrameContext *frameContext);
   void UpdatePlayerFaceDir();
 
   // --- Animation ---
@@ -48,12 +52,14 @@ public:
   Player();
 
   // --- Logic ---
-  void Update(const KeyboardInput *keyboardInput, const float deltaTime);
+  void Update(const FrameContext *frameContext);
   void Chop(HexCoord target);
 
   // --- Setters ---
   void SetHexGrid(HexGrid *grid);
   void SetGFX_Manager(GFX_Manager *graphicsManager);
+  void SetUI_Handler(UI_Handler *ui_handler);
+  void SetItemHandler(ItemHandler *itemHandler);
 
   // --- Getters ---
   Vector2 GetPosition() const;

@@ -60,14 +60,16 @@ HexGrid::HexGrid() {
   std::random_device rd;
   randomEngine = std::mt19937(rd());
 
-  const float mean = (ta::DETAILS_X + ta::DETAILS_X_MAX - 1) / 2.0f;
+  const float mean =
+      (tex_atlas::DETAILS_X + tex_atlas::DETAILS_X_MAX - 1) / 2.0f;
   const float stddev =
-      (ta::DETAILS_X_MAX - ta::DETAILS_X) / conf::GAUSIAN_EFFECT;
+      (tex_atlas::DETAILS_X_MAX - tex_atlas::DETAILS_X) / conf::GAUSIAN_EFFECT;
   detailDistribution = std::normal_distribution<float>(mean, stddev);
 
-  const float meanRes = (ta::RESOURCE_X + ta::RESOURCE_X_MAX - 1) / 2.0f;
-  const float stddevRes =
-      (ta::RESOURCE_X_MAX - ta::RESOURCE_X) / conf::GAUSIAN_EFFECT;
+  const float meanRes =
+      (tex_atlas::RESOURCE_X + tex_atlas::RESOURCE_X_MAX - 1) / 2.0f;
+  const float stddevRes = (tex_atlas::RESOURCE_X_MAX - tex_atlas::RESOURCE_X) /
+                          conf::GAUSIAN_EFFECT;
   resourceDistribution = std::normal_distribution<float>(meanRes, stddevRes);
 
   size_t estimated_hits = conf::ESTIMATED_VISIBLE_TILES;
@@ -114,8 +116,8 @@ void HexGrid::InitGrid(float radius) {
 }
 
 TerDet HexGrid::GetRandomTerainDetail(tile::id tileID) {
-  float x = GetRandomValue(-ta::RES8_F, ta::RES8_F);
-  float y = GetRandomValue(-ta::RES8_F, ta::RES8_F);
+  float x = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
+  float y = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
 
   // Generate a value from the normal distribution
   float generated_type_float = detailDistribution(randomEngine);
@@ -124,11 +126,12 @@ TerDet HexGrid::GetRandomTerainDetail(tile::id tileID) {
   int generated_type = static_cast<int>(std::round(generated_type_float));
 
   // Clamp the value to the valid range
-  int type = std::clamp(generated_type, ta::DETAILS_X, ta::DETAILS_X_MAX - 1);
+  int type = std::clamp(generated_type, tex_atlas::DETAILS_X,
+                        tex_atlas::DETAILS_X_MAX - 1);
 
   // Determine if detail is null and skip render process
-  int renderBitMask = ta::RENDER_BIT_MASK_DETAIL.at(tileID);
-  int detailShift = type - ta::DETAILS_X;
+  int renderBitMask = tex_atlas::RENDER_BIT_MASK_DETAIL.at(tileID);
+  int detailShift = type - tex_atlas::DETAILS_X;
   if (!(renderBitMask >> detailShift & 1)) {
     type = conf::SKIP_RENDER;
   }
@@ -137,8 +140,8 @@ TerDet HexGrid::GetRandomTerainDetail(tile::id tileID) {
 }
 
 TerRsrc HexGrid::GetRandomTerainResource(tile::id tileID) {
-  float x = GetRandomValue(-ta::RES8_F, ta::RES8_F);
-  float y = GetRandomValue(-ta::RES8_F, ta::RES8_F);
+  float x = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
+  float y = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
 
   // Generate a value from the normal distribution
   float generated_type_float = resourceDistribution(randomEngine);
@@ -147,11 +150,12 @@ TerRsrc HexGrid::GetRandomTerainResource(tile::id tileID) {
   int generated_type = static_cast<int>(std::round(generated_type_float));
 
   // Clamp the value to the valid range
-  int type = std::clamp(generated_type, ta::RESOURCE_X, ta::RESOURCE_X_MAX - 1);
+  int type = std::clamp(generated_type, tex_atlas::RESOURCE_X,
+                        tex_atlas::RESOURCE_X_MAX - 1);
 
   // Determine if resource is null and skip render process
-  int renderBitMask = ta::RENDER_BIT_MASK_RESOURCE.at(tileID);
-  int resourceShift = type - ta::RESOURCE_X;
+  int renderBitMask = tex_atlas::RENDER_BIT_MASK_RESOURCE.at(tileID);
+  int resourceShift = type - tex_atlas::RESOURCE_X;
   if (!(renderBitMask >> resourceShift & 1)) {
     type = conf::SKIP_RENDER;
   }
@@ -302,7 +306,7 @@ void HexGrid::CalcVisibleTiles() {
       Vector2 pos = HexCoordToPoint(h);
       pos.x -= conf::TILE_RESOLUTION_HALF;
       pos.y -= conf::TILE_RESOLUTION_HALF;
-      Rectangle dest_rect = {pos.x, pos.y, ta::RES32, ta::RES32};
+      Rectangle dest_rect = {pos.x, pos.y, tex_atlas::RES32, tex_atlas::RES32};
       // Check if the tile's bounding box intersects with the render view.
       if (CheckCollisionRecs(renderView, dest_rect)) {
         newVisiCache.push_back(h);
@@ -349,7 +353,7 @@ bool HexGrid::RemoveResource(HexCoord h, int rsrcID) {
   MapTile &t = GetTile(h);
   for (TerRsrc &r : t.rsrc) {
     if (r.rsrcID != conf::UNINITIALIZED && r.rsrcID != conf::SKIP_RENDER) {
-      if (r.rsrcID - ta::RESOURCE_X == rsrcID) {
+      if (r.rsrcID - tex_atlas::RESOURCE_X == rsrcID) {
         r.rsrcID = conf::SKIP_RENDER;
         return true;
       }
@@ -365,7 +369,7 @@ void HexGrid::DrawTile(HexCoord h, int TA_X, int TA_Y, drawMask::id layerID) {
   Vector2 pos = HexCoordToPoint(h);
   pos.x -= conf::TILE_RESOLUTION_HALF;
   pos.y -= conf::TILE_RESOLUTION_HALF;
-  Rectangle destRect = {pos.x, pos.y, ta::RES32, ta::RES32};
+  Rectangle destRect = {pos.x, pos.y, tex_atlas::RES32, tex_atlas::RES32};
 
   const MapTile &tile = GetTile(h);
   Vector2 origin = {0.0f, 0.0f};
@@ -412,7 +416,7 @@ void HexGrid::UpdateTileVisibility(float totalTime) {
   }
 
   // Update animation frame based on game time for animated tiles.
-  animationFrame = (int)(totalTime * ta::TILES_ANIMATION_SPEED) % 1;
+  animationFrame = (int)(totalTime * tex_atlas::TILES_ANIMATION_SPEED) % 1;
 }
 
 void HexGrid::Update(const Camera2D &camera, float totalTime) {
@@ -424,20 +428,20 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
     tile::id id = t.tileID;
 
     Vector2 tileCenter = HexCoordToPoint(h);
-    Vector2 renderPos =
-        Vector2{tileCenter.x - ta::RES16_F, tileCenter.y - ta::RES16_F};
+    Vector2 renderPos = Vector2{tileCenter.x - tex_atlas::RES16_F,
+                                tileCenter.y - tex_atlas::RES16_F};
 
     Rectangle destRec = Rectangle{.x = renderPos.x,
                                   .y = renderPos.y,
-                                  .width = ta::RES32_F,
-                                  .height = ta::RES32_F};
+                                  .width = tex_atlas::RES32_F,
+                                  .height = tex_atlas::RES32_F};
 
     // Draw chached visible tiles
     LoadTileGFX(destRec, animationFrame + 12, id);
 
     // 'destRec' needs to be repostion, details and resource assets are
     // begining at the bottom
-    destRec.y -= ta::RES16_F;
+    destRec.y -= tex_atlas::RES16_F;
 
     // Initialise if undiscoverd and draw details
     for (TerDet &d : t.det) {
@@ -481,9 +485,9 @@ void HexGrid::LoadResourceGFX(Rectangle destRec, const TerRsrc r,
 
   destRec.x += r.x;
   destRec.y += r.y;
-  if (r.rsrcID - ta::RESOURCE_X == rsrc::TREE) {
-    destRec.height += ta::RES32_F;
-    destRec.y -= ta::RES32_F;
+  if (r.rsrcID - tex_atlas::RESOURCE_X == rsrc::TREE) {
+    destRec.height += tex_atlas::RES32_F;
+    destRec.y -= tex_atlas::RES32_F;
     graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND, r.rsrcID, tileID,
                                         destRec, WHITE);
   } else {
@@ -526,7 +530,7 @@ bool HexGrid::CheckObstacleCollision(Vector2 worldPos, float radius) {
 
     for (const TerRsrc &r : tile.rsrc) {
       if (r.rsrcID != conf::UNINITIALIZED && r.rsrcID != conf::SKIP_RENDER) {
-        if (r.rsrcID - ta::RESOURCE_X == rsrc::TREE) {
+        if (r.rsrcID - tex_atlas::RESOURCE_X == rsrc::TREE) {
           // Calculate tree world position.
           // Resource offset (r.x, r.y) is relative to the tile's visual center.
           // In DrawTile/LoadResourceGFX:

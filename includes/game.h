@@ -33,19 +33,6 @@ struct WorldState {
   float updateGridTreshold;
 };
 
-struct FrameContext {
-  Inputs inputs;
-  Vector2 mouseScreenPos;
-  Vector2 mouseWorldPos;
-  mouseMask::id mouseMask;
-
-  // Screen
-  int screenWidth;
-  int screenHeight;
-
-  float deltaTime;
-};
-
 struct RenderState {
   Camera2D camera;
 

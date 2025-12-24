@@ -4,7 +4,6 @@
 #include "font_handler.h"
 #include "hex_tile_grid.h"
 #include "raylib.h"
-#include "raymath.h"
 #include <string>
 
 #ifdef __APPLE__
@@ -49,7 +48,9 @@ Game::Game() {
   worldState.hexGrid.SetCamRectPointer(&worldState.cameraRect);
 
   worldState.player.SetHexGrid(&worldState.hexGrid);
+  worldState.player.SetItemHandler(&worldState.itemHandler);
   worldState.player.SetGFX_Manager(&gfxManager);
+  worldState.player.SetUI_Handler(&uiHandler);
 
   worldState.camera.target = conf::SCREEN_CENTER;
   worldState.camera.offset = conf::SCREEN_CENTER;
@@ -237,14 +238,13 @@ void Game::RunLogic() {
   }
 
   // Set selected tool bar slot
-  uiHandler.SetSelectedItem(selToolBarSlot);
+  uiHandler.SetSelToolBarSlot(selToolBarSlot);
   worldState.itemHandler.SetItemSelection(selToolBarSlot);
 
   // Player Update
-  worldState.player.Update(&frameContext.inputs.keyPress,
-                           frameContext.deltaTime);
+  worldState.player.Update(&frameContext);
 
-  // Update Camera Target (Logic)
+  // Update Camera Target
   worldState.camera.target = worldState.player.GetPosition();
 
   // --- Update Render State Snapshot (Back Buffer) ---
@@ -279,45 +279,19 @@ void Game::RunLogic() {
   logicExecutionTime = elapsedLogic.count();
 }
 
-void Game::ProccesLeftMouseClick(int *toolBarSel) {
+void Game::ProccesLeftMouseClick(int *selToolBarSlot) {
 
-  // Clicked on item bar
+  // Clicked on item bar -> Set new selected tool bar slot
   if (uiHandler.GetToolBarAvailability() &&
-      CheckCollisionPointRec(
-          frameContext.mouseScreenPos, // ToolBar is Screen Space usually?
-          uiHandler.GetToolBarRect())) {
-    frameContext.mouseMask =
-        mouseMask::ITEM_BAR; // Update local state if needed
-    *toolBarSel = uiHandler.GetItemSlotAt(frameContext.mouseScreenPos);
+      CheckCollisionPointRec(frameContext.mouseScreenPos,
+                             uiHandler.GetToolBarRect())) {
+    frameContext.mouseMask = mouseMask::ITEM_BAR;
+
+    *selToolBarSlot = uiHandler.GetItemSlotAt(frameContext.mouseScreenPos);
 
     // Clicked on ground
   } else {
     frameContext.mouseMask = mouseMask::GROUND;
-
-    HexCoord clickedHex =
-        worldState.hexGrid.PointToHexCoord(frameContext.mouseWorldPos);
-    ItemStack *selectedItem =
-        worldState.itemHandler.GetToolBarItemPointer(*toolBarSel);
-
-    if (selectedItem->itemID == item::AXE) {
-      Vector2 playerPos = worldState.player.GetPosition();
-      Vector2 clickPos = worldState.hexGrid.HexCoordToPoint(clickedHex);
-
-      if (Vector2Distance(playerPos, clickPos) < conf::TILE_RESOLUTION * 2.5f) {
-        if (worldState.hexGrid.RemoveResource(clickedHex, rsrc::TREE)) {
-          worldState.player.Chop(clickedHex);
-          worldState.itemHandler.AddItem(item::WOOD, 1);
-        }
-      }
-    } else {
-      tile::id tileToPlace =
-          worldState.itemHandler.ConvertItemToTileID(selectedItem->itemID);
-
-      if (tileToPlace != tile::NULL_ID &&
-          worldState.hexGrid.SetTile(clickedHex, tileToPlace)) {
-        worldState.itemHandler.TakeItemFromToolBar(selectedItem, 1);
-      }
-    }
   }
 }
 

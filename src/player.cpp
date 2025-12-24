@@ -242,10 +242,12 @@ void Player::SetGFX_Manager(GFX_Manager *graphicsManager) {
 
 void Player::SetHexGrid(HexGrid *grid) { this->hexGrid = grid; }
 
-void Player::SetUI_Handler(UI_Handler *uiHandler) { uiHandler = uiHandler; }
+void Player::SetUI_Handler(UI_Handler *uiHandler) {
+  this->uiHandler = uiHandler;
+}
 
 void Player::SetItemHandler(ItemHandler *itemHandler) {
-  itemHandler = itemHandler;
+  this->itemHandler = itemHandler;
 }
 // --- Getters ---
 Vector2 Player::GetPosition() const { return position; }

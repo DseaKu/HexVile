@@ -46,7 +46,7 @@ constexpr const int TERRAIN_DETAILS_MAX = 2;
 constexpr const int TERRAIN_RESOURCE_MAX = 1;
 
 constexpr float TREE_COLLISION_RADIUS = 3.0f;
-constexpr float INTERACT_DISTANCE = 32.0f;
+constexpr float INTERACT_DISTANCE = 60.0f;
 // ==========================================
 //               Hex Tile
 // ==========================================

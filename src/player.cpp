@@ -159,7 +159,10 @@ void Player::Chop(HexCoord target) {
     faceDirID = faceDir::NE;
     break;
   }
-  itemHandler->AddItem(item::WOOD, 1);
+
+  if (hexGrid->RemoveResource(target, rsrc::TREE)) {
+    itemHandler->AddItem(item::WOOD, 1);
+  }
 }
 
 void Player::Idle() {

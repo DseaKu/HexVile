@@ -350,13 +350,11 @@ bool HexGrid::RemoveResource(HexCoord h, int rsrcID) {
   if (!HasTile(h)) {
     return false;
   }
-  MapTile &t = GetTile(h);
-  for (TerRsrc &r : t.rsrc) {
-    if (r.rsrcID != conf::UNINITIALIZED && r.rsrcID != conf::SKIP_RENDER) {
-      if (r.rsrcID - tex_atlas::RESOURCE_X == rsrcID) {
-        r.rsrcID = conf::SKIP_RENDER;
-        return true;
-      }
+  MapTile &tile = GetTile(h);
+  for (TerRsrc &rsrc : tile.rsrc) {
+    if (rsrc.rsrcID - tex_atlas::RESOURCE_X == rsrcID) {
+      rsrc.rsrcID = conf::UNINITIALIZED;
+      return true;
     }
   }
   return false;

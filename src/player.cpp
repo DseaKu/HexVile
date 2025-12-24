@@ -256,31 +256,17 @@ const char *Player::PlayerDirToString() const {
 // --- Rendering ---
 void Player::GenerateDrawData() {
 
-  animationProperties aD = ad::playerLUT.at(this->stateID);
+  animationProperties animData = ad::playerLUT.at(this->stateID);
 
   // Calculate animation frame
-  float currentSpeed = aD.speed;
-
-  float frameCount = (float)animationData[stateID][faceDirID].frameCount;
-  float frameCount = (float)animationData[stateID][faceDirID].frameCount;
-
-  float animationProgress = animationDelta * currentSpeed;
-
-  if (animationData[stateID][faceDirID].loop) {
-    animationFrame = (int)animationProgress % (int)frameCount;
-  } else {
-    animationFrame = (int)animationProgress;
-    if (animationFrame >= frameCount) {
-      animationFrame = (int)frameCount - 1;
-      if (stateID == playerState::CHOP) {
-        Idle();
-      }
-    }
-  }
+  float animSpeed = animData.speed;
+  int frameCount = animData.frameCount;
+  int animationProgress = this->animationDelta * animSpeed;
+  this->animationFrame = animationProgress % frameCount;
 
   // Get texture atlas position
-  int taX = aD.x + this->animationFrame;
-  int taY = aD.y + this->faceDirID;
+  int taX = animData.x + this->animationFrame;
+  int taY = animData.y + this->faceDirID;
 
   // Get destination position
   Vector2 drawPos = position;

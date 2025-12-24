@@ -114,6 +114,7 @@ struct animationProperties {
   int y;
   int frameCount;
   float speed;
+  bool isLooping;
 };
 namespace ad {
 // --- Player Animation Properties ---
@@ -121,17 +122,20 @@ constexpr animationProperties PLAYER_WALK = {.x = ta::PLAYER_X,
                                              .y = ta::PLAYER_Y +
                                                   faceDir::SIZE * 0,
                                              .frameCount = 8,
-                                             .speed = 9.0f};
+                                             .speed = 9.0f,
+                                             .isLooping = true};
 constexpr animationProperties PLAYER_IDLE = {.x = ta::PLAYER_X,
                                              .y = ta::PLAYER_Y +
                                                   faceDir::SIZE * 1,
                                              .frameCount = 12,
-                                             .speed = 5.0f};
+                                             .speed = 5.0f,
+                                             .isLooping = true};
 constexpr animationProperties PLAYER_ATTACK = {.x = ta::PLAYER_X,
                                                .y = ta::PLAYER_Y +
                                                     faceDir::SIZE * 2,
                                                .frameCount = 8,
-                                               .speed = 1.0f};
+                                               .speed = 8.0f,
+                                               .isLooping = true};
 
 // --- Player Animation LUT ---
 inline const std::map<playerState::id, animationProperties> playerLUT = {

@@ -218,24 +218,27 @@ void Game::RunLogic() {
   uiHandler.Update(frameContext.mouseWorldPos);
 
   // Get selected tool bar slot
-  int toolBarSel = worldState.itemHandler.GetSelectionToolBar();
+  int selToolBarSlot = worldState.itemHandler.GetSelectionToolBar();
+
+  // Check if player selected new slow by key press
+  selToolBarSlot = uiHandler.GetToolBarSelection(frameContext.inputs.keyPress,
+                                                 selToolBarSlot);
 
   // Process left mouse click
   if (frameContext.inputs.mousePress.left) {
-    toolBarSel = ProccesLeftMouseClick(toolBarSel);
+    ProccesLeftMouseClick(&selToolBarSlot);
   }
 
+  // Process left right click
   if (frameContext.inputs.mousePress.right) {
     HexCoord clickedHex =
         worldState.hexGrid.PointToHexCoord(frameContext.mouseWorldPos);
     worldState.hexGrid.SetTile(clickedHex, tile::NULL_ID);
   }
 
-  toolBarSel =
-      uiHandler.GetToolBarSelection(frameContext.inputs.keyPress, toolBarSel);
-
-  uiHandler.SetSelectedItem(toolBarSel);
-  worldState.itemHandler.SetItemSelection(toolBarSel);
+  // Set selected tool bar slot
+  uiHandler.SetSelectedItem(selToolBarSlot);
+  worldState.itemHandler.SetItemSelection(selToolBarSlot);
 
   // Player Update
   worldState.player.Update(&frameContext.inputs.keyPress,
@@ -276,7 +279,7 @@ void Game::RunLogic() {
   logicExecutionTime = elapsedLogic.count();
 }
 
-int Game::ProccesLeftMouseClick(int toolBarSel) {
+void Game::ProccesLeftMouseClick(int *toolBarSel) {
 
   // Clicked on item bar
   if (uiHandler.GetToolBarAvailability() &&
@@ -285,7 +288,7 @@ int Game::ProccesLeftMouseClick(int toolBarSel) {
           uiHandler.GetToolBarRect())) {
     frameContext.mouseMask =
         mouseMask::ITEM_BAR; // Update local state if needed
-    toolBarSel = uiHandler.GetItemSlotAt(frameContext.mouseScreenPos);
+    *toolBarSel = uiHandler.GetItemSlotAt(frameContext.mouseScreenPos);
 
     // Clicked on ground
   } else {
@@ -294,7 +297,7 @@ int Game::ProccesLeftMouseClick(int toolBarSel) {
     HexCoord clickedHex =
         worldState.hexGrid.PointToHexCoord(frameContext.mouseWorldPos);
     ItemStack *selectedItem =
-        worldState.itemHandler.GetToolBarItemPointer(toolBarSel);
+        worldState.itemHandler.GetToolBarItemPointer(*toolBarSel);
 
     if (selectedItem->itemID == item::AXE) {
       Vector2 playerPos = worldState.player.GetPosition();
@@ -316,7 +319,6 @@ int Game::ProccesLeftMouseClick(int toolBarSel) {
       }
     }
   }
-  return toolBarSel;
 }
 
 const char *Game::MouseMaskToString(mouseMask::id m) {

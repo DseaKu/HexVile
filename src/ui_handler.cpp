@@ -104,7 +104,6 @@ int UI_Handler::GetItemSlotAt(Vector2 screenPos) {
   }
   return -1;
 }
-int UI_Handler::GetSelToolBarSlot() { return selToolBarSlot; }
 
 bool UI_Handler::GetToolBarAvailability() { return isToolBarActive; }
 Rectangle UI_Handler::GetToolBarRect() { return toolBarLayout.rect; }
@@ -117,6 +116,10 @@ void UI_Handler::SetHexGrid(HexGrid *p) { hexGrid = p; }
 void UI_Handler::SetSelToolBarSlot(int index) { selToolBarSlot = index; }
 void UI_Handler::SetToolBarActive(bool is_active) {
   isToolBarActive = is_active;
+}
+
+void SetFrameContext(const FrameContext *frameContext) {
+  frameContext = frameContext;
 }
 
 // --- Rendering Helpers ---

@@ -66,6 +66,7 @@ Game::Game() {
   uiHandler.SetFontHandler(&fontHandler);
   uiHandler.SetHexGrid(&worldState.hexGrid);
   uiHandler.SetToolBarActive(true);
+  uiHandler.SetFrameContext(&frameContext);
 
   SetMousePosition(GetScreenWidth() / 2, GetScreenHeight() / 2);
 
@@ -188,23 +189,21 @@ void Game::UpdateFrameContext() {
   frameContext.inputs.keyPress.Down = IsKeyDown(KEY_S);
 }
 
-void Game::UpdateWorldState() {}
-
-void Game::ProcessFrameContext() {
-
-  frameContext.pos.mouseWorld =
-      GetScreenToWorld2D(frameContext.pos.mouseScreen, worldState.camera);
-
-  // Use frameContext and worldState
-  worldState.timer += frameContext.deltaTime;
-}
-
 void Game::RunLogic() {
   auto startLogic = std::chrono::high_resolution_clock::now();
 
-  ProcessFrameContext();
+  // ==========================================
+  //               Frame Context Related
+  // ==========================================
+  // --- Update mouse ---
+  frameContext.pos.mouseWorld =
+      GetScreenToWorld2D(frameContext.pos.mouseScreen, worldState.camera);
 
-  // Update Camera Offset to match new screen size
+  frameContext.selToolBarSlot = worldState.itemHandler.GetSelectionToolBar();
+  // --- Update delta time ---
+  worldState.timer += frameContext.deltaTime;
+
+  // --- Update camera ---
   worldState.camera.offset = Vector2{(float)frameContext.screenWidth / 2.0f,
                                      (float)frameContext.screenHeight / 2.0f};
   worldState.cameraTopLeft =
@@ -223,11 +222,10 @@ void Game::RunLogic() {
   uiHandler.Update(frameContext.pos.mouseWorld);
 
   // Get selected tool bar slot
-  int selToolBarSlot = worldState.itemHandler.GetSelectionToolBar();
 
   // Check if player selected new slow by key press
-  selToolBarSlot = uiHandler.GetToolBarSelection(frameContext.inputs.keyPress,
-                                                 selToolBarSlot);
+  frameContext.selToolBarSlot = uiHandler.GetToolBarSelection(
+      frameContext.inputs.keyPress, frameContext.selToolBarSlot);
 
   // Process left right click
   if (frameContext.inputs.mousePress.right) {
@@ -237,8 +235,8 @@ void Game::RunLogic() {
   }
 
   // Set selected tool bar slot
-  uiHandler.SetSelToolBarSlot(selToolBarSlot);
-  worldState.itemHandler.SetItemSelection(selToolBarSlot);
+  uiHandler.SetSelToolBarSlot(frameContext.selToolBarSlot);
+  worldState.itemHandler.SetItemSelection(frameContext.selToolBarSlot);
 
   // Player Update
   worldState.player.Update(&frameContext);

@@ -106,8 +106,6 @@ private:
   void LogicLoop(); // The function running in the separate thread
   void RunLogic();  // Calls the update functions on worldState
   void ProccesLeftMouseClick(int *toolBarSel);
-  void ProcessFrameContext();
-  void UpdateWorldState();
 
   void DrawDebugOverlay(bool is_enabled);
 

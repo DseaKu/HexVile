@@ -2,6 +2,7 @@
 #define UI_HANDLER_H
 
 #include "GFX_manager.h"
+#include "defines.h"
 #include "font_handler.h"
 #include "hex_tile_grid.h"
 #include "item_handler.h"
@@ -35,6 +36,7 @@ private:
   ItemHandler *itemHandler;
   FontHandler *fontHandler;
   HexGrid *hexGrid;
+  FrameContext *frameContext = nullptr;
 
   // Render Helpers
   void DrawHighlighedTile(Vector2 mouseWorldPos);
@@ -57,6 +59,7 @@ public:
   void SetHexGrid(HexGrid *p);
   void SetSelToolBarSlot(int index);
   void SetToolBarActive(bool is_active);
+  void SetFrameContext(const FrameContext *frameContext);
 
   // Queries
   bool GetToolBarAvailability();
@@ -64,7 +67,6 @@ public:
 
   // Getter
   int GetItemSlotAt(Vector2 screenPos);
-  int GetSelToolBarSlot();
 
   // Input
   int GetToolBarSelection(KeyboardInput keyPress, int currentSelection);

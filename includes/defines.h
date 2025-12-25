@@ -179,6 +179,7 @@ struct FrameContext {
   // Screen
   int screenWidth;
   int screenHeight;
+  int selToolBarSlot;
 
   float deltaTime;
 };

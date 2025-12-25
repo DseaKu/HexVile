@@ -63,7 +63,8 @@ bool ItemHandler::AddItem(item::id itemID, int count) {
   // Try to stack in toolbar first
   for (auto &stack : toolBar) {
     if (stack.itemID == itemID) {
-      if (stack.count + count <= itemDataBase.GetItemProperties(itemID).maxStack) {
+      if (stack.count + count <=
+          itemDataBase.GetItemProperties(itemID).maxStack) {
         stack.count += count;
         return true;
       }
@@ -80,13 +81,14 @@ bool ItemHandler::AddItem(item::id itemID, int count) {
   // Try to stack in inventory (not fully implemented in UI but data exists)
   for (auto &stack : inventory) {
     if (stack.itemID == itemID) {
-      if (stack.count + count <= itemDataBase.GetItemProperties(itemID).maxStack) {
+      if (stack.count + count <=
+          itemDataBase.GetItemProperties(itemID).maxStack) {
         stack.count += count;
         return true;
       }
     }
   }
-    // Try to find empty slot in inventory
+  // Try to find empty slot in inventory
   for (auto &stack : inventory) {
     if (stack.itemID == item::NULL_ID) {
       stack.itemID = itemID;

@@ -32,7 +32,7 @@ void Player::UpdatePlayerState() {
   // Interact with enviorment
   if (frameContext->mouseMask == mouseMask::GROUND) {
     if (frameContext->inputs.mousePress.left) {
-      int selToolBarSlot = uiHandler->GetSelToolBarSlot();
+      int selToolBarSlot = frameContext->selToolBarSlot;
       HexCoord clickedTile =
           hexGrid->PointToHexCoord(frameContext->pos.mouseWorld);
       ItemStack *selectedItem =

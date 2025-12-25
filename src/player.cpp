@@ -7,6 +7,7 @@
 #include "raymath.h"
 #include "texture_atlas.h"
 #include "ui_handler.h"
+#include <pthread.h>
 
 Player::Player() {
   position = conf::SCREEN_CENTER;
@@ -22,7 +23,7 @@ Player::Player() {
 }
 
 // --- Logic ---
-void Player::UpdatePlayerState(const FrameContext *frameContext) {
+void Player::UpdatePlayerState() {
 
   if (moveDir.x == 0 && moveDir.y == 0) {
     Idle();
@@ -63,6 +64,47 @@ void Player::UpdatePlayerState(const FrameContext *frameContext) {
 
 void Player::UpdatePlayerFaceDir() {
 
+  if (frameContext->inputs.mousePress.left ||
+      frameContext->inputs.mousePress.right) {
+    Vector2 tarPos = frameContext->mouseWorldPos;
+    Vector2 diff = Vector2Subtract(tarPos, this->position);
+    float angle = atan2(diff.y, diff.x) * RAD2DEG;
+    if (angle < 0) {
+      angle += 360;
+    }
+    // Map angle to 8 directions (approximate)
+    // E: 0, SE: 45, S: 90, SW: 135, W: 180, NW: 225, N: 270, NE: 315
+    // Offset by 22.5 to center sectors
+    int sector = (int)((angle + 22.5f) / 45.0f) % 8;
+
+    switch (sector) {
+    case 0:
+      faceDirID = faceDir::E;
+      break;
+    case 1:
+      faceDirID = faceDir::SE;
+      break;
+    case 2:
+      faceDirID = faceDir::S;
+      break;
+    case 3:
+      faceDirID = faceDir::SW;
+      break;
+    case 4:
+      faceDirID = faceDir::W;
+      break;
+    case 5:
+      faceDirID = faceDir::NW;
+      break;
+    case 6:
+      faceDirID = faceDir::N;
+      break;
+    case 7:
+      faceDirID = faceDir::NE;
+      break;
+    }
+  }
+
   // Determine player face direction
   if (moveDir.x != 0 || moveDir.y != 0) {
     if (moveDir.x == 0 && moveDir.y == -1) {
@@ -85,7 +127,8 @@ void Player::UpdatePlayerFaceDir() {
   }
 }
 
-void Player::Update(const FrameContext *frameContext) {
+void Player::Update(const FrameContext *curFrameContext) {
+  frameContext = curFrameContext;
   animationDelta += frameContext->deltaTime;
 
   playerTile = hexGrid->PointToHexCoord(position);
@@ -98,7 +141,7 @@ void Player::Update(const FrameContext *frameContext) {
 
   UpdatePlayerFaceDir();
 
-  UpdatePlayerState(frameContext);
+  UpdatePlayerState();
 
   // Calculate move Speed
   float distance = Vector2Distance(position, previousPosition);
@@ -127,38 +170,6 @@ void Player::Chop(HexCoord target) {
   float angle = atan2(diff.y, diff.x) * RAD2DEG;
   if (angle < 0)
     angle += 360;
-
-  // Map angle to 8 directions (approximate)
-  // E: 0, SE: 45, S: 90, SW: 135, W: 180, NW: 225, N: 270, NE: 315
-  // Offset by 22.5 to center sectors
-  int sector = (int)((angle + 22.5f) / 45.0f) % 8;
-
-  switch (sector) {
-  case 0:
-    faceDirID = faceDir::E;
-    break;
-  case 1:
-    faceDirID = faceDir::SE;
-    break;
-  case 2:
-    faceDirID = faceDir::S;
-    break;
-  case 3:
-    faceDirID = faceDir::SW;
-    break;
-  case 4:
-    faceDirID = faceDir::W;
-    break;
-  case 5:
-    faceDirID = faceDir::NW;
-    break;
-  case 6:
-    faceDirID = faceDir::N;
-    break;
-  case 7:
-    faceDirID = faceDir::NE;
-    break;
-  }
 
   if (hexGrid->RemoveResource(target, rsrc::TREE)) {
     itemHandler->AddItem(item::WOOD, 1);

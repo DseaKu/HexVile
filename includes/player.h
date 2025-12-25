@@ -22,6 +22,7 @@ private:
   HexGrid *hexGrid = nullptr;
   UI_Handler *uiHandler = nullptr;
   ItemHandler *itemHandler = nullptr;
+  const FrameContext *frameContext = nullptr;
 
   // --- State ---
   Vector2 position;
@@ -34,7 +35,7 @@ private:
   float speedTilesPerSecond;
 
   // --- Logic ---
-  void UpdatePlayerState(const FrameContext *frameContext);
+  void UpdatePlayerState();
   void UpdatePlayerFaceDir();
 
   // --- Animation ---
@@ -52,7 +53,7 @@ public:
   Player();
 
   // --- Logic ---
-  void Update(const FrameContext *frameContext);
+  void Update(const FrameContext *curFrameContext);
   void Chop(HexCoord target);
 
   // --- Setters ---

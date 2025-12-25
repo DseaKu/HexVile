@@ -18,8 +18,6 @@ Player::Player() {
   animationFrame = 0;
   animationDelta = 0.0f;
   playerTile = {0, 0};
-
-  InitAnimations();
 }
 
 // --- Logic ---
@@ -215,37 +213,6 @@ void Player::Walk(Vector2 dir, float deltaTime) {
   } else {
     // Idle if blocked
     Idle();
-  }
-}
-
-void Player::InitAnimations() {
-  // Default init
-  for (int i = 0; i < playerState::SIZE; i++) {
-    for (int j = 0; j < faceDir::SIZE; j++) {
-      animationData[i][j] = {.frameCount = tex_atlas::PLAYER_X_MAX,
-                             .speed = tex_atlas::PLAYER_ANIMATION_SPEED,
-                             .loop = true};
-    }
-  }
-
-  // Walk Specifics
-  for (int i = 0; i < faceDir::SIZE; i++) {
-    animationData[playerState::WALK][i].frameCount = tex_atlas::PLAYER_WALK_MAX;
-  }
-
-  // Idle Specifics
-  for (int i = 0; i < faceDir::SIZE; i++) {
-    animationData[playerState::IDLE][i].speed =
-        tex_atlas::PLAYER_ANIMATION_SPEED_IDLE;
-  }
-
-  // Chop Specifics
-  for (int i = 0; i < faceDir::SIZE; i++) {
-    animationData[playerState::CHOP][i].frameCount =
-        tex_atlas::PLAYER_WALK_MAX; // Use walk frames for now
-    animationData[playerState::CHOP][i].speed =
-        tex_atlas::PLAYER_ANIMATION_SPEED * 1.5f;
-    animationData[playerState::CHOP][i].loop = false;
   }
 }
 

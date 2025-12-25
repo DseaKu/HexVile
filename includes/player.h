@@ -9,12 +9,6 @@
 #include "raylib.h"
 #include "ui_handler.h"
 
-struct PlayerAnimationData {
-  int frameCount;
-  float speed;
-  bool loop;
-};
-
 class Player {
 private:
   // --- Dependencies ---
@@ -41,12 +35,10 @@ private:
   // --- Animation ---
   int animationFrame;
   float animationDelta;
-  PlayerAnimationData animationData[playerState::SIZE][faceDir::SIZE];
 
   // --- Helpers ---
   void Idle();
   void Walk(Vector2 dir, float deltaTime);
-  void InitAnimations();
   void GenerateDrawData();
 
 public:

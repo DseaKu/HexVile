@@ -35,19 +35,18 @@ void Player::UpdatePlayerState() {
       int selToolBarSlot = uiHandler->GetSelToolBarSlot();
       HexCoord clickedTile =
           hexGrid->PointToHexCoord(frameContext->mouseWorldPos);
-
       ItemStack *selectedItem =
           itemHandler->GetToolBarItemPointer(selToolBarSlot);
 
       // Process tool interaction
       if (selectedItem->itemID == item::AXE) {
         Vector2 clickedPos = hexGrid->HexCoordToPoint(clickedTile);
-
         if (Vector2Distance(this->position, clickedPos) <
             conf::INTERACT_DISTANCE) {
           Chop(clickedTile);
         }
-        // Process tile setter
+
+        // Process tile planter
       } else {
         tile::id tileToPlace =
             itemHandler->ConvertItemToTileID(selectedItem->itemID);
@@ -155,16 +154,20 @@ void Player::Update(const FrameContext *curFrameContext) {
 
 void Player::Chop(HexCoord target) {
   if (stateID == playerState::CHOP) {
+    animationDelta += this->frameContext->deltaTime;
+    if (animationDelta < 3.0f) {
+
+      if (hexGrid->RemoveResource(target, rsrc::TREE)) {
+        itemHandler->AddItem(item::WOOD, 1);
+        stateID = playerState::IDLE;
+      }
+    }
     return;
   }
 
   stateID = playerState::CHOP;
   animationFrame = 0;
   animationDelta = 0.0f;
-
-  if (hexGrid->RemoveResource(target, rsrc::TREE)) {
-    itemHandler->AddItem(item::WOOD, 1);
-  }
 }
 
 void Player::Idle() {

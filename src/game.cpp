@@ -166,10 +166,6 @@ void Game::UpdateFrameContext() {
   frameContext.screenWidth = GetScreenWidth();
   frameContext.screenHeight = GetScreenHeight();
 
-  // Update Camera Offset to match new screen size
-  worldState.camera.offset = Vector2{(float)frameContext.screenWidth / 2.0f,
-                                     (float)frameContext.screenHeight / 2.0f};
-
   frameContext.pos.mouseScreen = GetMousePosition();
 
   frameContext.pos.mouseWorld =
@@ -194,21 +190,24 @@ void Game::UpdateFrameContext() {
   frameContext.inputs.keyPress.Right = IsKeyDown(KEY_D);
   frameContext.inputs.keyPress.Up = IsKeyDown(KEY_W);
   frameContext.inputs.keyPress.Down = IsKeyDown(KEY_S);
-
-  worldState.cameraTopLeft =
-      GetScreenToWorld2D(Vector2{0, 0}, worldState.camera);
-
-  float camWidth = (float)frameContext.screenWidth / worldState.camera.zoom;
-  float camHeight = (float)frameContext.screenHeight / worldState.camera.zoom;
-
-  worldState.cameraRect = {worldState.cameraTopLeft.x,
-                           worldState.cameraTopLeft.y, camWidth, camHeight};
 }
 
 void Game::UpdateWorldState() {}
 
 void Game::RunLogic() {
   auto startLogic = std::chrono::high_resolution_clock::now();
+
+  UpdateFrameContext();
+
+  // Update Camera Offset to match new screen size
+  worldState.camera.offset = Vector2{(float)frameContext.screenWidth / 2.0f,
+                                     (float)frameContext.screenHeight / 2.0f};
+  worldState.cameraTopLeft =
+      GetScreenToWorld2D(Vector2{0, 0}, worldState.camera);
+  float camWidth = (float)frameContext.screenWidth / worldState.camera.zoom;
+  float camHeight = (float)frameContext.screenHeight / worldState.camera.zoom;
+  worldState.cameraRect = {worldState.cameraTopLeft.x,
+                           worldState.cameraTopLeft.y, camWidth, camHeight};
 
   // Use frameContext and worldState
   worldState.timer += frameContext.deltaTime;

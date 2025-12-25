@@ -100,10 +100,11 @@ private:
   double displayRamUsage;
 
   // Methods
-  void UpdateInputs(); // Gathers inputs from Raylib
-  void LogicLoop();    // The function running in the separate thread
-  void RunLogic();     // Calls the update functions on worldState
+  void LogicLoop(); // The function running in the separate thread
+  void RunLogic();  // Calls the update functions on worldState
   void ProccesLeftMouseClick(int *toolBarSel);
+  void UpdateFrameContext();
+  void UpdateWorldState();
 
   void DrawDebugOverlay(bool is_enabled);
 

@@ -80,7 +80,8 @@ Game::Game() {
 void Game::GameLoop() {
   while (!WindowShouldClose()) {
     // 1. Gather Input (Main Thread)
-    UpdateInputs();
+
+    UpdateFrameContext();
 
     // 2. Sync: Send Input to Logic
     {
@@ -154,7 +155,7 @@ void Game::LogicLoop() {
   }
 }
 
-void Game::UpdateInputs() {
+void Game::UpdateFrameContext() {
   if (IsKeyPressed(KEY_F)) {
     isFullscreenMode = !isFullscreenMode;
     ToggleBorderlessWindowed();
@@ -204,6 +205,8 @@ void Game::UpdateInputs() {
                            worldState.cameraTopLeft.y, camWidth, camHeight};
 }
 
+void Game::UpdateWorldState() {}
+
 void Game::RunLogic() {
   auto startLogic = std::chrono::high_resolution_clock::now();
 
@@ -224,11 +227,6 @@ void Game::RunLogic() {
   // Check if player selected new slow by key press
   selToolBarSlot = uiHandler.GetToolBarSelection(frameContext.inputs.keyPress,
                                                  selToolBarSlot);
-
-  // Process left mouse click
-  if (frameContext.inputs.mousePress.left) {
-    ProccesLeftMouseClick(&selToolBarSlot);
-  }
 
   // Process left right click
   if (frameContext.inputs.mousePress.right) {

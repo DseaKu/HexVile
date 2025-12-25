@@ -174,8 +174,6 @@ struct Location {
 struct FrameContext {
   Location pos;
   Input inputs;
-  // Vector2 mouseScreenPos;
-  // Vector2 mouseWorldPos;
   mouseMask::id mouseMask;
 
   // Screen

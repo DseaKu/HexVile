@@ -36,7 +36,7 @@ private:
   ItemHandler *itemHandler;
   FontHandler *fontHandler;
   HexGrid *hexGrid;
-  FrameContext *frameContext = nullptr;
+  const FrameContext *frameContext = nullptr;
 
   // Render Helpers
   void DrawHighlighedTile(Vector2 mouseWorldPos);
@@ -59,7 +59,7 @@ public:
   void SetHexGrid(HexGrid *p);
   void SetSelToolBarSlot(int index);
   void SetToolBarActive(bool is_active);
-  void SetFrameContext(const FrameContext *frameContext);
+  void SetFrameContext(const FrameContext *curFrameContext);
 
   // Queries
   bool GetToolBarAvailability();

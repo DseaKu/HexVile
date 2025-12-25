@@ -118,8 +118,8 @@ void UI_Handler::SetToolBarActive(bool is_active) {
   isToolBarActive = is_active;
 }
 
-void SetFrameContext(const FrameContext *frameContext) {
-  frameContext = frameContext;
+void UI_Handler::SetFrameContext(const FrameContext *frameContext) {
+  this->frameContext = frameContext;
 }
 
 // --- Rendering Helpers ---

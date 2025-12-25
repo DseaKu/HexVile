@@ -149,15 +149,33 @@ struct MouseInput {
   bool right;
 };
 
-struct Inputs {
+struct Input {
   MouseInput mousePress;
   KeyboardInput keyPress;
 };
 
+struct TileIndex {
+  int q;
+  int r;
+};
+
+struct RsrcPos {
+  TileIndex tileIndex;
+  int rsrcIndex;
+  rsrc::id rsrc;
+};
+
+struct Location {
+  Vector2 mouseScreen;
+  Vector2 mouseWorld;
+  RsrcPos selRsrc;
+};
+
 struct FrameContext {
-  Inputs inputs;
-  Vector2 mouseScreenPos;
-  Vector2 mouseWorldPos;
+  Location pos;
+  Input inputs;
+  // Vector2 mouseScreenPos;
+  // Vector2 mouseWorldPos;
   mouseMask::id mouseMask;
 
   // Screen

@@ -34,7 +34,7 @@ void Player::UpdatePlayerState() {
     if (frameContext->inputs.mousePress.left) {
       int selToolBarSlot = uiHandler->GetSelToolBarSlot();
       HexCoord clickedTile =
-          hexGrid->PointToHexCoord(frameContext->mouseWorldPos);
+          hexGrid->PointToHexCoord(frameContext->pos.mouseWorld);
       ItemStack *selectedItem =
           itemHandler->GetToolBarItemPointer(selToolBarSlot);
 
@@ -63,7 +63,7 @@ void Player::UpdatePlayerFaceDir() {
 
   if (frameContext->inputs.mousePress.left ||
       frameContext->inputs.mousePress.right) {
-    Vector2 tarPos = frameContext->mouseWorldPos;
+    Vector2 tarPos = frameContext->pos.mouseWorld;
     Vector2 diff = Vector2Subtract(tarPos, this->position);
     float angle = atan2(diff.y, diff.x) * RAD2DEG;
     if (angle < 0) {

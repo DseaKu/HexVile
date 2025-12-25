@@ -169,10 +169,10 @@ void Game::UpdateInputs() {
   worldState.camera.offset = Vector2{(float)frameContext.screenWidth / 2.0f,
                                      (float)frameContext.screenHeight / 2.0f};
 
-  frameContext.mouseScreenPos = GetMousePosition();
+  frameContext.pos.mouseScreen = GetMousePosition();
 
-  frameContext.mouseWorldPos =
-      GetScreenToWorld2D(frameContext.mouseScreenPos, worldState.camera);
+  frameContext.pos.mouseWorld =
+      GetScreenToWorld2D(frameContext.pos.mouseScreen, worldState.camera);
 
   frameContext.inputs.mousePress.left = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
   frameContext.inputs.mousePress.right =
@@ -216,7 +216,7 @@ void Game::RunLogic() {
 
   // Update Grid
   worldState.hexGrid.Update(worldState.camera, frameContext.deltaTime);
-  uiHandler.Update(frameContext.mouseWorldPos);
+  uiHandler.Update(frameContext.pos.mouseWorld);
 
   // Get selected tool bar slot
   int selToolBarSlot = worldState.itemHandler.GetSelectionToolBar();
@@ -233,7 +233,7 @@ void Game::RunLogic() {
   // Process left right click
   if (frameContext.inputs.mousePress.right) {
     HexCoord clickedHex =
-        worldState.hexGrid.PointToHexCoord(frameContext.mouseWorldPos);
+        worldState.hexGrid.PointToHexCoord(frameContext.pos.mouseWorld);
     worldState.hexGrid.SetTile(clickedHex, tile::NULL_ID);
   }
 
@@ -258,8 +258,9 @@ void Game::RunLogic() {
   rs.visCalcTime = worldState.hexGrid.GetVisCalcTime();
 
   rs.mouseTileCoord =
-      worldState.hexGrid.PointToHexCoord(frameContext.mouseWorldPos);
-  rs.mouseTileType = worldState.hexGrid.PointToType(frameContext.mouseWorldPos);
+      worldState.hexGrid.PointToHexCoord(frameContext.pos.mouseWorld);
+  rs.mouseTileType =
+      worldState.hexGrid.PointToType(frameContext.pos.mouseWorld);
 
   rs.playerPos = worldState.player.GetPosition();
   rs.playerTileCoord = worldState.hexGrid.PointToHexCoord(rs.playerPos);
@@ -283,11 +284,11 @@ void Game::ProccesLeftMouseClick(int *selToolBarSlot) {
 
   // Clicked on item bar -> Set new selected tool bar slot
   if (uiHandler.GetToolBarAvailability() &&
-      CheckCollisionPointRec(frameContext.mouseScreenPos,
+      CheckCollisionPointRec(frameContext.pos.mouseScreen,
                              uiHandler.GetToolBarRect())) {
     frameContext.mouseMask = mouseMask::ITEM_BAR;
 
-    *selToolBarSlot = uiHandler.GetItemSlotAt(frameContext.mouseScreenPos);
+    *selToolBarSlot = uiHandler.GetItemSlotAt(frameContext.pos.mouseScreen);
 
     // Clicked on ground
   } else {
@@ -363,8 +364,8 @@ void Game::DrawDebugOverlay(bool is_enabled) {
   debugData.push_back(
       {"Mouse",
        {
-           TextFormat("X,Y: %.1f,%.1f", frameContext.mouseWorldPos.x,
-                      frameContext.mouseWorldPos.y),
+           TextFormat("X,Y: %.1f,%.1f", frameContext.pos.mouseWorld.x,
+                      frameContext.pos.mouseWorld.y),
            TextFormat("Tile Q,R: %i,%i", rs.mouseTileCoord.q,
                       rs.mouseTileCoord.r),
            TextFormat("Type: %s",

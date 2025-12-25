@@ -82,7 +82,6 @@ void Game::GameLoop() {
     // 1. Gather Input (Main Thread)
 
     UpdateFrameContext();
-
     // 2. Sync: Send Input to Logic
     {
       std::unique_lock<std::mutex> lock(logicMutex);
@@ -168,9 +167,6 @@ void Game::UpdateFrameContext() {
 
   frameContext.pos.mouseScreen = GetMousePosition();
 
-  frameContext.pos.mouseWorld =
-      GetScreenToWorld2D(frameContext.pos.mouseScreen, worldState.camera);
-
   frameContext.inputs.mousePress.left = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
   frameContext.inputs.mousePress.right =
       IsMouseButtonPressed(MOUSE_BUTTON_RIGHT);
@@ -194,10 +190,19 @@ void Game::UpdateFrameContext() {
 
 void Game::UpdateWorldState() {}
 
+void Game::ProcessFrameContext() {
+
+  frameContext.pos.mouseWorld =
+      GetScreenToWorld2D(frameContext.pos.mouseScreen, worldState.camera);
+
+  // Use frameContext and worldState
+  worldState.timer += frameContext.deltaTime;
+}
+
 void Game::RunLogic() {
   auto startLogic = std::chrono::high_resolution_clock::now();
 
-  UpdateFrameContext();
+  ProcessFrameContext();
 
   // Update Camera Offset to match new screen size
   worldState.camera.offset = Vector2{(float)frameContext.screenWidth / 2.0f,
@@ -208,9 +213,6 @@ void Game::RunLogic() {
   float camHeight = (float)frameContext.screenHeight / worldState.camera.zoom;
   worldState.cameraRect = {worldState.cameraTopLeft.x,
                            worldState.cameraTopLeft.y, camWidth, camHeight};
-
-  // Use frameContext and worldState
-  worldState.timer += frameContext.deltaTime;
 
   // Update UI Layout
   uiHandler.UpdateScreenSize(frameContext.screenWidth,

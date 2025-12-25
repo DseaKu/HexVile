@@ -99,11 +99,14 @@ private:
   double displayVisTime;
   double displayRamUsage;
 
-  // Methods
+  // Main Threat - Render, update frame context and draw debug data;
+  void UpdateFrameContext();
+
+  // Logic Threat - Process frame context, update world state
   void LogicLoop(); // The function running in the separate thread
   void RunLogic();  // Calls the update functions on worldState
   void ProccesLeftMouseClick(int *toolBarSel);
-  void UpdateFrameContext();
+  void ProcessFrameContext();
   void UpdateWorldState();
 
   void DrawDebugOverlay(bool is_enabled);

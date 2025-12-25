@@ -162,13 +162,6 @@ void Player::Chop(HexCoord target) {
   animationFrame = 0;
   animationDelta = 0.0f;
 
-  // Face the target
-  Vector2 targetPos = hexGrid->HexCoordToPoint(target);
-  Vector2 diff = Vector2Subtract(targetPos, position);
-  float angle = atan2(diff.y, diff.x) * RAD2DEG;
-  if (angle < 0)
-    angle += 360;
-
   if (hexGrid->RemoveResource(target, rsrc::TREE)) {
     itemHandler->AddItem(item::WOOD, 1);
   }

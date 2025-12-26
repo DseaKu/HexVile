@@ -26,7 +26,7 @@ constexpr float RES8_F = static_cast<float>(RES8);
 // --- y = 0 ---
 // --- Player ---
 constexpr int PLAYER_X = 0;
-constexpr int PLAYER_Y = 1;
+constexpr int PLAYER_Y = 0;
 constexpr int PLAYER_X_MAX = PLAYER_X + 12;
 
 // --- Tile ---
@@ -39,6 +39,7 @@ constexpr int DETAILS_X_MAX = DETAILS_X + 12;
 
 // --- Resource ---
 constexpr int RESOURCE_X = DETAILS_X_MAX;
+constexpr int RESOURCE_Y = 0;
 constexpr int RESOURCE_X_MAX = RESOURCE_X + 8;
 
 // --- UI ---

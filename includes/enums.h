@@ -34,8 +34,8 @@ enum id {
 // --- Resourcen ---
 namespace rsrc {
 enum id {
-  NULL_ID = 0,
-  TREE,
+  NULL_ID = -1,
+  TREE = 0,
   SIZE,
 };
 }

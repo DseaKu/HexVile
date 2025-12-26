@@ -11,9 +11,7 @@ const std::vector<HexCoord> HexGrid::DIRECTIONS = {
     HexCoord(1, 0),  HexCoord(0, 1),  HexCoord(-1, 1),
     HexCoord(-1, 0), HexCoord(0, -1), HexCoord(1, -1)};
 
-// ==========================================
-//               Hex Coordinates
-// ==========================================
+// ============= Hex Coordinates ====================
 HexCoord::HexCoord() : q(0), r(0) {}
 HexCoord::HexCoord(int q, int r) : q(q), r(r) {}
 
@@ -39,9 +37,7 @@ bool HexCoord::operator<(const HexCoord &other) const {
   return r < other.r;
 }
 
-// ==========================================
-//               Hex Grid
-// ==========================================
+// ============= Hex Grid ===================
 HexGrid::HexGrid() {
 
   animationFrame = 0;
@@ -201,9 +197,7 @@ MapTile &HexGrid::GetTile(HexCoord h) {
   return tileData[(h.r + mapRadius) * gridSize + (h.q + mapRadius)];
 }
 
-// ==========================================
-//               Conversion
-// ==========================================
+// ============= Conversion =================
 HexCoord HexGrid::HexRound(FractionalHex h) const {
   int q = round(h.q);
   int r = round(h.r);
@@ -272,9 +266,7 @@ const char *HexGrid::TileToString(tile::id tileID) const {
   }
 }
 
-// ==========================================
-//               Logic
-// ==========================================
+// ============= Logic =======================
 
 void HexGrid::CalcVisibleTiles() {
   auto start = std::chrono::high_resolution_clock::now();
@@ -463,9 +455,7 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
   }
 }
 
-// ==========================================
-//               Render
-// ==========================================
+// ============= Render =====================
 void HexGrid::LoadTileGFX(Rectangle destRec, int x, int y) {
   graphicsManager->LoadGFX_Data(drawMask::GROUND_0, x, y, destRec, WHITE);
 }

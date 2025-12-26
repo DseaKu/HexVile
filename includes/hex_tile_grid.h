@@ -38,12 +38,14 @@ struct FractionalHex {
 
 // --- Terrain Detail ---
 struct TileDet {
+  u8 texVariation;
   Vector2 tilePos;
   int detID;
 };
 
 // --- Terrain Resource ---
 struct TileRsrc {
+  u8 texVariation;
   Vector2 tilePos;
   rsrc::id rsrcID;
 };

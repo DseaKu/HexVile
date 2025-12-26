@@ -117,8 +117,6 @@ void Debugger::Update(const RenderState &rs, float dt, double logicTime,
            TextFormat("Tile Q,R: %i,%i", rs.mouseTileCoord.q,
                       rs.mouseTileCoord.r),
            TextFormat("Type: %s", TileToString(rs.mouseTileType)),
-           // Clicked on? Game.cpp passed frameContext.mouseMask. Not in rs.
-           // I'll skip "Clicked on" or add to RS.
        }});
 
   debugData.push_back(

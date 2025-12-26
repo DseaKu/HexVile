@@ -113,6 +113,7 @@ constexpr int DEBUG_OVERLAY_SUBSECTION_Y_GAP =
     DEBUG_OVERLAY_SUBSECTION_FONT_SIZE + 3;
 constexpr int DEBUG_OVERLAY_SUBSECTION_Y_POS =
     DEBUG_OVERLAY_SECTION_Y + DEBUG_OVERLAY_SUBSECTION_Y_GAP;
+
 } // namespace conf
 
 // --- Unsigned Integer Aliases ---
@@ -186,4 +187,54 @@ struct FrameContext {
   float deltaTime;
 };
 
+// ==========================================
+//               Spawn Rate
+// ==========================================
+
+struct TileEntity {
+  int variation;
+  int spawnRate;
+  rsrc::id rsrcID;
+};
+namespace spawn_data {
+
+// --- Rescource ---
+constexpr TileEntity TREE = TileEntity{
+    .variation = 0,
+    .spawnRate = 15,
+    .rsrcID = rsrc::TREE,
+};
+
+constexpr TileEntity ROCK = TileEntity{
+    .variation = 0,
+    .spawnRate = 15,
+    .rsrcID = rsrc::TREE,
+};
+
+// --- Details ---
+inline const std::map<std::string, int> DET_SPAWN_DATA_GRASS = {
+    {"TOTAL", 100}, {"FLOWER0", 10}, {"FLOWER1", 5}, {"FLOWER2", 5}};
+
+inline const std::map<std::string, int> DET_SPAWN_DATA_WATER = {{"TOTAL", 100},
+                                                                {"LOTUS", 5}};
+
+inline const std::map<std::string, int> DET_SPAWN_DATA_DIRT = {
+    {"TOTAL", 100}, {"POO", 2}, {"STICK", 1}};
+
+} // namespace spawn_data
+//
+
+namespace spawn_data_lut {
+inline const std::map<tile::id, std::vector<TileEntity>> rsrcLut = {
+    {tile::GRASS, {spawn_data::TREE}},
+    {tile::WATER, {}},
+    {tile::DIRT, {spawn_data::ROCK}}};
+
+inline const std::map<tile::id, std::map<std::string, int>> detLut = {
+    {tile::GRASS, spawn_data::DET_SPAWN_DATA_GRASS},
+    {tile::WATER, spawn_data::DET_SPAWN_DATA_WATER},
+    {tile::DIRT, spawn_data::DET_SPAWN_DATA_DIRT},
+
+};
+} // namespace spawn_data_lut
 #endif // !DEFINES_H

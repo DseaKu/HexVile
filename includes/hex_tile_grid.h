@@ -37,14 +37,14 @@ struct FractionalHex {
 };
 
 // --- Terrain Detail ---
-struct TerDet {
+struct TileDet {
   float x;
   float y;
   int detID;
 };
 
 // --- Terrain Resource ---
-struct TerRsrc {
+struct TileRsrc {
   float x;
   float y;
   int rsrcID;
@@ -53,8 +53,8 @@ struct TerRsrc {
 // --- Map Tile ---
 struct MapTile {
   tile::id tileID;
-  TerDet det[conf::TERRAIN_DETAILS_MAX];
-  TerRsrc rsrc[conf::TERRAIN_RESOURCE_MAX];
+  TileDet det[conf::TERRAIN_DETAILS_MAX];
+  TileRsrc rsrc[conf::TERRAIN_RESOURCE_MAX];
 };
 
 /* Grid parts and relationships:
@@ -115,8 +115,8 @@ private:
   HexCoord HexRound(FractionalHex h) const;
   const MapTile &GetTile(HexCoord h) const;
   MapTile &GetTile(HexCoord h);
-  TerDet GetRandomTerainDetail(tile::id tileID);
-  TerRsrc GetRandomTerainResource(tile::id tileID);
+  TileDet GetRandomTerainDetail(tile::id tileID);
+  TileRsrc GetRandomTerainResource(tile::id tileID);
   void CalcRenderRect();
   void CalcVisibleTiles();
   void UpdateTileVisibility(float totalTime);
@@ -126,8 +126,8 @@ private:
 
   // --- Render ---
   void LoadTileGFX(Rectangle destRec, int x, int y);
-  void LoadDetailGFX(Rectangle destRec, const TerDet d, tile::id tileID);
-  void LoadResourceGFX(Rectangle destRec, const TerRsrc r, tile::id tileID);
+  void LoadDetailGFX(Rectangle destRec, const TileDet d, tile::id tileID);
+  void LoadResourceGFX(Rectangle destRec, const TileRsrc r, tile::id tileID);
 
 public:
   HexGrid();

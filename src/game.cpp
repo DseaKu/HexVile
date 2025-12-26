@@ -203,7 +203,7 @@ void Game::RunLogic() {
   frameContext.mouseMask = uiHandler.UpdateMouseMask();
 
   // --- Update Selected Tool Bar Slot ---
-  frameContext.selToolBarSlot = uiHandler.GetToolBarSelection(&frameContext);
+  frameContext.selToolBarSlot = uiHandler.GetToolBarSelection();
 
   // --- Get position of hovered resource ---
   frameContext.pos.selRsrc = uiHandler.GetHoveredRsrcPos();

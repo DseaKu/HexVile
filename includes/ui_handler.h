@@ -65,7 +65,7 @@ public:
   Rectangle GetToolBarRect();
 
   // Getter
-  int GetToolBarSelection(const FrameContext *curFrameContext);
+  int GetToolBarSelection();
   RsrcPos GetHoveredRsrcPos();
 };
 

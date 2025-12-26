@@ -185,9 +185,9 @@ void UI_Handler::DrawItemCount(int slotIndex, Rectangle slotRect) {
 }
 
 // --- Getter ---
-int UI_Handler::GetToolBarSelection(const FrameContext *curFrameContext) {
+int UI_Handler::GetToolBarSelection() {
+  int curSelection = frameContext->selToolBarSlot;
   KeyboardInput keyPress = frameContext->inputs.keyPress;
-  int curSelection = curFrameContext->selToolBarSlot;
 
   int toolBarSlotBuffer = curSelection;
   if (keyPress.One)
@@ -236,7 +236,12 @@ int UI_Handler::GetToolBarSelection(const FrameContext *curFrameContext) {
   return curSelection;
 }
 RsrcPos UI_Handler::GetHoveredRsrcPos() {
-  RsrcPos a;
 
+  Vector2 mousePos = frameContext->pos.mouseScreen;
+  MapTile tile = hexGrid->PointToTile(mousePos);
+  for (TileRsrc rsrc : tile.rsrc) {
+  }
+
+  RsrcPos a;
   return a;
 }

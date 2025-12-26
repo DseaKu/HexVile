@@ -96,11 +96,11 @@ void HexGrid::InitGrid(float radius) {
 
         MapTile initTile = {.tileID = tile::GRASS};
 
-        for (TerDet &d : initTile.det) {
+        for (TileDet &d : initTile.det) {
           d.detID = conf::UNINITIALIZED;
         }
 
-        for (TerRsrc &r : initTile.rsrc) {
+        for (TileRsrc &r : initTile.rsrc) {
           r.rsrcID = conf::UNINITIALIZED;
         }
 
@@ -115,7 +115,7 @@ void HexGrid::InitGrid(float radius) {
   CalcVisibleTiles();
 }
 
-TerDet HexGrid::GetRandomTerainDetail(tile::id tileID) {
+TileDet HexGrid::GetRandomTerainDetail(tile::id tileID) {
   float x = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
   float y = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
 
@@ -136,10 +136,10 @@ TerDet HexGrid::GetRandomTerainDetail(tile::id tileID) {
     type = conf::SKIP_RENDER;
   }
 
-  return TerDet{.x = x, .y = y, .detID = type};
+  return TileDet{.x = x, .y = y, .detID = type};
 }
 
-TerRsrc HexGrid::GetRandomTerainResource(tile::id tileID) {
+TileRsrc HexGrid::GetRandomTerainResource(tile::id tileID) {
   float x = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
   float y = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
 
@@ -160,7 +160,7 @@ TerRsrc HexGrid::GetRandomTerainResource(tile::id tileID) {
     type = conf::SKIP_RENDER;
   }
 
-  return TerRsrc{.x = x, .y = y, .rsrcID = type};
+  return TileRsrc{.x = x, .y = y, .rsrcID = type};
 }
 
 void HexGrid::SetGFX_Manager(GFX_Manager *graphicsManager) {
@@ -351,7 +351,7 @@ bool HexGrid::RemoveResource(HexCoord h, int rsrcID) {
     return false;
   }
   MapTile &tile = GetTile(h);
-  for (TerRsrc &rsrc : tile.rsrc) {
+  for (TileRsrc &rsrc : tile.rsrc) {
     if (rsrc.rsrcID - tex_atlas::RESOURCE_X == rsrcID) {
       rsrc.rsrcID = conf::UNINITIALIZED;
       return true;
@@ -442,7 +442,7 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
     destRec.y -= tex_atlas::RES16_F;
 
     // Initialise if undiscoverd and draw details
-    for (TerDet &d : t.det) {
+    for (TileDet &d : t.det) {
       if (d.detID == conf::UNINITIALIZED) {
         d = GetRandomTerainDetail(t.tileID);
       }
@@ -452,7 +452,7 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
     }
 
     // Initialise if undiscoverd and draw resource
-    for (TerRsrc &r : t.rsrc) {
+    for (TileRsrc &r : t.rsrc) {
       if (r.rsrcID == conf::UNINITIALIZED) {
         r = GetRandomTerainResource(t.tileID);
       }
@@ -470,7 +470,7 @@ void HexGrid::LoadTileGFX(Rectangle destRec, int x, int y) {
   graphicsManager->LoadGFX_Data(drawMask::GROUND_0, x, y, destRec, WHITE);
 }
 
-void HexGrid::LoadDetailGFX(Rectangle destRec, const TerDet d,
+void HexGrid::LoadDetailGFX(Rectangle destRec, const TileDet d,
                             tile::id tileID) {
   destRec.x += d.x;
   destRec.y += d.y;
@@ -478,7 +478,7 @@ void HexGrid::LoadDetailGFX(Rectangle destRec, const TerDet d,
                                 WHITE);
 }
 
-void HexGrid::LoadResourceGFX(Rectangle destRec, const TerRsrc r,
+void HexGrid::LoadResourceGFX(Rectangle destRec, const TileRsrc r,
                               tile::id tileID) {
 
   destRec.x += r.x;
@@ -526,7 +526,7 @@ bool HexGrid::CheckObstacleCollision(Vector2 worldPos, float radius) {
     const MapTile &tile = GetTile(h);
     Vector2 tileCenter = HexCoordToPoint(h);
 
-    for (const TerRsrc &r : tile.rsrc) {
+    for (const TileRsrc &r : tile.rsrc) {
       if (r.rsrcID != conf::UNINITIALIZED && r.rsrcID != conf::SKIP_RENDER) {
         if (r.rsrcID - tex_atlas::RESOURCE_X == rsrc::TREE) {
           // Calculate tree world position.
@@ -566,10 +566,10 @@ bool HexGrid::SetTile(HexCoord h, tile::id tileID) {
   } else {
     MapTile &t = GetTile(h);
     t.tileID = tileID;
-    for (TerDet &d : t.det) {
+    for (TileDet &d : t.det) {
       d = GetRandomTerainDetail(tileID);
     }
-    for (TerRsrc &r : t.rsrc) {
+    for (TileRsrc &r : t.rsrc) {
       r = GetRandomTerainResource(tileID);
     }
 

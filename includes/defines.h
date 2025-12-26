@@ -212,14 +212,11 @@ constexpr TileEntity ROCK = TileEntity{
 };
 
 // --- Details ---
-inline const std::map<std::string, int> DET_SPAWN_DATA_GRASS = {
-    {"TOTAL", 100}, {"FLOWER0", 10}, {"FLOWER1", 5}, {"FLOWER2", 5}};
-
-inline const std::map<std::string, int> DET_SPAWN_DATA_WATER = {{"TOTAL", 100},
-                                                                {"LOTUS", 5}};
-
-inline const std::map<std::string, int> DET_SPAWN_DATA_DIRT = {
-    {"TOTAL", 100}, {"POO", 2}, {"STICK", 1}};
+constexpr int DETAIL_MAX = 6;
+constexpr int TOTAL_WEIGHT_DET = 100;
+constexpr int DET_SPAWN_CHANCE_GRASS[DETAIL_MAX] = {5, 4, 3, 0, 0, 0};
+constexpr int DET_SPAWN_CHANCE_WATER[DETAIL_MAX] = {5, 0, 0, 0, 0, 0};
+constexpr int DET_SPAWN_CHANCE_DIRT[DETAIL_MAX] = {3, 1, 0, 0, 0, 0};
 
 } // namespace spawn_data
 //
@@ -230,10 +227,15 @@ inline const std::map<tile::id, std::vector<TileEntity>> rsrcLut = {
     {tile::WATER, {}},
     {tile::DIRT, {spawn_data::ROCK}}};
 
-inline const std::map<tile::id, std::map<std::string, int>> detLut = {
-    {tile::GRASS, spawn_data::DET_SPAWN_DATA_GRASS},
-    {tile::WATER, spawn_data::DET_SPAWN_DATA_WATER},
-    {tile::DIRT, spawn_data::DET_SPAWN_DATA_DIRT},
+inline const std::map<tile::id, std::vector<int>> detLut = {
+    {tile::GRASS,
+     std::vector<int>(std::begin(spawn_data::DET_SPAWN_CHANCE_GRASS),
+                      std::end(spawn_data::DET_SPAWN_CHANCE_GRASS))},
+    {tile::WATER,
+     std::vector<int>(std::begin(spawn_data::DET_SPAWN_CHANCE_WATER),
+                      std::end(spawn_data::DET_SPAWN_CHANCE_WATER))},
+    {tile::DIRT, std::vector<int>(std::begin(spawn_data::DET_SPAWN_CHANCE_DIRT),
+                                  std::end(spawn_data::DET_SPAWN_CHANCE_DIRT))},
 
 };
 } // namespace spawn_data_lut

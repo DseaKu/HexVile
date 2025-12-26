@@ -115,23 +115,15 @@ TileDet HexGrid::GetRandomTerainDetail(tile::id tileID) {
   float x = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
   float y = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
 
-  std::map<std::string, int> spawnData = spawn_data_lut::detLut.at(tileID);
+  std::vector<int> spawnData = spawn_data_lut::detLut.at(tileID);
 
-  // Pop total value from spawnData
-  const auto totalValue = spawnData.begin();
-  spawnData.erase(totalValue);
-
+  int totalWeight = spawn_data::TOTAL_WEIGHT_DET;
   int taOffsetX = conf::SKIP_RENDER;
-  int i = 0;
-  int counter = 0;
-  for (const auto &val : spawnData) {
-    int randNum = GetRandomValue(0, totalValue->second);
-    counter += val.second;
-    i++;
-    if (randNum <= counter) {
-      taOffsetX = i;
-      break;
-    }
+  int index = GetRandomValue(0, spawnData.size());
+
+  int randNum = GetRandomValue(0, totalWeight);
+  if (randNum <= spawnData[index]) {
+    taOffsetX = index;
   }
 
   return TileDet{.tilePos = Vector2{x, y}, .taOffsetX = taOffsetX};
@@ -467,8 +459,8 @@ void HexGrid::LoadDetailGFX(Rectangle destRec, const TileDet detail,
   destRec.x += detail.tilePos.x;
   destRec.y += detail.tilePos.y;
   int taX = tex_atlas::DETAILS_X + detail.taOffsetX;
-  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, detail.taOffsetX, tileID,
-                                destRec, WHITE);
+  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, taX, tileID, destRec,
+                                WHITE);
 }
 
 void HexGrid::LoadResourceGFX(Rectangle destRec, const TileRsrc rsrc,

@@ -93,7 +93,7 @@ void HexGrid::InitGrid(float radius) {
         MapTile initTile = {.tileID = tile::GRASS};
 
         for (TileDet &d : initTile.det) {
-          d.detID = conf::UNINITIALIZED;
+          d.taOffsetX = conf::UNINITIALIZED;
         }
 
         for (TileRsrc &r : initTile.rsrc) {
@@ -115,24 +115,26 @@ TileDet HexGrid::GetRandomTerainDetail(tile::id tileID) {
   float x = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
   float y = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
 
-  // Generate a value from the normal distribution
-  float generated_type_float = detailDistribution(randomEngine);
+  std::map<std::string, int> spawnData = spawn_data_lut::detLut.at(tileID);
 
-  // Round to nearest integer
-  int generated_type = static_cast<int>(std::round(generated_type_float));
+  // Pop total value from spawnData
+  const auto totalValue = spawnData.begin();
+  spawnData.erase(totalValue);
 
-  // Clamp the value to the valid range
-  int type = std::clamp(generated_type, tex_atlas::DETAILS_X,
-                        tex_atlas::DETAILS_X_MAX - 1);
-
-  // Determine if detail is null and skip render process
-  int renderBitMask = tex_atlas::RENDER_BIT_MASK_DETAIL.at(tileID);
-  int detailShift = type - tex_atlas::DETAILS_X;
-  if (!(renderBitMask >> detailShift & 1)) {
-    type = conf::SKIP_RENDER;
+  int taOffsetX = conf::SKIP_RENDER;
+  int i = 0;
+  int counter = 0;
+  for (const auto &val : spawnData) {
+    int randNum = GetRandomValue(0, totalValue->second);
+    counter += val.second;
+    i++;
+    if (randNum <= counter) {
+      taOffsetX = i;
+      break;
+    }
   }
 
-  return TileDet{.tilePos = Vector2{x, y}, .detID = type};
+  return TileDet{.tilePos = Vector2{x, y}, .taOffsetX = taOffsetX};
 }
 
 TileRsrc HexGrid::GetRandomTerainResource(tile::id tileID) {
@@ -435,10 +437,10 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
 
     // Initialise if undiscoverd and draw details
     for (TileDet &d : t.det) {
-      if (d.detID == conf::UNINITIALIZED) {
+      if (d.taOffsetX == conf::UNINITIALIZED) {
         d = GetRandomTerainDetail(t.tileID);
       }
-      if (d.detID != conf::SKIP_RENDER) {
+      if (d.taOffsetX != conf::SKIP_RENDER) {
         LoadDetailGFX(destRec, d, t.tileID);
       }
     }
@@ -464,7 +466,8 @@ void HexGrid::LoadDetailGFX(Rectangle destRec, const TileDet detail,
                             tile::id tileID) {
   destRec.x += detail.tilePos.x;
   destRec.y += detail.tilePos.y;
-  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, detail.detID, tileID,
+  int taX = tex_atlas::DETAILS_X + detail.taOffsetX;
+  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, detail.taOffsetX, tileID,
                                 destRec, WHITE);
 }
 
@@ -484,9 +487,7 @@ void HexGrid::LoadResourceGFX(Rectangle destRec, const TileRsrc rsrc,
   }
 }
 
-// ==========================================
-//               Getter
-// ==========================================
+// ============= Getter =====================
 int HexGrid::GetTilesInUse() const { return tilesInUse; }
 int HexGrid::GetTilesInTotal() const { return tilesInTotal; }
 int HexGrid::GetTilesVisible() const { return currentVisibleTiles.size(); }
@@ -535,9 +536,7 @@ bool HexGrid::CheckObstacleCollision(Vector2 worldPos, float radius) {
   return false;
 }
 
-// ==========================================
-//               Setter
-// ==========================================
+// ============= Setter =====================
 void HexGrid::SetCamRectPointer(Rectangle *camRect) { this->camRect = camRect; }
 
 bool HexGrid::SetTile(HexCoord h, tile::id tileID) {

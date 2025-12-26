@@ -210,30 +210,27 @@ constexpr std::array<int, RESCOURCE_DIVERSITY> RSRC_SPAWN_CHANCE_DIRT = {0, 0,
 // --- Details ---
 constexpr int DETAIL_DIVERSITY = 6;
 constexpr int TOTAL_WEIGHT_DET = 100;
-constexpr int DET_SPAWN_CHANCE_GRASS[DETAIL_DIVERSITY] = {5, 4, 3, 0, 0, 0};
-constexpr int DET_SPAWN_CHANCE_WATER[DETAIL_DIVERSITY] = {5, 0, 0, 0, 0, 0};
-constexpr int DET_SPAWN_CHANCE_DIRT[DETAIL_DIVERSITY] = {3, 1, 0, 0, 0, 0};
+constexpr std::array<int, DETAIL_DIVERSITY> DET_SPAWN_CHANCE_GRASS = {5, 4, 3,
+                                                                      0, 0, 0};
+constexpr std::array<int, DETAIL_DIVERSITY> DET_SPAWN_CHANCE_WATER = {5, 0, 0,
+                                                                      0, 0, 0};
+constexpr std::array<int, DETAIL_DIVERSITY> DET_SPAWN_CHANCE_DIRT = {3, 1, 0,
+                                                                     0, 0, 0};
 
 } // namespace spawn_data
-//
 
 namespace spawn_data_lut {
+
 inline const std::map<tile::id,
                       std::array<int, spawn_data::RESCOURCE_DIVERSITY>>
     rsrcLut = {{tile::GRASS, spawn_data::RSRC_SPAWN_CHANCE_GRASS},
                {tile::WATER, spawn_data::RSRC_SPAWN_CHANCE_WATER},
                {tile::DIRT, spawn_data::RSRC_SPAWN_CHANCE_DIRT}};
 
-inline const std::map<tile::id, std::vector<int>> detLut = {
-    {tile::GRASS,
-     std::vector<int>(std::begin(spawn_data::DET_SPAWN_CHANCE_GRASS),
-                      std::end(spawn_data::DET_SPAWN_CHANCE_GRASS))},
-    {tile::WATER,
-     std::vector<int>(std::begin(spawn_data::DET_SPAWN_CHANCE_WATER),
-                      std::end(spawn_data::DET_SPAWN_CHANCE_WATER))},
-    {tile::DIRT, std::vector<int>(std::begin(spawn_data::DET_SPAWN_CHANCE_DIRT),
-                                  std::end(spawn_data::DET_SPAWN_CHANCE_DIRT))},
+inline const std::map<tile::id, std::array<int, spawn_data::DETAIL_DIVERSITY>>
+    detLut = {{tile::GRASS, spawn_data::DET_SPAWN_CHANCE_GRASS},
+              {tile::WATER, spawn_data::DET_SPAWN_CHANCE_WATER},
+              {tile::DIRT, spawn_data::DET_SPAWN_CHANCE_DIRT}};
 
-};
 } // namespace spawn_data_lut
 #endif // !DEFINES_H

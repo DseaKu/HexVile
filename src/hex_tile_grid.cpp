@@ -115,7 +115,7 @@ TileDet HexGrid::GetRandomTerainDetail(tile::id tileID) {
   float x = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
   float y = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
 
-  std::vector<int> spawnData = spawn_data_lut::detLut.at(tileID);
+  auto spawnData = spawn_data_lut::detLut.at(tileID);
 
   int totalWeight = spawn_data::TOTAL_WEIGHT_DET;
   int taOffsetX = conf::SKIP_RENDER;

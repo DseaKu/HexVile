@@ -2,6 +2,7 @@
 #define DEFINES_H
 #include "enums.h"
 #include "raylib.h"
+#include <array>
 #include <cstdint>
 #include <vector>
 
@@ -191,41 +192,37 @@ struct FrameContext {
 //               Spawn Rate
 // ==========================================
 
-struct TileEntity {
-  int variation;
-  int spawnRate;
-  rsrc::id rsrcID;
-};
 namespace spawn_data {
 
 // --- Rescource ---
-constexpr TileEntity TREE = TileEntity{
-    .variation = 0,
-    .spawnRate = 15,
-    .rsrcID = rsrc::TREE,
-};
+constexpr int RESCOURCE_DIVERSITY = 3;
+constexpr int TOTAL_WEIGHT_RSRC = 100;
+constexpr int SPAWN_CHANCE_TREE = 5;
+constexpr int SPAWN_CHANCE_ROCK = 5;
 
-constexpr TileEntity ROCK = TileEntity{
-    .variation = 0,
-    .spawnRate = 15,
-    .rsrcID = rsrc::TREE,
-};
+constexpr std::array<int, RESCOURCE_DIVERSITY> RSRC_SPAWN_CHANCE_GRASS = {5, 0,
+                                                                          0};
+constexpr std::array<int, RESCOURCE_DIVERSITY> RSRC_SPAWN_CHANCE_WATER = {0, 0,
+                                                                          0};
+constexpr std::array<int, RESCOURCE_DIVERSITY> RSRC_SPAWN_CHANCE_DIRT = {0, 0,
+                                                                         0};
 
 // --- Details ---
-constexpr int DETAIL_MAX = 6;
+constexpr int DETAIL_DIVERSITY = 6;
 constexpr int TOTAL_WEIGHT_DET = 100;
-constexpr int DET_SPAWN_CHANCE_GRASS[DETAIL_MAX] = {5, 4, 3, 0, 0, 0};
-constexpr int DET_SPAWN_CHANCE_WATER[DETAIL_MAX] = {5, 0, 0, 0, 0, 0};
-constexpr int DET_SPAWN_CHANCE_DIRT[DETAIL_MAX] = {3, 1, 0, 0, 0, 0};
+constexpr int DET_SPAWN_CHANCE_GRASS[DETAIL_DIVERSITY] = {5, 4, 3, 0, 0, 0};
+constexpr int DET_SPAWN_CHANCE_WATER[DETAIL_DIVERSITY] = {5, 0, 0, 0, 0, 0};
+constexpr int DET_SPAWN_CHANCE_DIRT[DETAIL_DIVERSITY] = {3, 1, 0, 0, 0, 0};
 
 } // namespace spawn_data
 //
 
 namespace spawn_data_lut {
-inline const std::map<tile::id, std::vector<TileEntity>> rsrcLut = {
-    {tile::GRASS, {spawn_data::TREE}},
-    {tile::WATER, {}},
-    {tile::DIRT, {spawn_data::ROCK}}};
+inline const std::map<tile::id,
+                      std::array<int, spawn_data::RESCOURCE_DIVERSITY>>
+    rsrcLut = {{tile::GRASS, spawn_data::RSRC_SPAWN_CHANCE_GRASS},
+               {tile::WATER, spawn_data::RSRC_SPAWN_CHANCE_WATER},
+               {tile::DIRT, spawn_data::RSRC_SPAWN_CHANCE_DIRT}};
 
 inline const std::map<tile::id, std::vector<int>> detLut = {
     {tile::GRASS,

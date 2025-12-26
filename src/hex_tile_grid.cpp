@@ -101,7 +101,7 @@ void HexGrid::InitGrid(float radius) {
         }
 
         for (TileRsrc &r : initTile.rsrc) {
-          r.rsrcID = conf::UNINITIALIZED;
+          r.rsrcID = (rsrc::id)conf::UNINITIALIZED;
         }
 
         tileData[gridR * gridSize + gridQ] = initTile;
@@ -160,7 +160,7 @@ TileRsrc HexGrid::GetRandomTerainResource(tile::id tileID) {
     type = conf::SKIP_RENDER;
   }
 
-  return TileRsrc{.tilePos = Vector2{x, y}, .rsrcID = type};
+  return TileRsrc{.tilePos = Vector2{x, y}, .rsrcID = (rsrc::id)type};
 }
 
 void HexGrid::SetGFX_Manager(GFX_Manager *graphicsManager) {
@@ -353,7 +353,7 @@ bool HexGrid::RemoveResource(HexCoord h, int rsrcID) {
   MapTile &tile = GetTile(h);
   for (TileRsrc &rsrc : tile.rsrc) {
     if (rsrc.rsrcID - tex_atlas::RESOURCE_X == rsrcID) {
-      rsrc.rsrcID = conf::UNINITIALIZED;
+      rsrc.rsrcID = (rsrc::id)conf::UNINITIALIZED;
       return true;
     }
   }
@@ -453,10 +453,10 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
 
     // Initialise if undiscoverd and draw resource
     for (TileRsrc &r : t.rsrc) {
-      if (r.rsrcID == conf::UNINITIALIZED) {
+      if (r.rsrcID == (rsrc::id)conf::UNINITIALIZED) {
         r = GetRandomTerainResource(t.tileID);
       }
-      if (r.rsrcID != conf::SKIP_RENDER) {
+      if (r.rsrcID != (rsrc::id)conf::SKIP_RENDER) {
         LoadResourceGFX(destRec, r, t.tileID);
       }
     }
@@ -527,20 +527,9 @@ bool HexGrid::CheckObstacleCollision(Vector2 worldPos, float radius) {
     Vector2 tileCenter = HexCoordToPoint(h);
 
     for (const TileRsrc &rsrc : tile.rsrc) {
-      if (rsrc.rsrcID != conf::UNINITIALIZED &&
-          rsrc.rsrcID != conf::SKIP_RENDER) {
+      if (rsrc.rsrcID != (rsrc::id)conf::UNINITIALIZED &&
+          rsrc.rsrcID != (rsrc::id)conf::SKIP_RENDER) {
         if (rsrc.rsrcID - tex_atlas::RESOURCE_X == rsrc::TREE) {
-          // Calculate tree world position.
-          // Resource offset (r.x, r.y) is relative to the tile's visual center.
-          // In DrawTile/LoadResourceGFX:
-          // Tile Render Pos (Top-Left) = TileCenter - RES16
-          // Resource Render Pos = Tile Render Pos + (r.x, r.y)
-          //                     = TileCenter - RES16 + (r.x, r.y)
-          // The collision center should be the center of the resource sprite's
-          // base tile area. Since r.x, r.y are offsets from the top-left of the
-          // 32x32 base, we add RES16 to get the center.
-          // Resource Center = TileCenter - RES16 + (r.x, r.y) + RES16
-          //                 = TileCenter + (r.x, r.y)
 
           Vector2 treePos = {tileCenter.x + rsrc.tilePos.x,
                              tileCenter.y + rsrc.tilePos.y};

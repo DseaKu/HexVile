@@ -45,7 +45,7 @@ struct TileDet {
 // --- Terrain Resource ---
 struct TileRsrc {
   Vector2 tilePos;
-  int rsrcID;
+  rsrc::id rsrcID;
 };
 
 // --- Map Tile ---

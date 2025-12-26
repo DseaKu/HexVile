@@ -164,6 +164,7 @@ struct RsrcPos {
   TileIndex tileIndex;
   int rsrcIndex;
   rsrc::id id;
+  Vector2 screenPos;
 };
 
 struct Location {

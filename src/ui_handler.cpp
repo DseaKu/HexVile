@@ -68,6 +68,8 @@ mouseMask::id UI_Handler::UpdateMouseMask() {
 // --- Input & Queries ---
 void UI_Handler::UpdateToolBarSelection(int *currentSelection) {
   KeyboardInput keyPress = frameContext->inputs.keyPress;
+
+  int toolBarSlotBuffer = *currentSelection;
   if (keyPress.One)
     *currentSelection = 0;
   if (keyPress.Two)
@@ -88,6 +90,11 @@ void UI_Handler::UpdateToolBarSelection(int *currentSelection) {
     *currentSelection = 8;
   if (keyPress.Zero)
     *currentSelection = 9;
+
+  // Revert selection if the toolbar slot is out of range
+  if (*currentSelection >= conf::TOOLBAR_SLOTS) {
+    *currentSelection = toolBarSlotBuffer;
+  }
 
   // Check if player clicked Tool Bar
   if (frameContext->inputs.mouseClick.left &&

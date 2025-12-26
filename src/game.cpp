@@ -194,6 +194,9 @@ void Game::UpdateFrameContext() {
 void Game::RunLogic() {
   auto startLogic = std::chrono::high_resolution_clock::now();
 
+  // --- Update delta time ---
+  worldState.timer += frameContext.deltaTime;
+
   // --- Update mouse ---
   frameContext.pos.mouseWorld =
       GetScreenToWorld2D(frameContext.pos.mouseScreen, worldState.camera);
@@ -202,8 +205,8 @@ void Game::RunLogic() {
   // --- Update Selected Tool Bar Slot ---
   uiHandler.UpdateToolBarSelection(&frameContext.selToolBarSlot);
 
-  // --- Update delta time ---
-  worldState.timer += frameContext.deltaTime;
+  // Player Update
+  worldState.player.Update(&frameContext);
 
   // --- Update camera ---
   worldState.camera.offset = Vector2{(float)frameContext.screenWidth / 2.0f,
@@ -214,27 +217,22 @@ void Game::RunLogic() {
   float camHeight = (float)frameContext.screenHeight / worldState.camera.zoom;
   worldState.cameraRect = {worldState.cameraTopLeft.x,
                            worldState.cameraTopLeft.y, camWidth, camHeight};
+  worldState.camera.target = worldState.player.GetPosition();
 
-  // Update UI Layout
+  // --- Update UI Layout ---
   uiHandler.UpdateScreenSize(frameContext.screenWidth,
                              frameContext.screenHeight);
 
-  // Update Grid
+  // --- Update Grid ---
   worldState.hexGrid.Update(worldState.camera, frameContext.deltaTime);
   uiHandler.Update(frameContext.pos.mouseWorld);
 
-  // Process left right click
+  // --- Process right click ---
   if (frameContext.inputs.mouseClick.right) {
     HexCoord clickedHex =
         worldState.hexGrid.PointToHexCoord(frameContext.pos.mouseWorld);
     worldState.hexGrid.SetTile(clickedHex, tile::NULL_ID);
   }
-
-  // Player Update
-  worldState.player.Update(&frameContext);
-
-  // Update Camera Target
-  worldState.camera.target = worldState.player.GetPosition();
 
   // --- Update Render State Snapshot (Back Buffer) ---
   RenderState &rs = renderStates[!renderStateIndex];

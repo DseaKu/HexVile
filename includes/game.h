@@ -69,7 +69,7 @@ private:
   WorldState worldState;
   FrameContext frameContext;
   RenderState renderStates[2];
-  int renderStateIndex = 0; // Index of the front buffer (used for rendering)
+  int renderStateIndex = 0;
 
   // Rendering/System
   GFX_Manager gfxManager;
@@ -85,8 +85,8 @@ private:
   std::condition_variable logicToMainCV;
   std::atomic<bool> isRunning;
   bool isFullscreenMode = false;
-  bool logicUpdateReady; // Input ready for logic
-  bool logicUpdateDone;  // Logic finished for this frame
+  bool logicUpdateReady;
+  bool logicUpdateDone;
   bool isUnloaded = false;
 
   // Profiling
@@ -103,9 +103,8 @@ private:
   void UpdateFrameContext();
 
   // Logic Threat - Process frame context, update world state
-  void LogicLoop(); // The function running in the separate thread
-  void RunLogic();  // Calls the update functions on worldState
-  void ProccesLeftMouseClick(int *toolBarSel);
+  void RunLogic();
+  void LogicLoop();
 
   void DrawDebugOverlay(bool is_enabled);
 

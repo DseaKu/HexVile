@@ -38,15 +38,13 @@ struct FractionalHex {
 
 // --- Terrain Detail ---
 struct TileDet {
-  float x;
-  float y;
+  Vector2 tilePos;
   int detID;
 };
 
 // --- Terrain Resource ---
 struct TileRsrc {
-  float x;
-  float y;
+  Vector2 tilePos;
   int rsrcID;
 };
 

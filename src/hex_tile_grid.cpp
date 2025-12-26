@@ -136,7 +136,7 @@ TileDet HexGrid::GetRandomTerainDetail(tile::id tileID) {
     type = conf::SKIP_RENDER;
   }
 
-  return TileDet{.x = x, .y = y, .detID = type};
+  return TileDet{.tilePos = Vector2{x, y}, .detID = type};
 }
 
 TileRsrc HexGrid::GetRandomTerainResource(tile::id tileID) {
@@ -160,7 +160,7 @@ TileRsrc HexGrid::GetRandomTerainResource(tile::id tileID) {
     type = conf::SKIP_RENDER;
   }
 
-  return TileRsrc{.x = x, .y = y, .rsrcID = type};
+  return TileRsrc{.tilePos = Vector2{x, y}, .rsrcID = type};
 }
 
 void HexGrid::SetGFX_Manager(GFX_Manager *graphicsManager) {
@@ -470,26 +470,26 @@ void HexGrid::LoadTileGFX(Rectangle destRec, int x, int y) {
   graphicsManager->LoadGFX_Data(drawMask::GROUND_0, x, y, destRec, WHITE);
 }
 
-void HexGrid::LoadDetailGFX(Rectangle destRec, const TileDet d,
+void HexGrid::LoadDetailGFX(Rectangle destRec, const TileDet detail,
                             tile::id tileID) {
-  destRec.x += d.x;
-  destRec.y += d.y;
-  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, d.detID, tileID, destRec,
-                                WHITE);
+  destRec.x += detail.tilePos.x;
+  destRec.y += detail.tilePos.y;
+  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, detail.detID, tileID,
+                                destRec, WHITE);
 }
 
-void HexGrid::LoadResourceGFX(Rectangle destRec, const TileRsrc r,
+void HexGrid::LoadResourceGFX(Rectangle destRec, const TileRsrc rsrc,
                               tile::id tileID) {
 
-  destRec.x += r.x;
-  destRec.y += r.y;
-  if (r.rsrcID - tex_atlas::RESOURCE_X == rsrc::TREE) {
+  destRec.x += rsrc.tilePos.x;
+  destRec.y += rsrc.tilePos.y;
+  if (rsrc.rsrcID - tex_atlas::RESOURCE_X == rsrc::TREE) {
     destRec.height += tex_atlas::RES32_F;
     destRec.y -= tex_atlas::RES32_F;
-    graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND, r.rsrcID, tileID,
-                                        destRec, WHITE);
+    graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND, rsrc.rsrcID,
+                                        tileID, destRec, WHITE);
   } else {
-    graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, r.rsrcID, tileID,
+    graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, rsrc.rsrcID, tileID,
                                   destRec, WHITE);
   }
 }
@@ -526,9 +526,10 @@ bool HexGrid::CheckObstacleCollision(Vector2 worldPos, float radius) {
     const MapTile &tile = GetTile(h);
     Vector2 tileCenter = HexCoordToPoint(h);
 
-    for (const TileRsrc &r : tile.rsrc) {
-      if (r.rsrcID != conf::UNINITIALIZED && r.rsrcID != conf::SKIP_RENDER) {
-        if (r.rsrcID - tex_atlas::RESOURCE_X == rsrc::TREE) {
+    for (const TileRsrc &rsrc : tile.rsrc) {
+      if (rsrc.rsrcID != conf::UNINITIALIZED &&
+          rsrc.rsrcID != conf::SKIP_RENDER) {
+        if (rsrc.rsrcID - tex_atlas::RESOURCE_X == rsrc::TREE) {
           // Calculate tree world position.
           // Resource offset (r.x, r.y) is relative to the tile's visual center.
           // In DrawTile/LoadResourceGFX:
@@ -541,7 +542,8 @@ bool HexGrid::CheckObstacleCollision(Vector2 worldPos, float radius) {
           // Resource Center = TileCenter - RES16 + (r.x, r.y) + RES16
           //                 = TileCenter + (r.x, r.y)
 
-          Vector2 treePos = {tileCenter.x + r.x, tileCenter.y + r.y};
+          Vector2 treePos = {tileCenter.x + rsrc.tilePos.x,
+                             tileCenter.y + rsrc.tilePos.y};
 
           if (CheckCollisionCircles(worldPos, radius, treePos,
                                     conf::TREE_COLLISION_RADIUS)) {

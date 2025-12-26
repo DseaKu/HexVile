@@ -189,6 +189,9 @@ void UI_Handler::DrawItemCount(int slotIndex, Rectangle slotRect) {
 // --- Getter ---
 int UI_Handler::GetToolBarSelection() {
   int curSelection = frameContext->selToolBarSlot;
+  if (curSelection < 0 || curSelection >= conf::TOOLBAR_SLOTS) {
+    curSelection = 0;
+  }
   KeyboardInput keyPress = frameContext->inputs.keyPress;
 
   int toolBarSlotBuffer = curSelection;

@@ -50,7 +50,7 @@ void GFX_Manager::LoadGFX_Data(drawMask::id layerID, int TA_X, int TA_Y,
   Rectangle srcRec = GetSrcRec(TA_X, TA_Y);
   // Write to Back Buffer
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
-      dstRec.y, GFX_Props{srcRec, dstRec, col});
+      dstRec.y, GFX_Props{textureAtlas, srcRec, dstRec, col});
 }
 
 void GFX_Manager::LoadGFX_Data(drawMask::id layerID, int TA_X, int TA_Y,
@@ -63,7 +63,14 @@ void GFX_Manager::LoadGFX_Data(drawMask::id layerID, int TA_X, int TA_Y,
 
   // Write to Back Buffer
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
-      dstRec.y, GFX_Props{srcRec, dstRec, col});
+      dstRec.y, GFX_Props{textureAtlas, srcRec, dstRec, col});
+}
+
+void GFX_Manager::LoadGFX_Data(drawMask::id layerID, Texture2D texture,
+                               Rectangle srcRec, Rectangle dstRec, Color col) {
+  // Write to Back Buffer
+  GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
+      dstRec.y, GFX_Props{texture, srcRec, dstRec, col});
 }
 
 void GFX_Manager::LoadGFX_Data_32x64(drawMask::id layerID, int TA_X, int TA_Y,
@@ -73,7 +80,8 @@ void GFX_Manager::LoadGFX_Data_32x64(drawMask::id layerID, int TA_X, int TA_Y,
 
   // Write to Back Buffer
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
-      dstRec.y + tex_atlas::RES32_F, GFX_Props{srcRec, dstRec, col});
+      dstRec.y + tex_atlas::RES32_F,
+      GFX_Props{textureAtlas, srcRec, dstRec, col});
 }
 
 void GFX_Manager::RenderLayer(drawMask::id maskID) {
@@ -82,7 +90,7 @@ void GFX_Manager::RenderLayer(drawMask::id maskID) {
   auto &layer = GFX_Data_Buffers[frontIndex][static_cast<int>(maskID)];
   for (auto &item : layer) {
     GFX_Props &props = item.second;
-    DrawTexturePro(textureAtlas, props.srcRec, props.dstRec, Vector2{0, 0},
+    DrawTexturePro(props.texture, props.srcRec, props.dstRec, Vector2{0, 0},
                    0.0f, props.color);
   }
   layer.clear(); // Consumed

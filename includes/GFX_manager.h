@@ -8,6 +8,7 @@
 #include <vector>
 
 struct GFX_Props {
+  Texture2D texture;
   Rectangle srcRec;
   Rectangle dstRec;
   Color color;
@@ -36,6 +37,9 @@ public:
                     Color col);
 
   void LoadGFX_Data(drawMask::id layerID, int TA_X, int TA_Y, Color col);
+
+  void LoadGFX_Data(drawMask::id layerID, Texture2D texture, Rectangle srcRec,
+                    Rectangle dstRec, Color col);
 
   // Combine 2 assets rectangle and load as one render object
   void LoadGFX_Data_32x64(drawMask::id layerID, int TA_X, int TA_Y,

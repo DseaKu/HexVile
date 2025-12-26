@@ -117,7 +117,11 @@ item::id ItemHandler::GetToolBarItemType(int pos) const {
 }
 
 const char *ItemHandler::GetSelectedItemType() const {
-  item::id id = toolBar[this->frameContext->selToolBarSlot].itemID;
+  int slot = this->frameContext->selToolBarSlot;
+  if (slot < 0 || slot >= toolBar.size()) {
+    slot = 0;
+  }
+  item::id id = toolBar[slot].itemID;
   return itemDataBase.GetItemProperties(id).name.c_str();
 }
 

@@ -111,6 +111,7 @@ enum id {
   ON_GROUND, // Player, Terrain Details
   UI_0,      // Toolbar, Item BG
   UI_1,      // Items, ItemsNum
+  DEBUG_OVERLAY,
   SIZE,
 };
 }

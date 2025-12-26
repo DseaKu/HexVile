@@ -6,22 +6,6 @@
 #include "raylib.h"
 #include <string>
 
-#ifdef __APPLE__
-#include <mach/mach.h>
-#endif
-
-double GetRamUsageMB() {
-#ifdef __APPLE__
-  struct mach_task_basic_info info;
-  mach_msg_type_number_t infoCount = MACH_TASK_BASIC_INFO_COUNT;
-  if (task_info(mach_task_self(), MACH_TASK_BASIC_INFO, (task_info_t)&info,
-                &infoCount) == KERN_SUCCESS) {
-    return (double)info.resident_size / (1024 * 1024);
-  }
-#endif
-  return 0.0;
-}
-
 // --- Initialization ---
 Game::Game() {
   isRunning = true;
@@ -35,6 +19,9 @@ Game::Game() {
   displayLogicTime = 0.0;
   displayVisTime = 0.0;
   displayRamUsage = 0.0;
+
+  frameContext = {};
+  frameContext.selToolBarSlot = 0;
 
   gfxManager.LoadAssets(conf::TEXTURE_ATLAS_PATH);
 
@@ -70,6 +57,8 @@ Game::Game() {
   uiHandler.SetHexGrid(&worldState.hexGrid);
   uiHandler.SetToolBarActive(true);
   uiHandler.SetFrameContext(&frameContext);
+
+  debugger.SetManagers(&gfxManager, &fontHandler);
 
   SetMousePosition(GetScreenWidth() / 2, GetScreenHeight() / 2);
 
@@ -109,8 +98,7 @@ void Game::GameLoop() {
 
       gfxManager.RenderLayer(drawMask::UI_0);
       gfxManager.RenderLayer(drawMask::UI_1);
-
-      DrawDebugOverlay(conf::IS_DEBUG_OVERLAY_ENABLED);
+      gfxManager.RenderLayer(drawMask::DEBUG_OVERLAY);
 
       EndDrawing();
       auto endRender = std::chrono::high_resolution_clock::now();
@@ -264,140 +252,15 @@ void Game::RunLogic() {
   rs.selectedItemType = worldState.itemHandler.GetSelectedItemType();
   rs.selectedToolBarSlot = frameContext.selToolBarSlot;
 
+  debugger.Update(rs, frameContext.deltaTime, logicExecutionTime.load(),
+                  renderExecutionTime.load());
+
   // Count passed time
   auto endLogic = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double, std::milli> elapsedLogic =
       endLogic - startLogic;
   logicExecutionTime = elapsedLogic.count();
 }
-
-const char *Game::MouseMaskToString(mouseMask::id m) {
-  switch (m) {
-  case mouseMask::NULL_ID:
-    return "Null";
-  case mouseMask::GROUND:
-    return "Ground";
-  case mouseMask::TOOL_BAR:
-    return "Tool Bar";
-  default:
-    return "Undefined";
-  }
-}
-
-// --- Debug overlay ---
-void Game::DrawDebugOverlay(bool is_enabled) {
-  if (!is_enabled)
-    return;
-
-  float sectionPosX = conf::DEBUG_OVERLAY_SECTION_X;
-  int sectionPosY = conf::DEBUG_OVERLAY_SECTION_Y;
-  int sectionGapY = conf::DEBUG_OVERLAY_SECTION_Y_GAP;
-  // int sectionFontSize = conf::DEBUG_OVERLAY_SECTION_FONT_SIZE;
-  Color sectionColor = conf::DEBUG_OVERLAY_SECTION_FONT_COLOR;
-
-  float subSectionPosX = conf::DEBUG_OVERLAY_SUBSECTION_X_POS;
-  int subSectionGapY = conf::DEBUG_OVERLAY_SUBSECTION_Y_GAP;
-  // int subSectionFontSize = conf::DEBUG_OVERLAY_SUBSECTION_FONT_SIZE;
-  Color subSectionColor = conf::DEBUG_OVERLAY_SECTION_FONT_COLOR;
-
-  float currentY = sectionPosY;
-
-  debugUpdateTimer += GetFrameTime();
-  if (debugUpdateTimer >= 1.0f) {
-    displayRenderTime = renderExecutionTime.load();
-    displayLogicTime = logicExecutionTime.load();
-    displayVisTime = renderStates[renderStateIndex].visCalcTime;
-    displayRamUsage = GetRamUsageMB();
-    debugUpdateTimer = 0.0f;
-  }
-
-  const RenderState &rs = renderStates[renderStateIndex];
-
-  debugData.clear();
-  debugData.push_back(
-      {"Resources",
-       {
-           TextFormat("FPS: %i", GetFPS()),
-           TextFormat("RAM: %.2f MB", displayRamUsage),
-           TextFormat("Screen: %ix%i", GetScreenWidth(), GetScreenHeight()),
-           TextFormat("Render: %ix%i", GetRenderWidth(), GetRenderHeight()),
-           TextFormat("Tiles Total: %i", rs.tilesTotal),
-           TextFormat("Tiles Used: %i", rs.tilesUsed),
-           TextFormat("Tiles Visible: %i", rs.tilesVisible),
-           TextFormat("Map radius: %i", rs.mapRadius),
-           TextFormat("Render Time: %.2f ms", displayRenderTime),
-           TextFormat("Logic Time: %.2f ms", displayLogicTime),
-           TextFormat("Culling Time: %.2f ms", displayVisTime),
-       }});
-
-  // Use currentInput for debug display
-  // HexCoord mapTile =
-  //     worldState.hexGrid.PointToHexCoord(frameContext.mouseWorldPos);
-  // TileID tileMouseType =
-  //     worldState.hexGrid.PointToType(frameContext.mouseWorldPos);
-
-  debugData.push_back(
-      {"Mouse",
-       {
-           TextFormat("X,Y: %.1f,%.1f", frameContext.pos.mouseWorld.x,
-                      frameContext.pos.mouseWorld.y),
-           TextFormat("Tile Q,R: %i,%i", rs.mouseTileCoord.q,
-                      rs.mouseTileCoord.r),
-           TextFormat("Type: %s",
-                      worldState.hexGrid.TileToString(rs.mouseTileType)),
-           TextFormat("Clicked on: %s",
-                      this->MouseMaskToString(frameContext.mouseMask)),
-       }});
-
-  // --- Player ---
-  // Vector2 playerPos = worldState.player.GetPosition();
-  // HexCoord playerTile = worldState.hexGrid.PointToHexCoord(playerPos);
-  // TileID tilePlayerType = worldState.hexGrid.PointToType(playerPos);
-  debugData.push_back(
-      {"Player",
-       {
-           TextFormat("X,Y: %.1f,%.1f", rs.playerPos.x, rs.playerPos.y),
-           TextFormat("Tile Q,R: %i,%i", rs.playerTileCoord.q,
-                      rs.playerTileCoord.r),
-           TextFormat("State:  %s", rs.playerStateStr.c_str()),
-           TextFormat("Face Dir: %s", rs.playerDirStr.c_str()),
-           TextFormat("Frame: %i", rs.playerFrame),
-           TextFormat("Type: %s",
-                      worldState.hexGrid.TileToString(rs.playerTileID)),
-           TextFormat("Speed[1/s]: %.2f", rs.playerSpeed),
-       }});
-
-  // --- Tool Bar ---
-  debugData.push_back({"Tool Bar",
-                       {
-                           TextFormat("Item: %s", rs.selectedItemType.c_str()),
-                           TextFormat("Slot: %i", rs.selectedToolBarSlot),
-                       }});
-
-  // Draw section
-  Vector2 playerScreenPos = GetWorldToScreen2D(rs.playerPos, rs.camera);
-  DrawCircleV(
-      GetWorldToScreen2D(worldState.hexGrid.HexCoordToPoint(HexCoord(0, 0)),
-                         rs.camera),
-      3.0f, RED);
-  DrawCircleV(playerScreenPos, 3.0f, RED);
-
-  // Draw text
-  for (const DebugData &data : debugData) {
-    fontHandler.DrawTextHackRegular(data.section.c_str(),
-                                    {sectionPosX, currentY}, sectionColor);
-    currentY += sectionGapY;
-    currentY += subSectionGapY;
-
-    // Draw sub-section text
-    for (const std::string &subSection : data.subSection) {
-      fontHandler.DrawTextHackRegular(
-          subSection.c_str(), {subSectionPosX, currentY}, subSectionColor);
-      currentY += subSectionGapY;
-    }
-    currentY += sectionGapY;
-  }
-};
 
 Game::~Game() { Unload(); }
 

@@ -28,6 +28,7 @@ set(SOURCES
     src/font_handler.cpp
     src/ui_handler.cpp
     src/item_handler.cpp
+    src/debugger.cpp
     # src/input_handler.cpp
 )
 

@@ -2,24 +2,19 @@
 #define GAME_H
 
 #include "GFX_manager.h"
+#include "debugger.h"
 #include "defines.h"
-#include "enums.h"
 #include "font_handler.h"
 #include "hex_tile_grid.h"
 #include "item_handler.h"
 #include "player.h"
 #include "raylib.h"
+#include "structs.h"
 #include "ui_handler.h"
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
 #include <thread>
-#include <vector>
-
-struct DebugData {
-  std::string section;
-  std::vector<std::string> subSection;
-};
 
 struct WorldState {
   HexGrid hexGrid;
@@ -31,34 +26,6 @@ struct WorldState {
   Rectangle cameraRect;
   float timer;
   float updateGridTreshold;
-};
-
-struct RenderState {
-  Camera2D camera;
-
-  // Resources / Stats
-  int tilesTotal;
-  int tilesUsed;
-  int tilesVisible;
-  int mapRadius;
-  double visCalcTime;
-
-  // Mouse Hover
-  HexCoord mouseTileCoord;
-  tile::id mouseTileType;
-
-  // Player
-  Vector2 playerPos;
-  HexCoord playerTileCoord;
-  tile::id playerTileID;
-  std::string playerStateStr;
-  std::string playerDirStr;
-  int playerFrame;
-  float playerSpeed;
-
-  // ToolBar
-  std::string selectedItemType;
-  int selectedToolBarSlot;
 };
 
 class Game {
@@ -75,8 +42,7 @@ private:
   GFX_Manager gfxManager;
   FontHandler fontHandler;
   UI_Handler uiHandler;
-
-  std::vector<DebugData> debugData;
+  Debugger debugger;
 
   // Threading
   std::thread logicThread;
@@ -106,14 +72,11 @@ private:
   void RunLogic();
   void LogicLoop();
 
-  void DrawDebugOverlay(bool is_enabled);
-
 public:
   Game();
   ~Game();
   void GameLoop();
   void Unload();
-  const char *MouseMaskToString(mouseMask::id maskID);
 };
 
 #endif // !GAME_H

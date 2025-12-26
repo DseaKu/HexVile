@@ -39,3 +39,43 @@ void FontHandler::DrawTextHackRegular(const char *text, Vector2 pos,
   DrawTextEx(this->fontHackRegular, text, pos, conf::DEFAULT_FONT_SIZE,
              conf::DEFAULT_FONT_SPACING, color);
 }
+
+void FontHandler::QueueText(GFX_Manager *gfx, const char *text, Vector2 pos,
+                            Color col, drawMask::id layer) {
+  if (text == nullptr || gfx == nullptr)
+    return;
+
+  Vector2 currentPos = pos;
+  float spacing = (float)conf::DEFAULT_FONT_SPACING;
+
+  for (int i = 0; text[i] != '\0'; i++) {
+    int codepoint = (unsigned char)text[i]; // Simple ASCII assumption
+    
+    if (codepoint == '\n') {
+        currentPos.y += fontHackRegular.baseSize; // Move down
+        currentPos.x = pos.x; // Reset X
+        continue;
+    }
+
+    int index = GetGlyphIndex(fontHackRegular, codepoint);
+
+    if (index != -1) {
+      Rectangle srcRec = fontHackRegular.recs[index];
+      GlyphInfo glyph = fontHackRegular.glyphs[index];
+
+      Rectangle dstRec = {
+          currentPos.x + glyph.offsetX,
+          currentPos.y + glyph.offsetY,
+          srcRec.width,
+          srcRec.height
+      };
+
+      gfx->LoadGFX_Data(layer, fontHackRegular.texture, srcRec, dstRec, col);
+
+      if (glyph.advanceX == 0)
+        currentPos.x += (float)srcRec.width + spacing;
+      else
+        currentPos.x += (float)glyph.advanceX + spacing;
+    }
+  }
+}

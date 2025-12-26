@@ -45,7 +45,7 @@ public:
   Player();
 
   // --- Logic ---
-  void Update(const FrameContext *curFrameContext);
+  void Update();
   void Chop(HexCoord target);
 
   // --- Setters ---
@@ -53,6 +53,7 @@ public:
   void SetGFX_Manager(GFX_Manager *graphicsManager);
   void SetUI_Handler(UI_Handler *ui_handler);
   void SetItemHandler(ItemHandler *itemHandler);
+  void SetFrameContext(const FrameContext *frameContext);
 
   // --- Getters ---
   Vector2 GetPosition() const;

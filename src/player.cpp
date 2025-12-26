@@ -124,8 +124,7 @@ void Player::UpdatePlayerFaceDir() {
   }
 }
 
-void Player::Update(const FrameContext *curFrameContext) {
-  frameContext = curFrameContext;
+void Player::Update() {
   animationDelta += frameContext->deltaTime;
 
   playerTile = hexGrid->PointToHexCoord(position);
@@ -246,6 +245,10 @@ const char *Player::PlayerStateToString() const {
   default:
     return "Unknown State";
   }
+}
+
+void Player::SetFrameContext(const FrameContext *frameContext) {
+  this->frameContext = frameContext;
 }
 
 const char *Player::PlayerDirToString() const {

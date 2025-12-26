@@ -239,7 +239,10 @@ RsrcPos UI_Handler::GetHoveredRsrcPos() {
 
   Vector2 mousePos = frameContext->pos.mouseScreen;
   MapTile tile = hexGrid->PointToTile(mousePos);
-  for (TileRsrc rsrc : tile.rsrc) {
+
+  int nearestRsrc;
+  for (int i = 0; i < conf::TERRAIN_RESOURCE_MAX; i++) {
+    Vector2 rsrcPos = tile.rsrc[i].tilePos;
   }
 
   RsrcPos a;

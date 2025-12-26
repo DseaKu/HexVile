@@ -51,6 +51,7 @@ Game::Game() {
   worldState.player.SetItemHandler(&worldState.itemHandler);
   worldState.player.SetGFX_Manager(&gfxManager);
   worldState.player.SetUI_Handler(&uiHandler);
+  worldState.player.SetFrameContext(&frameContext);
 
   worldState.camera.target = conf::SCREEN_CENTER;
   worldState.camera.offset = conf::SCREEN_CENTER;
@@ -209,7 +210,7 @@ void Game::RunLogic() {
   frameContext.pos.selRsrc = uiHandler.GetHoveredRsrcPos();
 
   // Player Update
-  worldState.player.Update(&frameContext);
+  worldState.player.Update();
 
   // --- Update camera ---
   worldState.camera.offset = Vector2{(float)frameContext.screenWidth / 2.0f,

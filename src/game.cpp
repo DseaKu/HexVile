@@ -170,8 +170,8 @@ void Game::UpdateFrameContext() {
 
   frameContext.pos.mouseScreen = GetMousePosition();
 
-  frameContext.inputs.mousePress.left = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
-  frameContext.inputs.mousePress.right =
+  frameContext.inputs.mouseClick.left = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+  frameContext.inputs.mouseClick.right =
       IsMouseButtonPressed(MOUSE_BUTTON_RIGHT);
 
   frameContext.inputs.keyPress.One = IsKeyPressed(KEY_ONE);
@@ -197,10 +197,10 @@ void Game::RunLogic() {
   // --- Update mouse ---
   frameContext.pos.mouseWorld =
       GetScreenToWorld2D(frameContext.pos.mouseScreen, worldState.camera);
+  frameContext.mouseMask = uiHandler.UpdateMouseMask();
 
   // --- Update Selected Tool Bar Slot ---
-  uiHandler.GetToolBarSelection(frameContext.inputs.keyPress,
-                                &frameContext.selToolBarSlot);
+  uiHandler.UpdateToolBarSelection(&frameContext.selToolBarSlot);
 
   // --- Update delta time ---
   worldState.timer += frameContext.deltaTime;
@@ -224,7 +224,7 @@ void Game::RunLogic() {
   uiHandler.Update(frameContext.pos.mouseWorld);
 
   // Process left right click
-  if (frameContext.inputs.mousePress.right) {
+  if (frameContext.inputs.mouseClick.right) {
     HexCoord clickedHex =
         worldState.hexGrid.PointToHexCoord(frameContext.pos.mouseWorld);
     worldState.hexGrid.SetTile(clickedHex, tile::NULL_ID);
@@ -269,29 +269,13 @@ void Game::RunLogic() {
   logicExecutionTime = elapsedLogic.count();
 }
 
-void Game::ProccesLeftMouseClick(int *selToolBarSlot) {
-
-  // Clicked on item bar -> Set new selected tool bar slot
-  if (uiHandler.GetToolBarAvailability() &&
-      CheckCollisionPointRec(frameContext.pos.mouseScreen,
-                             uiHandler.GetToolBarRect())) {
-    frameContext.mouseMask = mouseMask::ITEM_BAR;
-
-    *selToolBarSlot = uiHandler.GetItemSlotAt(frameContext.pos.mouseScreen);
-
-    // Clicked on ground
-  } else {
-    frameContext.mouseMask = mouseMask::GROUND;
-  }
-}
-
 const char *Game::MouseMaskToString(mouseMask::id m) {
   switch (m) {
   case mouseMask::NULL_ID:
     return "Null";
   case mouseMask::GROUND:
     return "Ground";
-  case mouseMask::ITEM_BAR:
+  case mouseMask::TOOL_BAR:
     return "Tool Bar";
   default:
     return "Undefined";

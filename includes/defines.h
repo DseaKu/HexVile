@@ -150,7 +150,8 @@ struct MouseInput {
 };
 
 struct Input {
-  MouseInput mousePress;
+  MouseInput mouseClick;
+  // MouseInput Mouse;
   KeyboardInput keyPress;
 };
 

@@ -31,7 +31,7 @@ void Player::UpdatePlayerState() {
 
   // Interact with enviorment
   if (frameContext->mouseMask == mouseMask::GROUND) {
-    if (frameContext->inputs.mousePress.left) {
+    if (frameContext->inputs.mouseClick.left) {
       int selToolBarSlot = frameContext->selToolBarSlot;
       HexCoord clickedTile =
           hexGrid->PointToHexCoord(frameContext->pos.mouseWorld);
@@ -61,8 +61,8 @@ void Player::UpdatePlayerState() {
 
 void Player::UpdatePlayerFaceDir() {
 
-  if (frameContext->inputs.mousePress.left ||
-      frameContext->inputs.mousePress.right) {
+  if (frameContext->inputs.mouseClick.left ||
+      frameContext->inputs.mouseClick.right) {
     Vector2 tarPos = frameContext->pos.mouseWorld;
     Vector2 diff = Vector2Subtract(tarPos, this->position);
     float angle = atan2(diff.y, diff.x) * RAD2DEG;

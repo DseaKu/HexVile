@@ -57,9 +57,17 @@ void UI_Handler::UpdateScreenSize(int width, int height) {
                         toolBarLayout.width, toolBarLayout.height};
 }
 
+mouseMask::id UI_Handler::UpdateMouseMask() {
+  if (isToolBarActive && CheckCollisionPointRec(frameContext->pos.mouseScreen,
+                                                toolBarLayout.rect)) {
+    return mouseMask::TOOL_BAR;
+  } else {
+    return mouseMask::GROUND;
+  }
+}
 // --- Input & Queries ---
-void UI_Handler::GetToolBarSelection(KeyboardInput keyPress,
-                                     int *currentSelection) {
+void UI_Handler::UpdateToolBarSelection(int *currentSelection) {
+  KeyboardInput keyPress = frameContext->inputs.keyPress;
   if (keyPress.One)
     *currentSelection = 0;
   if (keyPress.Two)
@@ -80,26 +88,24 @@ void UI_Handler::GetToolBarSelection(KeyboardInput keyPress,
     *currentSelection = 8;
   if (keyPress.Zero)
     *currentSelection = 9;
-}
 
-int UI_Handler::GetItemSlotAt(Vector2 screenPos) {
-  if (!isToolBarActive)
-    return -1;
+  // Check if player clicked Tool Bar
+  if (frameContext->inputs.mouseClick.left &&
+      frameContext->mouseMask == mouseMask::TOOL_BAR) {
 
-  if (CheckCollisionPointRec(screenPos, toolBarLayout.rect)) {
     // Local coordinate in the toolbar
-    float localX = screenPos.x - toolBarLayout.posX - toolBarLayout.padding;
+    float localX = frameContext->pos.mouseScreen.x - toolBarLayout.posX -
+                   toolBarLayout.padding;
 
     if (localX < 0)
-      return -1;
+      return;
 
     int slotIndex = (int)(localX / toolBarLayout.slotSize);
 
     if (slotIndex >= 0 && slotIndex < toolBarLayout.maxSlots) {
-      return slotIndex;
+      *currentSelection = slotIndex;
     }
   }
-  return -1;
 }
 
 bool UI_Handler::GetToolBarAvailability() { return isToolBarActive; }

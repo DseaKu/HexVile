@@ -50,6 +50,7 @@ public:
   // Core
   void Update(Vector2 mouseWorldPos);
   void UpdateScreenSize(int width, int height);
+  mouseMask::id UpdateMouseMask();
 
   // Setters
   void SetGFX_Manager(GFX_Manager *p);
@@ -64,10 +65,7 @@ public:
   Rectangle GetToolBarRect();
 
   // Getter
-  int GetItemSlotAt(Vector2 screenPos);
-
-  // Input
-  void GetToolBarSelection(KeyboardInput keyPress, int *currentSelection);
+  void UpdateToolBarSelection(int *currentSelection);
 };
 
 #endif // UI_HANDLER_H

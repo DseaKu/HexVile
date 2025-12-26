@@ -96,7 +96,7 @@ namespace mouseMask {
 enum id {
   NULL_ID = 0,
   GROUND,
-  ITEM_BAR,
+  TOOL_BAR,
   SIZE,
 };
 }

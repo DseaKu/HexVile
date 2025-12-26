@@ -175,11 +175,11 @@ struct FrameContext {
   Location pos;
   Input inputs;
   mouseMask::id mouseMask;
+  int selToolBarSlot;
 
   // Screen
   int screenWidth;
   int screenHeight;
-  int selToolBarSlot;
 
   float deltaTime;
 };

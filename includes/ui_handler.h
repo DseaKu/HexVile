@@ -29,7 +29,6 @@ private:
 
   ToolBarLayout toolBarLayout;
   bool isToolBarActive;
-  int selToolBarSlot;
 
   // Dependencies
   GFX_Manager *graphicsManager;
@@ -57,7 +56,6 @@ public:
   void SetItemHandler(ItemHandler *p);
   void SetFontHandler(FontHandler *p);
   void SetHexGrid(HexGrid *p);
-  void SetSelToolBarSlot(int index);
   void SetToolBarActive(bool is_active);
   void SetFrameContext(const FrameContext *curFrameContext);
 
@@ -69,7 +67,7 @@ public:
   int GetItemSlotAt(Vector2 screenPos);
 
   // Input
-  int GetToolBarSelection(KeyboardInput keyPress, int currentSelection);
+  void GetToolBarSelection(KeyboardInput keyPress, int *currentSelection);
 };
 
 #endif // UI_HANDLER_H

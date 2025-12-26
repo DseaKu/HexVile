@@ -59,6 +59,8 @@ Game::Game() {
   worldState.cameraRect = {0, 0, 0, 0};
   worldState.cameraTopLeft = {0, 0};
 
+  worldState.itemHandler.SetFrameContext(&frameContext);
+
   fontHandler.LoadFonts();
 
   uiHandler.SetGFX_Manager(&gfxManager);
@@ -192,14 +194,14 @@ void Game::UpdateFrameContext() {
 void Game::RunLogic() {
   auto startLogic = std::chrono::high_resolution_clock::now();
 
-  // ==========================================
-  //               Frame Context Related
-  // ==========================================
   // --- Update mouse ---
   frameContext.pos.mouseWorld =
       GetScreenToWorld2D(frameContext.pos.mouseScreen, worldState.camera);
 
-  frameContext.selToolBarSlot = worldState.itemHandler.GetSelectionToolBar();
+  // --- Update Selected Tool Bar Slot ---
+  uiHandler.GetToolBarSelection(frameContext.inputs.keyPress,
+                                &frameContext.selToolBarSlot);
+
   // --- Update delta time ---
   worldState.timer += frameContext.deltaTime;
 
@@ -221,22 +223,12 @@ void Game::RunLogic() {
   worldState.hexGrid.Update(worldState.camera, frameContext.deltaTime);
   uiHandler.Update(frameContext.pos.mouseWorld);
 
-  // Get selected tool bar slot
-
-  // Check if player selected new slow by key press
-  frameContext.selToolBarSlot = uiHandler.GetToolBarSelection(
-      frameContext.inputs.keyPress, frameContext.selToolBarSlot);
-
   // Process left right click
   if (frameContext.inputs.mousePress.right) {
     HexCoord clickedHex =
         worldState.hexGrid.PointToHexCoord(frameContext.pos.mouseWorld);
     worldState.hexGrid.SetTile(clickedHex, tile::NULL_ID);
   }
-
-  // Set selected tool bar slot
-  uiHandler.SetSelToolBarSlot(frameContext.selToolBarSlot);
-  worldState.itemHandler.SetItemSelection(frameContext.selToolBarSlot);
 
   // Player Update
   worldState.player.Update(&frameContext);
@@ -268,7 +260,7 @@ void Game::RunLogic() {
   rs.playerSpeed = worldState.player.GetSpeedTilesPerSecond();
 
   rs.selectedItemType = worldState.itemHandler.GetSelectedItemType();
-  rs.selectedToolBarSlot = worldState.itemHandler.GetSelectionToolBar();
+  rs.selectedToolBarSlot = frameContext.selToolBarSlot;
 
   // Count passed time
   auto endLogic = std::chrono::high_resolution_clock::now();

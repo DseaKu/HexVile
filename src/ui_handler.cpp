@@ -35,7 +35,6 @@ UI_Handler::UI_Handler() {
 
   // State
   isToolBarActive = false;
-  selToolBarSlot = 0;
 
   // Dependencies
   graphicsManager = nullptr;
@@ -59,30 +58,28 @@ void UI_Handler::UpdateScreenSize(int width, int height) {
 }
 
 // --- Input & Queries ---
-int UI_Handler::GetToolBarSelection(KeyboardInput keyPress,
-                                    int currentSelection) {
+void UI_Handler::GetToolBarSelection(KeyboardInput keyPress,
+                                     int *currentSelection) {
   if (keyPress.One)
-    return 0;
+    *currentSelection = 0;
   if (keyPress.Two)
-    return 1;
+    *currentSelection = 1;
   if (keyPress.Three)
-    return 2;
+    *currentSelection = 2;
   if (keyPress.Four)
-    return 3;
+    *currentSelection = 3;
   if (keyPress.Five)
-    return 4;
+    *currentSelection = 4;
   if (keyPress.Six)
-    return 5;
+    *currentSelection = 5;
   if (keyPress.Seven)
-    return 6;
+    *currentSelection = 6;
   if (keyPress.Eight)
-    return 7;
+    *currentSelection = 7;
   if (keyPress.Nine)
-    return 8;
+    *currentSelection = 8;
   if (keyPress.Zero)
-    return 9;
-
-  return currentSelection;
+    *currentSelection = 9;
 }
 
 int UI_Handler::GetItemSlotAt(Vector2 screenPos) {
@@ -113,7 +110,6 @@ void UI_Handler::SetGFX_Manager(GFX_Manager *p) { graphicsManager = p; }
 void UI_Handler::SetItemHandler(ItemHandler *p) { itemHandler = p; }
 void UI_Handler::SetFontHandler(FontHandler *p) { fontHandler = p; }
 void UI_Handler::SetHexGrid(HexGrid *p) { hexGrid = p; }
-void UI_Handler::SetSelToolBarSlot(int index) { selToolBarSlot = index; }
 void UI_Handler::SetToolBarActive(bool is_active) {
   isToolBarActive = is_active;
 }
@@ -150,7 +146,7 @@ void UI_Handler::DrawToolBarSlot(int slotIndex) {
   // 1. Draw Background
   graphicsManager->LoadGFX_Data(drawMask::UI_0, tex_atlas::UI_X,
                                 ui::ITEM_BAR_BG, slotRect, WHITE);
-  if (slotIndex == itemHandler->GetSelectionToolBar()) {
+  if (slotIndex == frameContext->selToolBarSlot) {
     graphicsManager->LoadGFX_Data(drawMask::UI_0, tex_atlas::UI_X,
                                   ui::ITEM_BAR_BG_H, slotRect, WHITE);
   }

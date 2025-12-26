@@ -24,10 +24,7 @@ const ItemProperties &ItemDataBase::GetItemProperties(item::id itemid) const {
 }
 
 // --- Item Handler ---
-ItemHandler::ItemHandler() {
-  selectedToolBarSlot = 0;
-  Init();
-}
+ItemHandler::ItemHandler() { Init(); }
 
 void ItemHandler::Init() {
   ItemStack itemNull = {.itemID = item::NULL_ID, .count = 0};
@@ -113,8 +110,6 @@ tile::id ItemHandler::ConvertItemToTileID(item::id itemid) const {
 }
 
 // --- Get ---
-int ItemHandler::GetSelectionToolBar() const { return selectedToolBarSlot; }
-
 ItemStack *ItemHandler::GetToolBarItemPointer(int pos) { return &toolBar[pos]; }
 
 item::id ItemHandler::GetToolBarItemType(int pos) const {
@@ -122,9 +117,11 @@ item::id ItemHandler::GetToolBarItemType(int pos) const {
 }
 
 const char *ItemHandler::GetSelectedItemType() const {
-  item::id id = toolBar[selectedToolBarSlot].itemID;
+  item::id id = toolBar[this->frameContext->selToolBarSlot].itemID;
   return itemDataBase.GetItemProperties(id).name.c_str();
 }
 
 // --- Set ---
-void ItemHandler::SetItemSelection(int pos) { selectedToolBarSlot = pos; }
+void ItemHandler::SetFrameContext(const FrameContext *curFrameContext) {
+  this->frameContext = curFrameContext;
+}

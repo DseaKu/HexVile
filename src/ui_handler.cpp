@@ -66,55 +66,6 @@ mouseMask::id UI_Handler::UpdateMouseMask() {
   }
 }
 // --- Input & Queries ---
-void UI_Handler::UpdateToolBarSelection(int *currentSelection) {
-  KeyboardInput keyPress = frameContext->inputs.keyPress;
-
-  int toolBarSlotBuffer = *currentSelection;
-  if (keyPress.One)
-    *currentSelection = 0;
-  if (keyPress.Two)
-    *currentSelection = 1;
-  if (keyPress.Three)
-    *currentSelection = 2;
-  if (keyPress.Four)
-    *currentSelection = 3;
-  if (keyPress.Five)
-    *currentSelection = 4;
-  if (keyPress.Six)
-    *currentSelection = 5;
-  if (keyPress.Seven)
-    *currentSelection = 6;
-  if (keyPress.Eight)
-    *currentSelection = 7;
-  if (keyPress.Nine)
-    *currentSelection = 8;
-  if (keyPress.Zero)
-    *currentSelection = 9;
-
-  // Revert selection if the toolbar slot is out of range
-  if (*currentSelection >= conf::TOOLBAR_SLOTS) {
-    *currentSelection = toolBarSlotBuffer;
-  }
-
-  // Check if player clicked Tool Bar
-  if (frameContext->inputs.mouseClick.left &&
-      frameContext->mouseMask == mouseMask::TOOL_BAR) {
-
-    // Local coordinate in the toolbar
-    float localX = frameContext->pos.mouseScreen.x - toolBarLayout.posX -
-                   toolBarLayout.padding;
-
-    if (localX < 0)
-      return;
-
-    int slotIndex = (int)(localX / toolBarLayout.slotSize);
-
-    if (slotIndex >= 0 && slotIndex < toolBarLayout.maxSlots) {
-      *currentSelection = slotIndex;
-    }
-  }
-}
-
 bool UI_Handler::GetToolBarAvailability() { return isToolBarActive; }
 Rectangle UI_Handler::GetToolBarRect() { return toolBarLayout.rect; }
 
@@ -231,4 +182,61 @@ void UI_Handler::DrawItemCount(int slotIndex, Rectangle slotRect) {
                                   digitRect, WHITE);
     digitIndex++;
   }
+}
+
+// --- Getter ---
+int UI_Handler::GetToolBarSelection(const FrameContext *curFrameContext) {
+  KeyboardInput keyPress = frameContext->inputs.keyPress;
+  int curSelection = curFrameContext->selToolBarSlot;
+
+  int toolBarSlotBuffer = curSelection;
+  if (keyPress.One)
+    curSelection = 0;
+  if (keyPress.Two)
+    curSelection = 1;
+  if (keyPress.Three)
+    curSelection = 2;
+  if (keyPress.Four)
+    curSelection = 3;
+  if (keyPress.Five)
+    curSelection = 4;
+  if (keyPress.Six)
+    curSelection = 5;
+  if (keyPress.Seven)
+    curSelection = 6;
+  if (keyPress.Eight)
+    curSelection = 7;
+  if (keyPress.Nine)
+    curSelection = 8;
+  if (keyPress.Zero)
+    curSelection = 9;
+
+  // Revert selection if the toolbar slot is out of range
+  if (curSelection >= conf::TOOLBAR_SLOTS) {
+    curSelection = toolBarSlotBuffer;
+  }
+
+  // Check if player clicked Tool Bar
+  if (frameContext->inputs.mouseClick.left &&
+      frameContext->mouseMask == mouseMask::TOOL_BAR) {
+
+    // Local coordinate in the toolbar
+    float localX = frameContext->pos.mouseScreen.x - toolBarLayout.posX -
+                   toolBarLayout.padding;
+
+    if (localX < 0)
+      return 0;
+
+    int slotIndex = (int)(localX / toolBarLayout.slotSize);
+
+    if (slotIndex >= 0 && slotIndex < toolBarLayout.maxSlots) {
+      curSelection = slotIndex;
+    }
+  }
+  return curSelection;
+}
+RsrcPos UI_Handler::GetHoveredRsrcPos() {
+  RsrcPos a;
+
+  return a;
 }

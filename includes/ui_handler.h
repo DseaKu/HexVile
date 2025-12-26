@@ -65,7 +65,8 @@ public:
   Rectangle GetToolBarRect();
 
   // Getter
-  void UpdateToolBarSelection(int *currentSelection);
+  int GetToolBarSelection(const FrameContext *curFrameContext);
+  RsrcPos GetHoveredRsrcPos();
 };
 
 #endif // UI_HANDLER_H

@@ -163,7 +163,7 @@ struct TileIndex {
 struct RsrcPos {
   TileIndex tileIndex;
   int rsrcIndex;
-  rsrc::id rsrc;
+  rsrc::id id;
 };
 
 struct Location {

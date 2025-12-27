@@ -53,19 +53,6 @@ void GFX_Manager::LoadGFX_Data(drawMask::id layerID, int TA_X, int TA_Y,
       dstRec.y, GFX_Props{textureAtlas, srcRec, dstRec, col});
 }
 
-void GFX_Manager::LoadGFX_Data(drawMask::id layerID, int TA_X, int TA_Y,
-                               Color col) {
-  Rectangle srcRec = GetSrcRec(TA_X, TA_Y);
-  Rectangle dstRec = Rectangle{.x = static_cast<float>(TA_X),
-                               .y = static_cast<float>(TA_Y),
-                               .width = tex_atlas::RES32_F,
-                               .height = tex_atlas::RES32_F};
-
-  // Write to Back Buffer
-  GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
-      dstRec.y, GFX_Props{textureAtlas, srcRec, dstRec, col});
-}
-
 void GFX_Manager::LoadGFX_Data(drawMask::id layerID, Texture2D texture,
                                Rectangle srcRec, Rectangle dstRec, Color col) {
   // Write to Back Buffer

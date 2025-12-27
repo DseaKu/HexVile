@@ -4,6 +4,7 @@
 #include "raylib.h"
 
 #include "enums.h"
+#include "texture_atlas.h"
 #include <map>
 #include <vector>
 
@@ -35,8 +36,6 @@ public:
   void UnloadAssets();
   void LoadGFX_Data(drawMask::id layerID, int TA_X, int TA_Y, Rectangle dstRec,
                     Color col);
-
-  void LoadGFX_Data(drawMask::id layerID, int TA_X, int TA_Y, Color col);
 
   void LoadGFX_Data(drawMask::id layerID, Texture2D texture, Rectangle srcRec,
                     Rectangle dstRec, Color col);

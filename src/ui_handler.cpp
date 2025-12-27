@@ -95,7 +95,7 @@ void UI_Handler::SetFrameContext(const frame::Context *frameContext) {
   this->frameContext = frameContext;
 }
 
-// --- Rendering Helpers ---
+// --- Load GFX Data ---
 void UI_Handler::LoadHighlightTileGFX() {
   if (!hexGrid)
     return;

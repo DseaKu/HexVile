@@ -206,6 +206,7 @@ void Game::RunLogic() {
 
   // Player Update
   worldState.player.Update();
+  frameContext.pos.player = worldState.player.GetPosition();
 
   // --- Update camera ---
   worldState.camera.offset = Vector2{(float)frameContext.screenWidth / 2.0f,

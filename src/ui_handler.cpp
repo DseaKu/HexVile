@@ -107,6 +107,10 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
     return;
 
   Vector2 curMousePos = frameContext->pos.mouseWorld;
+  if (Vector2Distance(curMousePos, frameContext->pos.player) <
+      conf::INTERACT_DISTANCE) {
+    return;
+  }
 
   for (const rsrc::Object &rsrc : frameContext->hoveredTile->rsrc) {
     if (rsrc.id != id)
@@ -118,9 +122,15 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
                        frameContext->pos.hoveredTilePoint.y -
                            tex_atlas::RES32_F + rsrc.tilePos.y};
 
-    if (Vector2Distance(rsrcPos, curMousePos) < conf::INTERACT_DISTANCE) {
-      graphicsManager->LoadGFX_Data_32x64(
-          drawMask::UI_0, tex_atlas::RSRC_TREE_HIGHLIGHTED, rsrcPos, WHITE);
+    if (rsrc.id == rsrc::ID_TREE) {
+      rsrcPos.y -= tex_atlas::RES32_F;
+    }
+
+    if (Vector2Distance(rsrcPos, curMousePos) <
+        conf::MOUSE_HIGHLIGHT_DISTANCE) {
+      graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND,
+                                          tex_atlas::RSRC_TREE_HIGHLIGHTED,
+                                          rsrcPos, WHITE);
     }
   }
 }

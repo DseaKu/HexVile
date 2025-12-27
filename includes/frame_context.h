@@ -34,6 +34,8 @@ struct Input {
 };
 
 struct Location {
+  Vector2 player;
+
   Vector2 mouseScreen;
   Vector2 mouseWorld;
 

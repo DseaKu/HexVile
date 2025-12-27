@@ -43,7 +43,7 @@ constexpr int DETAILS_X_MAX = DETAILS_X + 12;
 // --- Resource ---
 constexpr Coords RSRC = {DETAILS_X_MAX, 0};
 constexpr Coords RSRC_TREE = {RSRC.x, RSRC.y};
-constexpr Coords RSRC_TREE_HIGHLIGHTED = {RSRC.x + 1, RSRC.y};
+constexpr Coords RSRC_TREE_HIGHLIGHTED = {RSRC.x, RSRC.y + 2};
 constexpr Coords RSRC_STONE = {RSRC.x, RSRC.y + 1};
 constexpr int RESOURCE_X = DETAILS_X_MAX;
 constexpr int RESOURCE_Y = 0;

@@ -162,21 +162,21 @@ void Game::UpdateFrameContext() {
   frameContext.inputs.mouseClick.right =
       IsMouseButtonPressed(MOUSE_BUTTON_RIGHT);
 
-  frameContext.inputs.keyPress.One = IsKeyPressed(KEY_ONE);
-  frameContext.inputs.keyPress.Two = IsKeyPressed(KEY_TWO);
-  frameContext.inputs.keyPress.Three = IsKeyPressed(KEY_THREE);
-  frameContext.inputs.keyPress.Four = IsKeyPressed(KEY_FOUR);
-  frameContext.inputs.keyPress.Five = IsKeyPressed(KEY_FIVE);
-  frameContext.inputs.keyPress.Six = IsKeyPressed(KEY_SIX);
-  frameContext.inputs.keyPress.Seven = IsKeyPressed(KEY_SEVEN);
-  frameContext.inputs.keyPress.Eight = IsKeyPressed(KEY_EIGHT);
-  frameContext.inputs.keyPress.Nine = IsKeyPressed(KEY_NINE);
-  frameContext.inputs.keyPress.Zero = IsKeyPressed(KEY_ZERO);
+  frameContext.inputs.keyPress.one = IsKeyPressed(KEY_ONE);
+  frameContext.inputs.keyPress.two = IsKeyPressed(KEY_TWO);
+  frameContext.inputs.keyPress.three = IsKeyPressed(KEY_THREE);
+  frameContext.inputs.keyPress.four = IsKeyPressed(KEY_FOUR);
+  frameContext.inputs.keyPress.five = IsKeyPressed(KEY_FIVE);
+  frameContext.inputs.keyPress.six = IsKeyPressed(KEY_SIX);
+  frameContext.inputs.keyPress.seven = IsKeyPressed(KEY_SEVEN);
+  frameContext.inputs.keyPress.eight = IsKeyPressed(KEY_EIGHT);
+  frameContext.inputs.keyPress.nine = IsKeyPressed(KEY_NINE);
+  frameContext.inputs.keyPress.zero = IsKeyPressed(KEY_ZERO);
 
-  frameContext.inputs.keyPress.Left = IsKeyDown(KEY_A);
-  frameContext.inputs.keyPress.Right = IsKeyDown(KEY_D);
-  frameContext.inputs.keyPress.Up = IsKeyDown(KEY_W);
-  frameContext.inputs.keyPress.Down = IsKeyDown(KEY_S);
+  frameContext.inputs.keyPress.left = IsKeyDown(KEY_A);
+  frameContext.inputs.keyPress.right = IsKeyDown(KEY_D);
+  frameContext.inputs.keyPress.up = IsKeyDown(KEY_W);
+  frameContext.inputs.keyPress.down = IsKeyDown(KEY_S);
 }
 
 void Game::RunLogic() {
@@ -194,7 +194,8 @@ void Game::RunLogic() {
   frameContext.selToolBarSlot = uiHandler.GetToolBarSelection();
 
   // --- Get position of hovered resource ---
-  // frameContext.pos.selRsrc = uiHandler.GetHoveredRsrcPos();
+  frameContext.pos.hoveredTile =
+      worldState.hexGrid.PointToTile(frameContext.pos.mouseScreen);
 
   // Player Update
   worldState.player.Update();

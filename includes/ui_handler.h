@@ -66,7 +66,6 @@ public:
 
   // Getter
   int GetToolBarSelection();
-  MapTile *GetHoveredTile();
 };
 
 #endif // UI_HANDLER_H

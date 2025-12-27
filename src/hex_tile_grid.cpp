@@ -155,8 +155,11 @@ bool HexGrid::IsWalkable(HexCoord h) const {
   if (!HasTile(h)) {
     return false;
   }
-  MapTile tile = HexCoordToTile(h);
-  tile::id type = tile.id;
+  const MapTile *tile = HexCoordToTile(h);
+  if (!tile)
+    return false;
+
+  tile::id type = tile->id;
   for (int i = 0; i < conf::WALKABLE_TILE_IDS.size(); i++) {
     if (type == conf::WALKABLE_TILE_IDS[i]) {
       return true;
@@ -199,22 +202,35 @@ Vector2 HexGrid::CoordToPoint(int q, int r) const {
 }
 
 tile::id HexGrid::PointToType(Vector2 point) const {
-  return PointToTile(point).id;
+  const MapTile *tile = PointToTile(point);
+  return tile ? tile->id : tile::NULL_ID;
 }
 
 tile::id HexGrid::HexCoordToType(HexCoord h) const {
-  MapTile m = HexCoordToTile(h);
-  return m.id;
+  const MapTile *m = HexCoordToTile(h);
+  return m ? m->id : tile::NULL_ID;
 }
 
-MapTile HexGrid::HexCoordToTile(HexCoord h) const {
+MapTile *HexGrid::HexCoordToTile(HexCoord h) {
   if (!IsInBounds(h)) {
-    return (MapTile){.id = tile::NULL_ID};
+    return nullptr;
   }
-  return GetTile(h);
+  return &GetTile(h);
 }
 
-MapTile HexGrid::PointToTile(Vector2 point) const {
+const MapTile *HexGrid::HexCoordToTile(HexCoord h) const {
+  if (!IsInBounds(h)) {
+    return nullptr;
+  }
+  return &GetTile(h);
+}
+
+MapTile *HexGrid::PointToTile(Vector2 point) {
+  HexCoord h = PointToHexCoord(point);
+  return HexCoordToTile(h);
+}
+
+const MapTile *HexGrid::PointToTile(Vector2 point) const {
   HexCoord h = PointToHexCoord(point);
   return HexCoordToTile(h);
 }

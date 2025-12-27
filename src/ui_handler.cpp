@@ -191,25 +191,25 @@ int UI_Handler::GetToolBarSelection() {
   frame::KeyboardInput keyPress = frameContext->inputs.keyPress;
 
   int toolBarSlotBuffer = curSelection;
-  if (keyPress.One)
+  if (keyPress.one)
     curSelection = 0;
-  if (keyPress.Two)
+  if (keyPress.two)
     curSelection = 1;
-  if (keyPress.Three)
+  if (keyPress.three)
     curSelection = 2;
-  if (keyPress.Four)
+  if (keyPress.four)
     curSelection = 3;
-  if (keyPress.Five)
+  if (keyPress.five)
     curSelection = 4;
-  if (keyPress.Six)
+  if (keyPress.six)
     curSelection = 5;
-  if (keyPress.Seven)
+  if (keyPress.seven)
     curSelection = 6;
-  if (keyPress.Eight)
+  if (keyPress.eight)
     curSelection = 7;
-  if (keyPress.Nine)
+  if (keyPress.nine)
     curSelection = 8;
-  if (keyPress.Zero)
+  if (keyPress.zero)
     curSelection = 9;
 
   // Revert selection if the toolbar slot is out of range
@@ -235,8 +235,4 @@ int UI_Handler::GetToolBarSelection() {
     }
   }
   return curSelection;
-}
-MapTile *UI_Handler::GetHoveredTile() {
-  MapTile *a;
-  return a;
 }

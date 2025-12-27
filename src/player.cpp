@@ -132,9 +132,9 @@ void Player::Update() {
 
   Vector2 dir = {0, 0};
   moveDir.x =
-      -frameContext->inputs.keyPress.Left + frameContext->inputs.keyPress.Right;
+      -frameContext->inputs.keyPress.left + frameContext->inputs.keyPress.right;
   moveDir.y =
-      -frameContext->inputs.keyPress.Up + frameContext->inputs.keyPress.Down;
+      -frameContext->inputs.keyPress.up + frameContext->inputs.keyPress.down;
 
   UpdatePlayerFaceDir();
 

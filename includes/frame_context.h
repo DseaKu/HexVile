@@ -5,20 +5,20 @@
 namespace frame {
 
 struct KeyboardInput {
-  bool One;
-  bool Two;
-  bool Three;
-  bool Four;
-  bool Five;
-  bool Six;
-  bool Seven;
-  bool Eight;
-  bool Nine;
-  bool Zero;
-  bool Up;
-  bool Down;
-  bool Left;
-  bool Right;
+  bool one;
+  bool two;
+  bool three;
+  bool four;
+  bool five;
+  bool six;
+  bool seven;
+  bool eight;
+  bool nine;
+  bool zero;
+  bool up;
+  bool down;
+  bool left;
+  bool right;
 };
 
 struct MouseInput {

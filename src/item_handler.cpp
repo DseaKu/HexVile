@@ -126,6 +126,6 @@ const char *ItemHandler::GetSelectedItemType() const {
 }
 
 // --- Set ---
-void ItemHandler::SetFrameContext(const FrameContext *curFrameContext) {
+void ItemHandler::SetFrameContext(const frame::Context *curFrameContext) {
   this->frameContext = curFrameContext;
 }

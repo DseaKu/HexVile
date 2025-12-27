@@ -44,9 +44,9 @@ struct TileDet {
 
 // --- Terrain Resource ---
 struct TileRsrc {
-  u8 texVariation;
   Vector2 tilePos;
   rsrc::id rsrcID;
+  int taOffsetX;
 };
 
 // --- Map Tile ---
@@ -100,9 +100,6 @@ private:
   Vector2 origin;
 
   // Gaussian distribution for terrain detail generation
-  std::mt19937 randomEngine;
-  std::normal_distribution<float> detailDistribution;
-  std::normal_distribution<float> resourceDistribution;
 
   GFX_Manager *graphicsManager;
 

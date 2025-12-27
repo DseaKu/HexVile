@@ -4,7 +4,6 @@
 #include "enums.h"
 #include "raylib.h"
 #include "texture_atlas.h"
-#include <algorithm>
 #include <vector>
 
 const std::vector<HexCoord> HexGrid::DIRECTIONS = {
@@ -51,22 +50,6 @@ HexGrid::HexGrid() {
   camRect = nullptr;
   lastCamRect = {0, 0, 0, 0};
   visiCacheReady = false;
-
-  // Gaussian distribution for terrain detail generation
-  std::random_device rd;
-  randomEngine = std::mt19937(rd());
-
-  const float mean =
-      (tex_atlas::DETAILS_X + tex_atlas::DETAILS_X_MAX - 1) / 2.0f;
-  const float stddev =
-      (tex_atlas::DETAILS_X_MAX - tex_atlas::DETAILS_X) / conf::GAUSIAN_EFFECT;
-  detailDistribution = std::normal_distribution<float>(mean, stddev);
-
-  const float meanRes =
-      (tex_atlas::RESOURCE_X + tex_atlas::RESOURCE_X_MAX - 1) / 2.0f;
-  const float stddevRes = (tex_atlas::RESOURCE_X_MAX - tex_atlas::RESOURCE_X) /
-                          conf::GAUSIAN_EFFECT;
-  resourceDistribution = std::normal_distribution<float>(meanRes, stddevRes);
 
   size_t estimated_hits = conf::ESTIMATED_VISIBLE_TILES;
   currentVisibleTiles.reserve(estimated_hits);
@@ -133,24 +116,18 @@ TileRsrc HexGrid::GetRandomTerainResource(tile::id tileID) {
   float x = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
   float y = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
 
-  // Generate a value from the normal distribution
-  float generated_type_float = resourceDistribution(randomEngine);
+  auto spawnData = spawn_data_lut::detLut.at(tileID);
 
-  // Round to nearest integer
-  int generated_type = static_cast<int>(std::round(generated_type_float));
+  int totalWeight = spawn_data::TOTAL_WEIGHT_DET;
+  int taOffsetX = conf::SKIP_RENDER;
+  int index = GetRandomValue(0, spawnData.size());
 
-  // Clamp the value to the valid range
-  int type = std::clamp(generated_type, tex_atlas::RESOURCE_X,
-                        tex_atlas::RESOURCE_X_MAX - 1);
-
-  // Determine if resource is null and skip render process
-  int renderBitMask = tex_atlas::RENDER_BIT_MASK_RESOURCE.at(tileID);
-  int resourceShift = type - tex_atlas::RESOURCE_X;
-  if (!(renderBitMask >> resourceShift & 1)) {
-    type = conf::SKIP_RENDER;
+  int randNum = GetRandomValue(0, totalWeight);
+  if (randNum <= spawnData[index]) {
+    taOffsetX = index;
   }
 
-  return TileRsrc{.tilePos = Vector2{x, y}, .rsrcID = (rsrc::id)type};
+  return TileRsrc{.tilePos = Vector2{x, y}, .taOffsetX = taOffsetX};
 }
 
 void HexGrid::SetGFX_Manager(GFX_Manager *graphicsManager) {

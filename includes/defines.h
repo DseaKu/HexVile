@@ -87,7 +87,6 @@ constexpr float TOOLBAR_ITEM_ICON_SCALE = 0.8f * UI_SCALE;
 // ==========================================
 constexpr int SKIP_RENDER = -1;
 constexpr int UNINITIALIZED = -2;
-constexpr float GAUSIAN_EFFECT = 6.5f;
 
 // ==========================================
 //               Font
@@ -199,9 +198,11 @@ constexpr int RESCOURCE_DIVERSITY = 3;
 constexpr int TOTAL_WEIGHT_RSRC = 100;
 constexpr int SPAWN_CHANCE_TREE = 5;
 constexpr int SPAWN_CHANCE_ROCK = 5;
+constexpr std::pair<rsrc::id, int> RSRC_NULL = {rsrc::NULL_ID, 0};
 
-constexpr std::array<int, RESCOURCE_DIVERSITY> RSRC_SPAWN_CHANCE_GRASS = {5, 0,
-                                                                          0};
+constexpr std::array<std::pair<rsrc::id, int>, RESCOURCE_DIVERSITY>
+    RSRC_SPAWN_CHANCE_GRASS = {{rsrc::TREE, 5}, RSRC_NULL, RSRC_NULL};
+
 constexpr std::array<int, RESCOURCE_DIVERSITY> RSRC_SPAWN_CHANCE_WATER = {0, 0,
                                                                           0};
 constexpr std::array<int, RESCOURCE_DIVERSITY> RSRC_SPAWN_CHANCE_DIRT = {0, 0,
@@ -212,7 +213,7 @@ constexpr int DETAIL_DIVERSITY = 6;
 constexpr int TOTAL_WEIGHT_DET = 100;
 constexpr std::array<int, DETAIL_DIVERSITY> DET_SPAWN_CHANCE_GRASS = {5, 4, 3,
                                                                       0, 0, 0};
-constexpr std::array<int, DETAIL_DIVERSITY> DET_SPAWN_CHANCE_WATER = {5, 0, 0,
+constexpr std::array<int, DETAIL_DIVERSITY> DET_SPAWN_CHANCE_WATER = {3, 0, 0,
                                                                       0, 0, 0};
 constexpr std::array<int, DETAIL_DIVERSITY> DET_SPAWN_CHANCE_DIRT = {3, 1, 0,
                                                                      0, 0, 0};

@@ -8,7 +8,6 @@
 #include <atomic>
 #include <future>
 #include <mutex>
-#include <random>
 #include <vector>
 
 // --- HEXAGON ---
@@ -45,13 +44,12 @@ struct TileDet {
 // --- Terrain Resource ---
 struct TileRsrc {
   Vector2 tilePos;
-  rsrc::id rsrcID;
-  int taOffsetX;
+  rsrc::id id;
 };
 
 // --- Map Tile ---
 struct MapTile {
-  tile::id tileID;
+  tile::id id;
   TileDet det[conf::TERRAIN_DETAILS_MAX];
   TileRsrc rsrc[conf::TERRAIN_RESOURCE_MAX];
 };

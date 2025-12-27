@@ -73,32 +73,32 @@ void HexGrid::InitGrid(float radius) {
 
       if (abs(q) + abs(r) + abs(-q - r) <= mapRadius * 2) {
 
-        MapTile initTile = {.tileID = tile::GRASS};
+        MapTile initTile = {.id = tile::GRASS};
 
         for (TileDet &d : initTile.det) {
           d.taOffsetX = conf::UNINITIALIZED;
         }
 
         for (TileRsrc &r : initTile.rsrc) {
-          r.rsrcID = (rsrc::id)conf::UNINITIALIZED;
+          r.id = (rsrc::id)conf::UNINITIALIZED;
         }
 
         tileData[gridR * gridSize + gridQ] = initTile;
         this->tilesInUse++;
 
       } else {
-        tileData[gridR * gridSize + gridQ] = (MapTile){.tileID = tile::NULL_ID};
+        tileData[gridR * gridSize + gridQ] = (MapTile){.id = tile::NULL_ID};
       }
     }
   }
   CalcVisibleTiles();
 }
 
-TileDet HexGrid::GetRandomTerainDetail(tile::id tileID) {
+TileDet HexGrid::GetRandomTerainDetail(tile::id id) {
   float x = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
   float y = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
 
-  auto spawnData = spawn_data_lut::detLut.at(tileID);
+  auto spawnData = spawn_data_lut::detLut.at(id);
 
   int totalWeight = spawn_data::TOTAL_WEIGHT_DET;
   int taOffsetX = conf::SKIP_RENDER;
@@ -112,22 +112,22 @@ TileDet HexGrid::GetRandomTerainDetail(tile::id tileID) {
   return TileDet{.tilePos = Vector2{x, y}, .taOffsetX = taOffsetX};
 }
 
-TileRsrc HexGrid::GetRandomTerainResource(tile::id tileID) {
+TileRsrc HexGrid::GetRandomTerainResource(tile::id id) {
   float x = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
   float y = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
 
-  auto spawnData = spawn_data_lut::detLut.at(tileID);
+  auto spawnData = spawn_data_lut::rsrcLut.at(id);
 
   int totalWeight = spawn_data::TOTAL_WEIGHT_DET;
-  int taOffsetX = conf::SKIP_RENDER;
+  rsrc::id rsrcID = rsrc::NULL_ID;
   int index = GetRandomValue(0, spawnData.size());
 
   int randNum = GetRandomValue(0, totalWeight);
-  if (randNum <= spawnData[index]) {
-    taOffsetX = index;
+  if (randNum <= spawnData[index].second) {
+    rsrcID = spawnData[index].first;
   }
 
-  return TileRsrc{.tilePos = Vector2{x, y}, .taOffsetX = taOffsetX};
+  return TileRsrc{.tilePos = Vector2{x, y}, .id = rsrcID};
 }
 
 void HexGrid::SetGFX_Manager(GFX_Manager *graphicsManager) {
@@ -143,7 +143,7 @@ bool HexGrid::HasTile(HexCoord h) const {
   if (!IsInBounds(h)) {
     return false;
   }
-  return GetTile(h).tileID != tile::NULL_ID;
+  return GetTile(h).id != tile::NULL_ID;
 }
 
 bool HexGrid::IsWalkable(HexCoord h) const {
@@ -151,7 +151,7 @@ bool HexGrid::IsWalkable(HexCoord h) const {
     return false;
   }
   MapTile tile = HexCoordToTile(h);
-  tile::id type = tile.tileID;
+  tile::id type = tile.id;
   for (int i = 0; i < conf::WALKABLE_TILE_IDS.size(); i++) {
     if (type == conf::WALKABLE_TILE_IDS[i]) {
       return true;
@@ -194,17 +194,17 @@ Vector2 HexGrid::CoordToPoint(int q, int r) const {
 }
 
 tile::id HexGrid::PointToType(Vector2 point) const {
-  return PointToTile(point).tileID;
+  return PointToTile(point).id;
 }
 
 tile::id HexGrid::HexCoordToType(HexCoord h) const {
   MapTile m = HexCoordToTile(h);
-  return m.tileID;
+  return m.id;
 }
 
 MapTile HexGrid::HexCoordToTile(HexCoord h) const {
   if (!IsInBounds(h)) {
-    return (MapTile){.tileID = tile::NULL_ID};
+    return (MapTile){.id = tile::NULL_ID};
   }
   return GetTile(h);
 }
@@ -222,8 +222,8 @@ HexCoord HexGrid::PointToHexCoord(Vector2 point) const {
   return HexRound({q, r, -q - r});
 }
 
-const char *HexGrid::TileToString(tile::id tileID) const {
-  switch (tileID) {
+const char *HexGrid::TileToString(tile::id id) const {
+  switch (id) {
   case tile::NULL_ID:
     return "NULL";
   case tile::GRASS:
@@ -261,7 +261,7 @@ void HexGrid::CalcVisibleTiles() {
   for (u16 r = 0; r < gridSize; r++) {
     for (u16 q = 0; q < gridSize; q++) {
 
-      if (tileData[r * gridSize + q].tileID == tile::NULL_ID) {
+      if (tileData[r * gridSize + q].id == tile::NULL_ID) {
         continue;
       }
       // Convert grid coordinates to HexCoord and then to screen coordinates.
@@ -301,7 +301,7 @@ bool HexGrid::CheckSurrounded(HexCoord target) const {
     HexCoord n = GetNeighbor(target, i);
     if (IsInBounds(n)) {
       neighborCount++;
-      if (GetTile(n).tileID == tile::NULL_ID) {
+      if (GetTile(n).id == tile::NULL_ID) {
         wallCount++;
       }
     }
@@ -309,14 +309,14 @@ bool HexGrid::CheckSurrounded(HexCoord target) const {
   return (neighborCount > 0 && wallCount == neighborCount);
 }
 
-bool HexGrid::RemoveResource(HexCoord h, int rsrcID) {
+bool HexGrid::RemoveResource(HexCoord h, int id) {
   if (!HasTile(h)) {
     return false;
   }
   MapTile &tile = GetTile(h);
   for (TileRsrc &rsrc : tile.rsrc) {
-    if (rsrc.rsrcID - tex_atlas::RESOURCE_X == rsrcID) {
-      rsrc.rsrcID = (rsrc::id)conf::UNINITIALIZED;
+    if (rsrc.id - tex_atlas::RESOURCE_X == id) {
+      rsrc.id = (rsrc::id)conf::UNINITIALIZED;
       return true;
     }
   }
@@ -385,8 +385,8 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
 
   for (const HexCoord &h : currentVisibleTiles) {
 
-    MapTile &t = GetTile(h);
-    tile::id id = t.tileID;
+    MapTile &tile = GetTile(h);
+    tile::id id = tile.id;
 
     Vector2 tileCenter = HexCoordToPoint(h);
     Vector2 renderPos = Vector2{tileCenter.x - tex_atlas::RES16_F,
@@ -405,22 +405,22 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
     destRec.y -= tex_atlas::RES16_F;
 
     // Initialise if undiscoverd and draw details
-    for (TileDet &d : t.det) {
+    for (TileDet &d : tile.det) {
       if (d.taOffsetX == conf::UNINITIALIZED) {
-        d = GetRandomTerainDetail(t.tileID);
+        d = GetRandomTerainDetail(tile.id);
       }
       if (d.taOffsetX != conf::SKIP_RENDER) {
-        LoadDetailGFX(destRec, d, t.tileID);
+        LoadDetailGFX(destRec, d, tile.id);
       }
     }
 
     // Initialise if undiscoverd and draw resource
-    for (TileRsrc &r : t.rsrc) {
-      if (r.rsrcID == (rsrc::id)conf::UNINITIALIZED) {
-        r = GetRandomTerainResource(t.tileID);
+    for (TileRsrc &rsrc : tile.rsrc) {
+      if (rsrc.id == (rsrc::id)conf::UNINITIALIZED) {
+        rsrc = GetRandomTerainResource(tile.id);
       }
-      if (r.rsrcID != (rsrc::id)conf::SKIP_RENDER) {
-        LoadResourceGFX(destRec, r, t.tileID);
+      if (rsrc.id != (rsrc::id)conf::SKIP_RENDER) {
+        LoadResourceGFX(destRec, rsrc, tile.id);
       }
     }
   }
@@ -432,27 +432,27 @@ void HexGrid::LoadTileGFX(Rectangle destRec, int x, int y) {
 }
 
 void HexGrid::LoadDetailGFX(Rectangle destRec, const TileDet detail,
-                            tile::id tileID) {
+                            tile::id id) {
   destRec.x += detail.tilePos.x;
   destRec.y += detail.tilePos.y;
   int taX = tex_atlas::DETAILS_X + detail.taOffsetX;
-  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, taX, tileID, destRec,
-                                WHITE);
+  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, taX, id, destRec, WHITE);
 }
 
 void HexGrid::LoadResourceGFX(Rectangle destRec, const TileRsrc rsrc,
-                              tile::id tileID) {
+                              tile::id id) {
 
   destRec.x += rsrc.tilePos.x;
   destRec.y += rsrc.tilePos.y;
-  if (rsrc.rsrcID - tex_atlas::RESOURCE_X == rsrc::TREE) {
+
+  int taX = rsrc.id + tex_atlas::RESOURCE_X;
+  if (rsrc.id == rsrc::TREE) {
     destRec.height += tex_atlas::RES32_F;
     destRec.y -= tex_atlas::RES32_F;
-    graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND, rsrc.rsrcID,
-                                        tileID, destRec, WHITE);
+    graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND, taX, id, destRec,
+                                        WHITE);
   } else {
-    graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, rsrc.rsrcID, tileID,
-                                  destRec, WHITE);
+    graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, taX, id, destRec, WHITE);
   }
 }
 
@@ -487,9 +487,9 @@ bool HexGrid::CheckObstacleCollision(Vector2 worldPos, float radius) {
     Vector2 tileCenter = HexCoordToPoint(h);
 
     for (const TileRsrc &rsrc : tile.rsrc) {
-      if (rsrc.rsrcID != (rsrc::id)conf::UNINITIALIZED &&
-          rsrc.rsrcID != (rsrc::id)conf::SKIP_RENDER) {
-        if (rsrc.rsrcID - tex_atlas::RESOURCE_X == rsrc::TREE) {
+      if (rsrc.id != (rsrc::id)conf::UNINITIALIZED &&
+          rsrc.id != (rsrc::id)conf::SKIP_RENDER) {
+        if (rsrc.id - tex_atlas::RESOURCE_X == rsrc::TREE) {
 
           Vector2 treePos = {tileCenter.x + rsrc.tilePos.x,
                              tileCenter.y + rsrc.tilePos.y};
@@ -508,18 +508,18 @@ bool HexGrid::CheckObstacleCollision(Vector2 worldPos, float radius) {
 // ============= Setter =====================
 void HexGrid::SetCamRectPointer(Rectangle *camRect) { this->camRect = camRect; }
 
-bool HexGrid::SetTile(HexCoord h, tile::id tileID) {
-  if (!IsInBounds(h) || HexCoordToType(h) == tileID) {
+bool HexGrid::SetTile(HexCoord h, tile::id id) {
+  if (!IsInBounds(h) || HexCoordToType(h) == id) {
     return false;
 
   } else {
     MapTile &t = GetTile(h);
-    t.tileID = tileID;
+    t.id = id;
     for (TileDet &d : t.det) {
-      d = GetRandomTerainDetail(tileID);
+      d = GetRandomTerainDetail(id);
     }
     for (TileRsrc &r : t.rsrc) {
-      r = GetRandomTerainResource(tileID);
+      r = GetRandomTerainResource(id);
     }
 
     return true;

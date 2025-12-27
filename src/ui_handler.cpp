@@ -257,7 +257,7 @@ RsrcPos UI_Handler::GetHoveredRsrcPos() {
     float curDist = Vector2DistanceSqr(mousePos, rsrcPos);
     if (closestDist > curDist) {
       closestRsrcIndex = i;
-      type = tile.rsrc[i].rsrcID;
+      type = tile.rsrc[i].id;
       screenPos = rsrcPos;
     }
   }

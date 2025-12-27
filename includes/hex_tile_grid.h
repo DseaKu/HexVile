@@ -42,17 +42,11 @@ struct TileDet {
   int taOffsetX;
 };
 
-// --- Terrain Resource ---
-struct TileRsrc {
-  Vector2 tilePos;
-  rsrc::Props type;
-};
-
 // --- Map Tile ---
 struct MapTile {
   tile::id id;
   TileDet det[conf::TERRAIN_DETAILS_MAX];
-  TileRsrc rsrc[conf::TERRAIN_RESOURCE_MAX];
+  rsrc::Object rsrc[conf::TERRAIN_RESOURCE_MAX];
 };
 
 /* Grid parts and relationships:
@@ -111,7 +105,7 @@ private:
   const MapTile &GetTile(HexCoord h) const;
   MapTile &GetTile(HexCoord h);
   TileDet GetRandomTerainDetail(tile::id tileID);
-  TileRsrc GetRandomTerainResource(tile::id tileID);
+  rsrc::Object GetRandomTerainResource(tile::id tileID);
   void CalcRenderRect();
   void CalcVisibleTiles();
   void UpdateTileVisibility(float totalTime);
@@ -122,7 +116,8 @@ private:
   // --- Render ---
   void LoadTileGFX(Rectangle destRec, int x, int y);
   void LoadDetailGFX(Rectangle destRec, const TileDet d, tile::id tileID);
-  void LoadResourceGFX(Rectangle destRec, const TileRsrc r, tile::id tileID);
+  void LoadResourceGFX(Rectangle destRec, const rsrc::Object r,
+                       tile::id tileID);
 
 public:
   HexGrid();

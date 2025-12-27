@@ -4,9 +4,7 @@
 #include "font_handler.h"
 #include "hex_tile_grid.h"
 #include "raylib.h"
-#include "raymath.h"
 #include "texture_atlas.h"
-#include <limits>
 #include <string>
 #include <utility>
 
@@ -241,35 +239,6 @@ int UI_Handler::GetToolBarSelection() {
   return curSelection;
 }
 RsrcPos UI_Handler::GetHoveredRsrcPos() {
-
-  Vector2 mousePos = frameContext->pos.mouseScreen;
-  HexCoord h = hexGrid->PointToHexCoord(mousePos);
-  MapTile tile = hexGrid->HexCoordToTile(h);
-
-  // Get closest resource to the current mouse pointer
-  float closestDist = std::numeric_limits<float>::max();
-  int closestRsrcIndex = -1;
-  rsrc::id type;
-  Vector2 screenPos;
-
-  for (int i = 0; i < conf::TERRAIN_RESOURCE_MAX; i++) {
-    Vector2 rsrcPos = tile.rsrc[i].tilePos;
-    float curDist = Vector2DistanceSqr(mousePos, rsrcPos);
-    if (closestDist > curDist) {
-      closestRsrcIndex = i;
-      type = tile.rsrc[i].id;
-      screenPos = rsrcPos;
-    }
-  }
-  if (closestRsrcIndex == -1) {
-    return RsrcPos{.tileIndex = TileIndex{0, 0},
-                   .rsrcIndex = 0,
-                   .id = rsrc::NULL_ID,
-                   .screenPos = Vector2{0, 0}};
-  } else {
-    return RsrcPos{.tileIndex = TileIndex{h.q, h.r},
-                   .rsrcIndex = closestRsrcIndex,
-                   .id = type,
-                   .screenPos = screenPos};
-  }
+  RsrcPos a;
+  return a;
 }

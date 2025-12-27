@@ -47,7 +47,8 @@ constexpr const int TERRAIN_RESOURCE_MAX = 1;
 
 constexpr float TREE_COLLISION_RADIUS = 3.0f;
 constexpr float INTERACT_DISTANCE = 60.0f;
-constexpr int SPAWN_CHANCE_RSRC = 100; // Higher -> less spwan
+constexpr int TOTAL_WEIGHT_RSRC = 100; // Higher -> less spwan chance
+constexpr int TOTAL_WEIGHT_DET = 100;
 // ==========================================
 //               Hex Tile
 // ==========================================

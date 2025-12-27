@@ -2,32 +2,36 @@
 #define RESCOURCE_H
 
 #include "enums.h"
+#include "raylib.h"
 #include "texture_atlas.h"
-
 namespace rsrc {
 
-enum id : int {
-  NULL_ID = -1,
-  TREE_ID = 0,
-  SIZE,
+constexpr Vector2 POS_NULL = {0, 0};
+
+enum ID : int {
+  UNINITIALIZED = -2,
+  ID_NULL = -1,
+  ID_TREE = 0,
+  ID_ROCK,
 };
-struct Def {
+struct Object {
+  Vector2 tilePos;
   TA_Pos taPos;
   int hp;
-  rsrc::id id;
+  ID id;
   int spawn_chance;
 };
 
-constexpr Def RSRC_NULL = {tex_atlas::POS_NULL, 0, NULL_ID, 0};
+constexpr Object RSRC_NULL = {POS_NULL, tex_atlas::POS_NULL, 0, ID_NULL, 0};
 
 // --- Grass ---
-constexpr Def TREE = {tex_atlas::RSRC_TREE, 100, TREE_ID, 5};
+constexpr Object TREE = {POS_NULL, tex_atlas::RSRC_TREE, 100, ID_TREE, 5};
 
 // --- Water ---
 // --- Dirt ---
-constexpr Def ROCK = {tex_atlas::RSRC_STONE, 100, TREE_ID, 5};
+constexpr Object ROCK = {POS_NULL, tex_atlas::RSRC_STONE, 100, ID_ROCK, 5};
 
-inline const std::map<tile::id, Def> TILE_LUT = {
+inline const std::map<tile::id, Object> TILE_LUT = {
     {tile::GRASS, TREE},
     {tile::WATER, RSRC_NULL},
     {tile::DIRT, ROCK},

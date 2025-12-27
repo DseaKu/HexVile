@@ -156,7 +156,7 @@ void Player::Chop(HexCoord target) {
     animationDelta += this->frameContext->deltaTime;
     if (animationDelta < 3.0f) {
 
-      if (hexGrid->RemoveResource(target, rsrc::TREE)) {
+      if (hexGrid->RemoveResource(target, rsrc::ID_TREE)) {
         itemHandler->AddItem(item::WOOD, 1);
         stateID = playerState::IDLE;
       }

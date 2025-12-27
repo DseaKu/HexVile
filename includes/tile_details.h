@@ -1,9 +1,10 @@
-#ifndef SPAWN_RULES_H
-#define SPAWN_RULES_H
+#ifndef TILE_DETAILS_H
+#define TILE_DETAILS_H
 
-#include "resource.h"
+#include "enums.h"
+#include <array>
 
-namespace spawn_data_rsrc {
+namespace tile_det {
 
 // ==========================================
 //               Resource
@@ -12,23 +13,7 @@ constexpr int RESCOURCE_DIVERSITY = 3;
 constexpr int SPAWN_CHANCE_TREE = 5;
 constexpr int SPAWN_CHANCE_ROCK = 5;
 
-constexpr std::pair<rsrc::id, int> RSRC_NULL = {rsrc::NULL_ID, 0};
-
-constexpr std::array<std::pair<rsrc::id, int>, RESCOURCE_DIVERSITY>
-    RSRC_SPAWN_CHANCE_GRASS = {{{rsrc::TREE, 5}, RSRC_NULL, RSRC_NULL}};
-
-constexpr std::array<std::pair<rsrc::id, int>, RESCOURCE_DIVERSITY>
-    RSRC_SPAWN_CHANCE_WATER = {RSRC_NULL, RSRC_NULL, RSRC_NULL};
-constexpr std::array<std::pair<rsrc::id, int>, RESCOURCE_DIVERSITY>
-    RSRC_SPAWN_CHANCE_DIRT = {RSRC_NULL, RSRC_NULL, RSRC_NULL};
-
-inline const std::map<tile::id,
-                      std::array<std::pair<rsrc::id, int>, RESCOURCE_DIVERSITY>>
-    rsrcLut = {{tile::GRASS, RSRC_SPAWN_CHANCE_GRASS},
-               {tile::WATER, RSRC_SPAWN_CHANCE_WATER},
-               {tile::DIRT, RSRC_SPAWN_CHANCE_DIRT}};
-
-} // namespace spawn_data_rsrc
+} // namespace tile_det
 
 // ==========================================
 //               Details
@@ -50,4 +35,4 @@ inline const std::map<tile::id, std::array<int, DETAIL_DIVERSITY>> detLut = {
     {tile::DIRT, DET_SPAWN_CHANCE_DIRT}};
 
 } // namespace spawn_data_det
-#endif // !SPAWN_RULES_H
+#endif // !TILE_DETAILS_H

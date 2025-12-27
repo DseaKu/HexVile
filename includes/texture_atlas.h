@@ -5,14 +5,14 @@
 #include <map>
 #include <utility>
 
-struct TA_Pos {
-  int x;
-  int y;
-};
 // ==========================================
 //               Texture atlas
 // ==========================================
 namespace tex_atlas {
+struct XY_Coords {
+  int x;
+  int y;
+};
 
 // --- Resolution ---
 constexpr int RES32_OFFSET = 100;
@@ -41,9 +41,9 @@ constexpr int DETAILS_X = TILES_X_MAX;
 constexpr int DETAILS_X_MAX = DETAILS_X + 12;
 
 // --- Resource ---
-constexpr TA_Pos RSRC = {DETAILS_X_MAX, 0};
-constexpr TA_Pos RSRC_TREE = {RSRC.x, RSRC.y};
-constexpr TA_Pos RSRC_STONE = {RSRC.x, RSRC.y + 1};
+constexpr XY_Coords RSRC = {DETAILS_X_MAX, 0};
+constexpr XY_Coords RSRC_TREE = {RSRC.x, RSRC.y};
+constexpr XY_Coords RSRC_STONE = {RSRC.x, RSRC.y + 1};
 constexpr int RESOURCE_X = DETAILS_X_MAX;
 constexpr int RESOURCE_Y = 0;
 constexpr int RESOURCE_X_MAX = RESOURCE_X + 8;
@@ -63,7 +63,7 @@ constexpr int ITEM_Y = 50;
 constexpr int ITEM_X_MAX = 10;
 
 // --- Null ---
-constexpr TA_Pos POS_NULL = {0, 0};
+constexpr XY_Coords POS_NULL = {0, 0};
 
 // --- Animation ---
 constexpr float PLAYER_ANIMATION_SPEED = 10.0f;

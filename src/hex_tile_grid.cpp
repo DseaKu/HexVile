@@ -115,13 +115,16 @@ TileDet HexGrid::GetRandomTerainDetail(tile::id id) {
 }
 
 rsrc::Object HexGrid::GetRandomTerainResource(tile::id id) {
-  float x = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
-  float y = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
 
   auto spawnData = rsrc::TILE_LUT.at(id);
 
+  float x = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
+  float y = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
+
+  spawnData.tilePos = {x, y};
+
   int totalWeight = conf::TOTAL_WEIGHT_RSRC;
-  rsrc::Object rsrc = rsrc::RSRC_NULL;
+  rsrc::Object rsrc = rsrc::OBJECT_NULL;
   int index = GetRandomValue(0, totalWeight);
 
   int randNum = GetRandomValue(0, totalWeight);
@@ -448,13 +451,16 @@ void HexGrid::LoadResourceGFX(Rectangle destRec, const rsrc::Object rsrc,
   destRec.y += rsrc.tilePos.y;
 
   int taX = rsrc.id + tex_atlas::RESOURCE_X;
+  tex_atlas::XY_Coords texAtlas = rsrc.xyTexAtlas;
+
   if (rsrc.id == rsrc::ID_TREE) {
     destRec.height += tex_atlas::RES32_F;
     destRec.y -= tex_atlas::RES32_F;
-    graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND, taX, id, destRec,
-                                        WHITE);
+    graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND, texAtlas.x,
+                                        texAtlas.y, destRec, WHITE);
   } else {
-    graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, taX, id, destRec, WHITE);
+    graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, texAtlas.x, texAtlas.y,
+                                  destRec, WHITE);
   }
 }
 

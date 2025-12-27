@@ -239,4 +239,4 @@ int UI_Handler::GetToolBarSelection() {
   }
   return curSelection;
 }
-rsrc::Object UI_Handler::GetHoveredRsrcPos() { return rsrc::RSRC_NULL; }
+rsrc::Object UI_Handler::GetHoveredRsrcPos() { return rsrc::OBJECT_NULL; }

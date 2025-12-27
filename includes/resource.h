@@ -16,25 +16,27 @@ enum ID : int {
 };
 struct Object {
   Vector2 tilePos;
-  TA_Pos taPos;
+  tex_atlas::XY_Coords xyTexAtlas;
   int hp;
   ID id;
   int spawn_chance;
 };
 
-constexpr Object RSRC_NULL = {POS_NULL, tex_atlas::POS_NULL, 0, ID_NULL, 0};
+constexpr Object OBJECT_NULL = {POS_NULL, tex_atlas::POS_NULL, 0, ID_NULL, 0};
 
 // --- Grass ---
-constexpr Object TREE = {POS_NULL, tex_atlas::RSRC_TREE, 100, ID_TREE, 5};
+constexpr Object OBJECT_TREE = {POS_NULL, tex_atlas::RSRC_TREE, 100, ID_TREE,
+                                5};
 
 // --- Water ---
 // --- Dirt ---
-constexpr Object ROCK = {POS_NULL, tex_atlas::RSRC_STONE, 100, ID_ROCK, 5};
+constexpr Object OBJECT_ROCK = {POS_NULL, tex_atlas::RSRC_STONE, 100, ID_ROCK,
+                                5};
 
 inline const std::map<tile::id, Object> TILE_LUT = {
-    {tile::GRASS, TREE},
-    {tile::WATER, RSRC_NULL},
-    {tile::DIRT, ROCK},
+    {tile::GRASS, OBJECT_TREE},
+    {tile::WATER, OBJECT_NULL},
+    {tile::DIRT, OBJECT_ROCK},
 };
 } // namespace rsrc
 

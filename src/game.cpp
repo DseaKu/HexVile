@@ -195,7 +195,7 @@ void Game::RunLogic() {
   frameContext.selToolBarSlot = uiHandler.GetToolBarSelection();
 
   // --- Get position of hovered resource ---
-  // frameContext.pos.selRsrc = uiHandler.GetHoveredRsrcPos();
+  frameContext.pos.selRsrc = uiHandler.GetHoveredRsrcPos();
 
   // Player Update
   worldState.player.Update();

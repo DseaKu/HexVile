@@ -7,6 +7,7 @@
 #include "hex_tile_grid.h"
 #include "item_handler.h"
 #include "raylib.h"
+#include "resource.h"
 
 class UI_Handler {
 private:
@@ -66,7 +67,7 @@ public:
 
   // Getter
   int GetToolBarSelection();
-  RsrcPos GetHoveredRsrcPos();
+  rsrc::Object GetHoveredRsrcPos();
 };
 
 #endif // UI_HANDLER_H

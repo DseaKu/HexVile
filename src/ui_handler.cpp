@@ -4,6 +4,7 @@
 #include "font_handler.h"
 #include "hex_tile_grid.h"
 #include "raylib.h"
+#include "resource.h"
 #include "texture_atlas.h"
 #include <string>
 #include <utility>
@@ -238,7 +239,4 @@ int UI_Handler::GetToolBarSelection() {
   }
   return curSelection;
 }
-RsrcPos UI_Handler::GetHoveredRsrcPos() {
-  RsrcPos a;
-  return a;
-}
+rsrc::Object UI_Handler::GetHoveredRsrcPos() { return rsrc::RSRC_NULL; }

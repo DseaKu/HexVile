@@ -163,13 +163,6 @@ struct TileIndex {
   int r;
 };
 
-struct RsrcPos {
-  TileIndex tileIndex;
-  int rsrcIndex;
-  // rsrc::id id;
-  Vector2 screenPos;
-};
-
 struct Location {
   Vector2 mouseScreen;
   Vector2 mouseWorld;

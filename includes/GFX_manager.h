@@ -45,6 +45,7 @@ public:
   void LoadGFX_Data_32x64(drawMask::id layerID, int TA_X, int TA_Y,
                           Rectangle dstRec, Color col);
   void RenderLayer(drawMask::id layer);
+
   Rectangle GetTileRec(tile::id id, int frame);
 
   void SwapBuffers();

@@ -16,7 +16,7 @@ enum ID : int {
 };
 struct Object {
   Vector2 tilePos;
-  tex_atlas::XY_Coords xyTexAtlas;
+  tex_atlas::Coords xyTexAtlas;
   int hp;
   ID id;
   int spawn_chance;
@@ -26,7 +26,7 @@ constexpr Object OBJECT_NULL = {POS_NULL, tex_atlas::POS_NULL, 0, ID_NULL, 0};
 
 // --- Grass ---
 constexpr Object OBJECT_TREE = {POS_NULL, tex_atlas::RSRC_TREE, 100, ID_TREE,
-                                5};
+                                1};
 
 // --- Water ---
 // --- Dirt ---

@@ -45,9 +45,9 @@ Rectangle GFX_Manager::GetSrcRec(int x, int y) { return textureRecData[y][x]; }
 
 void GFX_Manager::UnloadAssets() { UnloadTexture(this->textureAtlas); }
 
-void GFX_Manager::LoadGFX_Data(drawMask::id layerID, int TA_X, int TA_Y,
+void GFX_Manager::LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
                                Rectangle dstRec, Color col) {
-  Rectangle srcRec = GetSrcRec(TA_X, TA_Y);
+  Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
   // Write to Back Buffer
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
       dstRec.y, GFX_Props{textureAtlas, srcRec, dstRec, col});

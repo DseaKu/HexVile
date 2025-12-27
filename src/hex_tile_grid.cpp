@@ -340,7 +340,7 @@ void HexGrid::DrawTile(HexCoord h, int TA_X, int TA_Y, drawMask::id layerID) {
   const MapTile &tile = GetTile(h);
   Vector2 origin = {0.0f, 0.0f};
 
-  graphicsManager->LoadGFX_Data(layerID, TA_X, TA_Y, destRect, WHITE);
+  graphicsManager->LoadGFX_Data(layerID, {TA_X, TA_Y}, destRect, WHITE);
 }
 
 void HexGrid::UpdateTileVisibility(float totalTime) {
@@ -433,7 +433,7 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
 
 // ============= Render =====================
 void HexGrid::LoadTileGFX(Rectangle destRec, int x, int y) {
-  graphicsManager->LoadGFX_Data(drawMask::GROUND_0, x, y, destRec, WHITE);
+  graphicsManager->LoadGFX_Data(drawMask::GROUND_0, {x, y}, destRec, WHITE);
 }
 
 void HexGrid::LoadDetailGFX(Rectangle destRec, const TileDet detail,
@@ -441,7 +441,7 @@ void HexGrid::LoadDetailGFX(Rectangle destRec, const TileDet detail,
   destRec.x += detail.tilePos.x;
   destRec.y += detail.tilePos.y;
   int taX = tex_atlas::DETAILS_X + detail.taOffsetX;
-  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, taX, id, destRec, WHITE);
+  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, {taX, id}, destRec, WHITE);
 }
 
 void HexGrid::LoadResourceGFX(Rectangle destRec, const rsrc::Object rsrc,
@@ -451,7 +451,7 @@ void HexGrid::LoadResourceGFX(Rectangle destRec, const rsrc::Object rsrc,
   destRec.y += rsrc.tilePos.y;
 
   int taX = rsrc.id + tex_atlas::RESOURCE_X;
-  tex_atlas::XY_Coords texAtlas = rsrc.xyTexAtlas;
+  tex_atlas::Coords texAtlas = rsrc.xyTexAtlas;
 
   if (rsrc.id == rsrc::ID_TREE) {
     destRec.height += tex_atlas::RES32_F;
@@ -459,7 +459,7 @@ void HexGrid::LoadResourceGFX(Rectangle destRec, const rsrc::Object rsrc,
     graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND, texAtlas.x,
                                         texAtlas.y, destRec, WHITE);
   } else {
-    graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, texAtlas.x, texAtlas.y,
+    graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, {texAtlas.x, texAtlas.y},
                                   destRec, WHITE);
   }
 }
@@ -520,13 +520,14 @@ bool HexGrid::SetTile(HexCoord h, tile::id id) {
     return false;
 
   } else {
-    MapTile &t = GetTile(h);
-    t.id = id;
-    for (TileDet &d : t.det) {
-      d = GetRandomTerainDetail(id);
+    MapTile &tile = GetTile(h);
+    tile.id = id;
+    for (TileDet &det : tile.det) {
+      det = GetRandomTerainDetail(id);
     }
-    for (rsrc::Object &r : t.rsrc) {
-      r = GetRandomTerainResource(id);
+    for (rsrc::Object &rsrc : tile.rsrc) {
+      // r = GetRandomTerainResource(id);
+      rsrc = rsrc::OBJECT_NULL;
     }
 
     return true;

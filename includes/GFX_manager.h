@@ -34,8 +34,8 @@ public:
   GFX_Manager();
   int LoadAssets(const char *);
   void UnloadAssets();
-  void LoadGFX_Data(drawMask::id layerID, int TA_X, int TA_Y, Rectangle dstRec,
-                    Color col);
+  void LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
+                    Rectangle dstRec, Color col);
 
   void LoadGFX_Data(drawMask::id layerID, Texture2D texture, Rectangle srcRec,
                     Rectangle dstRec, Color col);

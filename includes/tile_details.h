@@ -22,12 +22,12 @@ namespace spawn_data_det {
 // --- Details ---
 constexpr int DETAIL_DIVERSITY = 6;
 constexpr int TOTAL_WEIGHT_DET = 100;
-constexpr std::array<int, DETAIL_DIVERSITY> DET_SPAWN_CHANCE_GRASS = {5, 4, 3,
-                                                                      0, 0, 0};
-constexpr std::array<int, DETAIL_DIVERSITY> DET_SPAWN_CHANCE_WATER = {3, 0, 0,
-                                                                      0, 0, 0};
-constexpr std::array<int, DETAIL_DIVERSITY> DET_SPAWN_CHANCE_DIRT = {3, 1, 0,
-                                                                     0, 0, 0};
+constexpr std::array<int, DETAIL_DIVERSITY> DET_SPAWN_CHANCE_GRASS = {13, 5, 5,
+                                                                      0,  0, 0};
+constexpr std::array<int, DETAIL_DIVERSITY> DET_SPAWN_CHANCE_WATER = {10, 3, 0,
+                                                                      0,  0, 0};
+constexpr std::array<int, DETAIL_DIVERSITY> DET_SPAWN_CHANCE_DIRT = {20, 10, 2,
+                                                                     0,  0,  0};
 
 inline const std::map<tile::id, std::array<int, DETAIL_DIVERSITY>> detLut = {
     {tile::GRASS, DET_SPAWN_CHANCE_GRASS},

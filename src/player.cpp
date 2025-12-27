@@ -301,5 +301,6 @@ void Player::GenerateDrawData() {
                        tex_atlas::RES32_F};
 
   // Load texture to renderer
-  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, taX, taY, dstRect, WHITE);
+  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, {taX, taY}, dstRect,
+                                WHITE);
 }

@@ -3,13 +3,12 @@
 
 #include "enums.h"
 #include <map>
-#include <utility>
 
 // ==========================================
 //               Texture atlas
 // ==========================================
 namespace tex_atlas {
-struct XY_Coords {
+struct Coords {
   int x;
   int y;
 };
@@ -41,9 +40,9 @@ constexpr int DETAILS_X = TILES_X_MAX;
 constexpr int DETAILS_X_MAX = DETAILS_X + 12;
 
 // --- Resource ---
-constexpr XY_Coords RSRC = {DETAILS_X_MAX, 0};
-constexpr XY_Coords RSRC_TREE = {RSRC.x, RSRC.y};
-constexpr XY_Coords RSRC_STONE = {RSRC.x, RSRC.y + 1};
+constexpr Coords RSRC = {DETAILS_X_MAX, 0};
+constexpr Coords RSRC_TREE = {RSRC.x, RSRC.y};
+constexpr Coords RSRC_STONE = {RSRC.x, RSRC.y + 1};
 constexpr int RESOURCE_X = DETAILS_X_MAX;
 constexpr int RESOURCE_Y = 0;
 constexpr int RESOURCE_X_MAX = RESOURCE_X + 8;
@@ -63,7 +62,7 @@ constexpr int ITEM_Y = 50;
 constexpr int ITEM_X_MAX = 10;
 
 // --- Null ---
-constexpr XY_Coords POS_NULL = {0, 0};
+constexpr Coords POS_NULL = {0, 0};
 
 // --- Animation ---
 constexpr float PLAYER_ANIMATION_SPEED = 10.0f;
@@ -76,15 +75,15 @@ constexpr float NUMBER_SCALE =
     RES32 * 0.5f; // Don't go to low, it can corruped the font
 //
 // --- Items ---
-constexpr std::pair<float, float> ITEM_NULL = {0, 0};
-constexpr std::pair<float, float> ITEM_SET_GRASS = {ITEM_X + 0, ITEM_Y + 0};
-constexpr std::pair<float, float> ITEM_SET_WATER = {ITEM_X + 1, ITEM_Y + 0};
-constexpr std::pair<float, float> ITEM_SET_DIRT = {ITEM_X + 2, ITEM_Y + 0};
+constexpr Coords ITEM_NULL = {0, 0};
+constexpr Coords ITEM_SET_GRASS = {ITEM_X + 0, ITEM_Y + 0};
+constexpr Coords ITEM_SET_WATER = {ITEM_X + 1, ITEM_Y + 0};
+constexpr Coords ITEM_SET_DIRT = {ITEM_X + 2, ITEM_Y + 0};
 
-constexpr std::pair<float, float> ITEM_AXE_STONE = {ITEM_X + 0, ITEM_Y + 1};
-constexpr std::pair<float, float> ITEM_WOOD_LOG = {ITEM_X + 1, ITEM_Y + 1};
+constexpr Coords ITEM_AXE_STONE = {ITEM_X + 0, ITEM_Y + 1};
+constexpr Coords ITEM_WOOD_LOG = {ITEM_X + 1, ITEM_Y + 1};
 
-inline const std::map<item::id, std::pair<float, float>> ITEM_TEXTURE_COORDS = {
+inline const std::map<item::id, Coords> ITEM_TEXTURE_COORDS = {
     {item::NULL_ID, ITEM_NULL},        {item::SET_GRASS, ITEM_SET_GRASS},
     {item::SET_WATER, ITEM_SET_WATER}, {item::SET_DIRT, ITEM_SET_DIRT},
     {item::AXE, ITEM_AXE_STONE},       {item::WOOD, ITEM_WOOD_LOG},

@@ -7,7 +7,6 @@
 #include "resource.h"
 #include "texture_atlas.h"
 #include <string>
-#include <utility>
 
 // --- Initialization ---
 UI_Handler::UI_Handler() {
@@ -109,11 +108,11 @@ void UI_Handler::DrawToolBarSlot(int slotIndex) {
                         (float)toolBarLayout.contentSize};
 
   // 1. Draw Background
-  graphicsManager->LoadGFX_Data(drawMask::UI_0, tex_atlas::UI_X,
-                                ui::ITEM_BAR_BG, slotRect, WHITE);
+  graphicsManager->LoadGFX_Data(
+      drawMask::UI_0, {tex_atlas::UI_X, ui::ITEM_BAR_BG}, slotRect, WHITE);
   if (slotIndex == frameContext->selToolBarSlot) {
-    graphicsManager->LoadGFX_Data(drawMask::UI_0, tex_atlas::UI_X,
-                                  ui::ITEM_BAR_BG_H, slotRect, WHITE);
+    graphicsManager->LoadGFX_Data(
+        drawMask::UI_0, {tex_atlas::UI_X, ui::ITEM_BAR_BG_H}, slotRect, WHITE);
   }
 
   // 2. Draw Content
@@ -128,8 +127,7 @@ void UI_Handler::DrawItemIcon(int slotIndex, Rectangle slotRect) {
   ItemStack *itemStack = itemHandler->GetToolBarItemPointer(slotIndex);
 
   item::id itemID = itemStack->itemID;
-  std::pair<float, float> textCoords =
-      tex_atlas::ITEM_TEXTURE_COORDS.at(itemID);
+  tex_atlas::Coords taCoords = tex_atlas::ITEM_TEXTURE_COORDS.at(itemID);
 
   // Calculate shrunk rect for icon
   float newWidth = slotRect.width * toolBarLayout.itemScale;
@@ -140,8 +138,7 @@ void UI_Handler::DrawItemIcon(int slotIndex, Rectangle slotRect) {
   Rectangle dstRec = {slotRect.x + offsetX, slotRect.y + offsetY, newWidth,
                       newHeight};
 
-  graphicsManager->LoadGFX_Data(drawMask::UI_0, textCoords.first,
-                                textCoords.second, dstRec, WHITE);
+  graphicsManager->LoadGFX_Data(drawMask::UI_0, taCoords, dstRec, WHITE);
 }
 
 void UI_Handler::DrawItemCount(int slotIndex, Rectangle slotRect) {
@@ -179,7 +176,7 @@ void UI_Handler::DrawItemCount(int slotIndex, Rectangle slotRect) {
                                   // means "draw up/left from anchor"
     };
 
-    graphicsManager->LoadGFX_Data(drawMask::UI_1, tex_atlas::NUMBER_X, digit,
+    graphicsManager->LoadGFX_Data(drawMask::UI_1, {tex_atlas::NUMBER_X, digit},
                                   digitRect, WHITE);
     digitIndex++;
   }

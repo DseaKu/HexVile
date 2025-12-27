@@ -4,7 +4,6 @@
 #include "font_handler.h"
 #include "hex_tile_grid.h"
 #include "raylib.h"
-#include <string>
 
 // --- Initialization ---
 Game::Game() {
@@ -195,7 +194,7 @@ void Game::RunLogic() {
   frameContext.selToolBarSlot = uiHandler.GetToolBarSelection();
 
   // --- Get position of hovered resource ---
-  frameContext.pos.selRsrc = uiHandler.GetHoveredRsrcPos();
+  // frameContext.pos.selRsrc = uiHandler.GetHoveredRsrcPos();
 
   // Player Update
   worldState.player.Update();

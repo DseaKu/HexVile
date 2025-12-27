@@ -2,12 +2,11 @@
 #define UI_HANDLER_H
 
 #include "GFX_manager.h"
-#include "defines.h"
 #include "font_handler.h"
+#include "frame_context.h"
 #include "hex_tile_grid.h"
 #include "item_handler.h"
 #include "raylib.h"
-#include "resource.h"
 
 class UI_Handler {
 private:
@@ -36,7 +35,7 @@ private:
   ItemHandler *itemHandler;
   FontHandler *fontHandler;
   HexGrid *hexGrid;
-  const FrameContext *frameContext = nullptr;
+  const frame::Context *frameContext = nullptr;
 
   // Render Helpers
   void DrawHighlighedTile(Vector2 mouseWorldPos);
@@ -59,7 +58,7 @@ public:
   void SetFontHandler(FontHandler *p);
   void SetHexGrid(HexGrid *p);
   void SetToolBarActive(bool is_active);
-  void SetFrameContext(const FrameContext *curFrameContext);
+  void SetFrameContext(const frame::Context *curFrameContext);
 
   // Queries
   bool GetToolBarAvailability();
@@ -67,7 +66,7 @@ public:
 
   // Getter
   int GetToolBarSelection();
-  rsrc::Object GetHoveredRsrcPos();
+  MapTile *GetHoveredTile();
 };
 
 #endif // UI_HANDLER_H

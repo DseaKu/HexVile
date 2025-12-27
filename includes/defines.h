@@ -2,7 +2,6 @@
 #define DEFINES_H
 #include "enums.h"
 #include "raylib.h"
-#include "resource.h"
 #include <cstdint>
 #include <vector>
 
@@ -129,57 +128,5 @@ using s8 = std::int8_t;
 using s16 = std::int16_t;
 using s32 = std::int32_t;
 using s64 = std::int64_t;
-
-struct KeyboardInput {
-  bool One;
-  bool Two;
-  bool Three;
-  bool Four;
-  bool Five;
-  bool Six;
-  bool Seven;
-  bool Eight;
-  bool Nine;
-  bool Zero;
-  bool Up;
-  bool Down;
-  bool Left;
-  bool Right;
-};
-
-struct MouseInput {
-  bool left;
-  bool right;
-};
-
-struct Input {
-  MouseInput mouseClick;
-  MouseInput mouseDown;
-  KeyboardInput keyPress;
-};
-
-struct TileIndex {
-  int q;
-  int r;
-};
-
-struct Location {
-  Vector2 mouseScreen;
-  Vector2 mouseWorld;
-  rsrc::Object selRsrc;
-};
-
-struct FrameContext {
-  Location pos;
-  Input inputs;
-  mouseMask::id mouseMask;
-  int selToolBarSlot;
-
-  // Screen
-  int screenWidth;
-  int screenHeight;
-
-  float deltaTime;
-};
 
 #endif // !DEFINES_H

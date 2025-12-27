@@ -2,8 +2,8 @@
 #define PLAYER_H
 
 #include "GFX_manager.h"
-#include "defines.h"
 #include "enums.h"
+#include "frame_context.h"
 #include "hex_tile_grid.h"
 #include "item_handler.h"
 #include "raylib.h"
@@ -16,7 +16,7 @@ private:
   HexGrid *hexGrid = nullptr;
   UI_Handler *uiHandler = nullptr;
   ItemHandler *itemHandler = nullptr;
-  const FrameContext *frameContext = nullptr;
+  const frame::Context *frameContext = nullptr;
 
   // --- State ---
   Vector2 position;
@@ -53,7 +53,7 @@ public:
   void SetGFX_Manager(GFX_Manager *graphicsManager);
   void SetUI_Handler(UI_Handler *ui_handler);
   void SetItemHandler(ItemHandler *itemHandler);
-  void SetFrameContext(const FrameContext *frameContext);
+  void SetFrameContext(const frame::Context *frameContext);
 
   // --- Getters ---
   Vector2 GetPosition() const;

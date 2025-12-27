@@ -2,9 +2,9 @@
 #include "defines.h"
 #include "enums.h"
 #include "font_handler.h"
+#include "frame_context.h"
 #include "hex_tile_grid.h"
 #include "raylib.h"
-#include "resource.h"
 #include "texture_atlas.h"
 #include <string>
 
@@ -78,7 +78,7 @@ void UI_Handler::SetToolBarActive(bool is_active) {
   isToolBarActive = is_active;
 }
 
-void UI_Handler::SetFrameContext(const FrameContext *frameContext) {
+void UI_Handler::SetFrameContext(const frame::Context *frameContext) {
   this->frameContext = frameContext;
 }
 
@@ -188,7 +188,7 @@ int UI_Handler::GetToolBarSelection() {
   if (curSelection < 0 || curSelection >= conf::TOOLBAR_SLOTS) {
     curSelection = 0;
   }
-  KeyboardInput keyPress = frameContext->inputs.keyPress;
+  frame::KeyboardInput keyPress = frameContext->inputs.keyPress;
 
   int toolBarSlotBuffer = curSelection;
   if (keyPress.One)
@@ -236,4 +236,7 @@ int UI_Handler::GetToolBarSelection() {
   }
   return curSelection;
 }
-rsrc::Object UI_Handler::GetHoveredRsrcPos() { return rsrc::OBJECT_NULL; }
+MapTile *UI_Handler::GetHoveredTile() {
+  MapTile *a;
+  return a;
+}

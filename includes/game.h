@@ -3,8 +3,8 @@
 
 #include "GFX_manager.h"
 #include "debugger.h"
-#include "defines.h"
 #include "font_handler.h"
+#include "frame_context.h"
 #include "hex_tile_grid.h"
 #include "item_handler.h"
 #include "player.h"
@@ -34,7 +34,7 @@ private:
 
   // Logic/State
   WorldState worldState;
-  FrameContext frameContext;
+  frame::Context frameContext;
   RenderState renderStates[2];
   int renderStateIndex = 0;
 

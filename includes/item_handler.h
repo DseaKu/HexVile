@@ -1,8 +1,8 @@
 #ifndef ITEM_HANDLER_H
 #define ITEM_HANDLER_H
 
-#include "defines.h"
 #include "enums.h"
+#include "frame_context.h"
 #include <map>
 #include <string>
 #include <utility>
@@ -45,7 +45,7 @@ private:
   std::vector<ItemStack> inventory;
   std::vector<ItemStack> toolBar;
   ItemDataBase itemDataBase;
-  const FrameContext *frameContext;
+  const frame::Context *frameContext;
 
   void Init();
 
@@ -57,7 +57,7 @@ public:
   bool AddItem(item::id itemID, int count);
 
   // Setters
-  void SetFrameContext(const FrameContext *curFrameContext);
+  void SetFrameContext(const frame::Context *curFrameContext);
 
   // Getters
   ItemStack *GetToolBarItemPointer(int pos);

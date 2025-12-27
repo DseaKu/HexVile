@@ -1,6 +1,7 @@
 #include "player.h"
 #include "defines.h"
 #include "enums.h"
+#include "frame_context.h"
 #include "hex_tile_grid.h"
 #include "item_handler.h"
 #include "raylib.h"
@@ -247,7 +248,7 @@ const char *Player::PlayerStateToString() const {
   }
 }
 
-void Player::SetFrameContext(const FrameContext *frameContext) {
+void Player::SetFrameContext(const frame::Context *frameContext) {
   this->frameContext = frameContext;
 }
 

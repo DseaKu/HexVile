@@ -1,10 +1,13 @@
 #include "ui_handler.h"
+#include "GFX_manager.h"
 #include "defines.h"
 #include "enums.h"
 #include "font_handler.h"
 #include "frame_context.h"
 #include "hex_tile_grid.h"
 #include "raylib.h"
+#include "raymath.h"
+#include "resource.h"
 #include "texture_atlas.h"
 #include <string>
 
@@ -49,7 +52,16 @@ void UI_Handler::Update() {
   LoadHighlightGFX();
 }
 
-void UI_Handler::LoadHighlightGFX() { LoadHighlightTileGFX(); }
+void UI_Handler::LoadHighlightGFX() {
+  // Get to hightlithning object
+  item::id itemID =
+      itemHandler->GetToolBarItemType(frameContext->selToolBarSlot);
+  if (itemID == item::AXE) {
+    LoadHighlightResourceGFX(rsrc::ID_TREE);
+  }
+
+  LoadHighlightTileGFX();
+}
 void UI_Handler::UpdateScreenSize(int width, int height) {
   toolBarLayout.posX = (width / 2.0f) - (toolBarLayout.width / 2.0f);
   toolBarLayout.posY =
@@ -90,8 +102,27 @@ void UI_Handler::LoadHighlightTileGFX() {
   HexCoord coord = hexGrid->PointToHexCoord(frameContext->pos.mouseWorld);
   hexGrid->DrawTile(coord, tex_atlas::UI_X, ui::TILE_H, drawMask::GROUND_1);
 }
-void UI_Handler::LoadHighlightResourceGFX() {
-  // Get Item
+void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
+  if (!frameContext || !frameContext->hoveredTile)
+    return;
+
+  Vector2 curMousePos = frameContext->pos.mouseWorld;
+
+  for (const rsrc::Object &rsrc : frameContext->hoveredTile->rsrc) {
+    if (rsrc.id != id)
+      continue;
+
+    // Get position of resource
+    Vector2 rsrcPos = {frameContext->pos.hoveredTilePoint.x -
+                           tex_atlas::RES16_F + rsrc.tilePos.x,
+                       frameContext->pos.hoveredTilePoint.y -
+                           tex_atlas::RES32_F + rsrc.tilePos.y};
+
+    if (Vector2Distance(rsrcPos, curMousePos) < conf::INTERACT_DISTANCE) {
+      graphicsManager->LoadGFX_Data_32x64(
+          drawMask::UI_0, tex_atlas::RSRC_TREE_HIGHLIGHTED, rsrcPos, WHITE);
+    }
+  }
 }
 void UI_Handler::LoadToolBarGFX() {
   if (!isToolBarActive || !itemHandler)

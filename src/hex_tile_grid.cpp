@@ -472,8 +472,9 @@ void HexGrid::LoadResourceGFX(Rectangle destRec, const rsrc::Object rsrc,
   if (rsrc.id == rsrc::ID_TREE) {
     destRec.height += tex_atlas::RES32_F;
     destRec.y -= tex_atlas::RES32_F;
-    graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND, texAtlas.x,
-                                        texAtlas.y, destRec, WHITE);
+    graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND,
+                                        {texAtlas.x, texAtlas.y},
+                                        {destRec.x, destRec.y}, WHITE);
   } else {
     graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, {texAtlas.x, texAtlas.y},
                                   destRec, WHITE);

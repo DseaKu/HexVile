@@ -196,9 +196,13 @@ void Game::RunLogic() {
   // --- Update Selected Tool Bar Slot ---
   frameContext.selToolBarSlot = uiHandler.GetToolBarSelection();
 
-  // --- Get position of hovered resource ---
-  frameContext.pos.hoveredTile =
-      worldState.hexGrid.PointToTile(frameContext.pos.mouseScreen);
+  // --- Get position and tileof hovered tile ---
+  frameContext.hoveredTile =
+      worldState.hexGrid.PointToTile(frameContext.pos.mouseWorld);
+  frameContext.pos.hoveredTileHexCoords =
+      worldState.hexGrid.PointToHexCoord(frameContext.pos.mouseWorld);
+  frameContext.pos.hoveredTilePoint =
+      worldState.hexGrid.HexCoordToPoint(frameContext.pos.hoveredTileHexCoords);
 
   // Player Update
   worldState.player.Update();

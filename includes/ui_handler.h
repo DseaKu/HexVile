@@ -40,7 +40,7 @@ private:
   // Render Helpers
   void LoadHighlightGFX();
   void LoadHighlightTileGFX();
-  void LoadHighlightResourceGFX();
+  void LoadHighlightResourceGFX(rsrc::ID id);
 
   void LoadToolBarGFX();
   void LoadToolBarSlotGFX(int slotIndex);

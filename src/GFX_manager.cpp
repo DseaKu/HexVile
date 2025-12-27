@@ -53,6 +53,15 @@ void GFX_Manager::LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
       dstRec.y, GFX_Props{textureAtlas, srcRec, dstRec, col});
 }
 
+void GFX_Manager::LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
+                               Vector2 dst, Color col) {
+  Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
+  // Write to Back Buffer
+  Rectangle dstRec = {dst.x, dst.y, tex_atlas::RES32_F, tex_atlas::RES64_F};
+  GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
+      dst.y, GFX_Props{textureAtlas, srcRec, dstRec, col});
+}
+
 void GFX_Manager::LoadGFX_Data(drawMask::id layerID, Texture2D texture,
                                Rectangle srcRec, Rectangle dstRec, Color col) {
   // Write to Back Buffer
@@ -60,15 +69,16 @@ void GFX_Manager::LoadGFX_Data(drawMask::id layerID, Texture2D texture,
       dstRec.y, GFX_Props{texture, srcRec, dstRec, col});
 }
 
-void GFX_Manager::LoadGFX_Data_32x64(drawMask::id layerID, int TA_X, int TA_Y,
-                                     Rectangle dstRec, Color col) {
-  Rectangle srcRec = GetSrcRec(TA_X, TA_Y);
+void GFX_Manager::LoadGFX_Data_32x64(drawMask::id layerID,
+                                     tex_atlas::Coords texAtlas, Vector2 dst,
+                                     Color col) {
+  Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
   srcRec.height += tex_atlas::RES32_F;
+  Rectangle dstRec = {dst.x, dst.y, tex_atlas::RES32_F, tex_atlas::RES64_F};
 
   // Write to Back Buffer
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
-      dstRec.y + tex_atlas::RES32_F,
-      GFX_Props{textureAtlas, srcRec, dstRec, col});
+      dst.y + tex_atlas::RES32_F, GFX_Props{textureAtlas, srcRec, dstRec, col});
 }
 
 void GFX_Manager::RenderLayer(drawMask::id maskID) {

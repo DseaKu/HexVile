@@ -2,6 +2,7 @@
 #define FRAME_CONTEXT_H
 
 #include "hex_tile_grid.h"
+#include "raylib.h"
 namespace frame {
 
 struct KeyboardInput {
@@ -35,7 +36,9 @@ struct Input {
 struct Location {
   Vector2 mouseScreen;
   Vector2 mouseWorld;
-  MapTile *hoveredTile;
+
+  HexCoord hoveredTileHexCoords;
+  Vector2 hoveredTilePoint;
 };
 
 struct Context {
@@ -43,6 +46,7 @@ struct Context {
   Input inputs;
   mouseMask::id mouseMask;
   int selToolBarSlot;
+  MapTile *hoveredTile;
 
   // Screen
   int screenWidth;

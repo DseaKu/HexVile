@@ -2,6 +2,7 @@
 #define DEFINES_H
 #include "enums.h"
 #include "raylib.h"
+#include "resource.h"
 #include <cstdint>
 #include <vector>
 
@@ -172,7 +173,7 @@ struct RsrcPos {
 struct Location {
   Vector2 mouseScreen;
   Vector2 mouseWorld;
-  RsrcPos selRsrc;
+  rsrc::Object selRsrc;
 };
 
 struct FrameContext {

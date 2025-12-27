@@ -1,7 +1,6 @@
 #ifndef TEXTURE_ATLAS_H
 #define TEXTURE_ATLAS_H
 
-#include "defines.h"
 #include "enums.h"
 #include <map>
 #include <utility>
@@ -17,7 +16,7 @@ namespace tex_atlas {
 
 // --- Resolution ---
 constexpr int RES32_OFFSET = 100;
-constexpr int RES32 = conf::TILE_RESOLUTION;
+constexpr int RES32 = 32;
 constexpr float RES32_F = static_cast<float>(RES32);
 constexpr int RES16 = RES32 / 2;
 constexpr float RES16_F = static_cast<float>(RES16);
@@ -63,22 +62,8 @@ constexpr int ITEM_X = 0;
 constexpr int ITEM_Y = 50;
 constexpr int ITEM_X_MAX = 10;
 
-// --- Details ---
-constexpr int GRASS_DETAILS =
-    BIT(detail::IDX_0) | BIT(detail::IDX_1) | BIT(detail::IDX_10);
-constexpr int WATER_DETAILS = BIT(detail::IDX_8);
-constexpr int DIRT_DETAILS = BIT(detail::IDX_10);
-
 // --- Null ---
 constexpr TA_Pos POS_NULL = {0, 0};
-
-inline const std::map<tile::id, int> RENDER_BIT_MASK_DETAIL = {
-    {tile::NULL_ID, 0},
-    {tile::GRASS, GRASS_DETAILS},
-    {tile::WATER, WATER_DETAILS},
-    {tile::DIRT, DIRT_DETAILS},
-
-}; // namespace tex_atlas
 
 // --- Animation ---
 constexpr float PLAYER_ANIMATION_SPEED = 10.0f;

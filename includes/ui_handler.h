@@ -38,17 +38,20 @@ private:
   const frame::Context *frameContext = nullptr;
 
   // Render Helpers
-  void DrawHighlighedTile(Vector2 mouseWorldPos);
-  void DrawToolBar();
-  void DrawToolBarSlot(int slotIndex);
-  void DrawItemIcon(int slotIndex, Rectangle slotRect);
-  void DrawItemCount(int slotIndex, Rectangle slotRect);
+  void LoadHighlightGFX();
+  void LoadHighlightTileGFX();
+  void LoadHighlightResourceGFX();
+
+  void LoadToolBarGFX();
+  void LoadToolBarSlotGFX(int slotIndex);
+  void LoadItemIconGFX(int slotIndex, Rectangle slotRect);
+  void LoadItemCountGFX(int slotIndex, Rectangle slotRect);
 
 public:
   UI_Handler();
 
   // Core
-  void Update(Vector2 mouseWorldPos);
+  void Update();
   void UpdateScreenSize(int width, int height);
   mouseMask::id UpdateMouseMask();
 

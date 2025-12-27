@@ -23,83 +23,90 @@ Player::Player() {
 
 // --- Logic ---
 void Player::UpdatePlayerState() {
+  bool isInteracting = false;
 
   // Interact with enviorment
-  if (frameContext->mouseMask == mouseMask::GROUND) {
-    if (frameContext->inputs.mouseDown.left) {
-      int selToolBarSlot = frameContext->selToolBarSlot;
-      HexCoord hoveredTile =
-          hexGrid->PointToHexCoord(frameContext->pos.mouseWorld);
-      ItemStack *selectedItem =
-          itemHandler->GetToolBarItemPointer(selToolBarSlot);
+  if (frameContext->mouseMask == mouseMask::GROUND &&
+      frameContext->inputs.mouseDown.left) {
+    isInteracting = true;
+    int selToolBarSlot = frameContext->selToolBarSlot;
+    HexCoord hoveredTile =
+        hexGrid->PointToHexCoord(frameContext->pos.mouseWorld);
+    ItemStack *selectedItem =
+        itemHandler->GetToolBarItemPointer(selToolBarSlot);
 
-      // Process tool interaction
-      if (selectedItem->itemID == item::AXE) {
-        Vector2 clickedPos = hexGrid->HexCoordToPoint(hoveredTile);
-        if (Vector2Distance(this->position, clickedPos) <
-            conf::INTERACT_DISTANCE) {
-          Chop(hoveredTile);
-        }
+    // Process tool interaction
+    if (selectedItem->itemID == item::AXE) {
+      Vector2 clickedPos = hexGrid->HexCoordToPoint(hoveredTile);
+      if (Vector2Distance(this->position, clickedPos) <
+          conf::INTERACT_DISTANCE) {
+        Chop(hoveredTile);
+      }
 
-        // Process tile planter
-      } else {
-        tile::id tileToPlace =
-            itemHandler->ConvertItemToTileID(selectedItem->itemID);
-        if (tileToPlace != tile::NULL_ID &&
-            hexGrid->SetTile(hoveredTile, tileToPlace)) {
-          itemHandler->TakeItemFromToolBar(selectedItem, 1);
-        }
+      // Process tile planter
+    } else {
+      tile::id tileToPlace =
+          itemHandler->ConvertItemToTileID(selectedItem->itemID);
+      if (tileToPlace != tile::NULL_ID &&
+          hexGrid->SetTile(hoveredTile, tileToPlace)) {
+        itemHandler->TakeItemFromToolBar(selectedItem, 1);
       }
     }
+  }
 
-  } else if (moveDir.x != 0 || moveDir.y != 0) {
-    Walk(moveDir, frameContext->deltaTime);
-  } else {
-    Idle();
+  if (!isInteracting) {
+    if (moveDir.x != 0 || moveDir.y != 0) {
+      Walk(moveDir, frameContext->deltaTime);
+    } else {
+      Idle();
+    }
   }
 }
+void Player::FaceToPoint(Vector2 point) {
 
+  Vector2 diff = Vector2Subtract(point, this->position);
+  float angle = atan2(diff.y, diff.x) * RAD2DEG;
+  if (angle < 0) {
+    angle += 360;
+  }
+  // Map angle to 8 directions (approximate)
+  // E: 0, SE: 45, S: 90, SW: 135, W: 180, NW: 225, N: 270, NE: 315
+  // Offset by 22.5 to center sectors
+  int sector = (int)((angle + 22.5f) / 45.0f) % 8;
+
+  switch (sector) {
+  case 0:
+    faceDirID = faceDir::E;
+    break;
+  case 1:
+    faceDirID = faceDir::SE;
+    break;
+  case 2:
+    faceDirID = faceDir::S;
+    break;
+  case 3:
+    faceDirID = faceDir::SW;
+    break;
+  case 4:
+    faceDirID = faceDir::W;
+    break;
+  case 5:
+    faceDirID = faceDir::NW;
+    break;
+  case 6:
+    faceDirID = faceDir::N;
+    break;
+  case 7:
+    faceDirID = faceDir::NE;
+    break;
+  }
+}
 void Player::UpdatePlayerFaceDir() {
 
   if (frameContext->inputs.mouseDown.left ||
       frameContext->inputs.mouseDown.right) {
     Vector2 tarPos = frameContext->pos.mouseWorld;
-    Vector2 diff = Vector2Subtract(tarPos, this->position);
-    float angle = atan2(diff.y, diff.x) * RAD2DEG;
-    if (angle < 0) {
-      angle += 360;
-    }
-    // Map angle to 8 directions (approximate)
-    // E: 0, SE: 45, S: 90, SW: 135, W: 180, NW: 225, N: 270, NE: 315
-    // Offset by 22.5 to center sectors
-    int sector = (int)((angle + 22.5f) / 45.0f) % 8;
-
-    switch (sector) {
-    case 0:
-      faceDirID = faceDir::E;
-      break;
-    case 1:
-      faceDirID = faceDir::SE;
-      break;
-    case 2:
-      faceDirID = faceDir::S;
-      break;
-    case 3:
-      faceDirID = faceDir::SW;
-      break;
-    case 4:
-      faceDirID = faceDir::W;
-      break;
-    case 5:
-      faceDirID = faceDir::NW;
-      break;
-    case 6:
-      faceDirID = faceDir::N;
-      break;
-    case 7:
-      faceDirID = faceDir::NE;
-      break;
-    }
+    this->FaceToPoint(tarPos);
   }
 
   // Determine player face direction

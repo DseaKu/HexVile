@@ -220,7 +220,7 @@ void Game::RunLogic() {
 
   // --- Update Grid ---
   worldState.hexGrid.Update(worldState.camera, frameContext.deltaTime);
-  uiHandler.Update(frameContext.pos.mouseWorld);
+  uiHandler.Update();
 
   // --- Process right click ---
   if (frameContext.inputs.mouseClick.right) {

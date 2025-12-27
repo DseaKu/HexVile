@@ -44,11 +44,12 @@ UI_Handler::UI_Handler() {
 }
 
 // --- Core ---
-void UI_Handler::Update(Vector2 mouseWorldPos) {
-  DrawHighlighedTile(mouseWorldPos);
-  DrawToolBar();
+void UI_Handler::Update() {
+  LoadToolBarGFX();
+  LoadHighlightGFX();
 }
 
+void UI_Handler::LoadHighlightGFX() { LoadHighlightTileGFX(); }
 void UI_Handler::UpdateScreenSize(int width, int height) {
   toolBarLayout.posX = (width / 2.0f) - (toolBarLayout.width / 2.0f);
   toolBarLayout.posY =
@@ -83,23 +84,25 @@ void UI_Handler::SetFrameContext(const frame::Context *frameContext) {
 }
 
 // --- Rendering Helpers ---
-void UI_Handler::DrawHighlighedTile(Vector2 mouseWorldPos) {
+void UI_Handler::LoadHighlightTileGFX() {
   if (!hexGrid)
     return;
-  HexCoord coord = hexGrid->PointToHexCoord(mouseWorldPos);
+  HexCoord coord = hexGrid->PointToHexCoord(frameContext->pos.mouseWorld);
   hexGrid->DrawTile(coord, tex_atlas::UI_X, ui::TILE_H, drawMask::GROUND_1);
 }
-
-void UI_Handler::DrawToolBar() {
+void UI_Handler::LoadHighlightResourceGFX() {
+  // Get Item
+}
+void UI_Handler::LoadToolBarGFX() {
   if (!isToolBarActive || !itemHandler)
     return;
 
   for (int i = 0; i < toolBarLayout.maxSlots; i++) {
-    DrawToolBarSlot(i);
+    LoadToolBarSlotGFX(i);
   }
 }
 
-void UI_Handler::DrawToolBarSlot(int slotIndex) {
+void UI_Handler::LoadToolBarSlotGFX(int slotIndex) {
   float slotPosX = toolBarLayout.posX + toolBarLayout.padding +
                    (slotIndex * toolBarLayout.slotSize);
   float slotPosY = toolBarLayout.posY + toolBarLayout.padding;
@@ -118,12 +121,12 @@ void UI_Handler::DrawToolBarSlot(int slotIndex) {
   // 2. Draw Content
   ItemStack *itemStack = itemHandler->GetToolBarItemPointer(slotIndex);
   if (itemStack && itemStack->itemID != item::NULL_ID) {
-    DrawItemIcon(slotIndex, slotRect);
-    DrawItemCount(slotIndex, slotRect);
+    LoadItemIconGFX(slotIndex, slotRect);
+    LoadItemCountGFX(slotIndex, slotRect);
   }
 }
 
-void UI_Handler::DrawItemIcon(int slotIndex, Rectangle slotRect) {
+void UI_Handler::LoadItemIconGFX(int slotIndex, Rectangle slotRect) {
   ItemStack *itemStack = itemHandler->GetToolBarItemPointer(slotIndex);
 
   item::id itemID = itemStack->itemID;
@@ -141,7 +144,7 @@ void UI_Handler::DrawItemIcon(int slotIndex, Rectangle slotRect) {
   graphicsManager->LoadGFX_Data(drawMask::UI_0, taCoords, dstRec, WHITE);
 }
 
-void UI_Handler::DrawItemCount(int slotIndex, Rectangle slotRect) {
+void UI_Handler::LoadItemCountGFX(int slotIndex, Rectangle slotRect) {
   ItemStack *item = itemHandler->GetToolBarItemPointer(slotIndex);
 
   // Re-calculate the icon rect to position numbers correctly relative to it?

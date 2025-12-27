@@ -31,6 +31,7 @@ private:
   // --- Logic ---
   void UpdatePlayerState();
   void UpdatePlayerFaceDir();
+  void FaceToPoint(Vector2 point);
 
   // --- Animation ---
   int animationFrame;

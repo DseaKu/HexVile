@@ -191,6 +191,15 @@ struct FrameContext {
 //               Spawn Rate
 // ==========================================
 
+struct RsrcProperties {
+  int taX;
+  int taY;
+  rsrc::id id;
+};
+namespace rsrc {
+constexpr RsrcProperties TREE = {};
+
+}
 namespace spawn_data {
 
 // --- Rescource ---
@@ -201,7 +210,7 @@ constexpr int SPAWN_CHANCE_ROCK = 5;
 constexpr std::pair<rsrc::id, int> RSRC_NULL = {rsrc::NULL_ID, 0};
 
 constexpr std::array<std::pair<rsrc::id, int>, RESCOURCE_DIVERSITY>
-    RSRC_SPAWN_CHANCE_GRASS = { { {rsrc::TREE, 5}, RSRC_NULL, RSRC_NULL } };
+    RSRC_SPAWN_CHANCE_GRASS = {{{rsrc::TREE, 5}, RSRC_NULL, RSRC_NULL}};
 
 constexpr std::array<std::pair<rsrc::id, int>, RESCOURCE_DIVERSITY>
     RSRC_SPAWN_CHANCE_WATER = {RSRC_NULL, RSRC_NULL, RSRC_NULL};
@@ -222,8 +231,8 @@ constexpr std::array<int, DETAIL_DIVERSITY> DET_SPAWN_CHANCE_DIRT = {3, 1, 0,
 
 namespace spawn_data_lut {
 
-inline const std::map<tile::id,
-                      std::array<std::pair<rsrc::id, int>, spawn_data::RESCOURCE_DIVERSITY>>
+inline const std::map<tile::id, std::array<std::pair<rsrc::id, int>,
+                                           spawn_data::RESCOURCE_DIVERSITY>>
     rsrcLut = {{tile::GRASS, spawn_data::RSRC_SPAWN_CHANCE_GRASS},
                {tile::WATER, spawn_data::RSRC_SPAWN_CHANCE_WATER},
                {tile::DIRT, spawn_data::RSRC_SPAWN_CHANCE_DIRT}};

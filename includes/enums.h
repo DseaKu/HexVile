@@ -33,7 +33,7 @@ enum id {
 
 // --- Resourcen ---
 namespace rsrc {
-enum id {
+enum id : int {
   NULL_ID = -1,
   TREE = 0,
   SIZE,
@@ -53,7 +53,7 @@ enum id {
 
 // --- Directions ---
 namespace faceDir {
-enum id {
+enum id : int {
   UNDEFINED = -1,
   NW = 0,
   W,

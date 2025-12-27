@@ -538,8 +538,10 @@ bool HexGrid::SetTile(HexCoord h, tile::id id) {
   } else {
     MapTile &tile = GetTile(h);
     tile.id = id;
-    for (TileDet &det : tile.det) {
-      det = GetRandomTerainDetail(id);
+    if (id != tile::NULL_ID) {
+      for (TileDet &det : tile.det) {
+        det = GetRandomTerainDetail(id);
+      }
     }
     for (rsrc::Object &rsrc : tile.rsrc) {
       // r = GetRandomTerainResource(id);

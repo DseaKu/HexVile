@@ -158,10 +158,13 @@ void Game::UpdateFrameContext() {
 
   frameContext.pos.mouseScreen = GetMousePosition();
 
+  // --- Mouse ---
   frameContext.inputs.mouseClick.left = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
   frameContext.inputs.mouseClick.right =
       IsMouseButtonPressed(MOUSE_BUTTON_RIGHT);
-
+  frameContext.inputs.mouseDown.left = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
+  frameContext.inputs.mouseDown.right = IsMouseButtonDown(MOUSE_BUTTON_RIGHT);
+  // --- Key Inputs ---
   frameContext.inputs.keyPress.one = IsKeyPressed(KEY_ONE);
   frameContext.inputs.keyPress.two = IsKeyPressed(KEY_TWO);
   frameContext.inputs.keyPress.three = IsKeyPressed(KEY_THREE);

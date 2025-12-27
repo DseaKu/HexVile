@@ -24,27 +24,21 @@ Player::Player() {
 // --- Logic ---
 void Player::UpdatePlayerState() {
 
-  if (moveDir.x == 0 && moveDir.y == 0) {
-    Idle();
-  } else {
-    Walk(moveDir, frameContext->deltaTime);
-  }
-
   // Interact with enviorment
   if (frameContext->mouseMask == mouseMask::GROUND) {
-    if (frameContext->inputs.mouseClick.left) {
+    if (frameContext->inputs.mouseDown.left) {
       int selToolBarSlot = frameContext->selToolBarSlot;
-      HexCoord clickedTile =
+      HexCoord hoveredTile =
           hexGrid->PointToHexCoord(frameContext->pos.mouseWorld);
       ItemStack *selectedItem =
           itemHandler->GetToolBarItemPointer(selToolBarSlot);
 
       // Process tool interaction
       if (selectedItem->itemID == item::AXE) {
-        Vector2 clickedPos = hexGrid->HexCoordToPoint(clickedTile);
+        Vector2 clickedPos = hexGrid->HexCoordToPoint(hoveredTile);
         if (Vector2Distance(this->position, clickedPos) <
             conf::INTERACT_DISTANCE) {
-          Chop(clickedTile);
+          Chop(hoveredTile);
         }
 
         // Process tile planter
@@ -52,18 +46,23 @@ void Player::UpdatePlayerState() {
         tile::id tileToPlace =
             itemHandler->ConvertItemToTileID(selectedItem->itemID);
         if (tileToPlace != tile::NULL_ID &&
-            hexGrid->SetTile(clickedTile, tileToPlace)) {
+            hexGrid->SetTile(hoveredTile, tileToPlace)) {
           itemHandler->TakeItemFromToolBar(selectedItem, 1);
         }
       }
     }
+
+  } else if (moveDir.x != 0 || moveDir.y != 0) {
+    Walk(moveDir, frameContext->deltaTime);
+  } else {
+    Idle();
   }
 }
 
 void Player::UpdatePlayerFaceDir() {
 
-  if (frameContext->inputs.mouseClick.left ||
-      frameContext->inputs.mouseClick.right) {
+  if (frameContext->inputs.mouseDown.left ||
+      frameContext->inputs.mouseDown.right) {
     Vector2 tarPos = frameContext->pos.mouseWorld;
     Vector2 diff = Vector2Subtract(tarPos, this->position);
     float angle = atan2(diff.y, diff.x) * RAD2DEG;
@@ -153,6 +152,7 @@ void Player::Update() {
 }
 
 void Player::Chop(HexCoord target) {
+
   if (stateID == playerState::CHOP) {
     animationDelta += this->frameContext->deltaTime;
     if (animationDelta < 3.0f) {
@@ -162,12 +162,11 @@ void Player::Chop(HexCoord target) {
         stateID = playerState::IDLE;
       }
     }
-    return;
+  } else {
+    stateID = playerState::CHOP;
+    animationFrame = 0;
+    animationDelta = 0.0f;
   }
-
-  stateID = playerState::CHOP;
-  animationFrame = 0;
-  animationDelta = 0.0f;
 }
 
 void Player::Idle() {

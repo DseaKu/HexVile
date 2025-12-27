@@ -5,6 +5,7 @@
 #include "defines.h"
 #include "enums.h"
 #include "raylib.h"
+#include "resource.h"
 #include <atomic>
 #include <future>
 #include <mutex>
@@ -44,7 +45,7 @@ struct TileDet {
 // --- Terrain Resource ---
 struct TileRsrc {
   Vector2 tilePos;
-  rsrc::id id;
+  rsrc::Props type;
 };
 
 // --- Map Tile ---

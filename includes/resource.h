@@ -11,23 +11,23 @@ enum id : int {
   TREE_ID = 0,
   SIZE,
 };
-struct Props {
+struct Def {
   TA_Pos taPos;
   int hp;
   rsrc::id id;
   int spawn_chance;
 };
 
-constexpr Props RSRC_NULL = {tex_atlas::POS_NULL, 0, NULL_ID, 0};
+constexpr Def RSRC_NULL = {tex_atlas::POS_NULL, 0, NULL_ID, 0};
 
 // --- Grass ---
-constexpr Props TREE = {tex_atlas::RSRC_TREE, 100, TREE_ID, 5};
+constexpr Def TREE = {tex_atlas::RSRC_TREE, 100, TREE_ID, 5};
 
 // --- Water ---
 // --- Dirt ---
-constexpr Props ROCK = {tex_atlas::RSRC_STONE, 100, TREE_ID, 5};
+constexpr Def ROCK = {tex_atlas::RSRC_STONE, 100, TREE_ID, 5};
 
-inline const std::map<tile::id, Props> TILE_LUT = {
+inline const std::map<tile::id, Def> TILE_LUT = {
     {tile::GRASS, TREE},
     {tile::WATER, RSRC_NULL},
     {tile::DIRT, ROCK},

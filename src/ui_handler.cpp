@@ -60,8 +60,17 @@ void UI_Handler::LoadHighlightGFX() {
     LoadHighlightResourceGFX(rsrc::ID_TREE);
   }
 
-  LoadHighlightTileGFX();
+  if (itemID == item::SET_GRASS) {
+    LoadHighlightTileGFX();
+  }
+  if (itemID == item::SET_WATER) {
+    LoadHighlightTileGFX();
+  }
+  if (itemID == item::SET_DIRT) {
+    LoadHighlightTileGFX();
+  }
 }
+
 void UI_Handler::UpdateScreenSize(int width, int height) {
   toolBarLayout.posX = (width / 2.0f) - (toolBarLayout.width / 2.0f);
   toolBarLayout.posY =
@@ -107,7 +116,7 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
     return;
 
   Vector2 curMousePos = frameContext->pos.mouseWorld;
-  if (Vector2Distance(curMousePos, frameContext->pos.player) <
+  if (Vector2Distance(curMousePos, frameContext->pos.player) >
       conf::INTERACT_DISTANCE) {
     return;
   }

@@ -2,7 +2,6 @@
 #define DEFINES_H
 #include "enums.h"
 #include "raylib.h"
-#include <array>
 #include <cstdint>
 #include <vector>
 
@@ -48,6 +47,7 @@ constexpr const int TERRAIN_RESOURCE_MAX = 1;
 
 constexpr float TREE_COLLISION_RADIUS = 3.0f;
 constexpr float INTERACT_DISTANCE = 60.0f;
+constexpr int SPAWN_CHANCE_RSRC = 100; // Higher -> less spwan
 // ==========================================
 //               Hex Tile
 // ==========================================
@@ -164,7 +164,7 @@ struct TileIndex {
 struct RsrcPos {
   TileIndex tileIndex;
   int rsrcIndex;
-  rsrc::id id;
+  // rsrc::id id;
   Vector2 screenPos;
 };
 
@@ -187,60 +187,4 @@ struct FrameContext {
   float deltaTime;
 };
 
-// ==========================================
-//               Spawn Rate
-// ==========================================
-
-struct RsrcProperties {
-  int taX;
-  int taY;
-  rsrc::id id;
-};
-namespace rsrc {
-constexpr RsrcProperties TREE = {};
-
-}
-namespace spawn_data {
-
-// --- Rescource ---
-constexpr int RESCOURCE_DIVERSITY = 3;
-constexpr int TOTAL_WEIGHT_RSRC = 100;
-constexpr int SPAWN_CHANCE_TREE = 5;
-constexpr int SPAWN_CHANCE_ROCK = 5;
-constexpr std::pair<rsrc::id, int> RSRC_NULL = {rsrc::NULL_ID, 0};
-
-constexpr std::array<std::pair<rsrc::id, int>, RESCOURCE_DIVERSITY>
-    RSRC_SPAWN_CHANCE_GRASS = {{{rsrc::TREE, 5}, RSRC_NULL, RSRC_NULL}};
-
-constexpr std::array<std::pair<rsrc::id, int>, RESCOURCE_DIVERSITY>
-    RSRC_SPAWN_CHANCE_WATER = {RSRC_NULL, RSRC_NULL, RSRC_NULL};
-constexpr std::array<std::pair<rsrc::id, int>, RESCOURCE_DIVERSITY>
-    RSRC_SPAWN_CHANCE_DIRT = {RSRC_NULL, RSRC_NULL, RSRC_NULL};
-
-// --- Details ---
-constexpr int DETAIL_DIVERSITY = 6;
-constexpr int TOTAL_WEIGHT_DET = 100;
-constexpr std::array<int, DETAIL_DIVERSITY> DET_SPAWN_CHANCE_GRASS = {5, 4, 3,
-                                                                      0, 0, 0};
-constexpr std::array<int, DETAIL_DIVERSITY> DET_SPAWN_CHANCE_WATER = {3, 0, 0,
-                                                                      0, 0, 0};
-constexpr std::array<int, DETAIL_DIVERSITY> DET_SPAWN_CHANCE_DIRT = {3, 1, 0,
-                                                                     0, 0, 0};
-
-} // namespace spawn_data
-
-namespace spawn_data_lut {
-
-inline const std::map<tile::id, std::array<std::pair<rsrc::id, int>,
-                                           spawn_data::RESCOURCE_DIVERSITY>>
-    rsrcLut = {{tile::GRASS, spawn_data::RSRC_SPAWN_CHANCE_GRASS},
-               {tile::WATER, spawn_data::RSRC_SPAWN_CHANCE_WATER},
-               {tile::DIRT, spawn_data::RSRC_SPAWN_CHANCE_DIRT}};
-
-inline const std::map<tile::id, std::array<int, spawn_data::DETAIL_DIVERSITY>>
-    detLut = {{tile::GRASS, spawn_data::DET_SPAWN_CHANCE_GRASS},
-              {tile::WATER, spawn_data::DET_SPAWN_CHANCE_WATER},
-              {tile::DIRT, spawn_data::DET_SPAWN_CHANCE_DIRT}};
-
-} // namespace spawn_data_lut
 #endif // !DEFINES_H

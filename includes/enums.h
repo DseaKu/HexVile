@@ -31,15 +31,6 @@ enum id {
 };
 }
 
-// --- Resourcen ---
-namespace rsrc {
-enum id : int {
-  NULL_ID = -1,
-  TREE = 0,
-  SIZE,
-};
-}
-
 // --- Player State ---
 namespace playerState {
 enum id {

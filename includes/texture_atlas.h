@@ -6,6 +6,10 @@
 #include <map>
 #include <utility>
 
+struct TA_Pos {
+  int x;
+  int y;
+};
 // ==========================================
 //               Texture atlas
 // ==========================================
@@ -38,6 +42,9 @@ constexpr int DETAILS_X = TILES_X_MAX;
 constexpr int DETAILS_X_MAX = DETAILS_X + 12;
 
 // --- Resource ---
+constexpr TA_Pos RSRC = {DETAILS_X_MAX, 0};
+constexpr TA_Pos RSRC_TREE = {RSRC.x, RSRC.y};
+constexpr TA_Pos RSRC_STONE = {RSRC.x, RSRC.y + 1};
 constexpr int RESOURCE_X = DETAILS_X_MAX;
 constexpr int RESOURCE_Y = 0;
 constexpr int RESOURCE_X_MAX = RESOURCE_X + 8;
@@ -62,24 +69,16 @@ constexpr int GRASS_DETAILS =
 constexpr int WATER_DETAILS = BIT(detail::IDX_8);
 constexpr int DIRT_DETAILS = BIT(detail::IDX_10);
 
+// --- Null ---
+constexpr TA_Pos POS_NULL = {0, 0};
+
 inline const std::map<tile::id, int> RENDER_BIT_MASK_DETAIL = {
     {tile::NULL_ID, 0},
     {tile::GRASS, GRASS_DETAILS},
     {tile::WATER, WATER_DETAILS},
     {tile::DIRT, DIRT_DETAILS},
-};
 
-// --- Resource ---
-constexpr int GRASS_RESOURCE = BIT(rsrc::TREE);
-constexpr int WATER_RESOURCE = 0;
-constexpr int DIRT_RESOURCE = 0;
-
-inline const std::map<tile::id, int> RENDER_BIT_MASK_RESOURCE = {
-    {tile::NULL_ID, 0},
-    {tile::GRASS, GRASS_RESOURCE},
-    {tile::WATER, WATER_RESOURCE},
-    {tile::DIRT, DIRT_RESOURCE},
-};
+}; // namespace tex_atlas
 
 // --- Animation ---
 constexpr float PLAYER_ANIMATION_SPEED = 10.0f;

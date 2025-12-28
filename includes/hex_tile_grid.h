@@ -159,6 +159,7 @@ public:
   const char *TileToString(tile::id tileID) const;
   HexCoord GetNeighbor(HexCoord h, int directionIndex) const;
   double GetVisCalcTime() const;
+  rsrc::Object GetResource(HexCoord h) const;
 
   bool CheckObstacleCollision(Vector2 worldPos, float radius);
 

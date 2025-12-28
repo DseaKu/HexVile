@@ -178,11 +178,12 @@ void Player::Chop(HexCoord target) {
     if (Vector2Distance(this->position, frameContext->pos.mouseWorld) <
         conf::INTERACT_DISTANCE_PLAYER) {
 
-      if (this->animationFrame == conf::CAUSE_DEMAGE_FRAME && !isDamageDone) {
-
-        if (hexGrid->DamageResource(target, rsrc::ID_TREE,
-                                    conf::DMG_STONE_AXE)) {
-          itemHandler->AddItem(item::WOOD, 1);
+      if (this->animationFrame == conf::CAUSE_DEMAGE_FRAME) {
+        if (!isDamageDone) {
+          if (hexGrid->DamageResource(target, rsrc::ID_TREE,
+                                      conf::DMG_STONE_AXE)) {
+            itemHandler->AddItem(item::WOOD, 1);
+          }
           isDamageDone = true;
         }
       } else {

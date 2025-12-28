@@ -96,10 +96,10 @@ enum id {
 namespace drawMask {
 enum id {
   NULL_ID = 0,
-  GROUND_0, // Tiles
-  GROUND_1, // Highlighted Tiles
+  GROUND0, // Tiles
+  GROUND1, // Highlighted Tiles
   SHADOW,
-  ON_GROUND, // Player, Terrain Details
+  ON_GROUND, // Player, Terrain Details, Resource
   UI_0,      // Toolbar, Item BG
   UI_1,      // Items, ItemsNum
   DEBUG_OVERLAY,

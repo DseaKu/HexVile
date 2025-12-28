@@ -109,7 +109,7 @@ void UI_Handler::LoadHighlightTileGFX() {
   if (!hexGrid)
     return;
   HexCoord coord = hexGrid->PointToHexCoord(frameContext->pos.mouseWorld);
-  hexGrid->DrawTile(coord, tex_atlas::UI_X, ui::TILE_H, drawMask::GROUND_1);
+  hexGrid->DrawTile(coord, tex_atlas::UI_X, ui::TILE_H, drawMask::GROUND1);
 }
 
 void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {

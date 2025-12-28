@@ -89,8 +89,8 @@ void Game::GameLoop() {
       ClearBackground(WHITE);
 
       BeginMode2D(renderStates[renderStateIndex].camera);
-      gfxManager.RenderLayer(drawMask::GROUND_0);
-      gfxManager.RenderLayer(drawMask::GROUND_1);
+      gfxManager.RenderLayer(drawMask::GROUND0);
+      gfxManager.RenderLayer(drawMask::GROUND1);
       gfxManager.RenderLayer(drawMask::SHADOW);
       gfxManager.RenderLayer(drawMask::ON_GROUND);
       EndMode2D();

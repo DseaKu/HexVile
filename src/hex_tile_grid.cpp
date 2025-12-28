@@ -117,7 +117,8 @@ TileDet HexGrid::GetRandomTerainDetail(tile::id id) {
   return TileDet{.tilePos = Vector2{x, y}, .taOffsetX = taOffsetX};
 }
 
-rsrc::Object HexGrid::GetRandomTerainResource(tile::id id, Vector2 tileWorldPos) {
+rsrc::Object HexGrid::GetRandomTerainResource(tile::id id,
+                                              Vector2 tileWorldPos) {
 
   auto spawnData = rsrc::TILE_LUT.at(id);
 
@@ -354,6 +355,10 @@ bool HexGrid::DamageResource(HexCoord h, int id, int damage) {
   rsrc::Object &rsrc = tile.rsrc;
   if (rsrc.id == id) {
     rsrc.hp -= damage;
+    // Get resource position to signal response
+    graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, tex_atlas::RSRC_TREE,
+                                  rsrc.worldPos, RED);
+
     if (rsrc.hp <= 0) {
       rsrc.id = rsrc::UNINITIALIZED;
       return true;
@@ -468,7 +473,7 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
 
 // ============= Render =====================
 void HexGrid::LoadTileGFX(Rectangle destRec, int x, int y) {
-  graphicsManager->LoadGFX_Data(drawMask::GROUND_0, {x, y}, destRec, WHITE);
+  graphicsManager->LoadGFX_Data(drawMask::GROUND0, {x, y}, destRec, WHITE);
 }
 
 void HexGrid::LoadDetailGFX(Rectangle destRec, const TileDet detail,
@@ -545,6 +550,10 @@ bool HexGrid::CheckObstacleCollision(Vector2 worldPos, float radius) {
   return false;
 }
 
+rsrc::Object HexGrid::GetResource(HexCoord h) const {
+  MapTile tile = this->GetTile(h);
+  return tile.rsrc;
+}
 // ============= Setter =====================
 void HexGrid::SetCamRectPointer(Rectangle *camRect) { this->camRect = camRect; }
 

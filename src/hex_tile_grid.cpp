@@ -336,7 +336,7 @@ bool HexGrid::RemoveResource(HexCoord h, int id) {
   }
   MapTile &tile = GetTile(h);
   for (rsrc::Object &rsrc : tile.rsrc) {
-    if (rsrc.id - tex_atlas::RESOURCE_X == id) {
+    if (rsrc.id == id) {
       rsrc.id = rsrc::UNINITIALIZED;
       return true;
     }

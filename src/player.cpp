@@ -109,26 +109,27 @@ void Player::UpdatePlayerFaceDir() {
       frameContext->inputs.mouseDown.right) {
     Vector2 tarPos = frameContext->pos.mouseWorld;
     this->FaceToPoint(tarPos);
-  }
+  } else {
 
-  // Determine player face direction
-  if (moveDir.x != 0 || moveDir.y != 0) {
-    if (moveDir.x == 0 && moveDir.y == -1) {
-      faceDirID = faceDir::N;
-    } else if (moveDir.x == 1 && moveDir.y == -1) {
-      faceDirID = faceDir::NE;
-    } else if (moveDir.x == 1 && moveDir.y == 0) {
-      faceDirID = faceDir::E;
-    } else if (moveDir.x == 1 && moveDir.y == 1) {
-      faceDirID = faceDir::SE;
-    } else if (moveDir.x == 0 && moveDir.y == 1) {
-      faceDirID = faceDir::S;
-    } else if (moveDir.x == -1 && moveDir.y == 1) {
-      faceDirID = faceDir::SW;
-    } else if (moveDir.x == -1 && moveDir.y == 0) {
-      faceDirID = faceDir::W;
-    } else if (moveDir.x == -1 && moveDir.y == -1) {
-      faceDirID = faceDir::NW;
+    // Determine player face direction
+    if (moveDir.x != 0 || moveDir.y != 0) {
+      if (moveDir.x == 0 && moveDir.y == -1) {
+        faceDirID = faceDir::N;
+      } else if (moveDir.x == 1 && moveDir.y == -1) {
+        faceDirID = faceDir::NE;
+      } else if (moveDir.x == 1 && moveDir.y == 0) {
+        faceDirID = faceDir::E;
+      } else if (moveDir.x == 1 && moveDir.y == 1) {
+        faceDirID = faceDir::SE;
+      } else if (moveDir.x == 0 && moveDir.y == 1) {
+        faceDirID = faceDir::S;
+      } else if (moveDir.x == -1 && moveDir.y == 1) {
+        faceDirID = faceDir::SW;
+      } else if (moveDir.x == -1 && moveDir.y == 0) {
+        faceDirID = faceDir::W;
+      } else if (moveDir.x == -1 && moveDir.y == -1) {
+        faceDirID = faceDir::NW;
+      }
     }
   }
 }
@@ -172,7 +173,6 @@ void Player::Chop(HexCoord target) {
 
       if (hexGrid->DamageResource(target, rsrc::ID_TREE, dmg)) {
         itemHandler->AddItem(item::WOOD, 1);
-        stateID = playerState::IDLE;
       }
     }
   } else {
@@ -303,9 +303,16 @@ void Player::GenerateDrawData() {
 
   faceDir::id dirID = this->faceDirID;
 
+  // The Chop animation in the sprite sheet is offset by 1 position (Starts at N
+  // instead of NW)
+  int dirIndex = (int)dirID;
+  if (this->stateID == playerState::CHOP) {
+    dirIndex = (dirIndex + 1) % 8;
+  }
+
   // Get texture atlas position
   int taX = aniData.texAtlas.x + this->animationFrame;
-  int taY = aniData.texAtlas.y + dirID;
+  int taY = aniData.texAtlas.y + dirIndex;
 
   // Get destination position
   Vector2 drawPos = position;

@@ -170,6 +170,7 @@ void Player::Update() {
 
 void Player::Chop(HexCoord target) {
 
+  bool static isDamageDone;
   if (stateID == playerState::CHOP) {
     animationDelta += this->frameContext->deltaTime;
 
@@ -177,15 +178,15 @@ void Player::Chop(HexCoord target) {
     if (Vector2Distance(this->position, frameContext->pos.mouseWorld) <
         conf::INTERACT_DISTANCE_PLAYER) {
 
-      damageAccumulator += conf::DMG_STONE_AXE * this->frameContext->deltaTime;
+      if (this->animationFrame == conf::CAUSE_DEMAGE_FRAME && !isDamageDone) {
 
-      if (damageAccumulator >= 1.0f) {
-        int dmg = (int)damageAccumulator;
-        damageAccumulator -= dmg;
-
-        if (hexGrid->DamageResource(target, rsrc::ID_TREE, dmg)) {
+        if (hexGrid->DamageResource(target, rsrc::ID_TREE,
+                                    conf::DMG_STONE_AXE)) {
           itemHandler->AddItem(item::WOOD, 1);
+          isDamageDone = true;
         }
+      } else {
+        isDamageDone = false;
       }
     }
   } else {
@@ -318,8 +319,8 @@ void Player::LoadPlayerGFX() {
   Vector2 drawPos = position;
   drawPos.x -= tex_atlas::RES16;
   drawPos.y -= tex_atlas::RES16 -
-               conf::PLAYER_SPRITE_Y_OFFSET; // Move player sprite a little bit
-                                             // to the bottom
+               conf::PLAYER_SPRITE_Y_OFFSET; // Move player sprite a little
+                                             // bit to the bottom
   Rectangle dstRect = {drawPos.x, drawPos.y, tex_atlas::RES32_F,
                        tex_atlas::RES32_F};
 

@@ -73,6 +73,7 @@ constexpr float CAMERA_HEIGHT = (float)SCREEN_HEIGHT / INITIAL_CAMERA_ZOOM;
 constexpr float PLAYER_MOVE_SPEED = 90.0f;
 constexpr int PLAYER_SPRITE_Y_OFFSET = -13;
 constexpr float PLAYER_COLLISION_CHECK_OFFSET = 5;
+constexpr int CAUSE_DEMAGE_FRAME = 3;
 
 // ==========================================
 //               Items

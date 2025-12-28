@@ -204,6 +204,13 @@ void Game::RunLogic() {
   frameContext.pos.hoveredTilePoint =
       worldState.hexGrid.HexCoordToPoint(frameContext.pos.hoveredTileHexCoords);
   frameContext.pos.hoveredRsrcPoint = frameContext.pos.hoveredTilePoint;
+  if (frameContext.hoveredTile && frameContext.hoveredTile->rsrc.id >= 0) {
+    rsrc::Object &r = frameContext.hoveredTile->rsrc;
+    frameContext.pos.hoveredRsrcPoint = {
+        r.worldPos.x - tex_atlas::RES16_F,
+        r.worldPos.y - tex_atlas::RES32_F -
+            (r.id == rsrc::ID_TREE ? tex_atlas::RES32_F : 0)};
+  }
 
   // Player Update
   worldState.player.Update();

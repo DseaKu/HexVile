@@ -117,14 +117,14 @@ TileDet HexGrid::GetRandomTerainDetail(tile::id id) {
   return TileDet{.tilePos = Vector2{x, y}, .taOffsetX = taOffsetX};
 }
 
-rsrc::Object HexGrid::GetRandomTerainResource(tile::id id) {
+rsrc::Object HexGrid::GetRandomTerainResource(tile::id id, Vector2 tileWorldPos) {
 
   auto spawnData = rsrc::TILE_LUT.at(id);
 
   float x = GetRandomValue(-conf::SPAWN_RSRC_SPREAD, conf::SPAWN_RSRC_SPREAD);
   float y = GetRandomValue(-conf::SPAWN_RSRC_SPREAD, conf::SPAWN_RSRC_SPREAD);
 
-  spawnData.tilePos = {x, y};
+  spawnData.worldPos = {tileWorldPos.x + x, tileWorldPos.y + y};
 
   int totalWeight = conf::TOTAL_WEIGHT_RSRC;
   rsrc::Object rsrc = rsrc::OBJECT_NULL;
@@ -458,7 +458,7 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
     rsrc::Object &rsrc = tile.rsrc;
 
     if (rsrc.id == rsrc::UNINITIALIZED) {
-      rsrc = GetRandomTerainResource(tile.id);
+      rsrc = GetRandomTerainResource(tile.id, tile.posWorld);
     }
     if (rsrc.id != rsrc::ID_NULL) {
       LoadResourceGFX(destRec, rsrc, tile.id);
@@ -482,8 +482,8 @@ void HexGrid::LoadDetailGFX(Rectangle destRec, const TileDet detail,
 void HexGrid::LoadResourceGFX(Rectangle destRec, const rsrc::Object rsrc,
                               tile::id id) {
 
-  destRec.x += rsrc.tilePos.x;
-  destRec.y += rsrc.tilePos.y;
+  destRec.x = rsrc.worldPos.x - tex_atlas::RES16_F;
+  destRec.y = rsrc.worldPos.y - tex_atlas::RES32_F;
 
   int taX = rsrc.id + tex_atlas::RESOURCE_X;
   tex_atlas::Coords texAtlas = rsrc.xyTexAtlas;
@@ -528,14 +528,12 @@ bool HexGrid::CheckObstacleCollision(Vector2 worldPos, float radius) {
       continue;
 
     const MapTile &tile = GetTile(h);
-    Vector2 tileCenter = HexCoordToPoint(h);
 
     const rsrc::Object &rsrc = tile.rsrc;
     if (rsrc.id != rsrc::UNINITIALIZED && rsrc.id != rsrc::ID_NULL) {
       if (rsrc.id == rsrc::ID_TREE) {
 
-        Vector2 treePos = {tileCenter.x + rsrc.tilePos.x,
-                           tileCenter.y + rsrc.tilePos.y};
+        Vector2 treePos = rsrc.worldPos;
 
         if (CheckCollisionCircles(worldPos, radius, treePos,
                                   conf::TREE_COLLISION_RADIUS)) {

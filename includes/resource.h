@@ -15,7 +15,7 @@ enum ID : int {
   ID_ROCK,
 };
 struct Object {
-  Vector2 tilePos;
+  Vector2 worldPos;
   tex_atlas::Coords xyTexAtlas;
   int hp;
   ID id;

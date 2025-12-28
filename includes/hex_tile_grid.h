@@ -106,7 +106,7 @@ private:
   const MapTile &GetTile(HexCoord h) const;
   MapTile &GetTile(HexCoord h);
   TileDet GetRandomTerainDetail(tile::id tileID);
-  rsrc::Object GetRandomTerainResource(tile::id tileID);
+  rsrc::Object GetRandomTerainResource(tile::id tileID, Vector2 tileWorldPos);
   void CalcRenderRect();
   void CalcVisibleTiles();
   void UpdateTileVisibility(float totalTime);

@@ -122,24 +122,20 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
   }
 
   const rsrc::Object &rsrc = frameContext->hoveredTile->rsrc;
-  if (rsrc.id != id) {
-    return;
-  }
+  if (rsrc.id == id) {
+    // Get position of resource
+    Vector2 rsrcPos = {rsrc.worldPos.x - tex_atlas::RES16_F,
+                       rsrc.worldPos.y - tex_atlas::RES32_F};
 
-  // Get position of resource
-  Vector2 rsrcPos = {frameContext->pos.hoveredTilePoint.x - tex_atlas::RES16_F +
-                         rsrc.tilePos.x,
-                     frameContext->pos.hoveredTilePoint.y - tex_atlas::RES32_F +
-                         rsrc.tilePos.y};
+    if (rsrc.id == rsrc::ID_TREE) {
+      rsrcPos.y -= tex_atlas::RES32_F;
+    }
 
-  if (rsrc.id == rsrc::ID_TREE) {
-    rsrcPos.y -= tex_atlas::RES32_F;
-  }
-
-  if (Vector2Distance(rsrcPos, curMousePos) < conf::INTERACT_DISTANCE_MOUSE) {
-    graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND,
-                                        tex_atlas::RSRC_TREE, rsrcPos,
-                                        Fade(YELLOW, conf::HIGHLIGHT_ALPHA));
+    if (Vector2Distance(rsrcPos, curMousePos) < conf::INTERACT_DISTANCE_MOUSE) {
+      graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND,
+                                          tex_atlas::RSRC_TREE, rsrcPos,
+                                          Fade(YELLOW, conf::HIGHLIGHT_ALPHA));
+    }
   }
 }
 

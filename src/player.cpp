@@ -40,10 +40,10 @@ void Player::UpdatePlayerState() {
     // Process tool interaction
     if (selectedItem->itemID == item::AXE) {
       Vector2 clickedPos = hexGrid->HexCoordToPoint(hoveredTile);
-      if (Vector2Distance(this->position, clickedPos) <
-          conf::INTERACT_DISTANCE_PLAYER) {
-        Chop(hoveredTile);
-      }
+      // if (Vector2Distance(this->position, clickedPos) <
+      //     conf::INTERACT_DISTANCE_PLAYER) {
+      Chop(hoveredTile);
+      // }
 
       // Process tile planter
     } else {
@@ -135,7 +135,14 @@ void Player::UpdatePlayerFaceDir() {
 }
 
 void Player::Update() {
+  // Calculate animation frame
   animationDelta += frameContext->deltaTime;
+  animation::Object aniData = animation::playerLut.at(this->stateID);
+
+  float animSpeed = aniData.speed;
+  int frameCount = aniData.frameCount;
+  int animationProgress = this->animationDelta * animSpeed;
+  this->animationFrame = animationProgress % frameCount;
 
   playerTile = hexGrid->PointToHexCoord(position);
 
@@ -158,21 +165,27 @@ void Player::Update() {
   }
   previousPosition = position;
 
-  GenerateDrawData();
+  this->LoadPlayerGFX();
 }
 
 void Player::Chop(HexCoord target) {
 
   if (stateID == playerState::CHOP) {
     animationDelta += this->frameContext->deltaTime;
-    damageAccumulator += conf::DMG_STONE_AXE * this->frameContext->deltaTime;
 
-    if (damageAccumulator >= 1.0f) {
-      int dmg = (int)damageAccumulator;
-      damageAccumulator -= dmg;
+    // Check if player is in range
+    if (Vector2Distance(this->position, frameContext->pos.mouseWorld) <
+        conf::INTERACT_DISTANCE_PLAYER) {
 
-      if (hexGrid->DamageResource(target, rsrc::ID_TREE, dmg)) {
-        itemHandler->AddItem(item::WOOD, 1);
+      damageAccumulator += conf::DMG_STONE_AXE * this->frameContext->deltaTime;
+
+      if (damageAccumulator >= 1.0f) {
+        int dmg = (int)damageAccumulator;
+        damageAccumulator -= dmg;
+
+        if (hexGrid->DamageResource(target, rsrc::ID_TREE, dmg)) {
+          itemHandler->AddItem(item::WOOD, 1);
+        }
       }
     }
   } else {
@@ -291,28 +304,15 @@ const char *Player::PlayerDirToString() const {
 }
 
 // --- Rendering ---
-void Player::GenerateDrawData() {
+void Player::LoadPlayerGFX() {
 
   animation::Object aniData = animation::playerLut.at(this->stateID);
 
-  // Calculate animation frame
-  float animSpeed = aniData.speed;
-  int frameCount = aniData.frameCount;
-  int animationProgress = this->animationDelta * animSpeed;
-  this->animationFrame = animationProgress % frameCount;
-
   faceDir::id dirID = this->faceDirID;
-
-  // The Chop animation in the sprite sheet is offset by 1 position (Starts at N
-  // instead of NW)
-  int dirIndex = (int)dirID;
-  if (this->stateID == playerState::CHOP) {
-    dirIndex = (dirIndex + 1) % 8;
-  }
 
   // Get texture atlas position
   int taX = aniData.texAtlas.x + this->animationFrame;
-  int taY = aniData.texAtlas.y + dirIndex;
+  int taY = aniData.texAtlas.y + dirID;
 
   // Get destination position
   Vector2 drawPos = position;

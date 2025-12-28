@@ -41,7 +41,7 @@ private:
   // --- Helpers ---
   void Idle();
   void Walk(Vector2 dir, float deltaTime);
-  void GenerateDrawData();
+  void LoadPlayerGFX();
 
 public:
   Player();

@@ -46,8 +46,8 @@ constexpr const int TERRAIN_DETAILS_MAX = 2;
 constexpr const int TERRAIN_RESOURCE_MAX = 1;
 
 constexpr float TREE_COLLISION_RADIUS = 3.0f;
-constexpr float INTERACT_DISTANCE_PLAYER = 30.0f;
-constexpr float INTERACT_DISTANCE_MOUSE = 70.0f;
+constexpr float INTERACT_DISTANCE_PLAYER = 40.0f;
+constexpr float INTERACT_DISTANCE_MOUSE = 80.0f;
 constexpr int TOTAL_WEIGHT_RSRC = 100; // Higher -> less spwan chance
 constexpr int TOTAL_WEIGHT_DET = 100;
 // ==========================================
@@ -57,7 +57,7 @@ constexpr int TILE_RESOLUTION = 32;
 constexpr int TILE_RESOLUTION_HALF = TILE_RESOLUTION / 2;
 constexpr float TILE_SPACING_X = 18.30f;
 constexpr float TILE_SPACING_Y = 15.95f;
-constexpr float SPAWN_RSRC_SPREAD = 4.0f;
+constexpr float SPAWN_RSRC_SPREAD = 3.0f;
 const std::vector<tile::id> WALKABLE_TILE_IDS = {tile::GRASS, tile::DIRT};
 
 // ==========================================

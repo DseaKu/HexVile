@@ -111,14 +111,18 @@ void UI_Handler::LoadHighlightTileGFX() {
   HexCoord coord = hexGrid->PointToHexCoord(frameContext->pos.mouseWorld);
   hexGrid->DrawTile(coord, tex_atlas::UI_X, ui::TILE_H, drawMask::GROUND_1);
 }
+
 void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
   if (!frameContext || !frameContext->hoveredTile)
     return;
 
+  Color col = RED;
+
+  // If player is in interact range change color indicator to yellow
   Vector2 curMousePos = frameContext->pos.mouseWorld;
-  if (Vector2Distance(curMousePos, frameContext->pos.player) >
+  if (Vector2Distance(curMousePos, frameContext->pos.player) <
       conf::INTERACT_DISTANCE_PLAYER) {
-    return;
+    col = YELLOW;
   }
 
   const rsrc::Object &rsrc = frameContext->hoveredTile->rsrc;
@@ -134,7 +138,7 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
     if (Vector2Distance(rsrcPos, curMousePos) < conf::INTERACT_DISTANCE_MOUSE) {
       graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND,
                                           tex_atlas::RSRC_TREE, rsrcPos,
-                                          Fade(YELLOW, conf::HIGHLIGHT_ALPHA));
+                                          Fade(col, conf::HIGHLIGHT_ALPHA));
     }
   }
 }

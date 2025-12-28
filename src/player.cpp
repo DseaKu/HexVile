@@ -165,6 +165,9 @@ void Player::Chop(HexCoord target) {
     animationDelta += this->frameContext->deltaTime;
     damageAccumulator += conf::DMG_STONE_AXE * this->frameContext->deltaTime;
 
+    // Turn player to tree
+    this->FaceToPoint(frameContext->pos.hoveredRsrcPoint);
+
     if (damageAccumulator >= 1.0f) {
       int dmg = (int)damageAccumulator;
       damageAccumulator -= dmg;

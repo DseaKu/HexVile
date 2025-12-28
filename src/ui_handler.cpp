@@ -117,7 +117,7 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
 
   Vector2 curMousePos = frameContext->pos.mouseWorld;
   if (Vector2Distance(curMousePos, frameContext->pos.player) >
-      conf::INTERACT_DISTANCE) {
+      conf::INTERACT_DISTANCE_PLAYER) {
     return;
   }
 
@@ -135,8 +135,7 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
       rsrcPos.y -= tex_atlas::RES32_F;
     }
 
-    if (Vector2Distance(rsrcPos, curMousePos) <
-        conf::MOUSE_HIGHLIGHT_DISTANCE) {
+    if (Vector2Distance(rsrcPos, curMousePos) < conf::INTERACT_DISTANCE_MOUSE) {
       graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND,
                                           tex_atlas::RSRC_TREE, rsrcPos,
                                           Fade(YELLOW, conf::HIGHLIGHT_ALPHA));

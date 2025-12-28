@@ -46,8 +46,8 @@ constexpr const int TERRAIN_DETAILS_MAX = 2;
 constexpr const int TERRAIN_RESOURCE_MAX = 1;
 
 constexpr float TREE_COLLISION_RADIUS = 3.0f;
-constexpr float INTERACT_DISTANCE = 30.0f;
-constexpr float MOUSE_HIGHLIGHT_DISTANCE = 60.0f;
+constexpr float INTERACT_DISTANCE_PLAYER = 30.0f;
+constexpr float INTERACT_DISTANCE_MOUSE = 70.0f;
 constexpr int TOTAL_WEIGHT_RSRC = 100; // Higher -> less spwan chance
 constexpr int TOTAL_WEIGHT_DET = 100;
 // ==========================================

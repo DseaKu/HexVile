@@ -39,7 +39,7 @@ void Player::UpdatePlayerState() {
     if (selectedItem->itemID == item::AXE) {
       Vector2 clickedPos = hexGrid->HexCoordToPoint(hoveredTile);
       if (Vector2Distance(this->position, clickedPos) <
-          conf::INTERACT_DISTANCE) {
+          conf::INTERACT_DISTANCE_PLAYER) {
         Chop(hoveredTile);
       }
 

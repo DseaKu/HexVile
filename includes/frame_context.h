@@ -34,14 +34,19 @@ struct Input {
 };
 
 struct Location {
+  // Player
   Vector2 player;
 
+  // Mouse
   Vector2 mouseScreen;
   Vector2 mouseWorld;
 
+  // Tile
   HexCoord hoveredTileHexCoords;
   Vector2 hoveredTilePoint;
+  MapTile *hoveredTile;
 
+  // Resource
   Vector2 hoveredRsrcPoint;
 };
 
@@ -50,7 +55,6 @@ struct Context {
   Input inputs;
   mouseMask::id mouseMask;
   int selToolBarSlot;
-  MapTile *hoveredTile;
 
   // Screen
   int screenWidth;

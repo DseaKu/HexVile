@@ -113,7 +113,7 @@ void UI_Handler::LoadHighlightTileGFX() {
 }
 
 void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
-  if (!frameContext || !frameContext->hoveredTile)
+  if (!frameContext || !frameContext->pos.hoveredTile)
     return;
 
   Color col = RED;
@@ -125,7 +125,7 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
     col = YELLOW;
   }
 
-  const rsrc::Object &rsrc = frameContext->hoveredTile->rsrc;
+  const rsrc::Object &rsrc = frameContext->pos.hoveredTile->rsrc;
   if (rsrc.id == id) {
     // Get position of resource
     Vector2 rsrcPos = {rsrc.worldPos.x - tex_atlas::RES16_F,

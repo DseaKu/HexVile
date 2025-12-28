@@ -1,4 +1,5 @@
 #include "player.h"
+#include "animation.h"
 #include "defines.h"
 #include "enums.h"
 #include "frame_context.h"
@@ -165,9 +166,6 @@ void Player::Chop(HexCoord target) {
     animationDelta += this->frameContext->deltaTime;
     damageAccumulator += conf::DMG_STONE_AXE * this->frameContext->deltaTime;
 
-    // Turn player to tree
-    this->FaceToPoint(frameContext->pos.hoveredRsrcPoint);
-
     if (damageAccumulator >= 1.0f) {
       int dmg = (int)damageAccumulator;
       damageAccumulator -= dmg;
@@ -295,24 +293,26 @@ const char *Player::PlayerDirToString() const {
 // --- Rendering ---
 void Player::GenerateDrawData() {
 
-  TexData texData = tex_lut::playerLUT.at(this->stateID);
+  animation::Object aniData = animation::playerLut.at(this->stateID);
 
   // Calculate animation frame
-  float animSpeed = texData.speed;
-  int frameCount = texData.frameCount;
+  float animSpeed = aniData.speed;
+  int frameCount = aniData.frameCount;
   int animationProgress = this->animationDelta * animSpeed;
   this->animationFrame = animationProgress % frameCount;
 
+  faceDir::id dirID = this->faceDirID;
+
   // Get texture atlas position
-  int taX = texData.x + this->animationFrame;
-  int taY = texData.y + this->faceDirID;
+  int taX = aniData.texAtlas.x + this->animationFrame;
+  int taY = aniData.texAtlas.y + dirID;
 
   // Get destination position
   Vector2 drawPos = position;
   drawPos.x -= tex_atlas::RES16;
   drawPos.y -= tex_atlas::RES16 -
-               conf::PLAYER_SPRITE_Y_OFFSET; // Player position shouldn't be
-                                             // below the sprite
+               conf::PLAYER_SPRITE_Y_OFFSET; // Move player sprite a little bit
+                                             // to the bottom
   Rectangle dstRect = {drawPos.x, drawPos.y, tex_atlas::RES32_F,
                        tex_atlas::RES32_F};
 

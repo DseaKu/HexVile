@@ -341,7 +341,7 @@ bool HexGrid::RemoveResource(HexCoord h, int id) {
   MapTile &tile = GetTile(h);
   rsrc::Object &rsrc = tile.rsrc;
   if (rsrc.id == id) {
-    rsrc.id = rsrc::UNINITIALIZED;
+    rsrc.id = rsrc::ID_NULL;
     return true;
   }
   return false;
@@ -358,7 +358,7 @@ bool HexGrid::DamageResource(HexCoord h, int id, int damage) {
     rsrc.flashTimer = 0.15f; // Flash for 150ms
 
     if (rsrc.hp <= 0) {
-      rsrc.id = rsrc::UNINITIALIZED;
+      rsrc.id = rsrc::ID_NULL;
       return true;
     }
     return false;

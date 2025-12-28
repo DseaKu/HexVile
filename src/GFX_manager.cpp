@@ -1,4 +1,5 @@
 #include "GFX_manager.h"
+#include "defines.h"
 #include "enums.h"
 #include "raylib.h"
 #include "texture_atlas.h"
@@ -9,6 +10,7 @@ GFX_Manager::GFX_Manager() {
   GFX_Data_Buffers[1].resize(drawMask::SIZE);
   backBufferIndex = 1; // Start writing to 1
   textureAtlas = {0, 0, 0, 0, 0};
+  hitShader = {0};
 }
 
 void GFX_Manager::InitTextureRec() {
@@ -38,47 +40,55 @@ int GFX_Manager::LoadAssets(const char *pathToAssest) {
   this->TA_Width = this->textureAtlas.width / tex_atlas::RES32;
   this->TA_Height = this->textureAtlas.height / tex_atlas::RES32;
   InitTextureRec();
+
+  this->hitShader = LoadShader(0, conf::HIT_FLASH_SHADER_PATH);
+
   return 0;
 }
 
 Rectangle GFX_Manager::GetSrcRec(int x, int y) { return textureRecData[y][x]; }
 
-void GFX_Manager::UnloadAssets() { UnloadTexture(this->textureAtlas); }
-
-void GFX_Manager::LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
-                               Rectangle dstRec, Color col) {
-  Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
-  // Write to Back Buffer
-  GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
-      dstRec.y, GFX_Props{textureAtlas, srcRec, dstRec, col});
+void GFX_Manager::UnloadAssets() {
+  UnloadTexture(this->textureAtlas);
+  UnloadShader(this->hitShader);
 }
 
 void GFX_Manager::LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
-                               Vector2 dst, Color col) {
+                               Rectangle dstRec, Color col, bool useHitShader) {
+  Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
+  // Write to Back Buffer
+  GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
+      dstRec.y, GFX_Props{textureAtlas, srcRec, dstRec, col, useHitShader});
+}
+
+void GFX_Manager::LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
+                               Vector2 dst, Color col, bool useHitShader) {
   Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
   // Write to Back Buffer
   Rectangle dstRec = {dst.x, dst.y, tex_atlas::RES32_F, tex_atlas::RES64_F};
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
-      dst.y, GFX_Props{textureAtlas, srcRec, dstRec, col});
+      dst.y, GFX_Props{textureAtlas, srcRec, dstRec, col, useHitShader});
 }
 
 void GFX_Manager::LoadGFX_Data(drawMask::id layerID, Texture2D texture,
-                               Rectangle srcRec, Rectangle dstRec, Color col) {
+                               Rectangle srcRec, Rectangle dstRec, Color col,
+                               bool useHitShader) {
   // Write to Back Buffer
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
-      dstRec.y, GFX_Props{texture, srcRec, dstRec, col});
+      dstRec.y, GFX_Props{texture, srcRec, dstRec, col, useHitShader});
 }
 
 void GFX_Manager::LoadGFX_Data_32x64(drawMask::id layerID,
                                      tex_atlas::Coords texAtlas, Vector2 dst,
-                                     Color col) {
+                                     Color col, bool useHitShader) {
   Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
   srcRec.height += tex_atlas::RES32_F;
   Rectangle dstRec = {dst.x, dst.y, tex_atlas::RES32_F, tex_atlas::RES64_F};
 
   // Write to Back Buffer
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
-      dst.y + tex_atlas::RES32_F, GFX_Props{textureAtlas, srcRec, dstRec, col});
+      dst.y + tex_atlas::RES32_F,
+      GFX_Props{textureAtlas, srcRec, dstRec, col, useHitShader});
 }
 
 void GFX_Manager::RenderLayer(drawMask::id maskID) {
@@ -87,8 +97,15 @@ void GFX_Manager::RenderLayer(drawMask::id maskID) {
   auto &layer = GFX_Data_Buffers[frontIndex][static_cast<int>(maskID)];
   for (auto &item : layer) {
     GFX_Props &props = item.second;
+
+    if (props.useHitShader)
+      BeginShaderMode(hitShader);
+
     DrawTexturePro(props.texture, props.srcRec, props.dstRec, Vector2{0, 0},
                    0.0f, props.color);
+
+    if (props.useHitShader)
+      EndShaderMode();
   }
   layer.clear(); // Consumed
 }

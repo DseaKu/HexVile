@@ -19,6 +19,7 @@ constexpr int MAX_FPS = 8000;
 constexpr const char *WINDOW_TITLE = "HexVile";
 constexpr const char *TEXTURE_ATLAS_PATH = "assets/images/texture_atlas.png";
 constexpr const char *FONT_HACK_REGULAR_PATH = "assets/font/hack_regular.ttf";
+constexpr const char *HIT_FLASH_SHADER_PATH = "assets/shaders/hit_flash.fs";
 constexpr const int VISIBLE_TILE_CALC_PERIOD = 20;
 constexpr float GRID_UPDATE_PLAYER_MOVE_THRESHOLD = 3.0f;
 constexpr const int RENDER_VIEW_CULLING_MARGIN = 150;

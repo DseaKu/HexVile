@@ -13,6 +13,7 @@ struct GFX_Props {
   Rectangle srcRec;
   Rectangle dstRec;
   Color color;
+  bool useHitShader;
 };
 
 class GFX_Manager {
@@ -20,6 +21,7 @@ private:
   int TA_Width;
   int TA_Height;
   Texture2D textureAtlas;
+  Shader hitShader;
   std::vector<std::vector<Rectangle>> textureRecData;
 
   // Double buffering for thread safety
@@ -35,17 +37,17 @@ public:
   int LoadAssets(const char *);
   void UnloadAssets();
   void LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
-                    Rectangle dstRec, Color col);
+                    Rectangle dstRec, Color col, bool useHitShader = false);
 
   void LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
-                    Vector2 dest, Color col);
+                    Vector2 dest, Color col, bool useHitShader = false);
 
   void LoadGFX_Data(drawMask::id layerID, Texture2D texture, Rectangle srcRec,
-                    Rectangle dstRec, Color col);
+                    Rectangle dstRec, Color col, bool useHitShader = false);
 
   // Combine 2 assets rectangle and load as one render object
   void LoadGFX_Data_32x64(drawMask::id layerID, tex_atlas::Coords texAtlas,
-                          Vector2 dst, Color col);
+                          Vector2 dst, Color col, bool useHitShader = false);
   void RenderLayer(drawMask::id layer);
 
   Rectangle GetTileRec(tile::id id, int frame);

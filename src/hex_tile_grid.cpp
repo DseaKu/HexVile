@@ -355,19 +355,7 @@ bool HexGrid::DamageResource(HexCoord h, int id, int damage) {
   rsrc::Object &rsrc = tile.rsrc;
   if (rsrc.id == id) {
     rsrc.hp -= damage;
-
-    if (rsrc.id == rsrc::ID_TREE) {
-      Vector2 drawPos = {rsrc.worldPos.x - tex_atlas::RES16_F + 0.15f,
-                         rsrc.worldPos.y - tex_atlas::RES64_F};
-      graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND, rsrc.xyTexAtlas,
-                                          drawPos, RED);
-    } else {
-      Rectangle destRec = {rsrc.worldPos.x - tex_atlas::RES16_F + 0.15f,
-                           rsrc.worldPos.y - tex_atlas::RES32_F,
-                           tex_atlas::RES32_F, tex_atlas::RES32_F};
-      graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, rsrc.xyTexAtlas,
-                                    destRec, RED);
-    }
+    rsrc.flashTimer = 0.15f; // Flash for 150ms
 
     if (rsrc.hp <= 0) {
       rsrc.id = rsrc::UNINITIALIZED;
@@ -476,6 +464,11 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
       rsrc = GetRandomTerainResource(tile.id, tile.posWorld);
     }
     if (rsrc.id != rsrc::ID_NULL) {
+      if (rsrc.flashTimer > 0.0f) {
+        rsrc.flashTimer -= totalTime;
+        if (rsrc.flashTimer < 0.0f)
+          rsrc.flashTimer = 0.0f;
+      }
       LoadResourceGFX(destRec, rsrc, tile.id);
     }
   }
@@ -502,16 +495,17 @@ void HexGrid::LoadResourceGFX(Rectangle destRec, const rsrc::Object rsrc,
 
   int taX = rsrc.id + tex_atlas::RESOURCE_X;
   tex_atlas::Coords texAtlas = rsrc.xyTexAtlas;
+  bool isFlashing = rsrc.flashTimer > 0.0f;
 
   if (rsrc.id == rsrc::ID_TREE) {
     destRec.height += tex_atlas::RES32_F;
     destRec.y -= tex_atlas::RES32_F;
-    graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND,
-                                        {texAtlas.x, texAtlas.y},
-                                        {destRec.x, destRec.y}, WHITE);
+    graphicsManager->LoadGFX_Data_32x64(
+        drawMask::ON_GROUND, {texAtlas.x, texAtlas.y}, {destRec.x, destRec.y},
+        WHITE, isFlashing);
   } else {
     graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, {texAtlas.x, texAtlas.y},
-                                  destRec, WHITE);
+                                  destRec, WHITE, isFlashing);
   }
 }
 

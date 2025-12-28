@@ -81,9 +81,8 @@ void HexGrid::InitGrid(float radius) {
           d.taOffsetX = conf::UNINITIALIZED;
         }
 
-        for (rsrc::Object &r : initTile.rsrc) {
-          r.id = rsrc::UNINITIALIZED;
-        }
+        rsrc::Object &r = initTile.rsrc;
+        r.id = rsrc::UNINITIALIZED;
 
         tileData[gridR * gridSize + gridQ] = initTile;
         this->tilesInUse++;
@@ -335,11 +334,10 @@ bool HexGrid::RemoveResource(HexCoord h, int id) {
     return false;
   }
   MapTile &tile = GetTile(h);
-  for (rsrc::Object &rsrc : tile.rsrc) {
-    if (rsrc.id == id) {
-      rsrc.id = rsrc::UNINITIALIZED;
-      return true;
-    }
+  rsrc::Object &rsrc = tile.rsrc;
+  if (rsrc.id == id) {
+    rsrc.id = rsrc::UNINITIALIZED;
+    return true;
   }
   return false;
 }
@@ -349,15 +347,14 @@ bool HexGrid::DamageResource(HexCoord h, int id, int damage) {
     return false;
   }
   MapTile &tile = GetTile(h);
-  for (rsrc::Object &rsrc : tile.rsrc) {
-    if (rsrc.id == id) {
-      rsrc.hp -= damage;
-      if (rsrc.hp <= 0) {
-        rsrc.id = rsrc::UNINITIALIZED;
-        return true;
-      }
-      return false;
+  rsrc::Object &rsrc = tile.rsrc;
+  if (rsrc.id == id) {
+    rsrc.hp -= damage;
+    if (rsrc.hp <= 0) {
+      rsrc.id = rsrc::UNINITIALIZED;
+      return true;
     }
+    return false;
   }
   return false;
 }
@@ -454,13 +451,13 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
     }
 
     // Initialise if undiscoverd and draw resource
-    for (rsrc::Object &rsrc : tile.rsrc) {
-      if (rsrc.id == rsrc::UNINITIALIZED) {
-        rsrc = GetRandomTerainResource(tile.id);
-      }
-      if (rsrc.id != rsrc::ID_NULL) {
-        LoadResourceGFX(destRec, rsrc, tile.id);
-      }
+    rsrc::Object &rsrc = tile.rsrc;
+
+    if (rsrc.id == rsrc::UNINITIALIZED) {
+      rsrc = GetRandomTerainResource(tile.id);
+    }
+    if (rsrc.id != rsrc::ID_NULL) {
+      LoadResourceGFX(destRec, rsrc, tile.id);
     }
   }
 }
@@ -529,17 +526,16 @@ bool HexGrid::CheckObstacleCollision(Vector2 worldPos, float radius) {
     const MapTile &tile = GetTile(h);
     Vector2 tileCenter = HexCoordToPoint(h);
 
-    for (const rsrc::Object &rsrc : tile.rsrc) {
-      if (rsrc.id != rsrc::UNINITIALIZED && rsrc.id != rsrc::ID_NULL) {
-        if (rsrc.id == rsrc::ID_TREE) {
+    const rsrc::Object &rsrc = tile.rsrc;
+    if (rsrc.id != rsrc::UNINITIALIZED && rsrc.id != rsrc::ID_NULL) {
+      if (rsrc.id == rsrc::ID_TREE) {
 
-          Vector2 treePos = {tileCenter.x + rsrc.tilePos.x,
-                             tileCenter.y + rsrc.tilePos.y};
+        Vector2 treePos = {tileCenter.x + rsrc.tilePos.x,
+                           tileCenter.y + rsrc.tilePos.y};
 
-          if (CheckCollisionCircles(worldPos, radius, treePos,
-                                    conf::TREE_COLLISION_RADIUS)) {
-            return true;
-          }
+        if (CheckCollisionCircles(worldPos, radius, treePos,
+                                  conf::TREE_COLLISION_RADIUS)) {
+          return true;
         }
       }
     }
@@ -562,10 +558,9 @@ bool HexGrid::SetTile(HexCoord h, tile::id id) {
         det = GetRandomTerainDetail(id);
       }
     }
-    for (rsrc::Object &rsrc : tile.rsrc) {
-      // r = GetRandomTerainResource(id);
-      rsrc = rsrc::OBJECT_NULL;
-    }
+    rsrc::Object &rsrc = tile.rsrc;
+    // r = GetRandomTerainResource(id);
+    rsrc = rsrc::OBJECT_NULL;
 
     return true;
   }

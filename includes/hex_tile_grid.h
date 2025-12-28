@@ -46,7 +46,7 @@ struct TileDet {
 struct MapTile {
   tile::id id;
   TileDet det[conf::TERRAIN_DETAILS_MAX];
-  rsrc::Object rsrc[conf::TERRAIN_RESOURCE_MAX];
+  rsrc::Object rsrc;
 };
 
 /* Grid parts and relationships:

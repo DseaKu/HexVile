@@ -203,11 +203,10 @@ void Game::RunLogic() {
       worldState.hexGrid.PointToHexCoord(frameContext.pos.mouseWorld);
   frameContext.pos.hoveredTilePoint =
       worldState.hexGrid.HexCoordToPoint(frameContext.pos.hoveredTileHexCoords);
+  frameContext.pos.hoveredRsrcPoint = frameContext.pos.hoveredTilePoint;
 
-  frameContext.pos.hoveredRsrcPoint =
-
-      // Player Update
-      worldState.player.Update();
+  // Player Update
+  worldState.player.Update();
   frameContext.pos.player = worldState.player.GetPosition();
 
   // --- Update camera ---

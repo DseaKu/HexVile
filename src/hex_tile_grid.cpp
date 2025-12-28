@@ -73,22 +73,26 @@ void HexGrid::InitGrid(float radius) {
       int gridQ = q + mapRadius;
       this->tilesInTotal++;
 
+      Vector2 worldPos = CoordToPoint(q, r);
+
       if (abs(q) + abs(r) + abs(-q - r) <= mapRadius * 2) {
 
         MapTile initTile = {.id = tile::GRASS};
+        initTile.posWorld = worldPos;
 
         for (TileDet &d : initTile.det) {
           d.taOffsetX = conf::UNINITIALIZED;
         }
 
-        rsrc::Object &r = initTile.rsrc;
-        r.id = rsrc::UNINITIALIZED;
+        rsrc::Object &rsrcObj = initTile.rsrc;
+        rsrcObj.id = rsrc::UNINITIALIZED;
 
         tileData[gridR * gridSize + gridQ] = initTile;
         this->tilesInUse++;
 
       } else {
-        tileData[gridR * gridSize + gridQ] = (MapTile){.id = tile::NULL_ID};
+        tileData[gridR * gridSize + gridQ] =
+            (MapTile){.id = tile::NULL_ID, .posWorld = worldPos};
       }
     }
   }

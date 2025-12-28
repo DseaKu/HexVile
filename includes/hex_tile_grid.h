@@ -47,6 +47,7 @@ struct MapTile {
   tile::id id;
   TileDet det[conf::TERRAIN_DETAILS_MAX];
   rsrc::Object rsrc;
+  Vector2 posWorld; // Center of tile
 };
 
 /* Grid parts and relationships:

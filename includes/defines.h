@@ -84,6 +84,7 @@ constexpr float TOOLBAR_SLOT_CONTENT_SIZE = 1.8f * UI_SCALE * TILE_RESOLUTION;
 constexpr float TOOLBAR_SLOT_SIZE =
     (TOOLBAR_SLOT_CONTENT_SIZE + TOOLBAR_PADDING) * UI_SCALE * 1.0f;
 constexpr float TOOLBAR_ITEM_ICON_SCALE = 0.8f * UI_SCALE;
+constexpr float HIGHLIGHT_ALPHA = 0.3f;
 // ==========================================
 //               Details & Objects
 // ==========================================

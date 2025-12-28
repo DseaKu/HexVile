@@ -138,8 +138,8 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
     if (Vector2Distance(rsrcPos, curMousePos) <
         conf::MOUSE_HIGHLIGHT_DISTANCE) {
       graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND,
-                                          tex_atlas::RSRC_TREE_HIGHLIGHTED,
-                                          rsrcPos, WHITE);
+                                          tex_atlas::RSRC_TREE, rsrcPos,
+                                          Fade(YELLOW, conf::HIGHLIGHT_ALPHA));
     }
   }
 }

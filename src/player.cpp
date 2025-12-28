@@ -18,6 +18,7 @@ Player::Player() {
   stateID = playerState::IDLE;
   animationFrame = 0;
   animationDelta = 0.0f;
+  damageAccumulator = 0.0f;
   playerTile = {0, 0};
 }
 
@@ -162,9 +163,13 @@ void Player::Chop(HexCoord target) {
 
   if (stateID == playerState::CHOP) {
     animationDelta += this->frameContext->deltaTime;
-    if (animationDelta < 3.0f) {
+    damageAccumulator += conf::DMG_STONE_AXE * this->frameContext->deltaTime;
 
-      if (hexGrid->RemoveResource(target, rsrc::ID_TREE)) {
+    if (damageAccumulator >= 1.0f) {
+      int dmg = (int)damageAccumulator;
+      damageAccumulator -= dmg;
+
+      if (hexGrid->DamageResource(target, rsrc::ID_TREE, dmg)) {
         itemHandler->AddItem(item::WOOD, 1);
         stateID = playerState::IDLE;
       }
@@ -173,6 +178,7 @@ void Player::Chop(HexCoord target) {
     stateID = playerState::CHOP;
     animationFrame = 0;
     animationDelta = 0.0f;
+    damageAccumulator = 0.0f;
   }
 }
 

@@ -143,6 +143,7 @@ public:
   bool CheckSurrounded(HexCoord target) const;
 
   bool RemoveResource(HexCoord h, int rsrcID);
+  bool DamageResource(HexCoord h, int rsrcID, int damage);
 
   // --- Conversions & Helpers ---
   HexCoord PointToHexCoord(Vector2 point) const;

@@ -41,6 +41,8 @@ struct Location {
 
   HexCoord hoveredTileHexCoords;
   Vector2 hoveredTilePoint;
+
+  Vector2 hoveredRsrcPoint;
 };
 
 struct Context {

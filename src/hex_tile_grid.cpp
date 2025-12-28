@@ -344,6 +344,24 @@ bool HexGrid::RemoveResource(HexCoord h, int id) {
   return false;
 }
 
+bool HexGrid::DamageResource(HexCoord h, int id, int damage) {
+  if (!HasTile(h)) {
+    return false;
+  }
+  MapTile &tile = GetTile(h);
+  for (rsrc::Object &rsrc : tile.rsrc) {
+    if (rsrc.id == id) {
+      rsrc.hp -= damage;
+      if (rsrc.hp <= 0) {
+        rsrc.id = rsrc::UNINITIALIZED;
+        return true;
+      }
+      return false;
+    }
+  }
+  return false;
+}
+
 void HexGrid::DrawTile(HexCoord h, int TA_X, int TA_Y, drawMask::id layerID) {
   if (!HasTile(h)) {
     return;

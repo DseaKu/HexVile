@@ -36,6 +36,7 @@ private:
   // --- Animation ---
   int animationFrame;
   float animationDelta;
+  float damageAccumulator;
 
   // --- Helpers ---
   void Idle();

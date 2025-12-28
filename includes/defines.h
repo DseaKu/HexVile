@@ -64,7 +64,6 @@ const std::vector<tile::id> WALKABLE_TILE_IDS = {tile::GRASS, tile::DIRT};
 //               Camera
 // ==========================================
 constexpr float INITIAL_CAMERA_ZOOM = 4.2f; // 3.8f;
-// constexpr float CAMERA_ZOOM = 8.0f; // 3.8f;
 constexpr float CAMERA_WIDTH = (float)SCREEN_WIDTH / INITIAL_CAMERA_ZOOM;
 constexpr float CAMERA_HEIGHT = (float)SCREEN_HEIGHT / INITIAL_CAMERA_ZOOM;
 
@@ -74,6 +73,11 @@ constexpr float CAMERA_HEIGHT = (float)SCREEN_HEIGHT / INITIAL_CAMERA_ZOOM;
 constexpr float PLAYER_MOVE_SPEED = 90.0f;
 constexpr int PLAYER_SPRITE_Y_OFFSET = -13;
 constexpr float PLAYER_COLLISION_CHECK_OFFSET = 5;
+
+// ==========================================
+//               Items
+// ==========================================
+constexpr float DMG_STONE_AXE = 40.0f;
 
 // ==========================================
 //               UI

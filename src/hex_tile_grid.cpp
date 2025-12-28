@@ -118,8 +118,8 @@ rsrc::Object HexGrid::GetRandomTerainResource(tile::id id) {
 
   auto spawnData = rsrc::TILE_LUT.at(id);
 
-  float x = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
-  float y = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
+  float x = GetRandomValue(-conf::SPAWN_RSRC_SPREAD, conf::SPAWN_RSRC_SPREAD);
+  float y = GetRandomValue(-conf::SPAWN_RSRC_SPREAD, conf::SPAWN_RSRC_SPREAD);
 
   spawnData.tilePos = {x, y};
 

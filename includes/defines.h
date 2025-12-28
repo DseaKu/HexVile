@@ -57,6 +57,7 @@ constexpr int TILE_RESOLUTION = 32;
 constexpr int TILE_RESOLUTION_HALF = TILE_RESOLUTION / 2;
 constexpr float TILE_SPACING_X = 18.30f;
 constexpr float TILE_SPACING_Y = 15.95f;
+constexpr float SPAWN_RSRC_SPREAD = 4.0f;
 const std::vector<tile::id> WALKABLE_TILE_IDS = {tile::GRASS, tile::DIRT};
 
 // ==========================================

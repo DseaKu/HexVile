@@ -355,9 +355,19 @@ bool HexGrid::DamageResource(HexCoord h, int id, int damage) {
   rsrc::Object &rsrc = tile.rsrc;
   if (rsrc.id == id) {
     rsrc.hp -= damage;
-    // Get resource position to signal response
-    graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, tex_atlas::RSRC_TREE,
-                                  rsrc.worldPos, RED);
+
+    if (rsrc.id == rsrc::ID_TREE) {
+      Vector2 drawPos = {rsrc.worldPos.x - tex_atlas::RES16_F + 0.15f,
+                         rsrc.worldPos.y - tex_atlas::RES64_F};
+      graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND, rsrc.xyTexAtlas,
+                                          drawPos, RED);
+    } else {
+      Rectangle destRec = {rsrc.worldPos.x - tex_atlas::RES16_F + 0.15f,
+                           rsrc.worldPos.y - tex_atlas::RES32_F,
+                           tex_atlas::RES32_F, tex_atlas::RES32_F};
+      graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, rsrc.xyTexAtlas,
+                                    destRec, RED);
+    }
 
     if (rsrc.hp <= 0) {
       rsrc.id = rsrc::UNINITIALIZED;

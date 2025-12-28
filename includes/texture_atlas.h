@@ -119,7 +119,7 @@ constexpr TexData PLAYER_IDLE = {.x = tex_atlas::PLAYER_X,
 constexpr TexData PLAYER_ATTACK = {.x = tex_atlas::PLAYER_X,
                                    .y = tex_atlas::PLAYER_Y + faceDir::SIZE * 2,
                                    .frameCount = 8,
-                                   .speed = 8.0f,
+                                   .speed = 5.0f,
                                    .isLooping = true};
 
 // --- Player Animation LUT ---

@@ -84,12 +84,12 @@ constexpr float DMG_STONE_AXE = 40.0f;
 // ==========================================
 //               UI
 // ==========================================
-constexpr float UI_SCALE = 1.5f;
+constexpr float UI_SCALE = 1.2f;
 constexpr float TOOLBAR_BOTTOM_MARGIN = 20.0f * UI_SCALE;
 constexpr float TOOLBAR_PADDING = 1.0f * UI_SCALE;
 constexpr float TOOLBAR_SLOT_CONTENT_SIZE = 1.8f * UI_SCALE * TILE_RESOLUTION;
 constexpr float TOOLBAR_SLOT_SIZE =
-    (TOOLBAR_SLOT_CONTENT_SIZE + TOOLBAR_PADDING) * UI_SCALE * 1.0f;
+    TOOLBAR_SLOT_CONTENT_SIZE + (10.0f * UI_SCALE);
 constexpr float TOOLBAR_ITEM_ICON_SCALE = 0.8f;
 constexpr float HIGHLIGHT_ALPHA = 0.3f;
 

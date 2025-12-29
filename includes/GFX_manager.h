@@ -16,6 +16,11 @@ struct GFX_Props {
   bool useHitShader;
 };
 
+struct GFX_Object {
+  float sortY;
+  GFX_Props props;
+};
+
 struct DrawOpts {
   Color color = WHITE;
   bool useHitShader = false;
@@ -34,7 +39,8 @@ private:
 
   // Double buffering for thread safety
   // 0: Front (Render), 1: Back (Logic)
-  std::vector<std::multimap<float, GFX_Props>> GFX_Data_Buffers[2];
+  // [BufferIndex][LayerID][Object]
+  std::vector<std::vector<std::vector<GFX_Object>>> GFX_Data_Buffers;
   int backBufferIndex = 1;
 
   void InitTextureRec();

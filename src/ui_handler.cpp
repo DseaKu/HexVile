@@ -162,10 +162,24 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
 }
 
 void UI_Handler::LoadInventoryGFX() {
+  const int cols = 6;
+  const int rows = 5;
+  const float cellSize = conf::INVENTORY_CELL_SIZE * conf::UI_SCALE;
 
-  // Draw background
-  graphicsManager->LoadGFX_Data(drawMask::UI_0, tex_atlas::INVENTORY_INNER,
-                                conf::SCREEN_CENTER);
+  float totalWidth = cols * cellSize;
+  float totalHeight = rows * cellSize;
+
+  float startX = conf::SCREEN_CENTER.x - (totalWidth / 2.0f);
+  float startY = conf::SCREEN_CENTER.y - (totalHeight / 2.0f);
+
+  for (int y = 0; y < rows; ++y) {
+    for (int x = 0; x < cols; ++x) {
+      Rectangle dstRect = {startX + (x * cellSize), startY + (y * cellSize),
+                           cellSize, cellSize};
+      graphicsManager->LoadGFX_Data(drawMask::UI_0, tex_atlas::INVENTORY_INNER,
+                                    dstRect, WHITE);
+    }
+  }
   // Draw item slots
 }
 void UI_Handler::LoadToolBarGFX() {

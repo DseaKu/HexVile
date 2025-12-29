@@ -64,7 +64,7 @@ const std::vector<tile::id> WALKABLE_TILE_IDS = {tile::GRASS, tile::DIRT};
 // ==========================================
 //               Camera
 // ==========================================
-constexpr float INITIAL_CAMERA_ZOOM = 4.9f; // 3.8f;
+constexpr float INITIAL_CAMERA_ZOOM = 4.7f; // 3.8f;
 constexpr float CAMERA_WIDTH = (float)SCREEN_WIDTH / INITIAL_CAMERA_ZOOM;
 constexpr float CAMERA_HEIGHT = (float)SCREEN_HEIGHT / INITIAL_CAMERA_ZOOM;
 
@@ -85,6 +85,7 @@ constexpr float DMG_STONE_AXE = 40.0f;
 //               UI
 // ==========================================
 constexpr float UI_SCALE = 1.2f;
+constexpr float INVENTORY_CELL_SIZE = 128.0f;
 constexpr float TOOLBAR_BOTTOM_MARGIN = 20.0f * UI_SCALE;
 constexpr float TOOLBAR_PADDING = 1.0f * UI_SCALE;
 constexpr float TOOLBAR_SLOT_CONTENT_SIZE = 1.8f * UI_SCALE * TILE_RESOLUTION;

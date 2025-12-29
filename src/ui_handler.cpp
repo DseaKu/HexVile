@@ -49,11 +49,25 @@ UI_Handler::UI_Handler() {
 
 // --- Core ---
 void UI_Handler::Update() {
+  if (frameContext->inputs.commands.toggleInventory) {
+    ToggleInventory();
+  }
+
   LoadToolBarGFX();
   LoadHighlightGFX();
+
+  if (isInventoryOpen) {
+    LoadInventoryGFX();
+  }
 }
 
-void UI_Handler::ToggleInventory() {}
+void UI_Handler::ToggleInventory() {
+  if (this->isInventoryOpen) {
+    isInventoryOpen = false;
+  } else {
+    isInventoryOpen = true;
+  }
+}
 
 void UI_Handler::LoadHighlightGFX() {
   // Get to hightlithning object
@@ -147,6 +161,13 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
   }
 }
 
+void UI_Handler::LoadInventoryGFX() {
+
+  // Draw background
+  graphicsManager->LoadGFX_Data(drawMask::UI_0, tex_atlas::INVENTORY_INNER,
+                                conf::SCREEN_CENTER);
+  // Draw item slots
+}
 void UI_Handler::LoadToolBarGFX() {
   if (!isToolBarActive || !itemHandler)
     return;

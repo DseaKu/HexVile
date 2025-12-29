@@ -55,6 +55,10 @@ constexpr int RESOURCE_X_MAX = RESOURCE_X + 8;
 constexpr int UI_X = 50;
 constexpr int UI_X_MAX = UI_X + 1;
 
+constexpr Coords INVENTORY_INNER = {52, 0};
+constexpr Coords INVENTORY_EDGE = {53, 0};
+constexpr Coords INVENTORY_CORNER = {54, 0};
+
 // --- Number ---
 constexpr int NUMBER_X = UI_X_MAX;
 constexpr int NUMBER_X_MAX = 1;

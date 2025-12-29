@@ -181,7 +181,7 @@ void Game::UpdateFrameContext() {
   frameContext.inputs.commands.up = IsKeyDown(KEY_W);
   frameContext.inputs.commands.down = IsKeyDown(KEY_S);
 
-  frameContext.inputs.commands.toggleInventory = IsKeyUp(KEY_I);
+  frameContext.inputs.commands.toggleInventory = IsKeyPressed(KEY_I);
 }
 
 void Game::RunLogic() {

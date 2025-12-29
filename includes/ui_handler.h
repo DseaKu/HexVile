@@ -44,6 +44,7 @@ private:
   void LoadHighlightResourceGFX(rsrc::ID id);
 
   void LoadToolBarGFX();
+  void LoadInventoryGFX();
   void LoadToolBarSlotGFX(int slotIndex);
   void LoadItemIconGFX(int slotIndex, Rectangle slotRect);
   void LoadItemCountGFX(int slotIndex, Rectangle slotRect);

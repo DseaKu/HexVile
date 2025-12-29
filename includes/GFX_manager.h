@@ -21,10 +21,12 @@ struct Object {
 struct Opts {
   Color color = WHITE;
   bool useHitShader = false;
+
   float srcWidth = 0.0f;
   float srcHeight = 0.0f;
   float dstWidth = 0.0f;
   float dstHeight = 0.0f;
+
   float sortingOffsetY = 0.0f;
 };
 

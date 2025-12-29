@@ -31,6 +31,9 @@ void Player::UpdatePlayerState() {
   if (frameContext->mouseMask == mouseMask::GROUND &&
       frameContext->inputs.mouseDown.left) {
     isInteracting = true;
+    if (stateID == playerState::WALK) {
+      Idle();
+    }
     int selToolBarSlot = frameContext->selToolBarSlot;
     HexCoord hoveredTile =
         hexGrid->PointToHexCoord(frameContext->pos.mouseWorld);

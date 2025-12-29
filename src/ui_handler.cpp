@@ -75,7 +75,7 @@ void UI_Handler::LoadHighlightGFX() {
   item::id itemID =
       itemHandler->GetToolBarItemType(frameContext->selToolBarSlot);
   if (itemID == item::AXE) {
-    LoadHighlightResourceGFX(rsrc::ID_TREE);
+    // LoadHighlightResourceGFX(rsrc::ID_TREE);
   }
 
   if (itemID == item::SET_GRASS) {

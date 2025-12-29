@@ -154,9 +154,11 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
     }
 
     if (Vector2Distance(rsrcPos, curMousePos) < conf::INTERACT_DISTANCE_MOUSE) {
-      graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND,
-                                          tex_atlas::RSRC_TREE, rsrcPos,
-                                          {Fade(col, conf::HIGHLIGHT_ALPHA)});
+      graphicsManager->LoadGFX_Data(
+          drawMask::ON_GROUND, tex_atlas::RSRC_TREE, rsrcPos,
+          {.color = Fade(col, conf::HIGHLIGHT_ALPHA),
+           .srcHeight = tex_atlas::RES64_F,
+           .sortingOffsetY = tex_atlas::RES32_F});
     }
   }
 }

@@ -19,6 +19,9 @@ struct GFX_Props {
 struct DrawOpts {
   Color color = WHITE;
   bool useHitShader = false;
+  float srcWidth = 0.0f;
+  float srcHeight = 0.0f;
+  float sortingOffsetY = 0.0f;
 };
 
 class GFX_Manager {
@@ -51,9 +54,6 @@ public:
   void LoadGFX_DataRaw(drawMask::id layerID, Texture2D texture, Rectangle srcRec,
                        Rectangle dstRec, DrawOpts opts = {});
 
-  // Combine 2 assets rectangle and load as one render object
-  void LoadGFX_Data_32x64(drawMask::id layerID, tex_atlas::Coords texAtlas,
-                          Vector2 dst, DrawOpts opts = {});
   void RenderLayer(drawMask::id layer);
 
   Rectangle GetTileRec(tile::id id, int frame);

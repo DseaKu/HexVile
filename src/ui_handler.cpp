@@ -176,8 +176,9 @@ void UI_Handler::LoadInventoryGFX() {
     for (int x = 0; x < cols; ++x) {
       Rectangle dstRect = {startX + (x * cellSize), startY + (y * cellSize),
                            cellSize, cellSize};
-      graphicsManager->LoadGFX_Data(drawMask::UI_0, tex_atlas::INVENTORY_INNER,
-                                    dstRect, WHITE);
+      // graphicsManager->LoadGFX_Data(drawMask::UI_0,
+      // tex_atlas::INVENTORY_INNER,
+      //                               dstRect, WHITE);
     }
   }
   // Draw item slots

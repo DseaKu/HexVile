@@ -53,7 +53,7 @@ public:
   void UnloadAssets();
 
   void LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
-                    Vector2 dest, gfx::Opts opts = {});
+                    Vector2 dst, gfx::Opts opts = {});
 
   void LoadGFX_DataEx(drawMask::id layerID, tex_atlas::Coords texAtlas,
                       Rectangle dstRec, gfx::Opts opts = {});

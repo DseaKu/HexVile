@@ -488,31 +488,24 @@ void HexGrid::LoadDetailGFX(Rectangle destRec, const TileDet detail,
 
 void HexGrid::LoadResourceGFX(Rectangle destRec, const rsrc::Object rsrc,
                               tile::id id) {
+  gfx::Opts opts;
 
   // Get destination and center the it
   destRec.x = rsrc.worldPos.x - tex_atlas::RES16_F;
-  destRec.y = rsrc.worldPos.y - tex_atlas::RES32_F;
+  destRec.y = rsrc.worldPos.y - tex_atlas::RES32_F * 2;
+  Vector2 dst = {destRec.x, destRec.y};
 
   // Get source
   int taX = tex_atlas::RESOURCE_X + rsrc.id;
   tex_atlas::Coords texAtlas = rsrc.texAtlasCoords;
   bool isFlashing = rsrc.flashTimer > 0.0f;
 
-  // if (rsrc.id == rsrc::ID_TREE) { DrawOpts opts; }
-
   if (rsrc.id == rsrc::ID_TREE) {
-    destRec.height = tex_atlas::RES32_F;
-    destRec.y -= tex_atlas::RES32_F;
-    graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, {texAtlas.x, texAtlas.y},
-                                  {destRec.x, destRec.y},
-                                  {.color = WHITE,
-                                   .useHitShader = isFlashing,
-                                   .srcHeight = tex_atlas::RES64_F,
-                                   .sortingOffsetY = tex_atlas::RES32_F});
-  } else {
-    graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, {texAtlas.x, texAtlas.y},
-                                  {destRec.x, destRec.y}, {WHITE, isFlashing});
+    opts = {.srcHeight = tex_atlas::RSRC_TREE_HEIGHT,
+            .dstHeight = -tex_atlas::RSRC_TREE_HEIGHT};
   }
+
+  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, texAtlas, dst, opts);
 }
 
 // ============= Getter =====================

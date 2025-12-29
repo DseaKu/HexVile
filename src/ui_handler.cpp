@@ -166,10 +166,10 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
 
 void UI_Handler::LoadInventoryBackgroundGFX() {
 
-  DrawOpts opts = {.srcWidth = tex_atlas::INVENTORY_WIDTH,
-                   .srcHeight = tex_atlas::INVENTORY_HEIGTH,
-                   .dstWidth = 128.0f * 4,
-                   .dstHeight = 128.0f * 4};
+  gfx::Opts opts = {.srcWidth = tex_atlas::INVENTORY_WIDTH,
+                    .srcHeight = tex_atlas::INVENTORY_HEIGTH,
+                    .dstWidth = 128.0f * 4,
+                    .dstHeight = 128.0f * 4};
 
   graphicsManager->LoadGFX_Data(drawMask::UI_0, tex_atlas::INVENTORY_COORDS,
                                 conf::SCREEN_CENTER, opts);

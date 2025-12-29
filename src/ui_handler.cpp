@@ -156,7 +156,7 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
     if (Vector2Distance(rsrcPos, curMousePos) < conf::INTERACT_DISTANCE_MOUSE) {
       graphicsManager->LoadGFX_Data_32x64(drawMask::ON_GROUND,
                                           tex_atlas::RSRC_TREE, rsrcPos,
-                                          Fade(col, conf::HIGHLIGHT_ALPHA));
+                                          {Fade(col, conf::HIGHLIGHT_ALPHA)});
     }
   }
 }
@@ -202,10 +202,10 @@ void UI_Handler::LoadToolBarSlotGFX(int slotIndex) {
 
   // 1. Draw Background
   graphicsManager->LoadGFX_DataEx(
-      drawMask::UI_0, {tex_atlas::UI_X, ui::ITEM_BAR_BG}, slotRect, WHITE);
+      drawMask::UI_0, {tex_atlas::UI_X, ui::ITEM_BAR_BG}, slotRect, {WHITE});
   if (slotIndex == frameContext->selToolBarSlot) {
     graphicsManager->LoadGFX_DataEx(
-        drawMask::UI_0, {tex_atlas::UI_X, ui::ITEM_BAR_BG_H}, slotRect, WHITE);
+        drawMask::UI_0, {tex_atlas::UI_X, ui::ITEM_BAR_BG_H}, slotRect, {WHITE});
   }
 
   // 2. Draw Content
@@ -231,7 +231,7 @@ void UI_Handler::LoadItemIconGFX(int slotIndex, Rectangle slotRect) {
   Rectangle dstRec = {slotRect.x + offsetX, slotRect.y + offsetY, newWidth,
                       newHeight};
 
-  graphicsManager->LoadGFX_DataEx(drawMask::UI_0, taCoords, dstRec, WHITE);
+  graphicsManager->LoadGFX_DataEx(drawMask::UI_0, taCoords, dstRec, {WHITE});
 }
 
 void UI_Handler::LoadItemCountGFX(int slotIndex, Rectangle slotRect) {
@@ -270,7 +270,7 @@ void UI_Handler::LoadItemCountGFX(int slotIndex, Rectangle slotRect) {
     };
 
     graphicsManager->LoadGFX_DataEx(drawMask::UI_1, {tex_atlas::NUMBER_X, digit},
-                                    digitRect, WHITE);
+                                    digitRect, {WHITE});
     digitIndex++;
   }
 }

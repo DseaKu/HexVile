@@ -54,33 +54,32 @@ void GFX_Manager::UnloadAssets() {
 }
 
 void GFX_Manager::LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
-                               Vector2 dst, Color col, bool useHitShader) {
+                               Vector2 dst, DrawOpts opts) {
   Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
   Rectangle dstRec = {dst.x, dst.y, tex_atlas::RES32_F, tex_atlas::RES32_F};
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
-      dst.y, GFX_Props{textureAtlas, srcRec, dstRec, col, useHitShader});
+      dst.y, GFX_Props{textureAtlas, srcRec, dstRec, opts.color, opts.useHitShader});
 }
 
 void GFX_Manager::LoadGFX_DataEx(drawMask::id layerID,
                                  tex_atlas::Coords texAtlas, Rectangle dstRec,
-                                 Color col, bool useHitShader) {
+                                 DrawOpts opts) {
   Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
   // Write to Back Buffer
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
-      dstRec.y, GFX_Props{textureAtlas, srcRec, dstRec, col, useHitShader});
+      dstRec.y, GFX_Props{textureAtlas, srcRec, dstRec, opts.color, opts.useHitShader});
 }
 
 void GFX_Manager::LoadGFX_DataRaw(drawMask::id layerID, Texture2D texture,
-                                  Rectangle srcRec, Rectangle dstRec, Color col,
-                                  bool useHitShader) {
+                                  Rectangle srcRec, Rectangle dstRec, DrawOpts opts) {
   // Write to Back Buffer
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
-      dstRec.y, GFX_Props{texture, srcRec, dstRec, col, useHitShader});
+      dstRec.y, GFX_Props{texture, srcRec, dstRec, opts.color, opts.useHitShader});
 }
 
 void GFX_Manager::LoadGFX_Data_32x64(drawMask::id layerID,
                                      tex_atlas::Coords texAtlas, Vector2 dst,
-                                     Color col, bool useHitShader) {
+                                     DrawOpts opts) {
   Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
   srcRec.height += tex_atlas::RES32_F;
   Rectangle dstRec = {dst.x, dst.y, tex_atlas::RES32_F, tex_atlas::RES64_F};
@@ -88,7 +87,7 @@ void GFX_Manager::LoadGFX_Data_32x64(drawMask::id layerID,
   // Write to Back Buffer
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
       dst.y + tex_atlas::RES32_F,
-      GFX_Props{textureAtlas, srcRec, dstRec, col, useHitShader});
+      GFX_Props{textureAtlas, srcRec, dstRec, opts.color, opts.useHitShader});
 }
 
 void GFX_Manager::RenderLayer(drawMask::id maskID) {

@@ -57,7 +57,8 @@ void UI_Handler::Update() {
   LoadHighlightGFX();
 
   if (isInventoryOpen) {
-    LoadInventoryGFX();
+    LoadInventoryBackgroundGFX();
+    LoadInventoryItemsGFX();
   }
 }
 
@@ -154,16 +155,27 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
     }
 
     if (Vector2Distance(rsrcPos, curMousePos) < conf::INTERACT_DISTANCE_MOUSE) {
-      graphicsManager->LoadGFX_Data(
-          drawMask::ON_GROUND, tex_atlas::RSRC_TREE, rsrcPos,
-          {.color = Fade(col, conf::HIGHLIGHT_ALPHA),
-           .srcHeight = tex_atlas::RES64_F,
-           .sortingOffsetY = tex_atlas::RES32_F});
+      graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, tex_atlas::RSRC_TREE,
+                                    rsrcPos,
+                                    {.color = Fade(col, conf::HIGHLIGHT_ALPHA),
+                                     .srcHeight = tex_atlas::RES64_F,
+                                     .sortingOffsetY = tex_atlas::RES32_F});
     }
   }
 }
 
-void UI_Handler::LoadInventoryGFX() {
+void UI_Handler::LoadInventoryBackgroundGFX() {
+
+  DrawOpts opts = {.srcWidth = tex_atlas::INVENTORY_WIDTH,
+                   .srcHeight = tex_atlas::INVENTORY_HEIGTH,
+                   .dstWidth = 128.0f * 4,
+                   .dstHeight = 128.0f * 4};
+
+  graphicsManager->LoadGFX_Data(drawMask::UI_0, tex_atlas::INVENTORY_COORDS,
+                                conf::SCREEN_CENTER, opts);
+}
+
+void UI_Handler::LoadInventoryItemsGFX() {
   int cols = conf::INVENTORY_CELL_COLS;
   int rows = conf::INVENTORY_SLOTS / cols;
   float cellSize = conf::INVENTORY_CELL_SIZE * conf::UI_SCALE;
@@ -178,9 +190,6 @@ void UI_Handler::LoadInventoryGFX() {
     for (int x = 0; x < cols; ++x) {
       Rectangle dstRect = {startX + (x * cellSize), startY + (y * cellSize),
                            cellSize, cellSize};
-      // graphicsManager->LoadGFX_Data(drawMask::UI_0,
-      // tex_atlas::INVENTORY_INNER,
-      //                               dstRect, WHITE);
     }
   }
   // Draw item slots
@@ -206,8 +215,9 @@ void UI_Handler::LoadToolBarSlotGFX(int slotIndex) {
   graphicsManager->LoadGFX_DataEx(
       drawMask::UI_0, {tex_atlas::UI_X, ui::ITEM_BAR_BG}, slotRect, {WHITE});
   if (slotIndex == frameContext->selToolBarSlot) {
-    graphicsManager->LoadGFX_DataEx(
-        drawMask::UI_0, {tex_atlas::UI_X, ui::ITEM_BAR_BG_H}, slotRect, {WHITE});
+    graphicsManager->LoadGFX_DataEx(drawMask::UI_0,
+                                    {tex_atlas::UI_X, ui::ITEM_BAR_BG_H},
+                                    slotRect, {WHITE});
   }
 
   // 2. Draw Content
@@ -271,8 +281,8 @@ void UI_Handler::LoadItemCountGFX(int slotIndex, Rectangle slotRect) {
                                   // means "draw up/left from anchor"
     };
 
-    graphicsManager->LoadGFX_DataEx(drawMask::UI_1, {tex_atlas::NUMBER_X, digit},
-                                    digitRect, {WHITE});
+    graphicsManager->LoadGFX_DataEx(
+        drawMask::UI_1, {tex_atlas::NUMBER_X, digit}, digitRect, {WHITE});
     digitIndex++;
   }
 }

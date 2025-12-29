@@ -57,13 +57,21 @@ void GFX_Manager::UnloadAssets() {
 
 void GFX_Manager::LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
                                Vector2 dst, DrawOpts opts) {
+
   Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
-  if (opts.srcWidth > 0)
+  Rectangle dstRec = {dst.x, dst.y, srcRec.width, srcRec.height};
+
+  if (opts.srcWidth != 0.0f)
     srcRec.width = opts.srcWidth;
-  if (opts.srcHeight > 0)
+  if (opts.srcHeight != 0.0f)
     srcRec.height = opts.srcHeight;
 
-  Rectangle dstRec = {dst.x, dst.y, srcRec.width, srcRec.height};
+  if (opts.dstWidth != 0.0f)
+    dstRec.width = opts.dstWidth;
+  if (opts.dstHeight != 0.0f) {
+    dstRec.height = opts.dstHeight;
+  }
+
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].push_back(
       {dst.y + opts.sortingOffsetY,
        GFX_Props{textureAtlas, srcRec, dstRec, opts.color, opts.useHitShader}});

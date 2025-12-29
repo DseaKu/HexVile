@@ -5,7 +5,6 @@
 
 #include "enums.h"
 #include "texture_atlas.h"
-#include <map>
 #include <vector>
 
 struct GFX_Props {
@@ -26,6 +25,8 @@ struct DrawOpts {
   bool useHitShader = false;
   float srcWidth = 0.0f;
   float srcHeight = 0.0f;
+  float dstWidth = 0.0f;
+  float dstHeight = 0.0f;
   float sortingOffsetY = 0.0f;
 };
 
@@ -57,8 +58,8 @@ public:
   void LoadGFX_DataEx(drawMask::id layerID, tex_atlas::Coords texAtlas,
                       Rectangle dstRec, DrawOpts opts = {});
 
-  void LoadGFX_DataRaw(drawMask::id layerID, Texture2D texture, Rectangle srcRec,
-                       Rectangle dstRec, DrawOpts opts = {});
+  void LoadGFX_DataRaw(drawMask::id layerID, Texture2D texture,
+                       Rectangle srcRec, Rectangle dstRec, DrawOpts opts = {});
 
   void RenderLayer(drawMask::id layer);
 

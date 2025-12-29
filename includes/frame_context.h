@@ -5,21 +5,27 @@
 #include "raylib.h"
 namespace frame {
 
-struct KeyboardInput {
-  bool one;
-  bool two;
-  bool three;
-  bool four;
-  bool five;
-  bool six;
-  bool seven;
-  bool eight;
-  bool nine;
-  bool zero;
+struct InputCommands {
+  // Tool bar slots
+  bool slot0;
+  bool slot1;
+  bool slot2;
+  bool slot3;
+  bool slot4;
+  bool slot5;
+  bool slot6;
+  bool slot7;
+  bool slot8;
+  bool slot9;
+
+  // Movement
   bool up;
   bool down;
   bool left;
   bool right;
+
+  // Menu
+  bool toggleInventory;
 };
 
 struct MouseInput {
@@ -30,7 +36,7 @@ struct MouseInput {
 struct Input {
   MouseInput mouseClick;
   MouseInput mouseDown;
-  KeyboardInput keyPress;
+  InputCommands commands;
 };
 
 struct Location {

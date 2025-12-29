@@ -43,6 +43,9 @@ void ItemHandler::Init() {
   toolBar[3] = grass;
   toolBar[4] = axe;
   toolBar[5] = grass;
+
+  inventory[0] = grass;
+  inventory[12] = grass;
 }
 
 bool ItemHandler::TakeItemFromToolBar(ItemStack *itemStack, int amount) {

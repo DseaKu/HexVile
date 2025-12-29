@@ -38,6 +38,7 @@ UI_Handler::UI_Handler() {
 
   // State
   isToolBarActive = false;
+  isInventoryOpen = false;
 
   // Dependencies
   graphicsManager = nullptr;
@@ -51,6 +52,8 @@ void UI_Handler::Update() {
   LoadToolBarGFX();
   LoadHighlightGFX();
 }
+
+void UI_Handler::ToggleInventory() {}
 
 void UI_Handler::LoadHighlightGFX() {
   // Get to hightlithning object
@@ -242,28 +245,28 @@ int UI_Handler::GetToolBarSelection() {
   if (curSelection < 0 || curSelection >= conf::TOOLBAR_SLOTS) {
     curSelection = 0;
   }
-  frame::KeyboardInput keyPress = frameContext->inputs.keyPress;
+  frame::InputCommands keyPress = frameContext->inputs.commands;
 
   int toolBarSlotBuffer = curSelection;
-  if (keyPress.one)
+  if (keyPress.slot0)
     curSelection = 0;
-  if (keyPress.two)
+  if (keyPress.slot1)
     curSelection = 1;
-  if (keyPress.three)
+  if (keyPress.slot2)
     curSelection = 2;
-  if (keyPress.four)
+  if (keyPress.slot3)
     curSelection = 3;
-  if (keyPress.five)
+  if (keyPress.slot4)
     curSelection = 4;
-  if (keyPress.six)
+  if (keyPress.slot5)
     curSelection = 5;
-  if (keyPress.seven)
+  if (keyPress.slot6)
     curSelection = 6;
-  if (keyPress.eight)
+  if (keyPress.slot7)
     curSelection = 7;
-  if (keyPress.nine)
+  if (keyPress.slot8)
     curSelection = 8;
-  if (keyPress.zero)
+  if (keyPress.slot9)
     curSelection = 9;
 
   // Revert selection if the toolbar slot is out of range

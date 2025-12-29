@@ -29,6 +29,7 @@ private:
 
   ToolBarLayout toolBarLayout;
   bool isToolBarActive;
+  bool isInventoryOpen;
 
   // Dependencies
   GFX_Manager *graphicsManager;
@@ -54,6 +55,7 @@ public:
   void Update();
   void UpdateScreenSize(int width, int height);
   mouseMask::id UpdateMouseMask();
+  void ToggleInventory();
 
   // Setters
   void SetGFX_Manager(GFX_Manager *p);

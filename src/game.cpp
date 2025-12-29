@@ -165,21 +165,23 @@ void Game::UpdateFrameContext() {
   frameContext.inputs.mouseDown.left = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
   frameContext.inputs.mouseDown.right = IsMouseButtonDown(MOUSE_BUTTON_RIGHT);
   // --- Key Inputs ---
-  frameContext.inputs.keyPress.one = IsKeyPressed(KEY_ONE);
-  frameContext.inputs.keyPress.two = IsKeyPressed(KEY_TWO);
-  frameContext.inputs.keyPress.three = IsKeyPressed(KEY_THREE);
-  frameContext.inputs.keyPress.four = IsKeyPressed(KEY_FOUR);
-  frameContext.inputs.keyPress.five = IsKeyPressed(KEY_FIVE);
-  frameContext.inputs.keyPress.six = IsKeyPressed(KEY_SIX);
-  frameContext.inputs.keyPress.seven = IsKeyPressed(KEY_SEVEN);
-  frameContext.inputs.keyPress.eight = IsKeyPressed(KEY_EIGHT);
-  frameContext.inputs.keyPress.nine = IsKeyPressed(KEY_NINE);
-  frameContext.inputs.keyPress.zero = IsKeyPressed(KEY_ZERO);
+  frameContext.inputs.commands.slot0 = IsKeyPressed(KEY_ONE);
+  frameContext.inputs.commands.slot1 = IsKeyPressed(KEY_TWO);
+  frameContext.inputs.commands.slot2 = IsKeyPressed(KEY_THREE);
+  frameContext.inputs.commands.slot3 = IsKeyPressed(KEY_FOUR);
+  frameContext.inputs.commands.slot4 = IsKeyPressed(KEY_FIVE);
+  frameContext.inputs.commands.slot5 = IsKeyPressed(KEY_SIX);
+  frameContext.inputs.commands.slot6 = IsKeyPressed(KEY_SEVEN);
+  frameContext.inputs.commands.slot7 = IsKeyPressed(KEY_EIGHT);
+  frameContext.inputs.commands.slot8 = IsKeyPressed(KEY_NINE);
+  frameContext.inputs.commands.slot9 = IsKeyPressed(KEY_ZERO);
 
-  frameContext.inputs.keyPress.left = IsKeyDown(KEY_A);
-  frameContext.inputs.keyPress.right = IsKeyDown(KEY_D);
-  frameContext.inputs.keyPress.up = IsKeyDown(KEY_W);
-  frameContext.inputs.keyPress.down = IsKeyDown(KEY_S);
+  frameContext.inputs.commands.left = IsKeyDown(KEY_A);
+  frameContext.inputs.commands.right = IsKeyDown(KEY_D);
+  frameContext.inputs.commands.up = IsKeyDown(KEY_W);
+  frameContext.inputs.commands.down = IsKeyDown(KEY_S);
+
+  frameContext.inputs.commands.toggleInventory = IsKeyUp(KEY_I);
 }
 
 void Game::RunLogic() {

@@ -107,8 +107,10 @@ void Player::UpdatePlayerFaceDir() {
 
   if (frameContext->inputs.mouseDown.left ||
       frameContext->inputs.mouseDown.right) {
-    Vector2 tarPos = frameContext->pos.mouseWorld;
-    this->FaceToPoint(tarPos);
+    if (frameContext->mouseMask == mouseMask::GROUND) {
+      Vector2 tarPos = frameContext->pos.mouseWorld;
+      this->FaceToPoint(tarPos);
+    }
   } else {
 
     // Determine player face direction
@@ -148,9 +150,9 @@ void Player::Update() {
 
   Vector2 dir = {0, 0};
   moveDir.x =
-      -frameContext->inputs.keyPress.left + frameContext->inputs.keyPress.right;
+      -frameContext->inputs.commands.left + frameContext->inputs.commands.right;
   moveDir.y =
-      -frameContext->inputs.keyPress.up + frameContext->inputs.keyPress.down;
+      -frameContext->inputs.commands.up + frameContext->inputs.commands.down;
 
   UpdatePlayerFaceDir();
 

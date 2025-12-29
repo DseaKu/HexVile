@@ -201,10 +201,10 @@ void UI_Handler::LoadToolBarSlotGFX(int slotIndex) {
                         (float)toolBarLayout.contentSize};
 
   // 1. Draw Background
-  graphicsManager->LoadGFX_Data(
+  graphicsManager->LoadGFX_DataEx(
       drawMask::UI_0, {tex_atlas::UI_X, ui::ITEM_BAR_BG}, slotRect, WHITE);
   if (slotIndex == frameContext->selToolBarSlot) {
-    graphicsManager->LoadGFX_Data(
+    graphicsManager->LoadGFX_DataEx(
         drawMask::UI_0, {tex_atlas::UI_X, ui::ITEM_BAR_BG_H}, slotRect, WHITE);
   }
 
@@ -231,7 +231,7 @@ void UI_Handler::LoadItemIconGFX(int slotIndex, Rectangle slotRect) {
   Rectangle dstRec = {slotRect.x + offsetX, slotRect.y + offsetY, newWidth,
                       newHeight};
 
-  graphicsManager->LoadGFX_Data(drawMask::UI_0, taCoords, dstRec, WHITE);
+  graphicsManager->LoadGFX_DataEx(drawMask::UI_0, taCoords, dstRec, WHITE);
 }
 
 void UI_Handler::LoadItemCountGFX(int slotIndex, Rectangle slotRect) {
@@ -269,8 +269,8 @@ void UI_Handler::LoadItemCountGFX(int slotIndex, Rectangle slotRect) {
                                   // means "draw up/left from anchor"
     };
 
-    graphicsManager->LoadGFX_Data(drawMask::UI_1, {tex_atlas::NUMBER_X, digit},
-                                  digitRect, WHITE);
+    graphicsManager->LoadGFX_DataEx(drawMask::UI_1, {tex_atlas::NUMBER_X, digit},
+                                    digitRect, WHITE);
     digitIndex++;
   }
 }

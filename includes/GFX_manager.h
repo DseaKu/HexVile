@@ -38,20 +38,20 @@ public:
   void UnloadAssets();
 
   void LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
-                    Vector2 dest);
+                    Vector2 dest, Color col = WHITE, bool useHitShader = false);
 
-  void LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
-                    Rectangle dstRec, Color col, bool useHitShader = false);
+  void LoadGFX_DataEx(drawMask::id layerID, tex_atlas::Coords texAtlas,
+                      Rectangle dstRec, Color col = WHITE,
+                      bool useHitShader = false);
 
-  void LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
-                    Vector2 dest, Color col, bool useHitShader = false);
-
-  void LoadGFX_Data(drawMask::id layerID, Texture2D texture, Rectangle srcRec,
-                    Rectangle dstRec, Color col, bool useHitShader = false);
+  void LoadGFX_DataRaw(drawMask::id layerID, Texture2D texture, Rectangle srcRec,
+                       Rectangle dstRec, Color col = WHITE,
+                       bool useHitShader = false);
 
   // Combine 2 assets rectangle and load as one render object
   void LoadGFX_Data_32x64(drawMask::id layerID, tex_atlas::Coords texAtlas,
-                          Vector2 dst, Color col, bool useHitShader = false);
+                          Vector2 dst, Color col = WHITE,
+                          bool useHitShader = false);
   void RenderLayer(drawMask::id layer);
 
   Rectangle GetTileRec(tile::id id, int frame);

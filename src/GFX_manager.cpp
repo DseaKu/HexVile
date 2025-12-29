@@ -54,33 +54,25 @@ void GFX_Manager::UnloadAssets() {
 }
 
 void GFX_Manager::LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
-                               Vector2 dst) {
+                               Vector2 dst, Color col, bool useHitShader) {
   Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
   Rectangle dstRec = {dst.x, dst.y, tex_atlas::RES32_F, tex_atlas::RES32_F};
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
-      dst.y, GFX_Props{textureAtlas, srcRec, dstRec, WHITE, false});
+      dst.y, GFX_Props{textureAtlas, srcRec, dstRec, col, useHitShader});
 }
 
-void GFX_Manager::LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
-                               Rectangle dstRec, Color col, bool useHitShader) {
+void GFX_Manager::LoadGFX_DataEx(drawMask::id layerID,
+                                 tex_atlas::Coords texAtlas, Rectangle dstRec,
+                                 Color col, bool useHitShader) {
   Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
   // Write to Back Buffer
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
       dstRec.y, GFX_Props{textureAtlas, srcRec, dstRec, col, useHitShader});
 }
 
-void GFX_Manager::LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
-                               Vector2 dst, Color col, bool useHitShader) {
-  Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
-  // Write to Back Buffer
-  Rectangle dstRec = {dst.x, dst.y, tex_atlas::RES32_F, tex_atlas::RES64_F};
-  GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
-      dst.y, GFX_Props{textureAtlas, srcRec, dstRec, col, useHitShader});
-}
-
-void GFX_Manager::LoadGFX_Data(drawMask::id layerID, Texture2D texture,
-                               Rectangle srcRec, Rectangle dstRec, Color col,
-                               bool useHitShader) {
+void GFX_Manager::LoadGFX_DataRaw(drawMask::id layerID, Texture2D texture,
+                                  Rectangle srcRec, Rectangle dstRec, Color col,
+                                  bool useHitShader) {
   // Write to Back Buffer
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].emplace(
       dstRec.y, GFX_Props{texture, srcRec, dstRec, col, useHitShader});

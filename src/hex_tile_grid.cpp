@@ -373,12 +373,8 @@ void HexGrid::DrawTile(HexCoord h, int TA_X, int TA_Y, drawMask::id layerID) {
   Vector2 pos = HexCoordToPoint(h);
   pos.x -= conf::TILE_RESOLUTION_HALF;
   pos.y -= conf::TILE_RESOLUTION_HALF;
-  Rectangle destRect = {pos.x, pos.y, tex_atlas::RES32, tex_atlas::RES32};
 
-  const MapTile &tile = GetTile(h);
-  Vector2 origin = {0.0f, 0.0f};
-
-  graphicsManager->LoadGFX_Data(layerID, {TA_X, TA_Y}, destRect, WHITE);
+  graphicsManager->LoadGFX_Data(layerID, {TA_X, TA_Y}, pos);
 }
 
 void HexGrid::UpdateTileVisibility(float totalTime) {
@@ -476,7 +472,7 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
 
 // ============= Render =====================
 void HexGrid::LoadTileGFX(Rectangle destRec, int x, int y) {
-  graphicsManager->LoadGFX_Data(drawMask::GROUND0, {x, y}, destRec, WHITE);
+  graphicsManager->LoadGFX_Data(drawMask::GROUND0, {x, y}, {destRec.x, destRec.y});
 }
 
 void HexGrid::LoadDetailGFX(Rectangle destRec, const TileDet detail,
@@ -484,7 +480,7 @@ void HexGrid::LoadDetailGFX(Rectangle destRec, const TileDet detail,
   destRec.x += detail.tilePos.x;
   destRec.y += detail.tilePos.y;
   int taX = tex_atlas::DETAILS_X + detail.taOffsetX;
-  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, {taX, id}, destRec, WHITE);
+  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, {taX, id}, {destRec.x, destRec.y});
 }
 
 void HexGrid::LoadResourceGFX(Rectangle destRec, const rsrc::Object rsrc,
@@ -505,7 +501,7 @@ void HexGrid::LoadResourceGFX(Rectangle destRec, const rsrc::Object rsrc,
         WHITE, isFlashing);
   } else {
     graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, {texAtlas.x, texAtlas.y},
-                                  destRec, WHITE, isFlashing);
+                                  {destRec.x, destRec.y}, WHITE, isFlashing);
   }
 }
 

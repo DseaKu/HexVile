@@ -324,10 +324,6 @@ void Player::LoadPlayerGFX() {
   drawPos.y -= tex_atlas::RES16 -
                conf::PLAYER_SPRITE_Y_OFFSET; // Move player sprite a little
                                              // bit to the bottom
-  Rectangle dstRect = {drawPos.x, drawPos.y, tex_atlas::RES32_F,
-                       tex_atlas::RES32_F};
-
   // Load texture to renderer
-  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, {taX, taY}, dstRect,
-                                WHITE);
+  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, {taX, taY}, drawPos);
 }

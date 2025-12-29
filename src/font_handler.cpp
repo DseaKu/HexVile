@@ -70,7 +70,7 @@ void FontHandler::QueueText(GFX_Manager *gfx, const char *text, Vector2 pos,
           srcRec.height
       };
 
-      gfx->LoadGFX_Data(layer, fontHackRegular.texture, srcRec, dstRec, col);
+      gfx->LoadGFX_DataRaw(layer, fontHackRegular.texture, srcRec, dstRec, col);
 
       if (glyph.advanceX == 0)
         currentPos.x += (float)srcRec.width + spacing;

@@ -56,7 +56,7 @@ void GFX_Manager::UnloadAssets() {
 }
 
 void GFX_Manager::LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
-                               Vector2 dst, DrawOpts opts) {
+                               Vector2 dst, gfx::Opts opts) {
 
   Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
   Rectangle dstRec = {dst.x, dst.y, srcRec.width, srcRec.height};
@@ -73,13 +73,13 @@ void GFX_Manager::LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
   }
 
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].push_back(
-      {dst.y + opts.sortingOffsetY,
-       GFX_Props{textureAtlas, srcRec, dstRec, opts.color, opts.useHitShader}});
+      {dst.y + opts.sortingOffsetY, textureAtlas, srcRec, dstRec, opts.color,
+       opts.useHitShader});
 }
 
 void GFX_Manager::LoadGFX_DataEx(drawMask::id layerID,
                                  tex_atlas::Coords texAtlas, Rectangle dstRec,
-                                 DrawOpts opts) {
+                                 gfx::Opts opts) {
   Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
   if (opts.srcWidth > 0)
     srcRec.width = opts.srcWidth;
@@ -88,17 +88,17 @@ void GFX_Manager::LoadGFX_DataEx(drawMask::id layerID,
 
   // Write to Back Buffer
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].push_back(
-      {dstRec.y + opts.sortingOffsetY,
-       GFX_Props{textureAtlas, srcRec, dstRec, opts.color, opts.useHitShader}});
+      {dstRec.y + opts.sortingOffsetY, textureAtlas, srcRec, dstRec, opts.color,
+       opts.useHitShader});
 }
 
 void GFX_Manager::LoadGFX_DataRaw(drawMask::id layerID, Texture2D texture,
                                   Rectangle srcRec, Rectangle dstRec,
-                                  DrawOpts opts) {
+                                  gfx::Opts opts) {
   // Write to Back Buffer
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].push_back(
-      {dstRec.y + opts.sortingOffsetY,
-       GFX_Props{texture, srcRec, dstRec, opts.color, opts.useHitShader}});
+      {dstRec.y + opts.sortingOffsetY, texture, srcRec, dstRec, opts.color,
+       opts.useHitShader});
 }
 
 void GFX_Manager::RenderLayer(drawMask::id maskID) {
@@ -108,20 +108,20 @@ void GFX_Manager::RenderLayer(drawMask::id maskID) {
 
   // Sort objects by Y position (Painter's Algorithm)
   std::sort(layer.begin(), layer.end(),
-            [](const GFX_Object &a, const GFX_Object &b) {
+            [](const gfx::Object &a, const gfx::Object &b) {
               return a.sortY < b.sortY;
             });
 
   for (auto &item : layer) {
-    GFX_Props &props = item.props;
+    // GFX_Props &props = item.props;
 
-    if (props.useHitShader)
+    if (item.useHitShader)
       BeginShaderMode(hitShader);
 
-    DrawTexturePro(props.texture, props.srcRec, props.dstRec, Vector2{0, 0},
-                   0.0f, props.color);
+    DrawTexturePro(item.texture, item.srcRec, item.dstRec, Vector2{0, 0}, 0.0f,
+                   item.color);
 
-    if (props.useHitShader)
+    if (item.useHitShader)
       EndShaderMode();
   }
   // Do NOT clear here. We clear the *new* back buffer in SwapBuffers.

@@ -6,8 +6,8 @@
 #include "resource.h"
 #include "texture_atlas.h"
 #include "tile_details.h"
-#include <vector>
 #include <cmath>
+#include <vector>
 
 const std::vector<HexCoord> HexGrid::DIRECTIONS = {
     HexCoord(1, 0),  HexCoord(0, 1),  HexCoord(-1, 1),
@@ -489,15 +489,19 @@ void HexGrid::LoadDetailGFX(Rectangle destRec, const TileDet detail,
 void HexGrid::LoadResourceGFX(Rectangle destRec, const rsrc::Object rsrc,
                               tile::id id) {
 
+  // Get destination and center the it
   destRec.x = rsrc.worldPos.x - tex_atlas::RES16_F;
   destRec.y = rsrc.worldPos.y - tex_atlas::RES32_F;
 
-  int taX = rsrc.id + tex_atlas::RESOURCE_X;
-  tex_atlas::Coords texAtlas = rsrc.xyTexAtlas;
+  // Get source
+  int taX = tex_atlas::RESOURCE_X + rsrc.id;
+  tex_atlas::Coords texAtlas = rsrc.texAtlasCoords;
   bool isFlashing = rsrc.flashTimer > 0.0f;
 
+  // if (rsrc.id == rsrc::ID_TREE) { DrawOpts opts; }
+
   if (rsrc.id == rsrc::ID_TREE) {
-    destRec.height += tex_atlas::RES32_F;
+    destRec.height = tex_atlas::RES32_F;
     destRec.y -= tex_atlas::RES32_F;
     graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, {texAtlas.x, texAtlas.y},
                                   {destRec.x, destRec.y},

@@ -36,6 +36,10 @@ public:
   GFX_Manager();
   int LoadAssets(const char *);
   void UnloadAssets();
+
+  void LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
+                    Vector2 dest);
+
   void LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
                     Rectangle dstRec, Color col, bool useHitShader = false);
 

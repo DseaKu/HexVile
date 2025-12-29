@@ -3,9 +3,7 @@
 
 #include "enums.h"
 #include "frame_context.h"
-#include <map>
 #include <string>
-#include <utility>
 #include <vector>
 
 // --- Structs ---
@@ -20,14 +18,6 @@ struct ItemStack {
   item::id itemID;
   int count;
 };
-
-struct Chest {
-  std::vector<ItemStack> contents;
-};
-
-// Global chest map (Consider moving this to a dedicated World/ChestHandler
-// later)
-extern std::map<std::pair<int, int>, Chest> gridChests;
 
 // --- Item Database ---
 class ItemDataBase {

@@ -116,7 +116,8 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
   if (!frameContext || !frameContext->pos.hoveredTile)
     return;
 
-  Color col = RED;
+  // Can be changed to indicate 'not in range'
+  Color col = WHITE;
 
   // If player is in interact range change color indicator to yellow
   Vector2 curMousePos = frameContext->pos.mouseWorld;

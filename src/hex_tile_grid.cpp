@@ -7,6 +7,7 @@
 #include "texture_atlas.h"
 #include "tile_details.h"
 #include <vector>
+#include <cmath>
 
 const std::vector<HexCoord> HexGrid::DIRECTIONS = {
     HexCoord(1, 0),  HexCoord(0, 1),  HexCoord(-1, 1),
@@ -107,7 +108,7 @@ TileDet HexGrid::GetRandomTerainDetail(tile::id id) {
 
   int totalWeight = conf::TOTAL_WEIGHT_DET;
   int taOffsetX = conf::SKIP_RENDER;
-  int index = GetRandomValue(0, spawnData.size());
+  int index = GetRandomValue(0, spawnData.size() - 1);
 
   int randNum = GetRandomValue(0, totalWeight);
   if (randNum <= spawnData[index]) {
@@ -182,9 +183,9 @@ MapTile &HexGrid::GetTile(HexCoord h) {
 
 // ============= Conversion =================
 HexCoord HexGrid::HexRound(FractionalHex h) const {
-  int q = round(h.q);
-  int r = round(h.r);
-  int s = round(h.s);
+  int q = std::round(h.q);
+  int r = std::round(h.r);
+  int s = std::round(h.s);
   double q_diff = std::abs(q - h.q);
   double r_diff = std::abs(r - h.r);
   double s_diff = std::abs(s - h.s);
@@ -200,7 +201,7 @@ Vector2 HexGrid::HexCoordToPoint(HexCoord h) const {
 }
 
 Vector2 HexGrid::CoordToPoint(int q, int r) const {
-  float x = tileGapX * (sqrt(3.0f) * q + sqrt(3.0f) / 2.0f * r);
+  float x = tileGapX * (std::sqrt(3.0f) * q + std::sqrt(3.0f) / 2.0f * r);
   float y = tileGapY * (3.0f / 2.0f * r);
   return {x + origin.x, y + origin.y};
 }
@@ -242,7 +243,7 @@ const MapTile *HexGrid::PointToTile(Vector2 point) const {
 HexCoord HexGrid::PointToHexCoord(Vector2 point) const {
   float pt_x = (point.x - origin.x) / tileGapX;
   float pt_y = (point.y - origin.y) / tileGapY;
-  double q = (sqrt(3.0) / 3.0 * pt_x - 1.0 / 3.0 * pt_y);
+  double q = (std::sqrt(3.0) / 3.0 * pt_x - 1.0 / 3.0 * pt_y);
   double r = (2.0 / 3.0 * pt_y);
   return HexRound({q, r, -q - r});
 }
@@ -472,7 +473,8 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
 
 // ============= Render =====================
 void HexGrid::LoadTileGFX(Rectangle destRec, int x, int y) {
-  graphicsManager->LoadGFX_Data(drawMask::GROUND0, {x, y}, {destRec.x, destRec.y});
+  graphicsManager->LoadGFX_Data(drawMask::GROUND0, {x, y},
+                                {destRec.x, destRec.y});
 }
 
 void HexGrid::LoadDetailGFX(Rectangle destRec, const TileDet detail,
@@ -480,7 +482,8 @@ void HexGrid::LoadDetailGFX(Rectangle destRec, const TileDet detail,
   destRec.x += detail.tilePos.x;
   destRec.y += detail.tilePos.y;
   int taX = tex_atlas::DETAILS_X + detail.taOffsetX;
-  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, {taX, id}, {destRec.x, destRec.y});
+  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, {taX, id},
+                                {destRec.x, destRec.y});
 }
 
 void HexGrid::LoadResourceGFX(Rectangle destRec, const rsrc::Object rsrc,
@@ -496,12 +499,12 @@ void HexGrid::LoadResourceGFX(Rectangle destRec, const rsrc::Object rsrc,
   if (rsrc.id == rsrc::ID_TREE) {
     destRec.height += tex_atlas::RES32_F;
     destRec.y -= tex_atlas::RES32_F;
-    graphicsManager->LoadGFX_Data(
-        drawMask::ON_GROUND, {texAtlas.x, texAtlas.y}, {destRec.x, destRec.y},
-        {.color = WHITE,
-         .useHitShader = isFlashing,
-         .srcHeight = tex_atlas::RES64_F,
-         .sortingOffsetY = tex_atlas::RES32_F});
+    graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, {texAtlas.x, texAtlas.y},
+                                  {destRec.x, destRec.y},
+                                  {.color = WHITE,
+                                   .useHitShader = isFlashing,
+                                   .srcHeight = tex_atlas::RES64_F,
+                                   .sortingOffsetY = tex_atlas::RES32_F});
   } else {
     graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, {texAtlas.x, texAtlas.y},
                                   {destRec.x, destRec.y}, {WHITE, isFlashing});

@@ -162,9 +162,9 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
 }
 
 void UI_Handler::LoadInventoryGFX() {
-  const int cols = 6;
-  const int rows = 5;
-  const float cellSize = conf::INVENTORY_CELL_SIZE * conf::UI_SCALE;
+  int cols = conf::INVENTORY_CELL_COLS;
+  int rows = conf::INVENTORY_SLOTS / cols;
+  float cellSize = conf::INVENTORY_CELL_SIZE * conf::UI_SCALE;
 
   float totalWidth = cols * cellSize;
   float totalHeight = rows * cellSize;

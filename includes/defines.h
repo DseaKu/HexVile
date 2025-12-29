@@ -31,10 +31,10 @@ constexpr const int ESTIMATED_VISIBLE_TILES = 3000;
 // ==========================================
 //               Screen
 // ==========================================
-constexpr int SCREEN_WIDTH = 1400;
-constexpr int SCREEN_HEIGHT = 900;
-// constexpr int SCREEN_WIDTH = 2800;
-// constexpr int SCREEN_HEIGHT = 1200;
+// constexpr int SCREEN_WIDTH = 1400;
+// constexpr int SCREEN_HEIGHT = 900;
+constexpr int SCREEN_WIDTH = 2800;
+constexpr int SCREEN_HEIGHT = 1200;
 constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
                                    (float)SCREEN_HEIGHT / 2};
 
@@ -64,7 +64,7 @@ const std::vector<tile::id> WALKABLE_TILE_IDS = {tile::GRASS, tile::DIRT};
 // ==========================================
 //               Camera
 // ==========================================
-constexpr float INITIAL_CAMERA_ZOOM = 4.2f; // 3.8f;
+constexpr float INITIAL_CAMERA_ZOOM = 4.9f; // 3.8f;
 constexpr float CAMERA_WIDTH = (float)SCREEN_WIDTH / INITIAL_CAMERA_ZOOM;
 constexpr float CAMERA_HEIGHT = (float)SCREEN_HEIGHT / INITIAL_CAMERA_ZOOM;
 
@@ -84,14 +84,15 @@ constexpr float DMG_STONE_AXE = 40.0f;
 // ==========================================
 //               UI
 // ==========================================
-constexpr float UI_SCALE = 1.0f;
+constexpr float UI_SCALE = 1.5f;
 constexpr float TOOLBAR_BOTTOM_MARGIN = 20.0f * UI_SCALE;
-constexpr float TOOLBAR_PADDING = 10.0f * UI_SCALE;
+constexpr float TOOLBAR_PADDING = 1.0f * UI_SCALE;
 constexpr float TOOLBAR_SLOT_CONTENT_SIZE = 1.8f * UI_SCALE * TILE_RESOLUTION;
 constexpr float TOOLBAR_SLOT_SIZE =
     (TOOLBAR_SLOT_CONTENT_SIZE + TOOLBAR_PADDING) * UI_SCALE * 1.0f;
-constexpr float TOOLBAR_ITEM_ICON_SCALE = 0.8f * UI_SCALE;
+constexpr float TOOLBAR_ITEM_ICON_SCALE = 0.8f;
 constexpr float HIGHLIGHT_ALPHA = 0.3f;
+
 // ==========================================
 //               Details & Objects
 // ==========================================

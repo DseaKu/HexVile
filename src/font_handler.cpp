@@ -50,11 +50,11 @@ void FontHandler::QueueText(GFX_Manager *gfx, const char *text, Vector2 pos,
 
   for (int i = 0; text[i] != '\0'; i++) {
     int codepoint = (unsigned char)text[i]; // Simple ASCII assumption
-    
+
     if (codepoint == '\n') {
-        currentPos.y += fontHackRegular.baseSize; // Move down
-        currentPos.x = pos.x; // Reset X
-        continue;
+      currentPos.y += fontHackRegular.baseSize; // Move down
+      currentPos.x = pos.x;                     // Reset X
+      continue;
     }
 
     int index = GetGlyphIndex(fontHackRegular, codepoint);
@@ -63,14 +63,12 @@ void FontHandler::QueueText(GFX_Manager *gfx, const char *text, Vector2 pos,
       Rectangle srcRec = fontHackRegular.recs[index];
       GlyphInfo glyph = fontHackRegular.glyphs[index];
 
-      Rectangle dstRec = {
-          currentPos.x + glyph.offsetX,
-          currentPos.y + glyph.offsetY,
-          srcRec.width,
-          srcRec.height
-      };
+      Rectangle dstRec = {currentPos.x + glyph.offsetX,
+                          currentPos.y + glyph.offsetY, srcRec.width,
+                          srcRec.height};
 
-      gfx->LoadGFX_DataRaw(layer, fontHackRegular.texture, srcRec, dstRec, {col});
+      gfx->LoadTextureToBackbuffer_Raw(layer, fontHackRegular.texture, srcRec,
+                                       dstRec, {col});
 
       if (glyph.advanceX == 0)
         currentPos.x += (float)srcRec.width + spacing;

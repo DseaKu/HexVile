@@ -43,10 +43,7 @@ void Player::UpdatePlayerState() {
     // Process tool interaction
     if (selectedItem->itemID == item::AXE) {
       Vector2 clickedPos = hexGrid->HexCoordToPoint(hoveredTile);
-      // if (Vector2Distance(this->position, clickedPos) <
-      //     conf::INTERACT_DISTANCE_PLAYER) {
       Chop(hoveredTile);
-      // }
 
       // Process tile planter
     } else {

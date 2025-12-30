@@ -92,9 +92,11 @@ void GFX_Manager::LoadGFX_DataEx(drawMask::id layerID,
        opts.useHitShader});
 }
 
-void GFX_Manager::LoadGFX_DataRaw(drawMask::id layerID, Texture2D texture,
-                                  Rectangle srcRec, Rectangle dstRec,
-                                  gfx::Opts opts) {
+void GFX_Manager::LoadTextureToBackbuffer_Raw(drawMask::id layerID,
+                                              Texture2D texture,
+                                              Rectangle srcRec,
+                                              Rectangle dstRec,
+                                              gfx::Opts opts) {
   // Write to Back Buffer
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].push_back(
       {dstRec.y + opts.sortingOffsetY, texture, srcRec, dstRec, opts.color,

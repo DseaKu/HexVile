@@ -60,8 +60,9 @@ public:
   void LoadGFX_DataEx(drawMask::id layerID, tex_atlas::Coords texAtlas,
                       Rectangle dstRec, gfx::Opts opts = {});
 
-  void LoadGFX_DataRaw(drawMask::id layerID, Texture2D texture,
-                       Rectangle srcRec, Rectangle dstRec, gfx::Opts opts = {});
+  void LoadTextureToBackbuffer_Raw(drawMask::id layerID, Texture2D texture,
+                                   Rectangle srcRec, Rectangle dstRec,
+                                   gfx::Opts opts = {});
 
   void RenderLayer(drawMask::id layer);
 

@@ -101,8 +101,8 @@ void HexGrid::InitGrid(float radius) {
 }
 
 TileDet HexGrid::GetRandomTerainDetail(tile::id id) {
-  float x = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
-  float y = GetRandomValue(-tex_atlas::RES8_F, tex_atlas::RES8_F);
+  float x = GetRandomValue(-tex::size::QUATER_TILE, tex::size::QUATER_TILE);
+  float y = GetRandomValue(-tex::size::QUATER_TILE, tex::size::QUATER_TILE);
 
   auto spawnData = spawn_data_det::detLut.at(id);
 
@@ -295,7 +295,7 @@ void HexGrid::CalcVisibleTiles() {
       Vector2 pos = HexCoordToPoint(h);
       pos.x -= conf::TILE_RESOLUTION_HALF;
       pos.y -= conf::TILE_RESOLUTION_HALF;
-      Rectangle dest_rect = {pos.x, pos.y, tex_atlas::RES32, tex_atlas::RES32};
+      Rectangle dest_rect = {pos.x, pos.y, tex::size::TILE, tex::size::TILE};
       // Check if the tile's bounding box intersects with the render view.
       if (CheckCollisionRecs(renderView, dest_rect)) {
         newVisiCache.push_back(h);
@@ -417,7 +417,7 @@ void HexGrid::UpdateTileVisibility(float totalTime) {
   }
 
   // Update animation frame based on game time for animated tiles.
-  animationFrame = (int)(totalTime * tex_atlas::TILES_ANIMATION_SPEED) % 1;
+  animationFrame = (int)(totalTime * tex::atlas::TILES_ANIMATION_SPEED) % 1;
 }
 
 void HexGrid::Update(const Camera2D &camera, float totalTime) {
@@ -429,20 +429,20 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
     tile::id id = tile.id;
 
     Vector2 tileCenter = HexCoordToPoint(h);
-    Vector2 renderPos = Vector2{tileCenter.x - tex_atlas::RES16_F,
-                                tileCenter.y - tex_atlas::RES16_F};
+    Vector2 renderPos = Vector2{tileCenter.x - tex::size::HALF_TILE,
+                                tileCenter.y - tex::size::HALF_TILE};
 
     Rectangle destRec = Rectangle{.x = renderPos.x,
                                   .y = renderPos.y,
-                                  .width = tex_atlas::RES32_F,
-                                  .height = tex_atlas::RES32_F};
+                                  .width = tex::size::TILE,
+                                  .height = tex::size::TILE};
 
     // Draw chached visible tiles
     LoadTileGFX(destRec, animationFrame + 12, id);
 
     // 'destRec' needs to be repostion, details and resource assets are
     // begining at the bottom
-    destRec.y -= tex_atlas::RES16_F;
+    destRec.y -= tex::size::HALF_TILE;
 
     // Initialise if undiscoverd and draw details
     for (TileDet &d : tile.det) {
@@ -481,7 +481,7 @@ void HexGrid::LoadDetailGFX(Rectangle destRec, const TileDet detail,
                             tile::id id) {
   destRec.x += detail.tilePos.x;
   destRec.y += detail.tilePos.y;
-  int taX = tex_atlas::DETAILS_X + detail.taOffsetX;
+  int taX = tex::atlas::DETAILS_X + detail.taOffsetX;
   graphicsManager->LoadTextureToBackbuffer(drawMask::ON_GROUND, {taX, id},
                                            {destRec.x, destRec.y});
 }
@@ -491,14 +491,14 @@ void HexGrid::LoadResourceGFX(Rectangle destRec, const rsrc::Object rsrc,
   gfx::Opts opts;
   Vector2 dst = rsrc.worldPos;
 
-  tex_atlas::Coords tex = rsrc.texAtlasCoords;
+  tex::atlas::Coords tex = rsrc.texAtlasCoords;
 
   if (rsrc.id == rsrc::ID_TREE) {
     opts = gfx::TextureOpts32x64;
   }
 
-  dst.x -= tex_atlas::RES16_F;
-  dst.y -= tex_atlas::RES32_F;
+  dst.x -= tex::size::HALF_TILE;
+  dst.y -= tex::size::TILE;
 
   graphicsManager->LoadTextureToBackbuffer(drawMask::ON_GROUND, tex, dst, opts);
 }

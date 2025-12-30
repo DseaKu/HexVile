@@ -320,8 +320,8 @@ void Player::LoadPlayerGFX() {
 
   // Get destination position
   Vector2 drawPos = position;
-  drawPos.x -= tex_atlas::RES16;
-  drawPos.y -= tex_atlas::RES16 -
+  drawPos.x -= tex::size::HALF_TILE;
+  drawPos.y -= tex::size::HALF_TILE -
                conf::PLAYER_SPRITE_Y_OFFSET; // Move player sprite a little
                                              // bit to the bottom
   // Load texture to renderer

@@ -30,9 +30,9 @@ struct Opts {
 
   float sortingOffsetY = 0.0f;
 };
-constexpr Opts TextureOpts32x64 = {.srcHeight = tex_atlas::RES32_F * 2.0f,
-                                   .dstHeight = tex_atlas::RES32_F * 2.0f,
-                                   .dstRecY = -tex_atlas::RES32_F};
+constexpr Opts TextureOpts32x64 = {.srcHeight = tex::size::TILE * 2.0f,
+                                   .dstHeight = tex::size::TILE * 2.0f,
+                                   .dstRecY = -tex::size::TILE};
 // constexpr Opts TextureOptsInventoryBG = {
 //     .srcWidth = tex_atlas::INVENTORY_WIDTH,
 //     .srcHeight = tex_atlas::INVENTORY_HEIGTH,
@@ -63,11 +63,12 @@ public:
   int LoadAssets(const char *);
   void UnloadAssets();
 
-  void LoadTextureToBackbuffer(drawMask::id layerID, tex_atlas::Coords texAtlas,
-                               Vector2 dst, gfx::Opts opts = {});
+  void LoadTextureToBackbuffer(drawMask::id layerID,
+                               tex::atlas::Coords texAtlas, Vector2 dst,
+                               gfx::Opts opts = {});
 
   void LoadTextureToBackbuffer_Ex(drawMask::id layerID,
-                                  tex_atlas::Coords texAtlas, Rectangle dstRec,
+                                  tex::atlas::Coords texAtlas, Rectangle dstRec,
                                   gfx::Opts opts = {});
 
   void LoadTextureToBackbuffer_Raw(drawMask::id layerID, Texture2D texture,

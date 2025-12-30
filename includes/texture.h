@@ -4,28 +4,28 @@
 #include "enums.h"
 #include <map>
 
+namespace tex {
+
 // ==========================================
-//               Texture atlas
+//               Size
 // ==========================================
-namespace tex_atlas {
+namespace size {
+// --- Resolution ---
+constexpr float TILE = 32.0f;
+constexpr float DOUBLE_TILE = TILE * 2;
+constexpr float HALF_TILE = TILE / 2;
+constexpr float QUATER_TILE = HALF_TILE / 2;
+} // namespace size
+
+// ==========================================
+//               Texture Atlas Coordinates
+// ==========================================
+
+namespace atlas {
 struct Coords {
   int x;
   int y;
 };
-
-// --- Resolution ---
-constexpr int RES32 = 32u;
-constexpr float RES32_F = static_cast<float>(RES32);
-constexpr int RES64 = 64u;
-constexpr float RES64_F = static_cast<float>(RES64);
-constexpr int RES16 = RES32 / 2;
-constexpr float RES16_F = static_cast<float>(RES16);
-constexpr int RES8 = RES16 / 2;
-constexpr float RES8_F = static_cast<float>(RES8);
-
-// ==========================================
-//               Positioning
-// ==========================================
 // --- y = 0 ---
 // --- Player ---
 constexpr int PLAYER_X = 0;
@@ -46,7 +46,7 @@ constexpr int DETAILS_X_MAX = DETAILS_X + 12;
 // --- Resource ---
 constexpr Coords RSRC = {DETAILS_X_MAX, 0};
 constexpr Coords RSRC_TREE = {RSRC.x, RSRC.y};
-constexpr float RSRC_TREE_HEIGHT = RES32_F * 2.0f;
+constexpr float RSRC_TREE_HEIGHT = size::TILE * 2.0f;
 constexpr Coords RSRC_STONE = {RSRC.x, RSRC.y + 1};
 constexpr int RESOURCE_X = DETAILS_X_MAX;
 constexpr int RESOURCE_Y = 0;
@@ -57,8 +57,8 @@ constexpr int UI_X = 50;
 constexpr int UI_X_MAX = UI_X + 1;
 
 constexpr Coords INVENTORY_COORDS = {52, 0};
-constexpr float INVENTORY_WIDTH_SRC = RES32_F * 4;
-constexpr float INVENTORY_HEIGTH_SRC = RES32_F * 3;
+constexpr float INVENTORY_WIDTH_SRC = size::TILE * 4;
+constexpr float INVENTORY_HEIGTH_SRC = size::TILE * 3;
 
 // --- Number ---
 constexpr int NUMBER_X = UI_X_MAX;
@@ -81,7 +81,7 @@ constexpr float TILES_ANIMATION_SPEED = 0.3f;
 
 // --- Number ---
 constexpr float NUMBER_SCALE =
-    RES32 * 0.5f; // Don't go to low, it can corruped the font
+    size::TILE * 0.5f; // Don't go to low, it can corruped the font
 //
 // --- Items ---
 constexpr Coords ITEM_NULL = {0, 0};
@@ -97,6 +97,7 @@ inline const std::map<item::id, Coords> ITEM_TEXTURE_COORDS = {
     {item::SET_WATER, ITEM_SET_WATER}, {item::SET_DIRT, ITEM_SET_DIRT},
     {item::AXE, ITEM_AXE_STONE},       {item::WOOD, ITEM_WOOD_LOG},
 };
-} // namespace tex_atlas
+} // namespace atlas
+} // namespace tex
 
 #endif // TEXTURE_H

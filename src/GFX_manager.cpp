@@ -17,7 +17,7 @@ GFX_Manager::GFX_Manager() {
 
 void GFX_Manager::InitTextureRec() {
 
-  float reso = static_cast<float>(tex_atlas::RES32);
+  float reso = static_cast<float>(tex::size::TILE);
   textureRecData.resize(TA_Height);
 
   for (int y = 0; y < TA_Height; y++) {
@@ -39,8 +39,8 @@ int GFX_Manager::LoadAssets(const char *pathToAssest) {
     std::cout << "Error loading texture atlas" << std::endl;
     return 1;
   }
-  this->TA_Width = this->textureAtlas.width / tex_atlas::RES32;
-  this->TA_Height = this->textureAtlas.height / tex_atlas::RES32;
+  this->TA_Width = this->textureAtlas.width / tex::size::TILE;
+  this->TA_Height = this->textureAtlas.height / tex::size::TILE;
   InitTextureRec();
 
   this->hitShader = LoadShader(0, conf::HIT_FLASH_SHADER_PATH);
@@ -56,11 +56,11 @@ void GFX_Manager::UnloadAssets() {
 }
 
 void GFX_Manager::LoadTextureToBackbuffer(drawMask::id layerID,
-                                          tex_atlas::Coords texAtlas,
+                                          tex::atlas::Coords texAtlas,
                                           Vector2 dst, gfx::Opts opts) {
 
   Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
-  Rectangle dstRec = {dst.x, dst.y, tex_atlas::RES32_F, tex_atlas::RES32_F};
+  Rectangle dstRec = {dst.x, dst.y, tex::size::TILE, tex::size::TILE};
 
   if (opts.srcWidth != 0.0f) {
     srcRec.width = opts.srcWidth;
@@ -87,7 +87,7 @@ void GFX_Manager::LoadTextureToBackbuffer(drawMask::id layerID,
 }
 
 void GFX_Manager::LoadTextureToBackbuffer_Ex(drawMask::id layerID,
-                                             tex_atlas::Coords texAtlas,
+                                             tex::atlas::Coords texAtlas,
                                              Rectangle dstRec, gfx::Opts opts) {
   Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
   if (opts.srcWidth > 0)
@@ -150,7 +150,7 @@ void GFX_Manager::SwapBuffers() {
 }
 
 Rectangle GFX_Manager::GetTileRec(tile::id tileID, int frame) {
-  int x_idx = (tex_atlas::TILE_X / tex_atlas::RES32) + frame;
+  int x_idx = (tex::atlas::TILE_X / tex::size::TILE) + frame;
   int y_idx = static_cast<int>(tileID);
   return textureRecData[y_idx][x_idx];
 }

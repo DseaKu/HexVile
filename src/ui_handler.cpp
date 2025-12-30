@@ -127,7 +127,7 @@ void UI_Handler::LoadHighlightTileGFX() {
   if (!hexGrid)
     return;
   HexCoord coord = hexGrid->PointToHexCoord(frameContext->pos.mouseWorld);
-  hexGrid->DrawTile(coord, tex_atlas::UI_X, ui::TILE_H, drawMask::GROUND1);
+  hexGrid->DrawTile(coord, tex::atlas::UI_X, ui::TILE_H, drawMask::GROUND1);
 }
 
 void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
@@ -147,19 +147,19 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
   const rsrc::Object &rsrc = frameContext->pos.hoveredTile->rsrc;
   if (rsrc.id == id) {
     // Get position of resource
-    Vector2 rsrcPos = {rsrc.worldPos.x - tex_atlas::RES16_F,
-                       rsrc.worldPos.y - tex_atlas::RES32_F};
+    Vector2 rsrcPos = {rsrc.worldPos.x - tex::size::HALF_TILE,
+                       rsrc.worldPos.y - tex::size::TILE};
 
     if (rsrc.id == rsrc::ID_TREE) {
-      rsrcPos.y -= tex_atlas::RES32_F;
+      rsrcPos.y -= tex::size::TILE;
     }
 
     if (Vector2Distance(rsrcPos, curMousePos) < conf::INTERACT_DISTANCE_MOUSE) {
       graphicsManager->LoadTextureToBackbuffer(
-          drawMask::ON_GROUND, tex_atlas::RSRC_TREE, rsrcPos,
+          drawMask::ON_GROUND, tex::atlas::RSRC_TREE, rsrcPos,
           {.color = Fade(col, conf::HIGHLIGHT_ALPHA),
-           .srcHeight = tex_atlas::RES64_F,
-           .sortingOffsetY = tex_atlas::RES32_F});
+           .srcHeight = tex::size::DOUBLE_TILE,
+           .sortingOffsetY = tex::size::TILE});
     }
   }
 }
@@ -213,10 +213,10 @@ void UI_Handler::LoadToolBarSlotGFX(int slotIndex) {
 
   // 1. Draw Background
   graphicsManager->LoadTextureToBackbuffer_Ex(
-      drawMask::UI_0, {tex_atlas::UI_X, ui::ITEM_BAR_BG}, slotRect, {WHITE});
+      drawMask::UI_0, {tex::atlas::UI_X, ui::ITEM_BAR_BG}, slotRect, {WHITE});
   if (slotIndex == frameContext->selToolBarSlot) {
     graphicsManager->LoadTextureToBackbuffer_Ex(
-        drawMask::UI_0, {tex_atlas::UI_X, ui::ITEM_BAR_BG_H}, slotRect,
+        drawMask::UI_0, {tex::atlas::UI_X, ui::ITEM_BAR_BG_H}, slotRect,
         {WHITE});
   }
 
@@ -232,7 +232,7 @@ void UI_Handler::LoadItemIconGFX(int slotIndex, Rectangle slotRect) {
   ItemStack *itemStack = itemHandler->GetToolBarItemPointer(slotIndex);
 
   item::id itemID = itemStack->itemID;
-  tex_atlas::Coords taCoords = tex_atlas::ITEM_TEXTURE_COORDS.at(itemID);
+  tex::atlas::Coords taCoords = tex::atlas::ITEM_TEXTURE_COORDS.at(itemID);
 
   // Calculate shrunk rect for icon
   float newWidth = slotRect.width * toolBarLayout.itemScale;
@@ -275,15 +275,15 @@ void UI_Handler::LoadItemCountGFX(int slotIndex, Rectangle slotRect) {
                         iconRect.y + iconRect.height};
 
     Rectangle digitRect = {
-        rbCorner.x - (digitIndex * tex_atlas::NUMBER_SCALE), rbCorner.y,
-        -tex_atlas::NUMBER_SCALE, // Negative width/height implies flip? Or just
-                                  // anchor?
-        -tex_atlas::NUMBER_SCALE  // Original code had negative. Assuming it
-                                  // means "draw up/left from anchor"
+        rbCorner.x - (digitIndex * tex::atlas::NUMBER_SCALE), rbCorner.y,
+        -tex::atlas::NUMBER_SCALE, // Negative width/height implies flip? Or
+                                   // just anchor?
+        -tex::atlas::NUMBER_SCALE  // Original code had negative. Assuming it
+                                   // means "draw up/left from anchor"
     };
 
     graphicsManager->LoadTextureToBackbuffer_Ex(
-        drawMask::UI_1, {tex_atlas::NUMBER_X, digit}, digitRect, {WHITE});
+        drawMask::UI_1, {tex::atlas::NUMBER_X, digit}, digitRect, {WHITE});
     digitIndex++;
   }
 }

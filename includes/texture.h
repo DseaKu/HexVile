@@ -24,8 +24,8 @@ constexpr float QUATER_TILE = HALF_TILE / 2;
 namespace atlas {
 struct Coords {
   int x, y;
-  int width = 1;
-  int height = 1;
+  float width = 1;
+  float height = 1;
 };
 // --- y = 0 ---
 // --- Player ---

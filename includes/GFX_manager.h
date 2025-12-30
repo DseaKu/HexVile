@@ -26,9 +26,13 @@ struct Opts {
   float srcHeight = 0.0f;
   float dstWidth = 0.0f;
   float dstHeight = 0.0f;
+  float dstRecY = 0.0f;
 
   float sortingOffsetY = 0.0f;
 };
+constexpr Opts TextureOpts32x64 = {.srcHeight = tex_atlas::RES32_F * 2.0f,
+                                   .dstHeight = tex_atlas::RES32_F * 2.0f,
+                                   .dstRecY = -tex_atlas::RES32_F};
 
 } // namespace gfx
 

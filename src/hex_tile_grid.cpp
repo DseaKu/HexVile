@@ -494,10 +494,7 @@ void HexGrid::LoadResourceGFX(Rectangle destRec, const rsrc::Object rsrc,
   tex_atlas::Coords tex = rsrc.texAtlasCoords;
 
   if (rsrc.id == rsrc::ID_TREE) {
-    opts.srcHeight = tex_atlas::RSRC_TREE_HEIGHT;
-    opts.dstHeight = -tex_atlas::RSRC_TREE_HEIGHT;
-    opts.sortingOffsetY += tex_atlas::RES32_F;
-    dst.y -= tex_atlas::RES32_F;
+    opts = gfx::TextureOpts32x64;
   }
 
   dst.x -= tex_atlas::RES16_F;

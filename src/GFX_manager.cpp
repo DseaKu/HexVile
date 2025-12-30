@@ -60,17 +60,25 @@ void GFX_Manager::LoadTextureToBackbuffer(drawMask::id layerID,
                                           Vector2 dst, gfx::Opts opts) {
 
   Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
-  Rectangle dstRec = {dst.x, dst.y, srcRec.width, srcRec.height};
+  Rectangle dstRec = {dst.x, dst.y, tex_atlas::RES32_F, tex_atlas::RES32_F};
 
-  if (opts.srcWidth != 0.0f)
+  if (opts.srcWidth != 0.0f) {
     srcRec.width = opts.srcWidth;
-  if (opts.srcHeight != 0.0f)
+  }
+
+  if (opts.srcHeight != 0.0f) {
     srcRec.height = opts.srcHeight;
+  }
 
   if (opts.dstWidth != 0.0f)
     dstRec.width = opts.dstWidth;
+
   if (opts.dstHeight != 0.0f) {
     dstRec.height = opts.dstHeight;
+  }
+
+  if (opts.dstRecY != 0.0f) {
+    dstRec.y += opts.dstRecY;
   }
 
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].push_back(

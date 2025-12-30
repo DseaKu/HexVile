@@ -54,11 +54,12 @@ public:
   int LoadAssets(const char *);
   void UnloadAssets();
 
-  void LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
-                    Vector2 dst, gfx::Opts opts = {});
+  void LoadTextureToBackbuffer(drawMask::id layerID, tex_atlas::Coords texAtlas,
+                               Vector2 dst, gfx::Opts opts = {});
 
-  void LoadGFX_DataEx(drawMask::id layerID, tex_atlas::Coords texAtlas,
-                      Rectangle dstRec, gfx::Opts opts = {});
+  void LoadTextureToBackbuffer_Ex(drawMask::id layerID,
+                                  tex_atlas::Coords texAtlas, Rectangle dstRec,
+                                  gfx::Opts opts = {});
 
   void LoadTextureToBackbuffer_Raw(drawMask::id layerID, Texture2D texture,
                                    Rectangle srcRec, Rectangle dstRec,

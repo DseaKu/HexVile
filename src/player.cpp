@@ -325,5 +325,6 @@ void Player::LoadPlayerGFX() {
                conf::PLAYER_SPRITE_Y_OFFSET; // Move player sprite a little
                                              // bit to the bottom
   // Load texture to renderer
-  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, {taX, taY}, drawPos);
+  graphicsManager->LoadTextureToBackbuffer(drawMask::ON_GROUND, {taX, taY},
+                                           drawPos);
 }

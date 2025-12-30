@@ -55,8 +55,9 @@ void GFX_Manager::UnloadAssets() {
   UnloadShader(this->hitShader);
 }
 
-void GFX_Manager::LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
-                               Vector2 dst, gfx::Opts opts) {
+void GFX_Manager::LoadTextureToBackbuffer(drawMask::id layerID,
+                                          tex_atlas::Coords texAtlas,
+                                          Vector2 dst, gfx::Opts opts) {
 
   Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
   Rectangle dstRec = {dst.x, dst.y, srcRec.width, srcRec.height};
@@ -77,9 +78,9 @@ void GFX_Manager::LoadGFX_Data(drawMask::id layerID, tex_atlas::Coords texAtlas,
        opts.useHitShader});
 }
 
-void GFX_Manager::LoadGFX_DataEx(drawMask::id layerID,
-                                 tex_atlas::Coords texAtlas, Rectangle dstRec,
-                                 gfx::Opts opts) {
+void GFX_Manager::LoadTextureToBackbuffer_Ex(drawMask::id layerID,
+                                             tex_atlas::Coords texAtlas,
+                                             Rectangle dstRec, gfx::Opts opts) {
   Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
   if (opts.srcWidth > 0)
     srcRec.width = opts.srcWidth;

@@ -155,11 +155,11 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
     }
 
     if (Vector2Distance(rsrcPos, curMousePos) < conf::INTERACT_DISTANCE_MOUSE) {
-      graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, tex_atlas::RSRC_TREE,
-                                    rsrcPos,
-                                    {.color = Fade(col, conf::HIGHLIGHT_ALPHA),
-                                     .srcHeight = tex_atlas::RES64_F,
-                                     .sortingOffsetY = tex_atlas::RES32_F});
+      graphicsManager->LoadTextureToBackbuffer(
+          drawMask::ON_GROUND, tex_atlas::RSRC_TREE, rsrcPos,
+          {.color = Fade(col, conf::HIGHLIGHT_ALPHA),
+           .srcHeight = tex_atlas::RES64_F,
+           .sortingOffsetY = tex_atlas::RES32_F});
     }
   }
 }
@@ -171,8 +171,8 @@ void UI_Handler::LoadInventoryBackgroundGFX() {
                     .dstWidth = 128.0f * 4,
                     .dstHeight = 128.0f * 4};
 
-  graphicsManager->LoadGFX_Data(drawMask::UI_0, tex_atlas::INVENTORY_COORDS,
-                                conf::SCREEN_CENTER, opts);
+  graphicsManager->LoadTextureToBackbuffer(
+      drawMask::UI_0, tex_atlas::INVENTORY_COORDS, conf::SCREEN_CENTER, opts);
 }
 
 void UI_Handler::LoadInventoryItemsGFX() {
@@ -212,12 +212,12 @@ void UI_Handler::LoadToolBarSlotGFX(int slotIndex) {
                         (float)toolBarLayout.contentSize};
 
   // 1. Draw Background
-  graphicsManager->LoadGFX_DataEx(
+  graphicsManager->LoadTextureToBackbuffer_Ex(
       drawMask::UI_0, {tex_atlas::UI_X, ui::ITEM_BAR_BG}, slotRect, {WHITE});
   if (slotIndex == frameContext->selToolBarSlot) {
-    graphicsManager->LoadGFX_DataEx(drawMask::UI_0,
-                                    {tex_atlas::UI_X, ui::ITEM_BAR_BG_H},
-                                    slotRect, {WHITE});
+    graphicsManager->LoadTextureToBackbuffer_Ex(
+        drawMask::UI_0, {tex_atlas::UI_X, ui::ITEM_BAR_BG_H}, slotRect,
+        {WHITE});
   }
 
   // 2. Draw Content
@@ -243,7 +243,8 @@ void UI_Handler::LoadItemIconGFX(int slotIndex, Rectangle slotRect) {
   Rectangle dstRec = {slotRect.x + offsetX, slotRect.y + offsetY, newWidth,
                       newHeight};
 
-  graphicsManager->LoadGFX_DataEx(drawMask::UI_0, taCoords, dstRec, {WHITE});
+  graphicsManager->LoadTextureToBackbuffer_Ex(drawMask::UI_0, taCoords, dstRec,
+                                              {WHITE});
 }
 
 void UI_Handler::LoadItemCountGFX(int slotIndex, Rectangle slotRect) {
@@ -281,7 +282,7 @@ void UI_Handler::LoadItemCountGFX(int slotIndex, Rectangle slotRect) {
                                   // means "draw up/left from anchor"
     };
 
-    graphicsManager->LoadGFX_DataEx(
+    graphicsManager->LoadTextureToBackbuffer_Ex(
         drawMask::UI_1, {tex_atlas::NUMBER_X, digit}, digitRect, {WHITE});
     digitIndex++;
   }

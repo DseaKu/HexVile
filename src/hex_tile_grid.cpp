@@ -375,7 +375,7 @@ void HexGrid::DrawTile(HexCoord h, int TA_X, int TA_Y, drawMask::id layerID) {
   pos.x -= conf::TILE_RESOLUTION_HALF;
   pos.y -= conf::TILE_RESOLUTION_HALF;
 
-  graphicsManager->LoadGFX_Data(layerID, {TA_X, TA_Y}, pos);
+  graphicsManager->LoadTextureToBackbuffer(layerID, {TA_X, TA_Y}, pos);
 }
 
 void HexGrid::UpdateTileVisibility(float totalTime) {
@@ -473,8 +473,8 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
 
 // ============= Render =====================
 void HexGrid::LoadTileGFX(Rectangle destRec, int x, int y) {
-  graphicsManager->LoadGFX_Data(drawMask::GROUND0, {x, y},
-                                {destRec.x, destRec.y});
+  graphicsManager->LoadTextureToBackbuffer(drawMask::GROUND0, {x, y},
+                                           {destRec.x, destRec.y});
 }
 
 void HexGrid::LoadDetailGFX(Rectangle destRec, const TileDet detail,
@@ -482,8 +482,8 @@ void HexGrid::LoadDetailGFX(Rectangle destRec, const TileDet detail,
   destRec.x += detail.tilePos.x;
   destRec.y += detail.tilePos.y;
   int taX = tex_atlas::DETAILS_X + detail.taOffsetX;
-  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, {taX, id},
-                                {destRec.x, destRec.y});
+  graphicsManager->LoadTextureToBackbuffer(drawMask::ON_GROUND, {taX, id},
+                                           {destRec.x, destRec.y});
 }
 
 void HexGrid::LoadResourceGFX(Rectangle destRec, const rsrc::Object rsrc,
@@ -503,7 +503,7 @@ void HexGrid::LoadResourceGFX(Rectangle destRec, const rsrc::Object rsrc,
   dst.x -= tex_atlas::RES16_F;
   dst.y -= tex_atlas::RES32_F;
 
-  graphicsManager->LoadGFX_Data(drawMask::ON_GROUND, tex, dst, opts);
+  graphicsManager->LoadTextureToBackbuffer(drawMask::ON_GROUND, tex, dst, opts);
 }
 
 // ============= Getter =====================

@@ -3,7 +3,7 @@
 
 #include "enums.h"
 #include "raylib.h"
-#include "texture_atlas.h"
+#include "texture.h"
 namespace rsrc {
 
 constexpr Vector2 POS_NULL = {0, 0};

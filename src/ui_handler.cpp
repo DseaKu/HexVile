@@ -8,7 +8,7 @@
 #include "raylib.h"
 #include "raymath.h"
 #include "resource.h"
-#include "texture_atlas.h"
+#include "texture.h"
 #include <string>
 
 // --- Initialization ---
@@ -167,12 +167,12 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
 void UI_Handler::LoadInventoryBackgroundGFX() {
 
   // Center inventory
-  Vector2 dst = {conf::SCREEN_CENTER.x - tex_atlas::INVENTORY_WIDTH / 2,
-                 conf::SCREEN_CENTER.y - tex_atlas::INVENTORY_HEIGTH / 2};
-
-  graphicsManager->LoadTextureToBackbuffer(drawMask::UI_0,
-                                           tex_atlas::INVENTORY_COORDS, dst,
-                                           gfx::TextureOptsInventoryBG);
+  // Vector2 dst = {conf::SCREEN_CENTER.x - tex_atlas::INVENTORY_WIDTH / 2,
+  //                conf::SCREEN_CENTER.y - tex_atlas::INVENTORY_HEIGTH / 2};
+  //
+  // graphicsManager->LoadTextureToBackbuffer(drawMask::UI_0,
+  //                                          tex_atlas::INVENTORY_COORDS, dst,
+  //                                          gfx::TextureOptsInventoryBG);
 }
 
 void UI_Handler::LoadInventoryItemsGFX() {

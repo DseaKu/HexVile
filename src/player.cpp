@@ -7,7 +7,7 @@
 #include "item_handler.h"
 #include "raylib.h"
 #include "raymath.h"
-#include "texture_atlas.h"
+#include "texture.h"
 #include "ui_handler.h"
 #include <pthread.h>
 

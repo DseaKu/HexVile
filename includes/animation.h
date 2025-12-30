@@ -2,7 +2,7 @@
 #define ANIMATION_H
 
 #include "enums.h"
-#include "texture_atlas.h"
+#include "texture.h"
 
 namespace animation {
 struct Object {

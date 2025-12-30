@@ -1,5 +1,5 @@
-#ifndef TEXTURE_ATLAS_H
-#define TEXTURE_ATLAS_H
+#ifndef TEXTURE_H
+#define TEXTURE_H
 
 #include "enums.h"
 #include <map>
@@ -99,4 +99,4 @@ inline const std::map<item::id, Coords> ITEM_TEXTURE_COORDS = {
 };
 } // namespace tex_atlas
 
-#endif // TEXTURE_ATLAS_H
+#endif // TEXTURE_H

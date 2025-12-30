@@ -2,7 +2,7 @@
 #include "defines.h"
 #include "enums.h"
 #include "raylib.h"
-#include "texture_atlas.h"
+#include "texture.h"
 #include <algorithm>
 #include <iostream>
 

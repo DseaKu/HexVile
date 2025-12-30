@@ -4,7 +4,7 @@
 #include "enums.h"
 #include "raylib.h"
 #include "resource.h"
-#include "texture_atlas.h"
+#include "texture.h"
 #include "tile_details.h"
 #include <cmath>
 #include <vector>

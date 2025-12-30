@@ -500,7 +500,7 @@ void HexGrid::LoadResourceGFX(Rectangle destRec, const rsrc::Object rsrc,
   tex::atlas::Coords tex = rsrc.texAtlasCoords;
 
   if (rsrc.id == rsrc::ID_TREE) {
-    opts = gfx::TextureOpts32x64;
+    // opts = gfx::TextureOpts32x64;
   }
 
   graphicsManager->LoadTextureToBackbuffer(drawMask::ON_GROUND, tex, dst, opts);

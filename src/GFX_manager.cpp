@@ -81,7 +81,9 @@ void GFX_Manager::LoadTextureToBackbuffer(drawMask::id layerID,
     dstRec.y += opts.dstRecY;
   }
 
-  if (coords.height > 1) {
+  if (coords.height != 1) {
+    srcRec.height = coords.height * tex::size::TILE;
+    dstRec.height = coords.height * tex::size::TILE;
   }
 
   Vector2 origin = opts.origin;

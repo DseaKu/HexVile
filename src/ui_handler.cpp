@@ -151,7 +151,7 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
 
     if (Vector2Distance(rsrcPos, curMousePos) < conf::INTERACT_DISTANCE_MOUSE) {
       graphicsManager->LoadTextureToBackbuffer(
-          drawMask::ON_GROUND, tex::atlas::RSRC_TREE, rsrcPos,
+          drawMask::ON_GROUND, tex::atlas::TREE, rsrcPos,
           {.color = Fade(col, conf::HIGHLIGHT_ALPHA),
            .srcHeight = tex::size::DOUBLE_TILE});
     }

@@ -46,10 +46,7 @@ constexpr int DETAILS_X_MAX = DETAILS_X + 12;
 
 // --- Resource ---
 constexpr Coords TREE = {32, 0, 1, 2};
-constexpr Coords RSRC = {DETAILS_X_MAX, 0};
-constexpr Coords RSRC_TREE = {RSRC.x, RSRC.y};
-constexpr float RSRC_TREE_HEIGHT = size::TILE * 2.0f;
-constexpr Coords RSRC_STONE = {RSRC.x, RSRC.y + 1};
+constexpr Coords STONE = {32, 1};
 constexpr int RESOURCE_X = DETAILS_X_MAX;
 constexpr int RESOURCE_Y = 0;
 constexpr int RESOURCE_X_MAX = RESOURCE_X + 8;

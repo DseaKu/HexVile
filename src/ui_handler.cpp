@@ -275,11 +275,11 @@ void UI_Handler::LoadItemCountGFX(int slotIndex, Rectangle slotRect) {
                         iconRect.y + iconRect.height};
 
     Rectangle digitRect = {
-        rbCorner.x - (digitIndex * tex::atlas::NUMBER_SCALE), rbCorner.y,
-        -tex::atlas::NUMBER_SCALE, // Negative width/height implies flip? Or
-                                   // just anchor?
-        -tex::atlas::NUMBER_SCALE  // Original code had negative. Assuming it
-                                   // means "draw up/left from anchor"
+        rbCorner.x - (digitIndex * tex::layout::NUMBER_SCALE), rbCorner.y,
+        -tex::layout::NUMBER_SCALE, // Negative width/height implies flip? Or
+                                    // just anchor?
+        -tex::layout::NUMBER_SCALE  // Original code had negative. Assuming it
+                                    // means "draw up/left from anchor"
     };
 
     graphicsManager->LoadTextureToBackbuffer_Ex(

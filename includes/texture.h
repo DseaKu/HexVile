@@ -18,13 +18,14 @@ constexpr float QUATER_TILE = HALF_TILE / 2;
 } // namespace size
 
 // ==========================================
-//               Texture Atlas Coordinates
+//               Texture Atlas Coordinates (source)
 // ==========================================
 
 namespace atlas {
 struct Coords {
-  int x;
-  int y;
+  int x, y;
+  int width = 1;
+  int height = 1;
 };
 // --- y = 0 ---
 // --- Player ---
@@ -44,6 +45,7 @@ constexpr int DETAILS_X = TILES_X_MAX;
 constexpr int DETAILS_X_MAX = DETAILS_X + 12;
 
 // --- Resource ---
+constexpr Coords TREE = {32, 0, 1, 2};
 constexpr Coords RSRC = {DETAILS_X_MAX, 0};
 constexpr Coords RSRC_TREE = {RSRC.x, RSRC.y};
 constexpr float RSRC_TREE_HEIGHT = size::TILE * 2.0f;
@@ -56,9 +58,7 @@ constexpr int RESOURCE_X_MAX = RESOURCE_X + 8;
 constexpr int UI_X = 50;
 constexpr int UI_X_MAX = UI_X + 1;
 
-constexpr Coords INVENTORY_COORDS = {52, 0};
-constexpr float INVENTORY_WIDTH_SRC = size::TILE * 4;
-constexpr float INVENTORY_HEIGTH_SRC = size::TILE * 3;
+constexpr Coords INVENTORY = {52, 0, 4, 3};
 
 // --- Number ---
 constexpr int NUMBER_X = UI_X_MAX;
@@ -79,9 +79,6 @@ constexpr float PLAYER_ANIMATION_SPEED_IDLE = 5.0f;
 constexpr int PLAYER_WALK_MAX = 8;
 constexpr float TILES_ANIMATION_SPEED = 0.3f;
 
-// --- Number ---
-constexpr float NUMBER_SCALE =
-    size::TILE * 0.5f; // Don't go to low, it can corruped the font
 //
 // --- Items ---
 constexpr Coords ITEM_NULL = {0, 0};
@@ -98,6 +95,16 @@ inline const std::map<item::id, Coords> ITEM_TEXTURE_COORDS = {
     {item::AXE, ITEM_AXE_STONE},       {item::WOOD, ITEM_WOOD_LOG},
 };
 } // namespace atlas
+// ==========================================
+//              Layout (destination)
+// ==========================================
+
+namespace layout {
+
+// --- Number ---
+constexpr float NUMBER_SCALE =
+    size::TILE * 0.5f; // Don't go to low, it can corruped the font
+} // namespace layout
 } // namespace tex
 
 #endif // TEXTURE_H

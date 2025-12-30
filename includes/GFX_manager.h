@@ -33,12 +33,12 @@ struct Opts {
 constexpr Opts TextureOpts32x64 = {.srcHeight = tex::size::TILE * 2.0f,
                                    .dstHeight = tex::size::TILE * 2.0f,
                                    .dstRecY = -tex::size::TILE};
-// constexpr Opts TextureOptsInventoryBG = {
-//     .srcWidth = tex_atlas::INVENTORY_WIDTH,
-//     .srcHeight = tex_atlas::INVENTORY_HEIGTH,
-//     .dstWidth = tex_atlas::INVENTORY_WIDTH,
-//     .dstHeight = tex_atlas::RSRC_TREE_HEIGHT};
-
+constexpr Opts TextureOptsInventoryBG = {
+    .srcWidth = tex::atlas::INVENTORY.width * tex::size::TILE,
+    .srcHeight = tex::atlas::INVENTORY.height * tex::size::TILE,
+    // .dstWidth = tex::atlas::INVENTORY_WIDTH,
+    // .dstHeight = tex::atlas::RSRC_TREE_HEIGHT};
+};
 } // namespace gfx
 
 class GFX_Manager {

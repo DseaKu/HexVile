@@ -62,6 +62,16 @@ void GFX_Manager::LoadTextureToBackbuffer(drawMask::id layerID,
   Rectangle srcRec = GetSrcRec(coords.x, coords.y);
   Rectangle dstRec = {dst.x, dst.y, tex::size::TILE, tex::size::TILE};
 
+  if (coords.height > 1) {
+    srcRec.height = coords.height * tex::size::TILE;
+    dstRec.height = coords.height * tex::size::TILE;
+  }
+
+  if (coords.width > 1) {
+    srcRec.width = coords.width * tex::size::TILE;
+    dstRec.width = coords.width * tex::size::TILE;
+  }
+
   if (opts.srcWidth != 0.0f) {
     srcRec.width = opts.srcWidth;
   }
@@ -81,9 +91,11 @@ void GFX_Manager::LoadTextureToBackbuffer(drawMask::id layerID,
     dstRec.y += opts.dstRecY;
   }
 
-  if (coords.height > 1) {
-    srcRec.height = coords.height * tex::size::TILE;
-    dstRec.height = coords.height * tex::size::TILE;
+  if (opts.scale != 1.0f) {
+    dstRec.width *= opts.scale;
+    dstRec.height *= opts.scale;
+    dstRec.x -= dstRec.width / 2.0f;
+    dstRec.y -= dstRec.height / 2.0f;
   }
 
   Vector2 origin = opts.origin;

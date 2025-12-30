@@ -29,6 +29,8 @@ struct Opts {
   float dstHeight = 0.0f;
   float dstRecY = 0.0f;
 
+  float scale = 1.0f;
+
   float sortingOffsetY = 0.0f;
 
   Vector2 origin = {0.5f, 1.0f};

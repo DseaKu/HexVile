@@ -68,7 +68,8 @@ void FontHandler::QueueText(GFX_Manager *gfx, const char *text, Vector2 pos,
                           srcRec.height};
 
       gfx->LoadTextureToBackbuffer_Raw(layer, fontHackRegular.texture, srcRec,
-                                       dstRec, {col});
+                                       dstRec,
+                                       {.color = col, .origin = {0.0f, 0.0f}});
 
       if (glyph.advanceX == 0)
         currentPos.x += (float)srcRec.width + spacing;

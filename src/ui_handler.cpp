@@ -147,19 +147,13 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
   const rsrc::Object &rsrc = frameContext->pos.hoveredTile->rsrc;
   if (rsrc.id == id) {
     // Get position of resource
-    Vector2 rsrcPos = {rsrc.worldPos.x - tex::size::HALF_TILE,
-                       rsrc.worldPos.y - tex::size::TILE};
-
-    if (rsrc.id == rsrc::ID_TREE) {
-      rsrcPos.y -= tex::size::TILE;
-    }
+    Vector2 rsrcPos = rsrc.worldPos;
 
     if (Vector2Distance(rsrcPos, curMousePos) < conf::INTERACT_DISTANCE_MOUSE) {
       graphicsManager->LoadTextureToBackbuffer(
           drawMask::ON_GROUND, tex::atlas::RSRC_TREE, rsrcPos,
           {.color = Fade(col, conf::HIGHLIGHT_ALPHA),
-           .srcHeight = tex::size::DOUBLE_TILE,
-           .sortingOffsetY = tex::size::TILE});
+           .srcHeight = tex::size::DOUBLE_TILE});
     }
   }
 }
@@ -213,11 +207,12 @@ void UI_Handler::LoadToolBarSlotGFX(int slotIndex) {
 
   // 1. Draw Background
   graphicsManager->LoadTextureToBackbuffer_Ex(
-      drawMask::UI_0, {tex::atlas::UI_X, ui::ITEM_BAR_BG}, slotRect, {WHITE});
+      drawMask::UI_0, {tex::atlas::UI_X, ui::ITEM_BAR_BG}, slotRect,
+      {.color = WHITE, .origin = {0.0f, 0.0f}});
   if (slotIndex == frameContext->selToolBarSlot) {
     graphicsManager->LoadTextureToBackbuffer_Ex(
         drawMask::UI_0, {tex::atlas::UI_X, ui::ITEM_BAR_BG_H}, slotRect,
-        {WHITE});
+        {.color = WHITE, .origin = {0.0f, 0.0f}});
   }
 
   // 2. Draw Content
@@ -243,8 +238,9 @@ void UI_Handler::LoadItemIconGFX(int slotIndex, Rectangle slotRect) {
   Rectangle dstRec = {slotRect.x + offsetX, slotRect.y + offsetY, newWidth,
                       newHeight};
 
-  graphicsManager->LoadTextureToBackbuffer_Ex(drawMask::UI_0, taCoords, dstRec,
-                                              {WHITE});
+  graphicsManager->LoadTextureToBackbuffer_Ex(
+      drawMask::UI_0, taCoords, dstRec,
+      {.color = WHITE, .origin = {0.0f, 0.0f}});
 }
 
 void UI_Handler::LoadItemCountGFX(int slotIndex, Rectangle slotRect) {
@@ -283,7 +279,8 @@ void UI_Handler::LoadItemCountGFX(int slotIndex, Rectangle slotRect) {
     };
 
     graphicsManager->LoadTextureToBackbuffer_Ex(
-        drawMask::UI_1, {tex::atlas::NUMBER_X, digit}, digitRect, {WHITE});
+        drawMask::UI_1, {tex::atlas::NUMBER_X, digit}, digitRect,
+        {.color = WHITE, .origin = {0.0f, 0.0f}});
     digitIndex++;
   }
 }

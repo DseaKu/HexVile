@@ -81,9 +81,15 @@ void GFX_Manager::LoadTextureToBackbuffer(drawMask::id layerID,
     dstRec.y += opts.dstRecY;
   }
 
+  Vector2 origin = opts.origin;
+  if (!opts.ignoreRelativeOrigin) {
+    origin.x *= dstRec.width;
+    origin.y *= dstRec.height;
+  }
+
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].push_back(
-      {dst.y + opts.sortingOffsetY, textureAtlas, srcRec, dstRec, opts.color,
-       opts.useHitShader});
+      {dst.y + opts.sortingOffsetY, textureAtlas, srcRec, dstRec, origin,
+       opts.color, opts.useHitShader});
 }
 
 void GFX_Manager::LoadTextureToBackbuffer_Ex(drawMask::id layerID,
@@ -95,10 +101,16 @@ void GFX_Manager::LoadTextureToBackbuffer_Ex(drawMask::id layerID,
   if (opts.srcHeight > 0)
     srcRec.height = opts.srcHeight;
 
+  Vector2 origin = opts.origin;
+  if (!opts.ignoreRelativeOrigin) {
+    origin.x *= dstRec.width;
+    origin.y *= dstRec.height;
+  }
+
   // Write to Back Buffer
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].push_back(
-      {dstRec.y + opts.sortingOffsetY, textureAtlas, srcRec, dstRec, opts.color,
-       opts.useHitShader});
+      {dstRec.y + opts.sortingOffsetY, textureAtlas, srcRec, dstRec, origin,
+       opts.color, opts.useHitShader});
 }
 
 void GFX_Manager::LoadTextureToBackbuffer_Raw(drawMask::id layerID,
@@ -106,10 +118,16 @@ void GFX_Manager::LoadTextureToBackbuffer_Raw(drawMask::id layerID,
                                               Rectangle srcRec,
                                               Rectangle dstRec,
                                               gfx::Opts opts) {
+  Vector2 origin = opts.origin;
+  if (!opts.ignoreRelativeOrigin) {
+    origin.x *= dstRec.width;
+    origin.y *= dstRec.height;
+  }
+
   // Write to Back Buffer
   GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].push_back(
-      {dstRec.y + opts.sortingOffsetY, texture, srcRec, dstRec, opts.color,
-       opts.useHitShader});
+      {dstRec.y + opts.sortingOffsetY, texture, srcRec, dstRec, origin,
+       opts.color, opts.useHitShader});
 }
 
 void GFX_Manager::RenderLayer(drawMask::id maskID) {
@@ -129,7 +147,7 @@ void GFX_Manager::RenderLayer(drawMask::id maskID) {
     if (item.useHitShader)
       BeginShaderMode(hitShader);
 
-    DrawTexturePro(item.texture, item.srcRec, item.dstRec, Vector2{0, 0}, 0.0f,
+    DrawTexturePro(item.texture, item.srcRec, item.dstRec, item.origin, 0.0f,
                    item.color);
 
     if (item.useHitShader)

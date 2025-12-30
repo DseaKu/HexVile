@@ -14,6 +14,7 @@ struct Object {
   Texture2D texture;
   Rectangle srcRec;
   Rectangle dstRec;
+  Vector2 origin;
   Color color;
   bool useHitShader;
 };
@@ -29,10 +30,12 @@ struct Opts {
   float dstRecY = 0.0f;
 
   float sortingOffsetY = 0.0f;
+
+  Vector2 origin = {0.5f, 1.0f};
+  bool ignoreRelativeOrigin = false;
 };
 constexpr Opts TextureOpts32x64 = {.srcHeight = tex::size::TILE * 2.0f,
-                                   .dstHeight = tex::size::TILE * 2.0f,
-                                   .dstRecY = -tex::size::TILE};
+                                   .dstHeight = tex::size::TILE * 2.0f};
 constexpr Opts TextureOptsInventoryBG = {
     .srcWidth = tex::atlas::INVENTORY.width * tex::size::TILE,
     .srcHeight = tex::atlas::INVENTORY.height * tex::size::TILE,

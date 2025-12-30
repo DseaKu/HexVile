@@ -40,10 +40,10 @@ private:
   Shader hitShader;
   std::vector<std::vector<Rectangle>> textureRecData;
 
-  // Double buffering for thread safety
   // 0: Front (Render), 1: Back (Logic)
-  // [BufferIndex][LayerID][Object]
-  std::vector<std::vector<std::vector<gfx::Object>>> GFX_Data_Buffers;
+  std::vector<std::vector<std::vector<gfx::Object>>>
+      GFX_Data_Buffers; // [BufferIndex][LayerID][Object]
+  //
   int backBufferIndex = 1;
 
   void InitTextureRec();

@@ -57,8 +57,8 @@ constexpr int UI_X = 50;
 constexpr int UI_X_MAX = UI_X + 1;
 
 constexpr Coords INVENTORY_COORDS = {52, 0};
-constexpr float INVENTORY_WIDTH = RES32_F * 4;
-constexpr float INVENTORY_HEIGTH = RES32_F * 3;
+constexpr float INVENTORY_WIDTH_SRC = RES32_F * 4;
+constexpr float INVENTORY_HEIGTH_SRC = RES32_F * 3;
 
 // --- Number ---
 constexpr int NUMBER_X = UI_X_MAX;

@@ -166,13 +166,13 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
 
 void UI_Handler::LoadInventoryBackgroundGFX() {
 
-  gfx::Opts opts = {.srcWidth = tex_atlas::INVENTORY_WIDTH,
-                    .srcHeight = tex_atlas::INVENTORY_HEIGTH,
-                    .dstWidth = 128.0f * 4,
-                    .dstHeight = 128.0f * 4};
+  // Center inventory
+  Vector2 dst = {conf::SCREEN_CENTER.x - tex_atlas::INVENTORY_WIDTH / 2,
+                 conf::SCREEN_CENTER.y - tex_atlas::INVENTORY_HEIGTH / 2};
 
-  graphicsManager->LoadTextureToBackbuffer(
-      drawMask::UI_0, tex_atlas::INVENTORY_COORDS, conf::SCREEN_CENTER, opts);
+  graphicsManager->LoadTextureToBackbuffer(drawMask::UI_0,
+                                           tex_atlas::INVENTORY_COORDS, dst,
+                                           gfx::TextureOptsInventoryBG);
 }
 
 void UI_Handler::LoadInventoryItemsGFX() {

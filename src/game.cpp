@@ -180,49 +180,10 @@ void Game::GetInputs() {
 }
 
 void Game::RunLogic() {
-
-  // ==========================================
-  //               Update frameContext
-  // ==========================================
-
   auto startLogic = std::chrono::high_resolution_clock::now();
 
-  // --- Update delta time ---
-  worldState.timer += frameContext.deltaTime;
+  UpdateFrameContext();
 
-  // --- Update mouse ---
-  frameContext.worldPos.mouse =
-      GetScreenToWorld2D(frameContext.screenPos.mouse, worldState.camera);
-  frameContext.mouseMask = uiHandler.UpdateMouseMask();
-
-  // --- Update Selected Tool Bar Slot ---
-  frameContext.selToolBarSlot = uiHandler.GetToolBarSelection();
-
-  // --- Get position and tileof hovered tile ---
-  frameContext.worldPos.hoveredTile =
-      worldState.hexGrid.PointToTile(frameContext.worldPos.mouse);
-  frameContext.worldPos.hoveredTileHexCoords =
-      worldState.hexGrid.PointToHexCoord(frameContext.worldPos.mouse);
-  frameContext.worldPos.hoveredTilePoint = worldState.hexGrid.HexCoordToPoint(
-      frameContext.worldPos.hoveredTileHexCoords);
-  frameContext.worldPos.hoveredRsrcPoint =
-      frameContext.worldPos.hoveredTilePoint;
-  if (frameContext.worldPos.hoveredTile &&
-      frameContext.worldPos.hoveredTile->rsrc.id >= 0) {
-    frameContext.worldPos.hoveredRsrcPoint =
-        frameContext.worldPos.hoveredTile->rsrc.worldPos;
-  }
-
-  // Screen Center
-  frameContext.screenPos.center =
-      GetScreenToWorld2D(conf::SCREEN_CENTER, worldState.camera);
-
-  // Player position
-  frameContext.worldPos.player = worldState.player.GetPosition();
-
-  // ==========================================
-  //               Update World state
-  // ==========================================
   // Player Update
   worldState.player.Update();
 
@@ -286,6 +247,42 @@ void Game::RunLogic() {
   std::chrono::duration<double, std::milli> elapsedLogic =
       endLogic - startLogic;
   logicExecutionTime = elapsedLogic.count();
+}
+
+void Game::UpdateFrameContext() {
+
+  // --- Update delta time ---
+  worldState.timer += frameContext.deltaTime;
+
+  // --- Update mouse ---
+  frameContext.worldPos.mouse =
+      GetScreenToWorld2D(frameContext.screenPos.mouse, worldState.camera);
+  frameContext.mouseMask = uiHandler.UpdateMouseMask();
+
+  // --- Update Selected Tool Bar Slot ---
+  frameContext.selToolBarSlot = uiHandler.GetToolBarSelection();
+
+  // --- Get position and tileof hovered tile ---
+  frameContext.worldPos.hoveredTile =
+      worldState.hexGrid.PointToTile(frameContext.worldPos.mouse);
+  frameContext.worldPos.hoveredTileHexCoords =
+      worldState.hexGrid.PointToHexCoord(frameContext.worldPos.mouse);
+  frameContext.worldPos.hoveredTilePoint = worldState.hexGrid.HexCoordToPoint(
+      frameContext.worldPos.hoveredTileHexCoords);
+  frameContext.worldPos.hoveredRsrcPoint =
+      frameContext.worldPos.hoveredTilePoint;
+  if (frameContext.worldPos.hoveredTile &&
+      frameContext.worldPos.hoveredTile->rsrc.id >= 0) {
+    frameContext.worldPos.hoveredRsrcPoint =
+        frameContext.worldPos.hoveredTile->rsrc.worldPos;
+  }
+
+  // Screen Center
+  frameContext.screenPos.center = {frameContext.screenWidth / 2,
+                                   frameContext.screenHeight / 2};
+
+  // Player position
+  frameContext.worldPos.player = worldState.player.GetPosition();
 }
 
 Game::~Game() { Unload(); }

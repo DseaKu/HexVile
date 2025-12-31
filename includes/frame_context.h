@@ -61,8 +61,8 @@ struct Context {
   int selToolBarSlot;
 
   // Screen
-  int screenWidth;
-  int screenHeight;
+  float screenWidth;
+  float screenHeight;
 
   float deltaTime;
 };

@@ -71,6 +71,7 @@ private:
   // Logic Threat - Process frame context, update world state
   void RunLogic();
   void LogicLoop();
+  void UpdateFrameContext();
 
 public:
   Game();

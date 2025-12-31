@@ -49,7 +49,7 @@ private:
   void LoadInventoryItemsGFX();
   void LoadItemSlotGFX(const ItemStack *item, Vector2 centerPos,
                        bool isSelected);
-  void LoadItemSlotGFX(int slotIndex);
+  void LoadToolBarSlot(int slotIndex);
   void LoadItemIconGFX(const ItemStack *item, Rectangle slotRect);
   void LoadItemCountGFX(const ItemStack *item, Rectangle slotRect);
 

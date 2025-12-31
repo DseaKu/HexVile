@@ -269,7 +269,7 @@ void UI_Handler::LoadInventoryItemsGFX() {
 void UI_Handler::LoadToolBarGFX() {
 
   for (int i = 0; i < toolBarLayout.maxSlots; i++) {
-    LoadItemSlotGFX(i);
+    LoadToolBarSlot(i);
   }
 }
 
@@ -300,7 +300,7 @@ void UI_Handler::LoadItemSlotGFX(const ItemStack *item, Vector2 centerPos,
   }
 }
 
-void UI_Handler::LoadItemSlotGFX(int slotIndex) {
+void UI_Handler::LoadToolBarSlot(int slotIndex) {
   // toolBarLayout.rect.x is the left edge of the toolbar
   float startX = toolBarLayout.rect.x;
 

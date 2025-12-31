@@ -259,25 +259,23 @@ void UI_Handler::LoadItemCountGFX(int slotIndex, Rectangle slotRect) {
 
   // Iterate backwards to draw from right to left
   for (auto it = num_str.rbegin(); it != num_str.rend(); ++it) {
+
+    // Convert char -> int
     int digit = *it - '0';
-    if (digit == 0)
-      digit = 10; // Atlas mapping
+    // if (digit == 0)
+    //   digit = 10; // Atlas mapping
 
-    Vector2 rbCorner = {iconRect.x + iconRect.width,
-                        iconRect.y + iconRect.height};
+    Vector2 dst = {iconRect.x + iconRect.width, iconRect.y + iconRect.height};
 
-    // Rectangle digitRect = {
-    //     rbCorner.x - (digitIndex * tex::layout::NUMBER_SCALE), rbCorner.y,
-    //     -tex::layout::NUMBER_SCALE, // Negative width/height implies flip? Or
-    //                                 // just anchor?
-    //     -tex::layout::NUMBER_SCALE  // Original code had negative. Assuming
-    //     it
-    //                                 // means "draw up/left from anchor"
-    // };
-    //
-    // graphicsManager->LoadTextureToBackbuffer_Ex(
-    //     drawMask::UI_1, {tex::atlas::NUMBER_X, digit}, digitRect,
-    //     {.color = WHITE, .origin = {0.0f, 0.0f}});
+    // Move left for each digit
+    dst.x -= digitIndex * tex::opts::NUMBERS.scale * tex::size::TILE;
+
+    // Shift to correct number
+    tex::atlas::Coords num = tex::atlas::NUMBER;
+    num.x += digit;
+
+    graphicsManager->LoadTextureToBackbuffer(drawMask::UI_1, num, dst,
+                                             tex::opts::NUMBERS);
     digitIndex++;
   }
 }

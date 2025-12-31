@@ -77,8 +77,7 @@ constexpr int UI_X_MAX = UI_X + 1;
 constexpr Coords INVENTORY = {52, 1, 4, 3};
 
 // --- Number ---
-constexpr int NUMBER_X = UI_X_MAX;
-constexpr int NUMBER_X_MAX = 1;
+constexpr Coords NUMBER = {52, 0};
 
 // --- y = 50 ----
 // --- Item ---
@@ -121,7 +120,7 @@ namespace opts {
 //
 constexpr float NUMBER_SCALE =
     size::TILE * 0.5f; // Don't go to low, it can corruped the font
-constexpr Opts NUMBERS = {.origin = {0, 0}};
+constexpr Opts NUMBERS = {.scale = 0.5f, .origin = {0, 0}};
 
 // --- Invetory ---
 constexpr Opts IVENTORY = {.scale = 6.0f, .origin = {0.475, 0.5}};

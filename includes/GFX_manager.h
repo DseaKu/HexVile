@@ -43,17 +43,17 @@ public:
   int LoadAssets(const char *);
   void UnloadAssets();
 
-  void LoadTextureToBackbuffer(drawMask::id layerID,
-                               tex::atlas::Coords texAtlas, Vector2 dst,
-                               tex::Opts opts = {});
+    void LoadTextureToBackbuffer(drawMask::id layerID, tex::atlas::Coords texAtlas,
 
-  void LoadTextureToBackbuffer_Ex(drawMask::id layerID,
-                                  tex::atlas::Coords texAtlas, Rectangle dstRec,
-                                  tex::Opts opts = {});
+                                 Vector2 dst, tex::Opts opts = {});
 
-  void LoadTextureToBackbuffer_Raw(drawMask::id layerID, Texture2D texture,
-                                   Rectangle srcRec, Rectangle dstRec,
-                                   tex::Opts opts = {});
+  
+
+    void LoadTextureToBackbuffer_Raw(drawMask::id layerID, Texture2D texture,
+
+                                     Rectangle srcRec, Rectangle dstRec,
+
+                                     tex::Opts opts = {});
 
   void RenderLayer(drawMask::id layer);
 

@@ -107,27 +107,6 @@ void GFX_Manager::LoadTextureToBackbuffer(drawMask::id layerID,
        opts.color, opts.useHitShader});
 }
 
-void GFX_Manager::LoadTextureToBackbuffer_Ex(drawMask::id layerID,
-                                             tex::atlas::Coords texAtlas,
-                                             Rectangle dstRec, tex::Opts opts) {
-  Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
-  if (opts.srcWidth > 0)
-    srcRec.width = opts.srcWidth;
-  if (opts.srcHeight > 0)
-    srcRec.height = opts.srcHeight;
-
-  Vector2 origin = opts.origin;
-  if (!opts.ignoreRelativeOrigin) {
-    origin.x *= dstRec.width;
-    origin.y *= dstRec.height;
-  }
-
-  // Write to Back Buffer
-  GFX_Data_Buffers[backBufferIndex][static_cast<int>(layerID)].push_back(
-      {dstRec.y + opts.sortingOffsetY, textureAtlas, srcRec, dstRec, origin,
-       opts.color, opts.useHitShader});
-}
-
 void GFX_Manager::LoadTextureToBackbuffer_Raw(drawMask::id layerID,
                                               Texture2D texture,
                                               Rectangle srcRec,

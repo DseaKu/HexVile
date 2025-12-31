@@ -199,29 +199,27 @@ void UI_Handler::LoadItemSlotGFX(int slotIndex) {
                    (slotIndex * toolBarLayout.slotSize);
   float slotPosY = toolBarLayout.posY + toolBarLayout.padding;
 
-  Rectangle slotRect = {slotPosX, slotPosY, (float)toolBarLayout.contentSize,
-                        (float)toolBarLayout.contentSize};
-
   Vector2 dst = {slotPosX, slotPosY};
+  float slotScale = (float)toolBarLayout.contentSize / tex::size::TILE;
+
+  tex::Opts opts = tex::opts::ITEM_SLOT_BACKGROUND;
+  opts.scale = slotScale;
 
   // Load Background
-  // graphicsManager->LoadTextureToBackbuffer_Ex(
-  //     drawMask::UI_0, tex::atlas::ITEM_SLOT_BACKGROUND, slotRect,
-  //     {.color = WHITE, .origin = {0.0f, 0.0f}});
-  //
   graphicsManager->LoadTextureToBackbuffer(
-      drawMask::UI_0, tex::atlas::ITEM_SLOT_BACKGROUND, dst,
-      tex::opts::ITEM_SLOT_BACKGROUND);
+      drawMask::UI_0, tex::atlas::ITEM_SLOT_BACKGROUND, dst, opts);
 
   if (slotIndex == frameContext->selToolBarSlot) {
-    graphicsManager->LoadTextureToBackbuffer_Ex(
-        drawMask::UI_0, tex::atlas::ITEM_SLOT_BACKGROUND_HIGHLIGHTED, slotRect,
-        {.color = WHITE, .origin = {0.0f, 0.0f}});
+    graphicsManager->LoadTextureToBackbuffer(
+        drawMask::UI_0, tex::atlas::ITEM_SLOT_BACKGROUND_HIGHLIGHTED, dst,
+        opts);
   }
 
   //  Load Content
   ItemStack *itemStack = itemHandler->GetToolBarItemPointer(slotIndex);
   if (itemStack && itemStack->itemID != item::NULL_ID) {
+    Rectangle slotRect = {slotPosX, slotPosY, (float)toolBarLayout.contentSize,
+                          (float)toolBarLayout.contentSize};
     LoadItemIconGFX(slotIndex, slotRect);
     LoadItemCountGFX(slotIndex, slotRect);
   }
@@ -233,18 +231,17 @@ void UI_Handler::LoadItemIconGFX(int slotIndex, Rectangle slotRect) {
   item::id itemID = itemStack->itemID;
   tex::atlas::Coords taCoords = tex::atlas::ITEM_TEXTURE_COORDS.at(itemID);
 
-  // Calculate shrunk rect for icon
-  float newWidth = slotRect.width * toolBarLayout.itemScale;
-  float newHeight = slotRect.height * toolBarLayout.itemScale;
-  float offsetX = (slotRect.width - newWidth) / 2.0f;
-  float offsetY = (slotRect.height - newHeight) / 2.0f;
+  // Calculate shrunk size for icon
+  float iconSize = slotRect.width * toolBarLayout.itemScale;
+  float offsetX = (slotRect.width - iconSize) / 2.0f;
+  float offsetY = (slotRect.height - iconSize) / 2.0f;
 
-  Rectangle dstRec = {slotRect.x + offsetX, slotRect.y + offsetY, newWidth,
-                      newHeight};
+  Vector2 dst = {slotRect.x + offsetX, slotRect.y + offsetY};
+  float iconScale = iconSize / tex::size::TILE;
 
-  graphicsManager->LoadTextureToBackbuffer_Ex(
-      drawMask::UI_0, taCoords, dstRec,
-      {.color = WHITE, .origin = {0.0f, 0.0f}});
+  graphicsManager->LoadTextureToBackbuffer(
+      drawMask::UI_0, taCoords, dst,
+      {.origin = {0.0f, 0.0f}, .scale = iconScale});
 }
 
 void UI_Handler::LoadItemCountGFX(int slotIndex, Rectangle slotRect) {

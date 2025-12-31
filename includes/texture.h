@@ -94,7 +94,6 @@ constexpr float PLAYER_ANIMATION_SPEED_IDLE = 5.0f;
 constexpr int PLAYER_WALK_MAX = 8;
 constexpr float TILES_ANIMATION_SPEED = 0.3f;
 
-//
 // --- Items ---
 constexpr Coords ITEM_NULL = {0, 0};
 constexpr Coords ITEM_SET_GRASS = {ITEM_X + 0, ITEM_Y + 0};

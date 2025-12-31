@@ -20,26 +20,36 @@ UI_Handler::UI_Handler() {
   // Dynamic calculation based on texture options
   float renderedSlotSize =
       tex::opts::ITEM_SLOT_BACKGROUND.scale * tex::size::TILE;
+  
+  // Calculate slot size including spacing
+  // spacing is arbitrary, using padding as gap between slots
+  float spacing = 10.0f * conf::UI_SCALE; 
+  
   toolBarLayout.contentSize = (int)renderedSlotSize;
-  toolBarLayout.slotSize = (int)(renderedSlotSize + (10.0f * conf::UI_SCALE));
+  toolBarLayout.slotSize = (int)(renderedSlotSize + spacing);
 
   toolBarLayout.itemScale = conf::TOOLBAR_ITEM_ICON_SCALE;
   toolBarLayout.scale = conf::UI_SCALE;
   toolBarLayout.bottomMargin = conf::TOOLBAR_BOTTOM_MARGIN;
 
-  // Calculate Geometry
-  toolBarLayout.width =
-      (toolBarLayout.maxSlots * toolBarLayout.slotSize) + toolBarLayout.padding;
-  toolBarLayout.height =
-      toolBarLayout.contentSize + (2 * toolBarLayout.padding);
+  // Calculate Toolbar Width (total width of all slots + spacing)
+  toolBarLayout.width = (toolBarLayout.maxSlots * toolBarLayout.slotSize); 
 
-  // Initial Position (centered horizontally, bottom of screen)
-  toolBarLayout.posX = conf::SCREEN_CENTER.x - (toolBarLayout.width / 2.0f);
-  toolBarLayout.posY =
-      conf::SCREEN_HEIGHT - toolBarLayout.height - toolBarLayout.bottomMargin;
+  // Initial Position (Center of the toolbar block)
+  // X: Screen Center
+  // Y: Bottom of screen - margin - half height (since origin is center)
+  toolBarLayout.posX = conf::SCREEN_CENTER.x;
+  
+  // For the Rect, we still need top-left coordinates for collision detection
+  float rectWidth = toolBarLayout.width;
+  float rectHeight = renderedSlotSize; // Height is just one slot
+  float rectX = toolBarLayout.posX - (rectWidth / 2.0f);
+  float rectY = conf::SCREEN_HEIGHT - rectHeight - toolBarLayout.bottomMargin;
 
-  toolBarLayout.rect = {toolBarLayout.posX, toolBarLayout.posY,
-                        toolBarLayout.width, toolBarLayout.height};
+  // Store the Y center for rendering slots
+  toolBarLayout.posY = rectY + (rectHeight / 2.0f);
+
+  toolBarLayout.rect = {rectX, rectY, rectWidth, rectHeight};
 
   // State
   isToolBarActive = false;
@@ -98,11 +108,18 @@ void UI_Handler::LoadHighlightGFX() {
 }
 
 void UI_Handler::UpdateScreenSize(int width, int height) {
-  toolBarLayout.posX = (width / 2.0f) - (toolBarLayout.width / 2.0f);
-  toolBarLayout.posY =
-      height - toolBarLayout.height - toolBarLayout.bottomMargin;
-  toolBarLayout.rect = {toolBarLayout.posX, toolBarLayout.posY,
-                        toolBarLayout.width, toolBarLayout.height};
+  // Update Center X
+  toolBarLayout.posX = (float)width / 2.0f;
+  
+  // Calculate Rect Position
+  float rectX = toolBarLayout.posX - (toolBarLayout.width / 2.0f);
+  float rectY = height - toolBarLayout.rect.height - toolBarLayout.bottomMargin;
+
+  // Update Y Center for slots
+  toolBarLayout.posY = rectY + (toolBarLayout.rect.height / 2.0f);
+
+  toolBarLayout.rect = {rectX, rectY,
+                        toolBarLayout.width, toolBarLayout.rect.height};
 }
 
 mouseMask::id UI_Handler::UpdateMouseMask() {
@@ -200,11 +217,14 @@ void UI_Handler::LoadToolBarGFX() {
 }
 
 void UI_Handler::LoadItemSlotGFX(int slotIndex) {
-  float slotPosX = toolBarLayout.posX + toolBarLayout.padding +
-                   (slotIndex * toolBarLayout.slotSize);
-  float slotPosY = toolBarLayout.posY + toolBarLayout.padding;
+  // toolBarLayout.rect.x is the left edge of the toolbar
+  float startX = toolBarLayout.rect.x;
+  
+  // Center of this specific slot
+  float centerX = startX + (slotIndex * toolBarLayout.slotSize) + (toolBarLayout.slotSize / 2.0f);
+  float centerY = toolBarLayout.posY; 
 
-  Vector2 dst = {slotPosX, slotPosY};
+  Vector2 dst = {centerX, centerY};
   tex::Opts opts = tex::opts::ITEM_SLOT_BACKGROUND;
   float renderedSize = opts.scale * tex::size::TILE;
 
@@ -221,7 +241,11 @@ void UI_Handler::LoadItemSlotGFX(int slotIndex) {
   //  Load Content
   ItemStack *itemStack = itemHandler->GetToolBarItemPointer(slotIndex);
   if (itemStack && itemStack->itemID != item::NULL_ID) {
-    Rectangle slotRect = {slotPosX, slotPosY, renderedSize, renderedSize};
+    // We still define slotRect as the bounding box for the content 
+    // centered at (centerX, centerY) with size (renderedSize, renderedSize)
+    Rectangle slotRect = {centerX - (renderedSize / 2.0f), 
+                          centerY - (renderedSize / 2.0f), 
+                          renderedSize, renderedSize};
     LoadItemIconGFX(slotIndex, slotRect);
     LoadItemCountGFX(slotIndex, slotRect);
   }
@@ -235,14 +259,17 @@ void UI_Handler::LoadItemIconGFX(int slotIndex, Rectangle slotRect) {
 
   // Calculate shrunk size for icon
   float iconSize = slotRect.width * toolBarLayout.itemScale;
-  float offsetX = (slotRect.width - iconSize) / 2.0f;
-  float offsetY = (slotRect.height - iconSize) / 2.0f;
-
-  Vector2 dst = {slotRect.x + offsetX, slotRect.y + offsetY};
+  
+  // Center of the slot
+  Vector2 dst = {slotRect.x + slotRect.width / 2.0f, 
+                 slotRect.y + slotRect.height / 2.0f};
+                 
   float iconScale = iconSize / tex::size::TILE;
+  
+  tex::Opts opts = tex::opts::ITEM_ICON;
+  opts.scale = iconScale;
 
-  graphicsManager->LoadTextureToBackbuffer(drawMask::UI_0, taCoords, dst,
-                                           tex::opts::ITEM_ICON);
+  graphicsManager->LoadTextureToBackbuffer(drawMask::UI_0, taCoords, dst, opts);
 }
 
 void UI_Handler::LoadItemCountGFX(int slotIndex, Rectangle slotRect) {
@@ -323,8 +350,8 @@ int UI_Handler::GetToolBarSelection() {
       frameContext->mouseMask == mouseMask::TOOL_BAR) {
 
     // Local coordinate in the toolbar
-    float localX = frameContext->screenPos.mouse.x - toolBarLayout.posX -
-                   toolBarLayout.padding;
+    // toolBarLayout.rect.x is the left edge of the toolbar
+    float localX = frameContext->screenPos.mouse.x - toolBarLayout.rect.x;
 
     if (localX < 0)
       return 0;

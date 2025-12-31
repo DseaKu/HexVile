@@ -6,12 +6,14 @@
 #define GLSL_VERSION 330
 #endif
 
+// --- Constructors ---
 FontHandler::FontHandler() {
 
   this->fontSizeDefault = conf::DEFAULT_FONT_SIZE;
   this->fontHackRegular = {0};
 }
 
+// --- Core Lifecycle ---
 void FontHandler::LoadFonts() {
   int fileSize = 0;
 
@@ -32,8 +34,8 @@ void FontHandler::LoadFonts() {
 }
 
 void FontHandler::UnloadFonts() { UnloadFont(fontHackRegular); }
-Font FontHandler::GetFontHackRegular() { return this->fontHackRegular; }
-int FontHandler::GetFontSizeDefault() { return this->fontSizeDefault; }
+
+// --- Graphics / Backbuffer ---
 void FontHandler::DrawTextHackRegular(const char *text, Vector2 pos,
                                       Color color) {
   DrawTextEx(this->fontHackRegular, text, pos, conf::DEFAULT_FONT_SIZE,
@@ -78,3 +80,7 @@ void FontHandler::QueueText(GFX_Manager *gfx, const char *text, Vector2 pos,
     }
   }
 }
+
+// --- Getters ---
+Font FontHandler::GetFontHackRegular() { return this->fontHackRegular; }
+int FontHandler::GetFontSizeDefault() { return this->fontSizeDefault; }

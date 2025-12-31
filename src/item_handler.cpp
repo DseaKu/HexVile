@@ -2,7 +2,7 @@
 #include "defines.h"
 #include "enums.h"
 
-// --- Item Data Base ---
+// --- Constructors ---
 ItemDataBase::ItemDataBase() {
   properties.resize(item::SIZE);
   properties[item::NULL_ID] = {
@@ -19,35 +19,9 @@ ItemDataBase::ItemDataBase() {
       .name = "Wood", .maxStack = 64, .value = 2, .placeableTile = false};
 }
 
-const ItemProperties &ItemDataBase::GetItemProperties(item::id itemid) const {
-  return properties[itemid];
-}
-
-// --- Item Handler ---
 ItemHandler::ItemHandler() { Init(); }
 
-void ItemHandler::Init() {
-  ItemStack itemNull = {.itemID = item::NULL_ID, .count = 0};
-  inventory.assign(conf::INVENTORY_SLOTS, itemNull);
-  toolBar.assign(conf::TOOLBAR_SLOTS, itemNull);
-
-  ItemStack grass = {.itemID = item::SET_GRASS, .count = 32};
-  ItemStack water = {.itemID = item::SET_WATER, .count = 51};
-  ItemStack dirt = {.itemID = item::SET_DIRT, .count = 8};
-  ItemStack dirt2 = {.itemID = item::SET_DIRT, .count = 24};
-  ItemStack axe = {.itemID = item::AXE, .count = 1};
-
-  toolBar[0] = dirt;
-  toolBar[1] = water;
-  toolBar[2] = dirt2;
-  toolBar[3] = grass;
-  toolBar[4] = axe;
-  toolBar[5] = grass;
-
-  inventory[0] = grass;
-  inventory[12] = grass;
-}
-
+// --- Logic / Actions ---
 bool ItemHandler::TakeItemFromToolBar(ItemStack *itemStack, int amount) {
   if (itemStack->count >= amount) {
     itemStack->count -= amount;
@@ -99,20 +73,16 @@ bool ItemHandler::AddItem(item::id itemID, int count) {
   return false;
 }
 
-// --- Conversion ---
-item::id ItemHandler::ToolBarSelectionToItemID(int sel) const {
-  return toolBar[sel].itemID;
-};
-
-tile::id ItemHandler::ConvertItemToTileID(item::id itemid) const {
-  auto it = item_to_tile_map.find(itemid);
-  if (it != item_to_tile_map.end()) {
-    return it->second;
-  }
-  return tile::NULL_ID;
+// --- Setters ---
+void ItemHandler::SetFrameContext(const frame::Context *curFrameContext) {
+  this->frameContext = curFrameContext;
 }
 
-// --- Get ---
+// --- Getters ---
+const ItemProperties &ItemDataBase::GetItemProperties(item::id itemid) const {
+  return properties[itemid];
+}
+
 ItemStack *ItemHandler::GetToolBarItemPointer(int pos) { return &toolBar[pos]; }
 
 item::id ItemHandler::GetToolBarItemType(int pos) const {
@@ -128,7 +98,38 @@ const char *ItemHandler::GetSelectedItemType() const {
   return itemDataBase.GetItemProperties(id).name.c_str();
 }
 
-// --- Set ---
-void ItemHandler::SetFrameContext(const frame::Context *curFrameContext) {
-  this->frameContext = curFrameContext;
+// --- Conversions / Helpers ---
+item::id ItemHandler::ToolBarSelectionToItemID(int sel) const {
+  return toolBar[sel].itemID;
+};
+
+tile::id ItemHandler::ConvertItemToTileID(item::id itemid) const {
+  auto it = item_to_tile_map.find(itemid);
+  if (it != item_to_tile_map.end()) {
+    return it->second;
+  }
+  return tile::NULL_ID;
+}
+
+// --- Private Methods ---
+void ItemHandler::Init() {
+  ItemStack itemNull = {.itemID = item::NULL_ID, .count = 0};
+  inventory.assign(conf::INVENTORY_SLOTS, itemNull);
+  toolBar.assign(conf::TOOLBAR_SLOTS, itemNull);
+
+  ItemStack grass = {.itemID = item::SET_GRASS, .count = 32};
+  ItemStack water = {.itemID = item::SET_WATER, .count = 51};
+  ItemStack dirt = {.itemID = item::SET_DIRT, .count = 8};
+  ItemStack dirt2 = {.itemID = item::SET_DIRT, .count = 24};
+  ItemStack axe = {.itemID = item::AXE, .count = 1};
+
+  toolBar[0] = dirt;
+  toolBar[1] = water;
+  toolBar[2] = dirt2;
+  toolBar[3] = grass;
+  toolBar[4] = axe;
+  toolBar[5] = grass;
+
+  inventory[0] = grass;
+  inventory[12] = grass;
 }

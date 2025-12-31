@@ -11,6 +11,7 @@
 #include "ui_handler.h"
 #include <pthread.h>
 
+// --- Constructors ---
 Player::Player() {
   position = conf::SCREEN_CENTER;
   previousPosition = position;
@@ -23,119 +24,7 @@ Player::Player() {
   playerTile = {0, 0};
 }
 
-// --- Logic ---
-void Player::UpdatePlayerState() {
-  bool isInteracting = false;
-
-  // Interact with enviorment
-  if (frameContext->mouseMask == mouseMask::GROUND &&
-      frameContext->inputs.mouseDown.left) {
-    isInteracting = true;
-    if (stateID == playerState::WALK) {
-      Idle();
-    }
-    int selToolBarSlot = frameContext->selToolBarSlot;
-    HexCoord hoveredTile =
-        hexGrid->PointToHexCoord(frameContext->worldPos.mouse);
-    ItemStack *selectedItem =
-        itemHandler->GetToolBarItemPointer(selToolBarSlot);
-
-    // Process tool interaction
-    if (selectedItem->itemID == item::AXE) {
-      Vector2 clickedPos = hexGrid->HexCoordToPoint(hoveredTile);
-      Chop(hoveredTile);
-
-      // Process tile planter
-    } else {
-      tile::id tileToPlace =
-          itemHandler->ConvertItemToTileID(selectedItem->itemID);
-      if (tileToPlace != tile::NULL_ID &&
-          hexGrid->SetTile(hoveredTile, tileToPlace)) {
-        itemHandler->TakeItemFromToolBar(selectedItem, 1);
-      }
-    }
-  }
-
-  if (!isInteracting) {
-    if (moveDir.x != 0 || moveDir.y != 0) {
-      Walk(moveDir, frameContext->deltaTime);
-    } else {
-      Idle();
-    }
-  }
-}
-void Player::FaceToPoint(Vector2 point) {
-
-  Vector2 diff = Vector2Subtract(point, this->position);
-  float angle = atan2(diff.y, diff.x) * RAD2DEG;
-  if (angle < 0) {
-    angle += 360;
-  }
-  // Map angle to 8 directions (approximate)
-  // E: 0, SE: 45, S: 90, SW: 135, W: 180, NW: 225, N: 270, NE: 315
-  // Offset by 22.5 to center sectors
-  int sector = (int)((angle + 22.5f) / 45.0f) % 8;
-
-  switch (sector) {
-  case 0:
-    faceDirID = faceDir::E;
-    break;
-  case 1:
-    faceDirID = faceDir::SE;
-    break;
-  case 2:
-    faceDirID = faceDir::S;
-    break;
-  case 3:
-    faceDirID = faceDir::SW;
-    break;
-  case 4:
-    faceDirID = faceDir::W;
-    break;
-  case 5:
-    faceDirID = faceDir::NW;
-    break;
-  case 6:
-    faceDirID = faceDir::N;
-    break;
-  case 7:
-    faceDirID = faceDir::NE;
-    break;
-  }
-}
-void Player::UpdatePlayerFaceDir() {
-
-  if (frameContext->inputs.mouseDown.left ||
-      frameContext->inputs.mouseDown.right) {
-    if (frameContext->mouseMask == mouseMask::GROUND) {
-      Vector2 tarPos = frameContext->worldPos.mouse;
-      this->FaceToPoint(tarPos);
-    }
-  } else {
-
-    // Determine player face direction
-    if (moveDir.x != 0 || moveDir.y != 0) {
-      if (moveDir.x == 0 && moveDir.y == -1) {
-        faceDirID = faceDir::N;
-      } else if (moveDir.x == 1 && moveDir.y == -1) {
-        faceDirID = faceDir::NE;
-      } else if (moveDir.x == 1 && moveDir.y == 0) {
-        faceDirID = faceDir::E;
-      } else if (moveDir.x == 1 && moveDir.y == 1) {
-        faceDirID = faceDir::SE;
-      } else if (moveDir.x == 0 && moveDir.y == 1) {
-        faceDirID = faceDir::S;
-      } else if (moveDir.x == -1 && moveDir.y == 1) {
-        faceDirID = faceDir::SW;
-      } else if (moveDir.x == -1 && moveDir.y == 0) {
-        faceDirID = faceDir::W;
-      } else if (moveDir.x == -1 && moveDir.y == -1) {
-        faceDirID = faceDir::NW;
-      }
-    }
-  }
-}
-
+// --- Core Lifecycle ---
 void Player::Update() {
   // Calculate animation frame
   animationDelta += frameContext->deltaTime;
@@ -198,6 +87,206 @@ void Player::Chop(HexCoord target) {
   }
 }
 
+// --- Graphics / Backbuffer ---
+void Player::LoadBackBuffer() {
+
+  animation::Object aniData = animation::playerLut.at(this->stateID);
+
+  faceDir::id dirID = this->faceDirID;
+
+  // Get texture atlas position
+  int taX = aniData.texAtlas.x + this->animationFrame;
+  int taY = aniData.texAtlas.y + dirID;
+
+  // Get destination position
+  Vector2 drawPos = position;
+
+  // Load texture to renderer
+  graphicsManager->LoadTextureToBackbuffer(drawMask::ON_GROUND, {taX, taY},
+                                           drawPos);
+}
+
+// --- Setters ---
+void Player::SetGFX_Manager(GFX_Manager *graphicsManager) {
+  this->graphicsManager = graphicsManager;
+}
+
+void Player::SetHexGrid(HexGrid *grid) { this->hexGrid = grid; }
+
+void Player::SetUI_Handler(UI_Handler *uiHandler) {
+  this->uiHandler = uiHandler;
+}
+
+void Player::SetItemHandler(ItemHandler *itemHandler) {
+  this->itemHandler = itemHandler;
+}
+
+void Player::SetFrameContext(const frame::Context *frameContext) {
+  this->frameContext = frameContext;
+}
+
+// --- Getters ---
+Vector2 Player::GetPosition() const { return position; }
+
+HexCoord Player::GetTile() const { return playerTile; }
+
+int Player::GetAnimationFrame() const { return animationFrame; }
+
+float Player::GetSpeedTilesPerSecond() const { return moveSpeed; }
+
+const char *Player::PlayerStateToString() const {
+  switch (stateID) {
+  case playerState::NULL_ID:
+    return "NULL";
+  case playerState::IDLE:
+    return "IDLE";
+  case playerState::WALK:
+    return "WALK";
+  default:
+    return "Unknown State";
+  }
+}
+
+const char *Player::PlayerDirToString() const {
+  switch (faceDirID) {
+  case faceDir::UNDEFINED:
+    return "UNDEFINED";
+  case faceDir::NW:
+    return "NW";
+  case faceDir::W:
+    return "W";
+  case faceDir::SW:
+    return "SW";
+  case faceDir::S:
+    return "S";
+  case faceDir::SE:
+    return "SE";
+  case faceDir::E:
+    return "E";
+  case faceDir::NE:
+    return "NE";
+  case faceDir::N:
+    return "N";
+  default:
+    return "Unknown Direction";
+  }
+}
+
+// --- Private Methods ---
+void Player::UpdatePlayerState() {
+  bool isInteracting = false;
+
+  // Interact with enviorment
+  if (frameContext->mouseMask == mouseMask::GROUND &&
+      frameContext->inputs.mouseDown.left) {
+    isInteracting = true;
+    if (stateID == playerState::WALK) {
+      Idle();
+    }
+    int selToolBarSlot = frameContext->selToolBarSlot;
+    HexCoord hoveredTile =
+        hexGrid->PointToHexCoord(frameContext->worldPos.mouse);
+    ItemStack *selectedItem =
+        itemHandler->GetToolBarItemPointer(selToolBarSlot);
+
+    // Process tool interaction
+    if (selectedItem->itemID == item::AXE) {
+      Vector2 clickedPos = hexGrid->HexCoordToPoint(hoveredTile);
+      Chop(hoveredTile);
+
+      // Process tile planter
+    } else {
+      tile::id tileToPlace =
+          itemHandler->ConvertItemToTileID(selectedItem->itemID);
+      if (tileToPlace != tile::NULL_ID &&
+          hexGrid->SetTile(hoveredTile, tileToPlace)) {
+        itemHandler->TakeItemFromToolBar(selectedItem, 1);
+      }
+    }
+  }
+
+  if (!isInteracting) {
+    if (moveDir.x != 0 || moveDir.y != 0) {
+      Walk(moveDir, frameContext->deltaTime);
+    } else {
+      Idle();
+    }
+  }
+}
+
+void Player::UpdatePlayerFaceDir() {
+
+  if (frameContext->inputs.mouseDown.left ||
+      frameContext->inputs.mouseDown.right) {
+    if (frameContext->mouseMask == mouseMask::GROUND) {
+      Vector2 tarPos = frameContext->worldPos.mouse;
+      this->FaceToPoint(tarPos);
+    }
+  } else {
+
+    // Determine player face direction
+    if (moveDir.x != 0 || moveDir.y != 0) {
+      if (moveDir.x == 0 && moveDir.y == -1) {
+        faceDirID = faceDir::N;
+      } else if (moveDir.x == 1 && moveDir.y == -1) {
+        faceDirID = faceDir::NE;
+      } else if (moveDir.x == 1 && moveDir.y == 0) {
+        faceDirID = faceDir::E;
+      } else if (moveDir.x == 1 && moveDir.y == 1) {
+        faceDirID = faceDir::SE;
+      } else if (moveDir.x == 0 && moveDir.y == 1) {
+        faceDirID = faceDir::S;
+      } else if (moveDir.x == -1 && moveDir.y == 1) {
+        faceDirID = faceDir::SW;
+      } else if (moveDir.x == -1 && moveDir.y == 0) {
+        faceDirID = faceDir::W;
+      } else if (moveDir.x == -1 && moveDir.y == -1) {
+        faceDirID = faceDir::NW;
+      }
+    }
+  }
+}
+
+void Player::FaceToPoint(Vector2 point) {
+
+  Vector2 diff = Vector2Subtract(point, this->position);
+  float angle = atan2(diff.y, diff.x) * RAD2DEG;
+  if (angle < 0) {
+    angle += 360;
+  }
+  // Map angle to 8 directions (approximate)
+  // E: 0, SE: 45, S: 90, SW: 135, W: 180, NW: 225, N: 270, NE: 315
+  // Offset by 22.5 to center sectors
+  int sector = (int)((angle + 22.5f) / 45.0f) % 8;
+
+  switch (sector) {
+  case 0:
+    faceDirID = faceDir::E;
+    break;
+  case 1:
+    faceDirID = faceDir::SE;
+    break;
+  case 2:
+    faceDirID = faceDir::S;
+    break;
+  case 3:
+    faceDirID = faceDir::SW;
+    break;
+  case 4:
+    faceDirID = faceDir::W;
+    break;
+  case 5:
+    faceDirID = faceDir::NW;
+    break;
+  case 6:
+    faceDirID = faceDir::N;
+    break;
+  case 7:
+    faceDirID = faceDir::NE;
+    break;
+  }
+}
+
 void Player::Idle() {
   if (stateID != playerState::IDLE) {
     animationFrame = 0;
@@ -238,88 +327,4 @@ void Player::Walk(Vector2 dir, float deltaTime) {
     // Idle if blocked
     Idle();
   }
-}
-
-// --- Setters ---
-void Player::SetGFX_Manager(GFX_Manager *graphicsManager) {
-  this->graphicsManager = graphicsManager;
-}
-
-void Player::SetHexGrid(HexGrid *grid) { this->hexGrid = grid; }
-
-void Player::SetUI_Handler(UI_Handler *uiHandler) {
-  this->uiHandler = uiHandler;
-}
-
-void Player::SetItemHandler(ItemHandler *itemHandler) {
-  this->itemHandler = itemHandler;
-}
-// --- Getters ---
-Vector2 Player::GetPosition() const { return position; }
-
-HexCoord Player::GetTile() const { return playerTile; }
-
-int Player::GetAnimationFrame() const { return animationFrame; }
-
-float Player::GetSpeedTilesPerSecond() const { return moveSpeed; }
-
-const char *Player::PlayerStateToString() const {
-  switch (stateID) {
-  case playerState::NULL_ID:
-    return "NULL";
-  case playerState::IDLE:
-    return "IDLE";
-  case playerState::WALK:
-    return "WALK";
-  default:
-    return "Unknown State";
-  }
-}
-
-void Player::SetFrameContext(const frame::Context *frameContext) {
-  this->frameContext = frameContext;
-}
-
-const char *Player::PlayerDirToString() const {
-  switch (faceDirID) {
-  case faceDir::UNDEFINED:
-    return "UNDEFINED";
-  case faceDir::NW:
-    return "NW";
-  case faceDir::W:
-    return "W";
-  case faceDir::SW:
-    return "SW";
-  case faceDir::S:
-    return "S";
-  case faceDir::SE:
-    return "SE";
-  case faceDir::E:
-    return "E";
-  case faceDir::NE:
-    return "NE";
-  case faceDir::N:
-    return "N";
-  default:
-    return "Unknown Direction";
-  }
-}
-
-// --- Rendering ---
-void Player::LoadBackBuffer() {
-
-  animation::Object aniData = animation::playerLut.at(this->stateID);
-
-  faceDir::id dirID = this->faceDirID;
-
-  // Get texture atlas position
-  int taX = aniData.texAtlas.x + this->animationFrame;
-  int taY = aniData.texAtlas.y + dirID;
-
-  // Get destination position
-  Vector2 drawPos = position;
-
-  // Load texture to renderer
-  graphicsManager->LoadTextureToBackbuffer(drawMask::ON_GROUND, {taX, taY},
-                                           drawPos);
 }

@@ -5,7 +5,7 @@
 #include "hex_tile_grid.h"
 #include "raylib.h"
 
-// --- Initialization ---
+// --- Constructors ---
 Game::Game() {
   isRunning = true;
   isFullscreenMode = false;
@@ -68,7 +68,9 @@ Game::Game() {
   isUnloaded = false;
 }
 
-// --- Main Loop -> Render Thread ---
+Game::~Game() { Unload(); }
+
+// --- Core Lifecycle ---
 void Game::GameLoop() {
   while (!WindowShouldClose()) {
 
@@ -122,24 +124,27 @@ void Game::GameLoop() {
   mainToLogicCV.notify_one();
 }
 
-// --- Logic Loop -> Logic Thread  ---
-void Game::LogicLoop() {
-  while (isRunning) {
-    std::unique_lock<std::mutex> lock(logicMutex);
-    mainToLogicCV.wait(lock, [this] { return logicUpdateReady || !isRunning; });
+void Game::Unload() {
+  if (isUnloaded)
+    return;
+  isUnloaded = true;
 
-    if (!isRunning)
-      break;
+  isRunning = false;
+  mainToLogicCV.notify_all();
+  if (logicThread.joinable()) {
+    logicThread.join();
+  }
 
-    RunLogic();
+  gfxManager.UnloadAssets();
+  fontHandler.UnloadFonts();
 
-    logicUpdateReady = false;
-    logicUpdateDone = true;
-    lock.unlock();
-    logicToMainCV.notify_one();
+  if (hackFontRegular != nullptr) {
+    UnloadFileData(hackFontRegular);
+    hackFontRegular = nullptr;
   }
 }
 
+// --- Private Methods ---
 void Game::GetInputs() {
   if (IsKeyPressed(KEY_F)) {
     isFullscreenMode = !isFullscreenMode;
@@ -260,6 +265,23 @@ void Game::LoadBackBuffer() {
   debugger.LoadBackBuffer();
 }
 
+void Game::LogicLoop() {
+  while (isRunning) {
+    std::unique_lock<std::mutex> lock(logicMutex);
+    mainToLogicCV.wait(lock, [this] { return logicUpdateReady || !isRunning; });
+
+    if (!isRunning)
+      break;
+
+    RunLogic();
+
+    logicUpdateReady = false;
+    logicUpdateDone = true;
+    lock.unlock();
+    logicToMainCV.notify_one();
+  }
+}
+
 void Game::UpdateFrameContext() {
 
   // --- Update delta time ---
@@ -294,26 +316,4 @@ void Game::UpdateFrameContext() {
 
   // Player position
   frameContext.worldPos.player = worldState.player.GetPosition();
-}
-
-Game::~Game() { Unload(); }
-
-void Game::Unload() {
-  if (isUnloaded)
-    return;
-  isUnloaded = true;
-
-  isRunning = false;
-  mainToLogicCV.notify_all();
-  if (logicThread.joinable()) {
-    logicThread.join();
-  }
-
-  gfxManager.UnloadAssets();
-  fontHandler.UnloadFonts();
-
-  if (hackFontRegular != nullptr) {
-    UnloadFileData(hackFontRegular);
-    hackFontRegular = nullptr;
-  }
 }

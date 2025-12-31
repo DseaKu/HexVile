@@ -107,17 +107,6 @@ enum id {
 };
 }
 
-// --- UI IDs ---
-namespace ui {
-enum id {
-  NULL_ID = 0,
-  TILE_H,
-  ITEM_BAR_BG,
-  ITEM_BAR_BG_H,
-  SIZE,
-};
-}
-
 // --- Mappings ---
 static const std::map<item::id, tile::id> item_to_tile_map = {
     {item::SET_GRASS, tile::GRASS},

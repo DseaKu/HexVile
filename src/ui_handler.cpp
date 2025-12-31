@@ -11,7 +11,7 @@
 #include "texture.h"
 #include <string>
 
-// --- Initialization ---
+// --- Constructors ---
 UI_Handler::UI_Handler() {
   // Initialize Layout Configuration
   toolBarLayout.maxSlots = conf::TOOLBAR_SLOTS;
@@ -62,48 +62,10 @@ UI_Handler::UI_Handler() {
   hexGrid = nullptr;
 }
 
-// --- Core ---
+// --- Core Lifecycle ---
 void UI_Handler::Update() {
   if (frameContext->inputs.commands.toggleInventory) {
     ToggleInventory();
-  }
-}
-
-void UI_Handler::LoadBackBuffer() {
-  LoadHighlightGFX();
-  if (isToolBarActive) {
-    LoadToolBarGFX();
-  }
-  if (isInventoryOpen) {
-    LoadInventoryBackgroundGFX();
-    LoadInventoryItemsGFX();
-  }
-}
-
-void UI_Handler::ToggleInventory() {
-  if (this->isInventoryOpen) {
-    isInventoryOpen = false;
-  } else {
-    isInventoryOpen = true;
-  }
-}
-
-void UI_Handler::LoadHighlightGFX() {
-  // Get to hightlithning object
-  item::id itemID =
-      itemHandler->GetToolBarItemType(frameContext->selToolBarSlot);
-  if (itemID == item::AXE) {
-    // LoadHighlightResourceGFX(rsrc::ID_TREE);
-  }
-
-  if (itemID == item::SET_GRASS) {
-    LoadHighlightTileGFX();
-  }
-  if (itemID == item::SET_WATER) {
-    LoadHighlightTileGFX();
-  }
-  if (itemID == item::SET_DIRT) {
-    LoadHighlightTileGFX();
   }
 }
 
@@ -130,9 +92,26 @@ mouseMask::id UI_Handler::UpdateMouseMask() {
     return mouseMask::GROUND;
   }
 }
-// --- Input & Queries ---
-bool UI_Handler::GetToolBarAvailability() { return isToolBarActive; }
-Rectangle UI_Handler::GetToolBarRect() { return toolBarLayout.rect; }
+
+void UI_Handler::ToggleInventory() {
+  if (this->isInventoryOpen) {
+    isInventoryOpen = false;
+  } else {
+    isInventoryOpen = true;
+  }
+}
+
+// --- Graphics / Backbuffer ---
+void UI_Handler::LoadBackBuffer() {
+  LoadHighlightGFX();
+  if (isToolBarActive) {
+    LoadToolBarGFX();
+  }
+  if (isInventoryOpen) {
+    LoadInventoryBackgroundGFX();
+    LoadInventoryItemsGFX();
+  }
+}
 
 // --- Setters ---
 void UI_Handler::SetGFX_Manager(GFX_Manager *p) { graphicsManager = p; }
@@ -147,7 +126,84 @@ void UI_Handler::SetFrameContext(const frame::Context *frameContext) {
   this->frameContext = frameContext;
 }
 
-// --- Load GFX Data ---
+// --- Getters & Queries ---
+bool UI_Handler::GetToolBarAvailability() { return isToolBarActive; }
+Rectangle UI_Handler::GetToolBarRect() { return toolBarLayout.rect; }
+
+int UI_Handler::GetToolBarSelection() {
+  int curSelection = frameContext->selToolBarSlot;
+  if (curSelection < 0 || curSelection >= conf::TOOLBAR_SLOTS) {
+    curSelection = 0;
+  }
+  frame::InputCommands keyPress = frameContext->inputs.commands;
+
+  int toolBarSlotBuffer = curSelection;
+  if (keyPress.slot0)
+    curSelection = 0;
+  if (keyPress.slot1)
+    curSelection = 1;
+  if (keyPress.slot2)
+    curSelection = 2;
+  if (keyPress.slot3)
+    curSelection = 3;
+  if (keyPress.slot4)
+    curSelection = 4;
+  if (keyPress.slot5)
+    curSelection = 5;
+  if (keyPress.slot6)
+    curSelection = 6;
+  if (keyPress.slot7)
+    curSelection = 7;
+  if (keyPress.slot8)
+    curSelection = 8;
+  if (keyPress.slot9)
+    curSelection = 9;
+
+  // Revert selection if the toolbar slot is out of range
+  if (curSelection >= conf::TOOLBAR_SLOTS) {
+    curSelection = toolBarSlotBuffer;
+  }
+
+  // Check if player clicked Tool Bar
+  if (frameContext->inputs.mouseClick.left &&
+      frameContext->mouseMask == mouseMask::TOOL_BAR) {
+
+    // Local coordinate in the toolbar
+    // toolBarLayout.rect.x is the left edge of the toolbar
+    float localX = frameContext->screenPos.mouse.x - toolBarLayout.rect.x;
+
+    if (localX < 0)
+      return 0;
+
+    int slotIndex = (int)(localX / toolBarLayout.slotSize);
+
+    if (slotIndex >= 0 && slotIndex < toolBarLayout.maxSlots) {
+      curSelection = slotIndex;
+    }
+  }
+  return curSelection;
+}
+
+// --- Private Methods ---
+void UI_Handler::LoadHighlightGFX() {
+  // Get to hightlithning object
+  item::id itemID =
+      itemHandler->GetToolBarItemType(frameContext->selToolBarSlot);
+  if (itemID == item::AXE) {
+    // LoadHighlightResourceGFX(rsrc::ID_TREE);
+  }
+
+  if (itemID == item::SET_GRASS) {
+    LoadHighlightTileGFX();
+  }
+  if (itemID == item::SET_WATER) {
+    LoadHighlightTileGFX();
+  }
+  if (itemID == item::SET_DIRT) {
+    LoadHighlightTileGFX();
+  }
+}
+
 void UI_Handler::LoadHighlightTileGFX() {
   if (!hexGrid)
     return;
@@ -209,6 +265,7 @@ void UI_Handler::LoadInventoryItemsGFX() {
   }
   // Draw item slots
 }
+
 void UI_Handler::LoadToolBarGFX() {
 
   for (int i = 0; i < toolBarLayout.maxSlots; i++) {
@@ -315,59 +372,4 @@ void UI_Handler::LoadItemCountGFX(const ItemStack *item, Rectangle slotRect) {
                                              tex::opts::NUMBERS);
     digitIndex++;
   }
-}
-
-// --- Getter ---
-int UI_Handler::GetToolBarSelection() {
-  int curSelection = frameContext->selToolBarSlot;
-  if (curSelection < 0 || curSelection >= conf::TOOLBAR_SLOTS) {
-    curSelection = 0;
-  }
-  frame::InputCommands keyPress = frameContext->inputs.commands;
-
-  int toolBarSlotBuffer = curSelection;
-  if (keyPress.slot0)
-    curSelection = 0;
-  if (keyPress.slot1)
-    curSelection = 1;
-  if (keyPress.slot2)
-    curSelection = 2;
-  if (keyPress.slot3)
-    curSelection = 3;
-  if (keyPress.slot4)
-    curSelection = 4;
-  if (keyPress.slot5)
-    curSelection = 5;
-  if (keyPress.slot6)
-    curSelection = 6;
-  if (keyPress.slot7)
-    curSelection = 7;
-  if (keyPress.slot8)
-    curSelection = 8;
-  if (keyPress.slot9)
-    curSelection = 9;
-
-  // Revert selection if the toolbar slot is out of range
-  if (curSelection >= conf::TOOLBAR_SLOTS) {
-    curSelection = toolBarSlotBuffer;
-  }
-
-  // Check if player clicked Tool Bar
-  if (frameContext->inputs.mouseClick.left &&
-      frameContext->mouseMask == mouseMask::TOOL_BAR) {
-
-    // Local coordinate in the toolbar
-    // toolBarLayout.rect.x is the left edge of the toolbar
-    float localX = frameContext->screenPos.mouse.x - toolBarLayout.rect.x;
-
-    if (localX < 0)
-      return 0;
-
-    int slotIndex = (int)(localX / toolBarLayout.slotSize);
-
-    if (slotIndex >= 0 && slotIndex < toolBarLayout.maxSlots) {
-      curSelection = slotIndex;
-    }
-  }
-  return curSelection;
 }

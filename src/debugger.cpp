@@ -7,7 +7,7 @@
 #include <mach/mach.h>
 #endif
 
-// --- Helper Functions ---
+// --- Private Helpers ---
 static double GetRamUsageMB() {
 #ifdef __APPLE__
   struct mach_task_basic_info info;
@@ -20,7 +20,7 @@ static double GetRamUsageMB() {
   return 0.0;
 }
 
-// --- Debugger ---
+// --- Constructors ---
 Debugger::Debugger() {
   gfxManager = nullptr;
   fontHandler = nullptr;
@@ -31,39 +31,7 @@ Debugger::Debugger() {
   displayRamUsage = 0.0;
 }
 
-void Debugger::SetManagers(GFX_Manager *gfx, FontHandler *font) {
-  this->gfxManager = gfx;
-  this->fontHandler = font;
-}
-
-const char *Debugger::MouseMaskToString(mouseMask::id m) {
-  switch (m) {
-  case mouseMask::NULL_ID:
-    return "Null";
-  case mouseMask::GROUND:
-    return "Ground";
-  case mouseMask::TOOL_BAR:
-    return "Tool Bar";
-  default:
-    return "Undefined";
-  }
-}
-
-const char *Debugger::TileToString(tile::id t) {
-  switch (t) {
-  case tile::NULL_ID:
-    return "NULL";
-  case tile::GRASS:
-    return "Grass";
-  case tile::WATER:
-    return "Water";
-  case tile::DIRT:
-    return "Dirt";
-  default:
-    return "Undefined";
-  }
-}
-
+// --- Core Lifecycle ---
 void Debugger::Update(const RenderState &rs, float dt, double logicTime,
                       double renderTime) {
   if (!gfxManager || !fontHandler)
@@ -128,6 +96,7 @@ void Debugger::Update(const RenderState &rs, float dt, double logicTime,
                        }});
 }
 
+// --- Graphics / Backbuffer ---
 void Debugger::LoadBackBuffer() {
   if (!gfxManager || !fontHandler)
     return;
@@ -160,5 +129,40 @@ void Debugger::LoadBackBuffer() {
       currentY += subSectionGapY;
     }
     currentY += sectionGapY;
+  }
+}
+
+// --- Setters ---
+void Debugger::SetManagers(GFX_Manager *gfx, FontHandler *font) {
+  this->gfxManager = gfx;
+  this->fontHandler = font;
+}
+
+// --- Private Helpers ---
+const char *Debugger::MouseMaskToString(mouseMask::id m) {
+  switch (m) {
+  case mouseMask::NULL_ID:
+    return "Null";
+  case mouseMask::GROUND:
+    return "Ground";
+  case mouseMask::TOOL_BAR:
+    return "Tool Bar";
+  default:
+    return "Undefined";
+  }
+}
+
+const char *Debugger::TileToString(tile::id t) {
+  switch (t) {
+  case tile::NULL_ID:
+    return "NULL";
+  case tile::GRASS:
+    return "Grass";
+  case tile::WATER:
+    return "Water";
+  case tile::DIRT:
+    return "Dirt";
+  default:
+    return "Undefined";
   }
 }

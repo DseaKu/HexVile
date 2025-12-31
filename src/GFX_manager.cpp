@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <iostream>
 
+// --- Constructors ---
 GFX_Manager::GFX_Manager() {
   GFX_Data_Buffers.resize(2);
   GFX_Data_Buffers[0].resize(drawMask::SIZE);
@@ -15,23 +16,7 @@ GFX_Manager::GFX_Manager() {
   hitShader = {0};
 }
 
-void GFX_Manager::InitTextureRec() {
-
-  float reso = static_cast<float>(tex::size::TILE);
-  textureRecData.resize(TA_Height);
-
-  for (int y = 0; y < TA_Height; y++) {
-    textureRecData[y].resize(TA_Width);
-    for (int x = 0; x < TA_Width; x++) {
-
-      float xOffset = static_cast<float>(x * reso);
-      float yOffset = static_cast<float>(y * reso);
-      textureRecData[y][x] =
-          Rectangle{.x = xOffset, .y = yOffset, .width = reso, .height = reso};
-    }
-  }
-}
-
+// --- Core Lifecycle ---
 int GFX_Manager::LoadAssets(const char *pathToAssest) {
   this->textureAtlas = LoadTexture(pathToAssest);
   // Catch error
@@ -48,13 +33,12 @@ int GFX_Manager::LoadAssets(const char *pathToAssest) {
   return 0;
 }
 
-Rectangle GFX_Manager::GetSrcRec(int x, int y) { return textureRecData[y][x]; }
-
 void GFX_Manager::UnloadAssets() {
   UnloadTexture(this->textureAtlas);
   UnloadShader(this->hitShader);
 }
 
+// --- Graphics / Backbuffer ---
 void GFX_Manager::LoadTextureToBackbuffer(drawMask::id layerID,
                                           tex::atlas::Coords coords,
                                           Vector2 dst, tex::Opts opts) {
@@ -161,8 +145,29 @@ void GFX_Manager::SwapBuffers() {
   backBufferIndex = nextBack;
 }
 
+// --- Getters ---
 Rectangle GFX_Manager::GetTileRec(tile::id tileID, int frame) {
   int x_idx = (tex::atlas::TILE_X / tex::size::TILE) + frame;
   int y_idx = static_cast<int>(tileID);
   return textureRecData[y_idx][x_idx];
 }
+
+// --- Private Methods ---
+void GFX_Manager::InitTextureRec() {
+
+  float reso = static_cast<float>(tex::size::TILE);
+  textureRecData.resize(TA_Height);
+
+  for (int y = 0; y < TA_Height; y++) {
+    textureRecData[y].resize(TA_Width);
+    for (int x = 0; x < TA_Width; x++) {
+
+      float xOffset = static_cast<float>(x * reso);
+      float yOffset = static_cast<float>(y * reso);
+      textureRecData[y][x] =
+          Rectangle{.x = xOffset, .y = yOffset, .width = reso, .height = reso};
+    }
+  }
+}
+
+Rectangle GFX_Manager::GetSrcRec(int x, int y) { return textureRecData[y][x]; }

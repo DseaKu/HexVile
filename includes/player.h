@@ -41,10 +41,11 @@ private:
   // --- Helpers ---
   void Idle();
   void Walk(Vector2 dir, float deltaTime);
-  void LoadPlayerGFX();
 
 public:
   Player();
+
+  void LoadBackBuffer();
 
   // --- Logic ---
   void Update();

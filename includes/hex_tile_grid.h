@@ -126,6 +126,7 @@ public:
   // --- Core Lifecycle ---
   void InitGrid(float radius);
   void Update(const Camera2D &camera, float totalTime);
+  void LoadBackBuffer();
   void Shutdown();
 
   // --- Setters ---

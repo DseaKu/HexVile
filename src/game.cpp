@@ -219,6 +219,7 @@ void Game::RunLogic() {
 
   rs.tilesTotal = worldState.hexGrid.GetTilesInTotal();
   rs.tilesUsed = worldState.hexGrid.GetTilesInUse();
+  //
   rs.tilesVisible = worldState.hexGrid.GetTilesVisible();
   rs.mapRadius = worldState.hexGrid.GetMapRadius();
   rs.visCalcTime = worldState.hexGrid.GetVisCalcTime();
@@ -242,11 +243,21 @@ void Game::RunLogic() {
   debugger.Update(rs, frameContext.deltaTime, logicExecutionTime.load(),
                   renderExecutionTime.load());
 
+  // --- Load textures to backbuffer ---
+  LoadBackBuffer();
+
   // Count passed time
   auto endLogic = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double, std::milli> elapsedLogic =
       endLogic - startLogic;
   logicExecutionTime = elapsedLogic.count();
+}
+
+void Game::LoadBackBuffer() {
+  worldState.hexGrid.LoadBackBuffer();
+  worldState.player.LoadBackBuffer();
+  uiHandler.LoadBackBuffer();
+  debugger.LoadBackBuffer();
 }
 
 void Game::UpdateFrameContext() {

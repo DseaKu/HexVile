@@ -72,17 +72,6 @@ void Debugger::Update(const RenderState &rs, float dt, double logicTime,
   if (!conf::IS_DEBUG_OVERLAY_ENABLED)
     return;
 
-  float sectionPosX = conf::DEBUG_OVERLAY_SECTION_X;
-  int sectionPosY = conf::DEBUG_OVERLAY_SECTION_Y;
-  int sectionGapY = conf::DEBUG_OVERLAY_SECTION_Y_GAP;
-  Color sectionColor = conf::DEBUG_OVERLAY_SECTION_FONT_COLOR;
-
-  float subSectionPosX = conf::DEBUG_OVERLAY_SUBSECTION_X_POS;
-  int subSectionGapY = conf::DEBUG_OVERLAY_SUBSECTION_Y_GAP;
-  Color subSectionColor = conf::DEBUG_OVERLAY_SECTION_FONT_COLOR;
-
-  float currentY = (float)sectionPosY;
-
   debugUpdateTimer += dt;
   if (debugUpdateTimer >= 1.0f) {
     displayRenderTime = renderTime;
@@ -137,6 +126,25 @@ void Debugger::Update(const RenderState &rs, float dt, double logicTime,
                            TextFormat("Item: %s", rs.selectedItemType.c_str()),
                            TextFormat("Slot: %i", rs.selectedToolBarSlot),
                        }});
+}
+
+void Debugger::LoadBackBuffer() {
+  if (!gfxManager || !fontHandler)
+    return;
+
+  if (!conf::IS_DEBUG_OVERLAY_ENABLED)
+    return;
+
+  float sectionPosX = conf::DEBUG_OVERLAY_SECTION_X;
+  int sectionPosY = conf::DEBUG_OVERLAY_SECTION_Y;
+  int sectionGapY = conf::DEBUG_OVERLAY_SECTION_Y_GAP;
+  Color sectionColor = conf::DEBUG_OVERLAY_SECTION_FONT_COLOR;
+
+  float subSectionPosX = conf::DEBUG_OVERLAY_SUBSECTION_X_POS;
+  int subSectionGapY = conf::DEBUG_OVERLAY_SUBSECTION_Y_GAP;
+  Color subSectionColor = conf::DEBUG_OVERLAY_SECTION_FONT_COLOR;
+
+  float currentY = (float)sectionPosY;
 
   // Draw text
   for (const DebugData &data : debugData) {

@@ -52,7 +52,9 @@ void UI_Handler::Update() {
   if (frameContext->inputs.commands.toggleInventory) {
     ToggleInventory();
   }
+}
 
+void UI_Handler::LoadBackBuffer() {
   LoadToolBarGFX();
   LoadHighlightGFX();
 

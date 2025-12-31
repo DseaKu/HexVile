@@ -70,6 +70,7 @@ private:
 
   // Logic Threat - Process frame context, update world state
   void RunLogic();
+  void LoadBackBuffer();
   void LogicLoop();
   void UpdateFrameContext();
 

@@ -426,6 +426,33 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
   UpdateTileVisibility(totalTime);
 
   for (const HexCoord &h : currentVisibleTiles) {
+    MapTile &tile = GetTile(h);
+
+    // Initialise if undiscoverd and draw details
+    for (TileDet &d : tile.det) {
+      if (d.taOffsetX == conf::UNINITIALIZED) {
+        d = GetRandomTerainDetail(tile.id);
+      }
+    }
+
+    // Initialise if undiscoverd and draw resource
+    rsrc::Object &rsrc = tile.rsrc;
+
+    if (rsrc.id == rsrc::UNINITIALIZED) {
+      rsrc = GetRandomTerainResource(tile.id, tile.posWorld);
+    }
+    if (rsrc.id != rsrc::ID_NULL) {
+      if (rsrc.flashTimer > 0.0f) {
+        rsrc.flashTimer -= totalTime;
+        if (rsrc.flashTimer < 0.0f)
+          rsrc.flashTimer = 0.0f;
+      }
+    }
+  }
+}
+
+void HexGrid::LoadBackBuffer() {
+  for (const HexCoord &h : currentVisibleTiles) {
 
     MapTile &tile = GetTile(h);
     tile::id id = tile.id;
@@ -446,28 +473,17 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
     // begining at the bottom
     destRec.y -= tex::size::HALF_TILE;
 
-    // Initialise if undiscoverd and draw details
+    // Draw details
     for (TileDet &d : tile.det) {
-      if (d.taOffsetX == conf::UNINITIALIZED) {
-        d = GetRandomTerainDetail(tile.id);
-      }
-      if (d.taOffsetX != conf::SKIP_RENDER) {
+      if (d.taOffsetX != conf::SKIP_RENDER &&
+          d.taOffsetX != conf::UNINITIALIZED) {
         LoadDetailGFX(destRec, d, tile.id);
       }
     }
 
-    // Initialise if undiscoverd and draw resource
+    // Draw resource
     rsrc::Object &rsrc = tile.rsrc;
-
-    if (rsrc.id == rsrc::UNINITIALIZED) {
-      rsrc = GetRandomTerainResource(tile.id, tile.posWorld);
-    }
-    if (rsrc.id != rsrc::ID_NULL) {
-      if (rsrc.flashTimer > 0.0f) {
-        rsrc.flashTimer -= totalTime;
-        if (rsrc.flashTimer < 0.0f)
-          rsrc.flashTimer = 0.0f;
-      }
+    if (rsrc.id != rsrc::ID_NULL && rsrc.id != rsrc::UNINITIALIZED) {
       LoadResourceGFX(destRec, rsrc, tile.id);
     }
   }

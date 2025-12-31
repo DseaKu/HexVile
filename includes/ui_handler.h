@@ -55,6 +55,7 @@ public:
 
   // Core
   void Update();
+  void LoadBackBuffer();
   void UpdateScreenSize(int width, int height);
   mouseMask::id UpdateMouseMask();
   void ToggleInventory();

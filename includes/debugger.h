@@ -26,6 +26,7 @@ public:
   void SetManagers(GFX_Manager *gfx, FontHandler *font);
   void Update(const RenderState &rs, float dt, double logicTime,
               double renderTime);
+  void LoadBackBuffer();
 };
 
 #endif // !DEBUGGER_H

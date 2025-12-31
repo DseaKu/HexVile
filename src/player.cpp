@@ -166,8 +166,6 @@ void Player::Update() {
     moveSpeed = 0;
   }
   previousPosition = position;
-
-  this->LoadPlayerGFX();
 }
 
 void Player::Chop(HexCoord target) {
@@ -308,7 +306,7 @@ const char *Player::PlayerDirToString() const {
 }
 
 // --- Rendering ---
-void Player::LoadPlayerGFX() {
+void Player::LoadBackBuffer() {
 
   animation::Object aniData = animation::playerLut.at(this->stateID);
 

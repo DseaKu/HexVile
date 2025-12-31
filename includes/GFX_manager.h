@@ -19,26 +19,7 @@ struct Object {
   bool useHitShader;
 };
 
-struct Opts {
-  Color color = WHITE;
-  bool useHitShader = false;
-
-  float srcWidth = 0.0f;
-  float srcHeight = 0.0f;
-  float dstWidth = 0.0f;
-  float dstHeight = 0.0f;
-  float dstRecY = 0.0f;
-
-  float scale = 1.0f;
-
-  float sortingOffsetY = 0.0f;
-
-  Vector2 origin = {0.5f, 1.0f};
-  bool ignoreRelativeOrigin = false;
-};
-// constexpr Opts TextureOpts32x64 = {.srcHeight = tex::size::TILE * 2.0f,
-//                                    .dstHeight = tex::size::TILE * 2.0f};
-constexpr Opts TextureOptsInventoryBG = {
+constexpr tex::Opts TextureOptsInventoryBG = {
     .srcWidth = tex::atlas::INVENTORY.width * tex::size::TILE,
     .srcHeight = tex::atlas::INVENTORY.height * tex::size::TILE,
     // .dstWidth = tex::atlas::INVENTORY_WIDTH,
@@ -70,15 +51,15 @@ public:
 
   void LoadTextureToBackbuffer(drawMask::id layerID,
                                tex::atlas::Coords texAtlas, Vector2 dst,
-                               gfx::Opts opts = {});
+                               tex::Opts opts = {});
 
   void LoadTextureToBackbuffer_Ex(drawMask::id layerID,
                                   tex::atlas::Coords texAtlas, Rectangle dstRec,
-                                  gfx::Opts opts = {});
+                                  tex::Opts opts = {});
 
   void LoadTextureToBackbuffer_Raw(drawMask::id layerID, Texture2D texture,
                                    Rectangle srcRec, Rectangle dstRec,
-                                   gfx::Opts opts = {});
+                                   tex::Opts opts = {});
 
   void RenderLayer(drawMask::id layer);
 

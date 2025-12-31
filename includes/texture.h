@@ -2,9 +2,28 @@
 #define TEXTURE_H
 
 #include "enums.h"
+#include "raylib.h"
 #include <map>
 
 namespace tex {
+
+struct Opts {
+  Color color = WHITE;
+  bool useHitShader = false;
+
+  float srcWidth = 0.0f;
+  float srcHeight = 0.0f;
+  float dstWidth = 0.0f;
+  float dstHeight = 0.0f;
+  float dstRecY = 0.0f;
+
+  float scale = 1.0f;
+
+  float sortingOffsetY = 0.0f;
+
+  Vector2 origin = {0.5f, 1.0f};
+  bool ignoreRelativeOrigin = false;
+};
 
 // ==========================================
 //               Size
@@ -55,7 +74,7 @@ constexpr int RESOURCE_X_MAX = RESOURCE_X + 8;
 constexpr int UI_X = 50;
 constexpr int UI_X_MAX = UI_X + 1;
 
-constexpr Coords INVENTORY = {52, 0, 4, 3};
+constexpr Coords INVENTORY = {52, 1, 4, 3};
 
 // --- Number ---
 constexpr int NUMBER_X = UI_X_MAX;
@@ -96,12 +115,18 @@ inline const std::map<item::id, Coords> ITEM_TEXTURE_COORDS = {
 //              Layout (destination)
 // ==========================================
 
-namespace layout {
+namespace opts {
 
 // --- Number ---
+//
 constexpr float NUMBER_SCALE =
     size::TILE * 0.5f; // Don't go to low, it can corruped the font
-} // namespace layout
+constexpr Opts NUMBERS = {.origin = {0, 0}};
+
+// --- Invetory ---
+constexpr Opts IVENTORY = {.scale = 6.0f, .origin = {0.475, 0.5}};
+} // namespace opts
+
 } // namespace tex
 
 #endif // TEXTURE_H

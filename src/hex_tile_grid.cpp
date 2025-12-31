@@ -375,7 +375,7 @@ void HexGrid::DrawTile(HexCoord h, int TA_X, int TA_Y, drawMask::id layerID) {
   pos.x -= conf::TILE_RESOLUTION_HALF;
   pos.y -= conf::TILE_RESOLUTION_HALF;
 
-  gfx::Opts opts;
+  tex::Opts opts;
   opts.origin = {0.0f, 0.0f};
   graphicsManager->LoadTextureToBackbuffer(layerID, {TA_X, TA_Y}, pos, opts);
 }
@@ -475,7 +475,7 @@ void HexGrid::Update(const Camera2D &camera, float totalTime) {
 
 // ============= Render =====================
 void HexGrid::LoadTileGFX(Rectangle destRec, int x, int y) {
-  gfx::Opts opts;
+  tex::Opts opts;
   opts.origin = {0.0f, 0.0f};
   graphicsManager->LoadTextureToBackbuffer(drawMask::GROUND0, {x, y},
                                            {destRec.x, destRec.y}, opts);
@@ -486,7 +486,7 @@ void HexGrid::LoadDetailGFX(Rectangle destRec, const TileDet detail,
   destRec.x += detail.tilePos.x;
   destRec.y += detail.tilePos.y;
   int taX = tex::atlas::DETAILS_X + detail.taOffsetX;
-  gfx::Opts opts;
+  tex::Opts opts;
   opts.origin = {0.0f, 0.0f};
   graphicsManager->LoadTextureToBackbuffer(drawMask::ON_GROUND, {taX, id},
                                            {destRec.x, destRec.y}, opts);
@@ -494,7 +494,7 @@ void HexGrid::LoadDetailGFX(Rectangle destRec, const TileDet detail,
 
 void HexGrid::LoadResourceGFX(Rectangle destRec, const rsrc::Object rsrc,
                               tile::id id) {
-  gfx::Opts opts;
+  tex::Opts opts;
   Vector2 dst = rsrc.worldPos;
 
   tex::atlas::Coords tex = rsrc.texAtlasCoords;

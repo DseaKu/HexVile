@@ -159,13 +159,10 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
 }
 
 void UI_Handler::LoadInventoryBackgroundGFX() {
-  gfx::Opts opts;
-  opts.scale *= 6.0f * conf::UI_SCALE;
-  opts.origin = {0.5, 0.5};
 
   graphicsManager->LoadTextureToBackbuffer(
       drawMask::UI_0, tex::atlas::INVENTORY, frameContext->screenPos.center,
-      opts);
+      tex::opts::IVENTORY);
 }
 
 void UI_Handler::LoadInventoryItemsGFX() {
@@ -269,17 +266,18 @@ void UI_Handler::LoadItemCountGFX(int slotIndex, Rectangle slotRect) {
     Vector2 rbCorner = {iconRect.x + iconRect.width,
                         iconRect.y + iconRect.height};
 
-    Rectangle digitRect = {
-        rbCorner.x - (digitIndex * tex::layout::NUMBER_SCALE), rbCorner.y,
-        -tex::layout::NUMBER_SCALE, // Negative width/height implies flip? Or
-                                    // just anchor?
-        -tex::layout::NUMBER_SCALE  // Original code had negative. Assuming it
-                                    // means "draw up/left from anchor"
-    };
-
-    graphicsManager->LoadTextureToBackbuffer_Ex(
-        drawMask::UI_1, {tex::atlas::NUMBER_X, digit}, digitRect,
-        {.color = WHITE, .origin = {0.0f, 0.0f}});
+    // Rectangle digitRect = {
+    //     rbCorner.x - (digitIndex * tex::layout::NUMBER_SCALE), rbCorner.y,
+    //     -tex::layout::NUMBER_SCALE, // Negative width/height implies flip? Or
+    //                                 // just anchor?
+    //     -tex::layout::NUMBER_SCALE  // Original code had negative. Assuming
+    //     it
+    //                                 // means "draw up/left from anchor"
+    // };
+    //
+    // graphicsManager->LoadTextureToBackbuffer_Ex(
+    //     drawMask::UI_1, {tex::atlas::NUMBER_X, digit}, digitRect,
+    //     {.color = WHITE, .origin = {0.0f, 0.0f}});
     digitIndex++;
   }
 }

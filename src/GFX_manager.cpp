@@ -57,7 +57,7 @@ void GFX_Manager::UnloadAssets() {
 
 void GFX_Manager::LoadTextureToBackbuffer(drawMask::id layerID,
                                           tex::atlas::Coords coords,
-                                          Vector2 dst, gfx::Opts opts) {
+                                          Vector2 dst, tex::Opts opts) {
 
   Rectangle srcRec = GetSrcRec(coords.x, coords.y);
   Rectangle dstRec = {dst.x, dst.y, tex::size::TILE, tex::size::TILE};
@@ -109,7 +109,7 @@ void GFX_Manager::LoadTextureToBackbuffer(drawMask::id layerID,
 
 void GFX_Manager::LoadTextureToBackbuffer_Ex(drawMask::id layerID,
                                              tex::atlas::Coords texAtlas,
-                                             Rectangle dstRec, gfx::Opts opts) {
+                                             Rectangle dstRec, tex::Opts opts) {
   Rectangle srcRec = GetSrcRec(texAtlas.x, texAtlas.y);
   if (opts.srcWidth > 0)
     srcRec.width = opts.srcWidth;
@@ -132,7 +132,7 @@ void GFX_Manager::LoadTextureToBackbuffer_Raw(drawMask::id layerID,
                                               Texture2D texture,
                                               Rectangle srcRec,
                                               Rectangle dstRec,
-                                              gfx::Opts opts) {
+                                              tex::Opts opts) {
   Vector2 origin = opts.origin;
   if (!opts.ignoreRelativeOrigin) {
     origin.x *= dstRec.width;

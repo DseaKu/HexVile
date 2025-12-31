@@ -202,17 +202,24 @@ void UI_Handler::LoadItemSlotGFX(int slotIndex) {
   Rectangle slotRect = {slotPosX, slotPosY, (float)toolBarLayout.contentSize,
                         (float)toolBarLayout.contentSize};
 
-  // 1. Draw Background
-  graphicsManager->LoadTextureToBackbuffer_Ex(
-      drawMask::UI_0, tex::atlas::ITEM_SLOT_BACKGROUND, slotRect,
-      {.color = WHITE, .origin = {0.0f, 0.0f}});
+  Vector2 dst = {slotPosX, slotPosY};
+
+  // Load Background
+  // graphicsManager->LoadTextureToBackbuffer_Ex(
+  //     drawMask::UI_0, tex::atlas::ITEM_SLOT_BACKGROUND, slotRect,
+  //     {.color = WHITE, .origin = {0.0f, 0.0f}});
+  //
+  graphicsManager->LoadTextureToBackbuffer(
+      drawMask::UI_0, tex::atlas::ITEM_SLOT_BACKGROUND, dst,
+      tex::opts::ITEM_SLOT_BACKGROUND);
+
   if (slotIndex == frameContext->selToolBarSlot) {
     graphicsManager->LoadTextureToBackbuffer_Ex(
         drawMask::UI_0, tex::atlas::ITEM_SLOT_BACKGROUND_HIGHLIGHTED, slotRect,
         {.color = WHITE, .origin = {0.0f, 0.0f}});
   }
 
-  // 2. Draw Content
+  //  Load Content
   ItemStack *itemStack = itemHandler->GetToolBarItemPointer(slotIndex);
   if (itemStack && itemStack->itemID != item::NULL_ID) {
     LoadItemIconGFX(slotIndex, slotRect);

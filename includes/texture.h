@@ -74,7 +74,6 @@ constexpr int RESOURCE_X_MAX = RESOURCE_X + 8;
 constexpr Coords ITEM_SLOT_BACKGROUND = {56, 1};
 constexpr Coords ITEM_SLOT_BACKGROUND_HIGHLIGHTED = {57, 1};
 constexpr Coords TILE_HIGHLIGHTED = {58, 1};
-
 constexpr Coords INVENTORY = {52, 1, 4, 3};
 
 // --- Number ---
@@ -120,6 +119,9 @@ namespace opts {
 // --- Number ---
 // Don't go to low with the scale, it corruped the font. 0.5f good result.
 constexpr Opts NUMBERS = {.scale = 0.5f, .origin = {0, 0}};
+
+// --- UI ---
+constexpr Opts ITEM_SLOT_BACKGROUND = {.origin{0, 0}};
 
 // --- Invetory ---
 constexpr Opts IVENTORY = {.scale = 6.0f, .origin = {0.475, 0.5}};

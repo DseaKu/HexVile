@@ -262,9 +262,6 @@ void UI_Handler::LoadItemCountGFX(int slotIndex, Rectangle slotRect) {
 
     // Convert char -> int
     int digit = *it - '0';
-    // if (digit == 0)
-    //   digit = 10; // Atlas mapping
-
     Vector2 dst = {iconRect.x + iconRect.width, iconRect.y + iconRect.height};
 
     // Move left for each digit

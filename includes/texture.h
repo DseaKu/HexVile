@@ -111,15 +111,13 @@ inline const std::map<item::id, Coords> ITEM_TEXTURE_COORDS = {
 };
 } // namespace atlas
 // ==========================================
-//              Layout (destination)
+//              Layout Options (destination)
 // ==========================================
 
 namespace opts {
 
 // --- Number ---
-//
-constexpr float NUMBER_SCALE =
-    size::TILE * 0.5f; // Don't go to low, it can corruped the font
+// Don't go to low with the scale, it corruped the font. 0.5f good result.
 constexpr Opts NUMBERS = {.scale = 0.5f, .origin = {0, 0}};
 
 // --- Invetory ---

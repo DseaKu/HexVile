@@ -16,8 +16,13 @@ UI_Handler::UI_Handler() {
   // Initialize Layout Configuration
   toolBarLayout.maxSlots = conf::TOOLBAR_SLOTS;
   toolBarLayout.padding = conf::TOOLBAR_PADDING;
-  toolBarLayout.contentSize = conf::TOOLBAR_SLOT_CONTENT_SIZE;
-  toolBarLayout.slotSize = conf::TOOLBAR_SLOT_SIZE;
+
+  // Dynamic calculation based on texture options
+  float renderedSlotSize =
+      tex::opts::ITEM_SLOT_BACKGROUND.scale * tex::size::TILE;
+  toolBarLayout.contentSize = (int)renderedSlotSize;
+  toolBarLayout.slotSize = (int)(renderedSlotSize + (10.0f * conf::UI_SCALE));
+
   toolBarLayout.itemScale = conf::TOOLBAR_ITEM_ICON_SCALE;
   toolBarLayout.scale = conf::UI_SCALE;
   toolBarLayout.bottomMargin = conf::TOOLBAR_BOTTOM_MARGIN;
@@ -236,9 +241,8 @@ void UI_Handler::LoadItemIconGFX(int slotIndex, Rectangle slotRect) {
   Vector2 dst = {slotRect.x + offsetX, slotRect.y + offsetY};
   float iconScale = iconSize / tex::size::TILE;
 
-  graphicsManager->LoadTextureToBackbuffer(
-      drawMask::UI_0, taCoords, dst,
-      {.origin = {0.0f, 0.0f}, .scale = iconScale});
+  graphicsManager->LoadTextureToBackbuffer(drawMask::UI_0, taCoords, dst,
+                                           tex::opts::ITEM_ICON);
 }
 
 void UI_Handler::LoadItemCountGFX(int slotIndex, Rectangle slotRect) {

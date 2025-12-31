@@ -94,6 +94,7 @@ constexpr float TOOLBAR_SLOT_SIZE =
     TOOLBAR_SLOT_CONTENT_SIZE + (10.0f * UI_SCALE);
 constexpr float TOOLBAR_ITEM_ICON_SCALE = 0.8f;
 constexpr float HIGHLIGHT_ALPHA = 0.3f;
+constexpr float TOOLBAR_INVENTORY_SPACE = 20.0f * UI_SCALE;
 
 // ==========================================
 //               Details & Objects

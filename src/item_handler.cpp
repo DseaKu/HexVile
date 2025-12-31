@@ -83,6 +83,13 @@ const ItemProperties &ItemDataBase::GetItemProperties(item::id itemid) const {
   return properties[itemid];
 }
 
+ItemStack *ItemHandler::GetInventoryItemPointer(int pos) {
+  if (pos >= 0 && pos < inventory.size()) {
+    return &inventory[pos];
+  }
+  return nullptr;
+}
+
 ItemStack *ItemHandler::GetToolBarItemPointer(int pos) { return &toolBar[pos]; }
 
 item::id ItemHandler::GetToolBarItemType(int pos) const {

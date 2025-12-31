@@ -20,11 +20,11 @@ UI_Handler::UI_Handler() {
   // Dynamic calculation based on texture options
   float renderedSlotSize =
       tex::opts::ITEM_SLOT_BACKGROUND.scale * tex::size::TILE;
-  
+
   // Calculate slot size including spacing
   // spacing is arbitrary, using padding as gap between slots
-  float spacing = 10.0f * conf::UI_SCALE; 
-  
+  float spacing = 10.0f * conf::UI_SCALE;
+
   toolBarLayout.contentSize = (int)renderedSlotSize;
   toolBarLayout.slotSize = (int)(renderedSlotSize + spacing);
 
@@ -33,13 +33,13 @@ UI_Handler::UI_Handler() {
   toolBarLayout.bottomMargin = conf::TOOLBAR_BOTTOM_MARGIN;
 
   // Calculate Toolbar Width (total width of all slots + spacing)
-  toolBarLayout.width = (toolBarLayout.maxSlots * toolBarLayout.slotSize); 
+  toolBarLayout.width = (toolBarLayout.maxSlots * toolBarLayout.slotSize);
 
   // Initial Position (Center of the toolbar block)
   // X: Screen Center
   // Y: Bottom of screen - margin - half height (since origin is center)
   toolBarLayout.posX = conf::SCREEN_CENTER.x;
-  
+
   // For the Rect, we still need top-left coordinates for collision detection
   float rectWidth = toolBarLayout.width;
   float rectHeight = renderedSlotSize; // Height is just one slot
@@ -60,6 +60,8 @@ UI_Handler::UI_Handler() {
   itemHandler = nullptr;
   fontHandler = nullptr;
   hexGrid = nullptr;
+
+  ToolBarInventorySpace = conf::TOOLBAR_INVENTORY_SPACE;
 }
 
 // --- Core Lifecycle ---
@@ -72,7 +74,7 @@ void UI_Handler::Update() {
 void UI_Handler::UpdateScreenSize(int width, int height) {
   // Update Center X
   toolBarLayout.posX = (float)width / 2.0f;
-  
+
   // Calculate Rect Position
   float rectX = toolBarLayout.posX - (toolBarLayout.width / 2.0f);
   float rectY = height - toolBarLayout.rect.height - toolBarLayout.bottomMargin;
@@ -80,8 +82,8 @@ void UI_Handler::UpdateScreenSize(int width, int height) {
   // Update Y Center for slots
   toolBarLayout.posY = rectY + (toolBarLayout.rect.height / 2.0f);
 
-  toolBarLayout.rect = {rectX, rectY,
-                        toolBarLayout.width, toolBarLayout.rect.height};
+  toolBarLayout.rect = {rectX, rectY, toolBarLayout.width,
+                        toolBarLayout.rect.height};
 }
 
 mouseMask::id UI_Handler::UpdateMouseMask() {
@@ -240,30 +242,62 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
 }
 
 void UI_Handler::LoadInventoryBackgroundGFX() {
+  // Calculate inventory grid height to find center Y
+  int cols = conf::INVENTORY_CELL_COLS;
+  int rows = conf::INVENTORY_SLOTS / cols;
+  
+  tex::Opts opts = tex::opts::ITEM_SLOT_BACKGROUND;
+  float slotSize = opts.scale * tex::size::TILE;
+  float spacing = 10.0f * conf::UI_SCALE;
+  float gridHeight = rows * slotSize + (rows - 1) * spacing;
+
+  // Center X is screen center
+  float centerX = conf::SCREEN_CENTER.x;
+  
+  // Center Y is middle of the grid area above toolbar
+  float centerY = toolBarLayout.rect.y - conf::TOOLBAR_INVENTORY_SPACE - (gridHeight / 2.0f);
 
   graphicsManager->LoadTextureToBackbuffer(
-      drawMask::UI_0, tex::atlas::INVENTORY, frameContext->screenPos.center,
+      drawMask::UI_0, tex::atlas::INVENTORY, {centerX, centerY},
       tex::opts::IVENTORY);
 }
 
 void UI_Handler::LoadInventoryItemsGFX() {
   int cols = conf::INVENTORY_CELL_COLS;
   int rows = conf::INVENTORY_SLOTS / cols;
-  float cellSize = conf::INVENTORY_CELL_SIZE * conf::UI_SCALE;
 
-  float totalWidth = cols * cellSize;
-  float totalHeight = rows * cellSize;
+  // Use same scale as toolbar for consistency
+  tex::Opts opts = tex::opts::ITEM_SLOT_BACKGROUND;
+  float slotSize = opts.scale * tex::size::TILE;
+  float spacing = 10.0f * conf::UI_SCALE;
 
-  float startX = conf::SCREEN_CENTER.x - (totalWidth / 2.0f);
-  float startY = conf::SCREEN_CENTER.y - (totalHeight / 2.0f);
+  float gridWidth = cols * slotSize + (cols - 1) * spacing;
+  float gridHeight = rows * slotSize + (rows - 1) * spacing;
 
-  for (int y = 0; y < rows; ++y) {
-    for (int x = 0; x < cols; ++x) {
-      Rectangle dstRect = {startX + (x * cellSize), startY + (y * cellSize),
-                           cellSize, cellSize};
-    }
+  // Center X
+  float startX = conf::SCREEN_CENTER.x - (gridWidth / 2.0f);
+  
+  // Y Position: Above Toolbar
+  // toolbarRect.y is the top edge of the toolbar
+  float startY = toolBarLayout.rect.y - gridHeight - conf::TOOLBAR_INVENTORY_SPACE;
+
+  // Shift to center of the first slot (since startX/Y is top-left edge)
+  float firstSlotCenterX = startX + (slotSize / 2.0f);
+  float firstSlotCenterY = startY + (slotSize / 2.0f);
+
+  for (int i = 0; i < conf::INVENTORY_SLOTS; ++i) {
+    int col = i % cols;
+    int row = i / cols;
+
+    float centerX = firstSlotCenterX + col * (slotSize + spacing);
+    float centerY = firstSlotCenterY + row * (slotSize + spacing);
+
+    Vector2 pos = {centerX, centerY};
+
+    const ItemStack *item = itemHandler->GetInventoryItemPointer(i);
+    // Inventory slots currently don't have "selection" state like toolbar
+    LoadItemSlotGFX(item, pos, false);
   }
-  // Draw item slots
 }
 
 void UI_Handler::LoadToolBarGFX() {

@@ -53,6 +53,7 @@ public:
   void SetFrameContext(const frame::Context *curFrameContext);
 
   // --- Getters ---
+  ItemStack *GetInventoryItemPointer(int pos);
   ItemStack *GetToolBarItemPointer(int pos);
   item::id GetToolBarItemType(int pos) const;
   const char *GetSelectedItemType() const;

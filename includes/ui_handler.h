@@ -31,6 +31,7 @@ private:
   ToolBarLayout toolBarLayout;
   bool isToolBarActive;
   bool isInventoryOpen;
+  float ToolBarInventorySpace;
 
   // --- Dependencies ---
   GFX_Manager *graphicsManager;

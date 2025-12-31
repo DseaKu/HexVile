@@ -46,9 +46,11 @@ private:
   void LoadToolBarGFX();
   void LoadInventoryBackgroundGFX();
   void LoadInventoryItemsGFX();
+  void LoadItemSlotGFX(const ItemStack *item, Vector2 centerPos,
+                       bool isSelected);
   void LoadItemSlotGFX(int slotIndex);
-  void LoadItemIconGFX(int slotIndex, Rectangle slotRect);
-  void LoadItemCountGFX(int slotIndex, Rectangle slotRect);
+  void LoadItemIconGFX(const ItemStack *item, Rectangle slotRect);
+  void LoadItemCountGFX(const ItemStack *item, Rectangle slotRect);
 
 public:
   UI_Handler();

@@ -216,64 +216,71 @@ void UI_Handler::LoadToolBarGFX() {
   }
 }
 
-void UI_Handler::LoadItemSlotGFX(int slotIndex) {
-  // toolBarLayout.rect.x is the left edge of the toolbar
-  float startX = toolBarLayout.rect.x;
-  
-  // Center of this specific slot
-  float centerX = startX + (slotIndex * toolBarLayout.slotSize) + (toolBarLayout.slotSize / 2.0f);
-  float centerY = toolBarLayout.posY; 
-
-  Vector2 dst = {centerX, centerY};
+void UI_Handler::LoadItemSlotGFX(const ItemStack *item, Vector2 centerPos,
+                                 bool isSelected) {
   tex::Opts opts = tex::opts::ITEM_SLOT_BACKGROUND;
   float renderedSize = opts.scale * tex::size::TILE;
 
   // Load Background
   graphicsManager->LoadTextureToBackbuffer(
-      drawMask::UI_0, tex::atlas::ITEM_SLOT_BACKGROUND, dst, opts);
+      drawMask::UI_0, tex::atlas::ITEM_SLOT_BACKGROUND, centerPos, opts);
 
-  if (slotIndex == frameContext->selToolBarSlot) {
+  if (isSelected) {
     graphicsManager->LoadTextureToBackbuffer(
-        drawMask::UI_0, tex::atlas::ITEM_SLOT_BACKGROUND_HIGHLIGHTED, dst,
+        drawMask::UI_0, tex::atlas::ITEM_SLOT_BACKGROUND_HIGHLIGHTED, centerPos,
         opts);
   }
 
   //  Load Content
-  ItemStack *itemStack = itemHandler->GetToolBarItemPointer(slotIndex);
-  if (itemStack && itemStack->itemID != item::NULL_ID) {
-    // We still define slotRect as the bounding box for the content 
+  if (item && item->itemID != item::NULL_ID) {
+    // We still define slotRect as the bounding box for the content
     // centered at (centerX, centerY) with size (renderedSize, renderedSize)
-    Rectangle slotRect = {centerX - (renderedSize / 2.0f), 
-                          centerY - (renderedSize / 2.0f), 
-                          renderedSize, renderedSize};
-    LoadItemIconGFX(slotIndex, slotRect);
-    LoadItemCountGFX(slotIndex, slotRect);
+    Rectangle slotRect = {centerPos.x - (renderedSize / 2.0f),
+                          centerPos.y - (renderedSize / 2.0f), renderedSize,
+                          renderedSize};
+    LoadItemIconGFX(item, slotRect);
+    LoadItemCountGFX(item, slotRect);
   }
 }
 
-void UI_Handler::LoadItemIconGFX(int slotIndex, Rectangle slotRect) {
-  ItemStack *itemStack = itemHandler->GetToolBarItemPointer(slotIndex);
+void UI_Handler::LoadItemSlotGFX(int slotIndex) {
+  // toolBarLayout.rect.x is the left edge of the toolbar
+  float startX = toolBarLayout.rect.x;
 
+  // Center of this specific slot
+  float centerX = startX + (slotIndex * toolBarLayout.slotSize) +
+                  (toolBarLayout.slotSize / 2.0f);
+  float centerY = toolBarLayout.posY;
+
+  Vector2 dst = {centerX, centerY};
+
+  bool isSelected = (slotIndex == frameContext->selToolBarSlot);
+  const ItemStack *itemStack = itemHandler->GetToolBarItemPointer(slotIndex);
+
+  LoadItemSlotGFX(itemStack, dst, isSelected);
+}
+
+void UI_Handler::LoadItemIconGFX(const ItemStack *itemStack,
+                                 Rectangle slotRect) {
   item::id itemID = itemStack->itemID;
   tex::atlas::Coords taCoords = tex::atlas::ITEM_TEXTURE_COORDS.at(itemID);
 
   // Calculate shrunk size for icon
   float iconSize = slotRect.width * toolBarLayout.itemScale;
-  
+
   // Center of the slot
-  Vector2 dst = {slotRect.x + slotRect.width / 2.0f, 
+  Vector2 dst = {slotRect.x + slotRect.width / 2.0f,
                  slotRect.y + slotRect.height / 2.0f};
-                 
+
   tex::Opts opts = tex::opts::ITEM_ICON;
   float iconScale = (iconSize / tex::size::TILE) * opts.scale;
-  
+
   opts.scale = iconScale;
 
   graphicsManager->LoadTextureToBackbuffer(drawMask::UI_0, taCoords, dst, opts);
 }
 
-void UI_Handler::LoadItemCountGFX(int slotIndex, Rectangle slotRect) {
-  ItemStack *item = itemHandler->GetToolBarItemPointer(slotIndex);
+void UI_Handler::LoadItemCountGFX(const ItemStack *item, Rectangle slotRect) {
 
   // Re-calculate the icon rect to position numbers correctly relative to it?
   // Original code used the icon rect for numbers too.

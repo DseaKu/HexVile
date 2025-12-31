@@ -367,7 +367,8 @@ bool HexGrid::DamageResource(HexCoord h, int id, int damage) {
   return false;
 }
 
-void HexGrid::DrawTile(HexCoord h, int TA_X, int TA_Y, drawMask::id layerID) {
+void HexGrid::DrawTile(HexCoord h, tex::atlas::Coords taCoords,
+                       drawMask::id layerID) {
   if (!HasTile(h)) {
     return;
   }
@@ -377,7 +378,7 @@ void HexGrid::DrawTile(HexCoord h, int TA_X, int TA_Y, drawMask::id layerID) {
 
   tex::Opts opts;
   opts.origin = {0.0f, 0.0f};
-  graphicsManager->LoadTextureToBackbuffer(layerID, {TA_X, TA_Y}, pos, opts);
+  graphicsManager->LoadTextureToBackbuffer(layerID, taCoords, pos, opts);
 }
 
 void HexGrid::UpdateTileVisibility(float totalTime) {

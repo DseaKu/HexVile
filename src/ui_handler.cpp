@@ -55,9 +55,10 @@ void UI_Handler::Update() {
 }
 
 void UI_Handler::LoadBackBuffer() {
-  LoadToolBarGFX();
   LoadHighlightGFX();
-
+  if (isToolBarActive) {
+    LoadToolBarGFX();
+  }
   if (isInventoryOpen) {
     LoadInventoryBackgroundGFX();
     LoadInventoryItemsGFX();
@@ -129,7 +130,7 @@ void UI_Handler::LoadHighlightTileGFX() {
   if (!hexGrid)
     return;
   HexCoord coord = hexGrid->PointToHexCoord(frameContext->worldPos.mouse);
-  hexGrid->DrawTile(coord, tex::atlas::UI_X, ui::TILE_H, drawMask::GROUND1);
+  hexGrid->DrawTile(coord, tex::atlas::TILE_HIGHLIGHTED, drawMask::GROUND1);
 }
 
 void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
@@ -187,15 +188,13 @@ void UI_Handler::LoadInventoryItemsGFX() {
   // Draw item slots
 }
 void UI_Handler::LoadToolBarGFX() {
-  if (!isToolBarActive || !itemHandler)
-    return;
 
   for (int i = 0; i < toolBarLayout.maxSlots; i++) {
-    LoadToolBarSlotGFX(i);
+    LoadItemSlotGFX(i);
   }
 }
 
-void UI_Handler::LoadToolBarSlotGFX(int slotIndex) {
+void UI_Handler::LoadItemSlotGFX(int slotIndex) {
   float slotPosX = toolBarLayout.posX + toolBarLayout.padding +
                    (slotIndex * toolBarLayout.slotSize);
   float slotPosY = toolBarLayout.posY + toolBarLayout.padding;
@@ -205,11 +204,11 @@ void UI_Handler::LoadToolBarSlotGFX(int slotIndex) {
 
   // 1. Draw Background
   graphicsManager->LoadTextureToBackbuffer_Ex(
-      drawMask::UI_0, {tex::atlas::UI_X, ui::ITEM_BAR_BG}, slotRect,
+      drawMask::UI_0, tex::atlas::ITEM_SLOT_BACKGROUND, slotRect,
       {.color = WHITE, .origin = {0.0f, 0.0f}});
   if (slotIndex == frameContext->selToolBarSlot) {
     graphicsManager->LoadTextureToBackbuffer_Ex(
-        drawMask::UI_0, {tex::atlas::UI_X, ui::ITEM_BAR_BG_H}, slotRect,
+        drawMask::UI_0, tex::atlas::ITEM_SLOT_BACKGROUND_HIGHLIGHTED, slotRect,
         {.color = WHITE, .origin = {0.0f, 0.0f}});
   }
 

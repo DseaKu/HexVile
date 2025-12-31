@@ -46,7 +46,7 @@ private:
   void LoadToolBarGFX();
   void LoadInventoryBackgroundGFX();
   void LoadInventoryItemsGFX();
-  void LoadToolBarSlotGFX(int slotIndex);
+  void LoadItemSlotGFX(int slotIndex);
   void LoadItemIconGFX(int slotIndex, Rectangle slotRect);
   void LoadItemCountGFX(int slotIndex, Rectangle slotRect);
 

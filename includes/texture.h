@@ -71,8 +71,9 @@ constexpr int RESOURCE_Y = 0;
 constexpr int RESOURCE_X_MAX = RESOURCE_X + 8;
 
 // --- UI ---
-constexpr int UI_X = 50;
-constexpr int UI_X_MAX = UI_X + 1;
+constexpr Coords ITEM_SLOT_BACKGROUND = {56, 1};
+constexpr Coords ITEM_SLOT_BACKGROUND_HIGHLIGHTED = {57, 1};
+constexpr Coords TILE_HIGHLIGHTED = {58, 1};
 
 constexpr Coords INVENTORY = {52, 1, 4, 3};
 

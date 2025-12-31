@@ -6,6 +6,7 @@
 #include "enums.h"
 #include "raylib.h"
 #include "resource.h"
+#include "texture.h"
 #include <atomic>
 #include <future>
 #include <mutex>
@@ -165,7 +166,7 @@ public:
   bool CheckObstacleCollision(Vector2 worldPos, float radius);
 
   // --- Direct Drawing (for debugging/special cases) ---
-  void DrawTile(HexCoord h, int TA_X, int TA_Y, drawMask::id layerID);
+  void DrawTile(HexCoord h, tex::atlas::Coords taCoords, drawMask::id layerID);
 };
 
 #endif // HEX_TILE_GRid_H

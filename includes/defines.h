@@ -31,10 +31,10 @@ constexpr const int ESTIMATED_VISIBLE_TILES = 3000;
 // ==========================================
 //               Screen
 // ==========================================
-constexpr int SCREEN_WIDTH = 1400;
-constexpr int SCREEN_HEIGHT = 900;
-// constexpr int SCREEN_WIDTH = 2800;
-// constexpr int SCREEN_HEIGHT = 1200;
+// constexpr int SCREEN_WIDTH = 1400;
+// constexpr int SCREEN_HEIGHT = 900;
+constexpr int SCREEN_WIDTH = 2800;
+constexpr int SCREEN_HEIGHT = 1200;
 constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
                                    (float)SCREEN_HEIGHT / 2};
 

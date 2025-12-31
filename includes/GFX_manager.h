@@ -19,12 +19,6 @@ struct Object {
   bool useHitShader;
 };
 
-constexpr tex::Opts TextureOptsInventoryBG = {
-    .srcWidth = tex::atlas::INVENTORY.width * tex::size::TILE,
-    .srcHeight = tex::atlas::INVENTORY.height * tex::size::TILE,
-    // .dstWidth = tex::atlas::INVENTORY_WIDTH,
-    // .dstHeight = tex::atlas::RSRC_TREE_HEIGHT};
-};
 } // namespace gfx
 
 class GFX_Manager {

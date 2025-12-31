@@ -264,9 +264,9 @@ void UI_Handler::LoadItemIconGFX(int slotIndex, Rectangle slotRect) {
   Vector2 dst = {slotRect.x + slotRect.width / 2.0f, 
                  slotRect.y + slotRect.height / 2.0f};
                  
-  float iconScale = iconSize / tex::size::TILE;
-  
   tex::Opts opts = tex::opts::ITEM_ICON;
+  float iconScale = (iconSize / tex::size::TILE) * opts.scale;
+  
   opts.scale = iconScale;
 
   graphicsManager->LoadTextureToBackbuffer(drawMask::UI_0, taCoords, dst, opts);

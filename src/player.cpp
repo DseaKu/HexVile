@@ -36,7 +36,7 @@ void Player::UpdatePlayerState() {
     }
     int selToolBarSlot = frameContext->selToolBarSlot;
     HexCoord hoveredTile =
-        hexGrid->PointToHexCoord(frameContext->pos.mouseWorld);
+        hexGrid->PointToHexCoord(frameContext->worldPos.mouse);
     ItemStack *selectedItem =
         itemHandler->GetToolBarItemPointer(selToolBarSlot);
 
@@ -108,7 +108,7 @@ void Player::UpdatePlayerFaceDir() {
   if (frameContext->inputs.mouseDown.left ||
       frameContext->inputs.mouseDown.right) {
     if (frameContext->mouseMask == mouseMask::GROUND) {
-      Vector2 tarPos = frameContext->pos.mouseWorld;
+      Vector2 tarPos = frameContext->worldPos.mouse;
       this->FaceToPoint(tarPos);
     }
   } else {
@@ -177,7 +177,7 @@ void Player::Chop(HexCoord target) {
     animationDelta += this->frameContext->deltaTime;
 
     // Check if player is in range
-    if (Vector2Distance(this->position, frameContext->pos.mouseWorld) <
+    if (Vector2Distance(this->position, frameContext->worldPos.mouse) <
         conf::INTERACT_DISTANCE_PLAYER) {
 
       if (this->animationFrame == conf::CAUSE_DEMAGE_FRAME) {

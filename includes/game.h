@@ -66,7 +66,7 @@ private:
   double displayRamUsage;
 
   // Main Threat - Render, update frame context and draw debug data;
-  void UpdateFrameContext();
+  void GetInputs();
 
   // Logic Threat - Process frame context, update world state
   void RunLogic();

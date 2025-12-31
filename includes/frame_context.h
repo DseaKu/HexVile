@@ -39,25 +39,23 @@ struct Input {
   InputCommands commands;
 };
 
-struct Location {
-  // Player
+struct WorldPos {
   Vector2 player;
-
-  // Mouse
-  Vector2 mouseScreen;
-  Vector2 mouseWorld;
-
-  // Tile
+  Vector2 mouse;
+  Vector2 hoveredRsrcPoint;
   HexCoord hoveredTileHexCoords;
   Vector2 hoveredTilePoint;
   MapTile *hoveredTile;
+};
 
-  // Resource
-  Vector2 hoveredRsrcPoint;
+struct ScreenPos {
+  Vector2 mouse;
+  Vector2 center;
 };
 
 struct Context {
-  Location pos;
+  WorldPos worldPos;
+  ScreenPos screenPos;
   Input inputs;
   mouseMask::id mouseMask;
   int selToolBarSlot;

@@ -98,7 +98,7 @@ void UI_Handler::UpdateScreenSize(int width, int height) {
 }
 
 mouseMask::id UI_Handler::UpdateMouseMask() {
-  if (isToolBarActive && CheckCollisionPointRec(frameContext->pos.mouseScreen,
+  if (isToolBarActive && CheckCollisionPointRec(frameContext->screenPos.mouse,
                                                 toolBarLayout.rect)) {
     return mouseMask::TOOL_BAR;
   } else {
@@ -126,25 +126,25 @@ void UI_Handler::SetFrameContext(const frame::Context *frameContext) {
 void UI_Handler::LoadHighlightTileGFX() {
   if (!hexGrid)
     return;
-  HexCoord coord = hexGrid->PointToHexCoord(frameContext->pos.mouseWorld);
+  HexCoord coord = hexGrid->PointToHexCoord(frameContext->worldPos.mouse);
   hexGrid->DrawTile(coord, tex::atlas::UI_X, ui::TILE_H, drawMask::GROUND1);
 }
 
 void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
-  if (!frameContext || !frameContext->pos.hoveredTile)
+  if (!frameContext || !frameContext->worldPos.hoveredTile)
     return;
 
   // Can be changed to indicate 'not in range'
   Color col = WHITE;
 
   // If player is in interact range change color indicator to yellow
-  Vector2 curMousePos = frameContext->pos.mouseWorld;
-  if (Vector2Distance(curMousePos, frameContext->pos.player) <
+  Vector2 curMousePos = frameContext->worldPos.mouse;
+  if (Vector2Distance(curMousePos, frameContext->worldPos.player) <
       conf::INTERACT_DISTANCE_PLAYER) {
     col = YELLOW;
   }
 
-  const rsrc::Object &rsrc = frameContext->pos.hoveredTile->rsrc;
+  const rsrc::Object &rsrc = frameContext->worldPos.hoveredTile->rsrc;
   if (rsrc.id == id) {
     // Get position of resource
     Vector2 rsrcPos = rsrc.worldPos;
@@ -160,11 +160,11 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
 
 void UI_Handler::LoadInventoryBackgroundGFX() {
   gfx::Opts opts;
-  opts.scale *= 10.0f;
+  opts.scale *= 8.0f;
+  opts.origin = {0.5, 0.5};
 
   // Center inventory
-  Vector2 dst = {conf::SCREEN_CENTER.x - tex::atlas::INVENTORY.width / 2,
-                 conf::SCREEN_CENTER.y - tex::atlas::INVENTORY.height / 2};
+  Vector2 dst = {conf::SCREEN_CENTER.x, conf::SCREEN_CENTER.y};
 
   graphicsManager->LoadTextureToBackbuffer(drawMask::UI_0,
                                            tex::atlas::INVENTORY, dst, opts);
@@ -326,7 +326,7 @@ int UI_Handler::GetToolBarSelection() {
       frameContext->mouseMask == mouseMask::TOOL_BAR) {
 
     // Local coordinate in the toolbar
-    float localX = frameContext->pos.mouseScreen.x - toolBarLayout.posX -
+    float localX = frameContext->screenPos.mouse.x - toolBarLayout.posX -
                    toolBarLayout.padding;
 
     if (localX < 0)

@@ -71,18 +71,17 @@ Game::Game() {
 // --- Main Loop -> Render Thread ---
 void Game::GameLoop() {
   while (!WindowShouldClose()) {
-    // 1. Gather Input (Main Thread)
 
-    UpdateFrameContext();
-    // 2. Sync: Send Input to Logic
+    // Gather Input
+    GetInputs();
     {
+      // Send Input to Logic thread
       std::unique_lock<std::mutex> lock(logicMutex);
       logicUpdateReady = true;
       logicUpdateDone = false;
     }
     mainToLogicCV.notify_one();
 
-    // 3. Render (Main Thread) - Uses current WorldState
     {
       auto startRender = std::chrono::high_resolution_clock::now();
       BeginDrawing();
@@ -106,11 +105,7 @@ void Game::GameLoop() {
       renderExecutionTime = elapsedRender.count();
     }
 
-    // 4. Sync: Wait for Logic to finish (Barrier)
-    // We wait here to ensure we don't start the next frame's input gathering
-    // until the logic is done with the current frame's input.
-    // Also, this ensures that the WorldState is consistent before we loop
-    // again.
+    // Synchronise with logic thread
     {
       std::unique_lock<std::mutex> lock(logicMutex);
       logicToMainCV.wait(lock, [this] { return logicUpdateDone; });
@@ -145,7 +140,7 @@ void Game::LogicLoop() {
   }
 }
 
-void Game::UpdateFrameContext() {
+void Game::GetInputs() {
   if (IsKeyPressed(KEY_F)) {
     isFullscreenMode = !isFullscreenMode;
     ToggleBorderlessWindowed();
@@ -156,7 +151,7 @@ void Game::UpdateFrameContext() {
   frameContext.screenWidth = GetScreenWidth();
   frameContext.screenHeight = GetScreenHeight();
 
-  frameContext.pos.mouseScreen = GetMousePosition();
+  frameContext.screenPos.mouse = GetMousePosition();
 
   // --- Mouse ---
   frameContext.inputs.mouseClick.left = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
@@ -185,36 +180,51 @@ void Game::UpdateFrameContext() {
 }
 
 void Game::RunLogic() {
+
+  // ==========================================
+  //               Update frameContext
+  // ==========================================
+
   auto startLogic = std::chrono::high_resolution_clock::now();
 
   // --- Update delta time ---
   worldState.timer += frameContext.deltaTime;
 
   // --- Update mouse ---
-  frameContext.pos.mouseWorld =
-      GetScreenToWorld2D(frameContext.pos.mouseScreen, worldState.camera);
+  frameContext.worldPos.mouse =
+      GetScreenToWorld2D(frameContext.screenPos.mouse, worldState.camera);
   frameContext.mouseMask = uiHandler.UpdateMouseMask();
 
   // --- Update Selected Tool Bar Slot ---
   frameContext.selToolBarSlot = uiHandler.GetToolBarSelection();
 
   // --- Get position and tileof hovered tile ---
-  frameContext.pos.hoveredTile =
-      worldState.hexGrid.PointToTile(frameContext.pos.mouseWorld);
-  frameContext.pos.hoveredTileHexCoords =
-      worldState.hexGrid.PointToHexCoord(frameContext.pos.mouseWorld);
-  frameContext.pos.hoveredTilePoint =
-      worldState.hexGrid.HexCoordToPoint(frameContext.pos.hoveredTileHexCoords);
-  frameContext.pos.hoveredRsrcPoint = frameContext.pos.hoveredTilePoint;
-  if (frameContext.pos.hoveredTile &&
-      frameContext.pos.hoveredTile->rsrc.id >= 0) {
-    frameContext.pos.hoveredRsrcPoint =
-        frameContext.pos.hoveredTile->rsrc.worldPos;
+  frameContext.worldPos.hoveredTile =
+      worldState.hexGrid.PointToTile(frameContext.worldPos.mouse);
+  frameContext.worldPos.hoveredTileHexCoords =
+      worldState.hexGrid.PointToHexCoord(frameContext.worldPos.mouse);
+  frameContext.worldPos.hoveredTilePoint = worldState.hexGrid.HexCoordToPoint(
+      frameContext.worldPos.hoveredTileHexCoords);
+  frameContext.worldPos.hoveredRsrcPoint =
+      frameContext.worldPos.hoveredTilePoint;
+  if (frameContext.worldPos.hoveredTile &&
+      frameContext.worldPos.hoveredTile->rsrc.id >= 0) {
+    frameContext.worldPos.hoveredRsrcPoint =
+        frameContext.worldPos.hoveredTile->rsrc.worldPos;
   }
 
+  // Screen Center
+  frameContext.screenPos.center =
+      GetScreenToWorld2D(conf::SCREEN_CENTER, worldState.camera);
+
+  // Player position
+  frameContext.worldPos.player = worldState.player.GetPosition();
+
+  // ==========================================
+  //               Update World state
+  // ==========================================
   // Player Update
   worldState.player.Update();
-  frameContext.pos.player = worldState.player.GetPosition();
 
   // --- Update camera ---
   worldState.camera.offset = Vector2{(float)frameContext.screenWidth / 2.0f,
@@ -238,7 +248,7 @@ void Game::RunLogic() {
   // --- Process right click ---
   if (frameContext.inputs.mouseClick.right) {
     HexCoord clickedHex =
-        worldState.hexGrid.PointToHexCoord(frameContext.pos.mouseWorld);
+        worldState.hexGrid.PointToHexCoord(frameContext.worldPos.mouse);
     worldState.hexGrid.SetTile(clickedHex, tile::NULL_ID);
   }
 
@@ -253,9 +263,9 @@ void Game::RunLogic() {
   rs.visCalcTime = worldState.hexGrid.GetVisCalcTime();
 
   rs.mouseTileCoord =
-      worldState.hexGrid.PointToHexCoord(frameContext.pos.mouseWorld);
+      worldState.hexGrid.PointToHexCoord(frameContext.worldPos.mouse);
   rs.mouseTileType =
-      worldState.hexGrid.PointToType(frameContext.pos.mouseWorld);
+      worldState.hexGrid.PointToType(frameContext.worldPos.mouse);
 
   rs.playerPos = worldState.player.GetPosition();
   rs.playerTileCoord = worldState.hexGrid.PointToHexCoord(rs.playerPos);

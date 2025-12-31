@@ -94,8 +94,6 @@ void GFX_Manager::LoadTextureToBackbuffer(drawMask::id layerID,
   if (opts.scale != 1.0f) {
     dstRec.width *= opts.scale;
     dstRec.height *= opts.scale;
-    dstRec.x -= dstRec.width / 2.0f;
-    dstRec.y -= dstRec.height / 2.0f;
   }
 
   Vector2 origin = opts.origin;

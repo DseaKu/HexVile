@@ -200,10 +200,8 @@ void UI_Handler::LoadItemSlotGFX(int slotIndex) {
   float slotPosY = toolBarLayout.posY + toolBarLayout.padding;
 
   Vector2 dst = {slotPosX, slotPosY};
-  float slotScale = (float)toolBarLayout.contentSize / tex::size::TILE;
-
   tex::Opts opts = tex::opts::ITEM_SLOT_BACKGROUND;
-  opts.scale = slotScale;
+  float renderedSize = opts.scale * tex::size::TILE;
 
   // Load Background
   graphicsManager->LoadTextureToBackbuffer(
@@ -218,8 +216,7 @@ void UI_Handler::LoadItemSlotGFX(int slotIndex) {
   //  Load Content
   ItemStack *itemStack = itemHandler->GetToolBarItemPointer(slotIndex);
   if (itemStack && itemStack->itemID != item::NULL_ID) {
-    Rectangle slotRect = {slotPosX, slotPosY, (float)toolBarLayout.contentSize,
-                          (float)toolBarLayout.contentSize};
+    Rectangle slotRect = {slotPosX, slotPosY, renderedSize, renderedSize};
     LoadItemIconGFX(slotIndex, slotRect);
     LoadItemCountGFX(slotIndex, slotRect);
   }

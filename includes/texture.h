@@ -120,7 +120,7 @@ namespace opts {
 constexpr Opts NUMBERS = {.scale = 0.5f, .origin = {0, 0}};
 
 // --- UI ---
-constexpr Opts ITEM_SLOT_BACKGROUND = {.origin{0, 0}};
+constexpr Opts ITEM_SLOT_BACKGROUND = {.scale = 7.0f, .origin{0, 0}};
 
 // --- Invetory ---
 constexpr Opts IVENTORY = {.scale = 6.0f, .origin = {0.475, 0.5}};

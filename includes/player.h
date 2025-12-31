@@ -28,28 +28,28 @@ private:
   float moveSpeed;
   float speedTilesPerSecond;
 
-  // --- Logic ---
-  void UpdatePlayerState();
-  void UpdatePlayerFaceDir();
-  void FaceToPoint(Vector2 point);
-
   // --- Animation ---
   int animationFrame;
   float animationDelta;
   float damageAccumulator;
 
-  // --- Helpers ---
+  // --- Private Methods ---
+  void UpdatePlayerState();
+  void UpdatePlayerFaceDir();
+  void FaceToPoint(Vector2 point);
   void Idle();
   void Walk(Vector2 dir, float deltaTime);
 
 public:
+  // --- Constructors ---
   Player();
 
-  void LoadBackBuffer();
-
-  // --- Logic ---
+  // --- Core Lifecycle ---
   void Update();
   void Chop(HexCoord target);
+
+  // --- Graphics / Backbuffer ---
+  void LoadBackBuffer();
 
   // --- Setters ---
   void SetHexGrid(HexGrid *grid);

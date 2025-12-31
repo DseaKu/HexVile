@@ -23,6 +23,7 @@ struct Object {
 
 class GFX_Manager {
 private:
+  // --- Members ---
   int TA_Width;
   int TA_Height;
   Texture2D textureAtlas;
@@ -35,31 +36,29 @@ private:
   //
   int backBufferIndex = 1;
 
+  // --- Private Methods ---
   void InitTextureRec();
   Rectangle GetSrcRec(int x, int y);
 
 public:
+  // --- Constructors ---
   GFX_Manager();
+
+  // --- Core Lifecycle ---
   int LoadAssets(const char *);
   void UnloadAssets();
 
-    void LoadTextureToBackbuffer(drawMask::id layerID, tex::atlas::Coords texAtlas,
-
-                                 Vector2 dst, tex::Opts opts = {});
-
-  
-
-    void LoadTextureToBackbuffer_Raw(drawMask::id layerID, Texture2D texture,
-
-                                     Rectangle srcRec, Rectangle dstRec,
-
-                                     tex::Opts opts = {});
-
+  // --- Graphics / Backbuffer ---
+  void LoadTextureToBackbuffer(drawMask::id layerID, tex::atlas::Coords texAtlas,
+                               Vector2 dst, tex::Opts opts = {});
+  void LoadTextureToBackbuffer_Raw(drawMask::id layerID, Texture2D texture,
+                                   Rectangle srcRec, Rectangle dstRec,
+                                   tex::Opts opts = {});
   void RenderLayer(drawMask::id layer);
-
-  Rectangle GetTileRec(tile::id id, int frame);
-
   void SwapBuffers();
+
+  // --- Getters ---
+  Rectangle GetTileRec(tile::id id, int frame);
 };
 
 #endif // !GRAPHICS_MANAGER_H

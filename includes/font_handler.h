@@ -6,17 +6,25 @@
 
 class FontHandler {
 private:
+  // --- Members ---
   Font fontHackRegular;
   int fontSizeDefault;
 
 public:
+  // --- Constructors ---
   FontHandler();
+
+  // --- Core Lifecycle ---
   void LoadFonts();
   void UnloadFonts();
-  Font GetFontHackRegular();
-  int GetFontSizeDefault();
+
+  // --- Graphics / Backbuffer ---
   void DrawTextHackRegular(const char *text, Vector2 position, Color color);
   void QueueText(GFX_Manager *gfx, const char *text, Vector2 pos, Color col,
                  drawMask::id layer = drawMask::DEBUG_OVERLAY);
+
+  // --- Getters ---
+  Font GetFontHackRegular();
+  int GetFontSizeDefault();
 };
 #endif // !FONT_HANDLER_H

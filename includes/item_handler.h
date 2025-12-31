@@ -32,29 +32,32 @@ public:
 // --- Item Handler ---
 class ItemHandler {
 private:
+  // --- Members ---
   std::vector<ItemStack> inventory;
   std::vector<ItemStack> toolBar;
   ItemDataBase itemDataBase;
   const frame::Context *frameContext;
 
+  // --- Private Methods ---
   void Init();
 
 public:
+  // --- Constructors ---
   ItemHandler();
 
-  // Actions
+  // --- Logic / Actions ---
   bool TakeItemFromToolBar(ItemStack *itemStack, int amount);
   bool AddItem(item::id itemID, int count);
 
-  // Setters
+  // --- Setters ---
   void SetFrameContext(const frame::Context *curFrameContext);
 
-  // Getters
+  // --- Getters ---
   ItemStack *GetToolBarItemPointer(int pos);
   item::id GetToolBarItemType(int pos) const;
   const char *GetSelectedItemType() const;
 
-  // Conversion / Helpers
+  // --- Conversions / Helpers ---
   item::id ToolBarSelectionToItemID(int sel) const;
   tile::id ConvertItemToTileID(item::id itemID) const;
 };

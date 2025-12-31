@@ -30,6 +30,7 @@ struct WorldState {
 
 class Game {
 private:
+  // --- Members ---
   unsigned char *hackFontRegular;
 
   // Logic/State
@@ -65,18 +66,22 @@ private:
   double displayVisTime;
   double displayRamUsage;
 
-  // Main Threat - Render, update frame context and draw debug data;
+  // --- Private Methods ---
+  // Main Thread
   void GetInputs();
 
-  // Logic Threat - Process frame context, update world state
+  // Logic Thread
   void RunLogic();
   void LoadBackBuffer();
   void LogicLoop();
   void UpdateFrameContext();
 
 public:
+  // --- Constructors ---
   Game();
   ~Game();
+
+  // --- Core Lifecycle ---
   void GameLoop();
   void Unload();
 };

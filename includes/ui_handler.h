@@ -27,18 +27,19 @@ private:
     Rectangle rect;
   };
 
+  // --- Members ---
   ToolBarLayout toolBarLayout;
   bool isToolBarActive;
   bool isInventoryOpen;
 
-  // Dependencies
+  // --- Dependencies ---
   GFX_Manager *graphicsManager;
   ItemHandler *itemHandler;
   FontHandler *fontHandler;
   HexGrid *hexGrid;
   const frame::Context *frameContext = nullptr;
 
-  // Render Helpers
+  // --- Private Methods ---
   void LoadHighlightGFX();
   void LoadHighlightTileGFX();
   void LoadHighlightResourceGFX(rsrc::ID id);
@@ -53,16 +54,19 @@ private:
   void LoadItemCountGFX(const ItemStack *item, Rectangle slotRect);
 
 public:
+  // --- Constructors ---
   UI_Handler();
 
-  // Core
+  // --- Core Lifecycle ---
   void Update();
-  void LoadBackBuffer();
   void UpdateScreenSize(int width, int height);
   mouseMask::id UpdateMouseMask();
   void ToggleInventory();
 
-  // Setters
+  // --- Graphics / Backbuffer ---
+  void LoadBackBuffer();
+
+  // --- Setters ---
   void SetGFX_Manager(GFX_Manager *p);
   void SetItemHandler(ItemHandler *p);
   void SetFontHandler(FontHandler *p);
@@ -70,11 +74,9 @@ public:
   void SetToolBarActive(bool is_active);
   void SetFrameContext(const frame::Context *curFrameContext);
 
-  // Queries
+  // --- Getters & Queries ---
   bool GetToolBarAvailability();
   Rectangle GetToolBarRect();
-
-  // Getter
   int GetToolBarSelection();
 };
 

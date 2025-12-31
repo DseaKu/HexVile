@@ -63,8 +63,12 @@ struct MapTile {
  */
 class HexGrid {
 private:
+  // --- Members ---
   std::vector<MapTile> tileData;
   int gridSize;
+
+  // --- Dependencies ---
+  GFX_Manager *graphicsManager;
 
   // Stores currently visible tiles for rendering.
   std::vector<HexCoord> currentVisibleTiles;
@@ -94,15 +98,11 @@ private:
   Rectangle lastCamRect;
   Vector2 origin;
 
-  // Gaussian distribution for terrain detail generation
-
-  GFX_Manager *graphicsManager;
-
   // Lookup Tables
   static const std::vector<HexCoord> DIRECTIONS;
   static const std::vector<tile::id> WALKABLE_TILES;
 
-  // --- Internal Helpers ---
+  // --- Private Methods ---
   HexCoord HexRound(FractionalHex h) const;
   const MapTile &GetTile(HexCoord h) const;
   MapTile &GetTile(HexCoord h);
@@ -111,31 +111,34 @@ private:
   void CalcRenderRect();
   void CalcVisibleTiles();
   void UpdateTileVisibility(float totalTime);
-
-  // --- Core Lifecycle ---
   void UpdateTilesProperties();
-
-  // --- Render ---
   void LoadTileGFX(Rectangle destRec, int x, int y);
   void LoadDetailGFX(Rectangle destRec, const TileDet d, tile::id tileID);
   void LoadResourceGFX(Rectangle destRec, const rsrc::Object r,
                        tile::id tileID);
 
 public:
+  // --- Constructors ---
   HexGrid();
 
   // --- Core Lifecycle ---
   void InitGrid(float radius);
   void Update(const Camera2D &camera, float totalTime);
-  void LoadBackBuffer();
   void Shutdown();
+  bool RemoveResource(HexCoord h, int rsrcID);
+  bool DamageResource(HexCoord h, int rsrcID, int damage);
+  bool CheckObstacleCollision(Vector2 worldPos, float radius);
+
+  // --- Graphics / Backbuffer ---
+  void LoadBackBuffer();
+  void DrawTile(HexCoord h, tex::atlas::Coords taCoords, drawMask::id layerID);
 
   // --- Setters ---
   void SetGFX_Manager(GFX_Manager *graphicsManager);
   void SetCamRectPointer(Rectangle *camRect);
   bool SetTile(HexCoord h, tile::id tileID);
 
-  // --- Getters & State Checks ---
+  // --- Getters ---
   int GetTilesInUse() const;
   int GetTilesInTotal() const;
   int GetTilesVisible() const;
@@ -144,11 +147,10 @@ public:
   bool HasTile(HexCoord h) const;
   bool IsWalkable(HexCoord h) const;
   bool CheckSurrounded(HexCoord target) const;
+  double GetVisCalcTime() const;
+  rsrc::Object GetResource(HexCoord h) const;
 
-  bool RemoveResource(HexCoord h, int rsrcID);
-  bool DamageResource(HexCoord h, int rsrcID, int damage);
-
-  // --- Conversions & Helpers ---
+  // --- Conversions / Helpers ---
   HexCoord PointToHexCoord(Vector2 point) const;
   Vector2 HexCoordToPoint(HexCoord h) const;
   Vector2 CoordToPoint(int q, int r) const;
@@ -160,13 +162,6 @@ public:
   tile::id HexCoordToType(HexCoord h) const;
   const char *TileToString(tile::id tileID) const;
   HexCoord GetNeighbor(HexCoord h, int directionIndex) const;
-  double GetVisCalcTime() const;
-  rsrc::Object GetResource(HexCoord h) const;
-
-  bool CheckObstacleCollision(Vector2 worldPos, float radius);
-
-  // --- Direct Drawing (for debugging/special cases) ---
-  void DrawTile(HexCoord h, tex::atlas::Coords taCoords, drawMask::id layerID);
 };
 
 #endif // HEX_TILE_GRid_H

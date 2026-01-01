@@ -27,16 +27,15 @@ private:
     Rectangle rect;
   };
 
-  float slotSize;
-  float itemBarWidth;
-  float xStartPos;
-
   // --- Members ---
   ToolBarLayout toolBarLayout;
   bool isToolBarActive;
   bool isInventoryOpen;
   float ToolBarInventorySpace;
 
+  float slotSize;
+  float itemBarWidth;
+  float xStartPos;
   // --- Dependencies ---
   GFX_Manager *graphicsManager;
   ItemHandler *itemHandler;
@@ -49,7 +48,7 @@ private:
   void LoadHighlightTileGFX();
   void LoadHighlightResourceGFX(rsrc::ID id);
 
-  void LoadToolBarGFX();
+  void LoadItemGridGFX(int col, int row, float yPos);
   void LoadItemSlotBackgroundGFX(Vector2 dst);
   void LoadItemSlotHighlightGFX(Vector2 dst);
   void LoadInventoryBackgroundGFX();

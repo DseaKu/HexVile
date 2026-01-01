@@ -100,8 +100,8 @@ enum id {
   GROUND1, // Highlighted Tiles
   SHADOW,
   ON_GROUND, // Player, Terrain Details, Resource
-  UI_0,      // Toolbar, Item BG
-  UI_1,      // Items, ItemsNum
+  UI_0,      // Toolbar, Item BG, inventory bg
+  UI_1,      // Items, ItemsNum,
   DEBUG_OVERLAY,
   SIZE,
 };

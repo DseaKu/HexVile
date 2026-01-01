@@ -44,6 +44,7 @@ bool ItemHandler::AddItem(item::id itemID, int count) {
       }
     }
   }
+
   // Try to find empty slot in toolbar
   for (auto &stack : toolBar) {
     if (stack.itemID == item::NULL_ID) {
@@ -52,6 +53,7 @@ bool ItemHandler::AddItem(item::id itemID, int count) {
       return true;
     }
   }
+
   // Try to stack in inventory (not fully implemented in UI but data exists)
   for (auto &stack : inventory) {
     if (stack.itemID == itemID) {
@@ -62,6 +64,7 @@ bool ItemHandler::AddItem(item::id itemID, int count) {
       }
     }
   }
+
   // Try to find empty slot in inventory
   for (auto &stack : inventory) {
     if (stack.itemID == item::NULL_ID) {
@@ -138,5 +141,9 @@ void ItemHandler::Init() {
   toolBar[5] = grass;
 
   inventory[0] = grass;
+  inventory[2] = water;
+  inventory[6] = water;
   inventory[12] = grass;
+  inventory[17] = grass;
+  inventory[18] = dirt;
 }

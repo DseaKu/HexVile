@@ -103,18 +103,6 @@ void UI_Handler::ToggleInventory() {
   }
 }
 
-// --- Graphics / Backbuffer ---
-void UI_Handler::LoadBackBuffer() {
-  LoadHighlightGFX();
-  if (isToolBarActive) {
-    LoadToolBarGFX();
-  }
-  if (isInventoryOpen) {
-    LoadInventoryBackgroundGFX();
-    LoadInventoryItemsGFX();
-  }
-}
-
 // --- Setters ---
 void UI_Handler::SetGFX_Manager(GFX_Manager *p) { graphicsManager = p; }
 void UI_Handler::SetItemHandler(ItemHandler *p) { itemHandler = p; }
@@ -186,6 +174,20 @@ int UI_Handler::GetToolBarSelection() {
   return curSelection;
 }
 
+// --- Graphics / Backbuffer ---
+void UI_Handler::LoadBackBuffer() {
+  LoadHighlightGFX();
+
+  if (isToolBarActive) {
+    LoadToolBarGFX();
+  }
+
+  if (isInventoryOpen) {
+    LoadInventoryBackgroundGFX();
+    LoadInventoryItemsGFX();
+  }
+}
+
 // --- Private Methods ---
 void UI_Handler::LoadHighlightGFX() {
   // Get to hightlithning object
@@ -245,7 +247,7 @@ void UI_Handler::LoadInventoryBackgroundGFX() {
   // Calculate inventory grid height to find center Y
   int cols = conf::INVENTORY_CELL_COLS;
   int rows = conf::INVENTORY_SLOTS / cols;
-  
+
   tex::Opts opts = tex::opts::ITEM_SLOT_BACKGROUND;
   float slotSize = opts.scale * tex::size::TILE;
   float spacing = 10.0f * conf::UI_SCALE;
@@ -253,9 +255,10 @@ void UI_Handler::LoadInventoryBackgroundGFX() {
 
   // Center X is screen center
   float centerX = conf::SCREEN_CENTER.x;
-  
+
   // Center Y is middle of the grid area above toolbar
-  float centerY = toolBarLayout.rect.y - conf::TOOLBAR_INVENTORY_SPACE - (gridHeight / 2.0f);
+  float centerY = toolBarLayout.rect.y - conf::TOOLBAR_INVENTORY_SPACE -
+                  (gridHeight / 2.0f);
 
   graphicsManager->LoadTextureToBackbuffer(
       drawMask::UI_0, tex::atlas::INVENTORY, {centerX, centerY},
@@ -276,10 +279,11 @@ void UI_Handler::LoadInventoryItemsGFX() {
 
   // Center X
   float startX = conf::SCREEN_CENTER.x - (gridWidth / 2.0f);
-  
+
   // Y Position: Above Toolbar
   // toolbarRect.y is the top edge of the toolbar
-  float startY = toolBarLayout.rect.y - gridHeight - conf::TOOLBAR_INVENTORY_SPACE;
+  float startY =
+      toolBarLayout.rect.y - gridHeight - conf::TOOLBAR_INVENTORY_SPACE;
 
   // Shift to center of the first slot (since startX/Y is top-left edge)
   float firstSlotCenterX = startX + (slotSize / 2.0f);
@@ -295,7 +299,7 @@ void UI_Handler::LoadInventoryItemsGFX() {
     Vector2 pos = {centerX, centerY};
 
     const ItemStack *item = itemHandler->GetInventoryItemPointer(i);
-    // Inventory slots currently don't have "selection" state like toolbar
+
     LoadItemSlotGFX(item, pos, false);
   }
 }
@@ -368,7 +372,7 @@ void UI_Handler::LoadItemIconGFX(const ItemStack *itemStack,
 
   opts.scale = iconScale;
 
-  graphicsManager->LoadTextureToBackbuffer(drawMask::UI_0, taCoords, dst, opts);
+  graphicsManager->LoadTextureToBackbuffer(drawMask::UI_1, taCoords, dst, opts);
 }
 
 void UI_Handler::LoadItemCountGFX(const ItemStack *item, Rectangle slotRect) {

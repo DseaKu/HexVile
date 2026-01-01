@@ -11,20 +11,20 @@
 class UI_Handler {
 private:
   struct ToolBarLayout {
-    int maxSlots;
-    int slotSize;
-    int contentSize;
-    float padding;
-    float bottomMargin;
-    float scale;
-    float itemScale;
-
-    // Calculated params
-    float width;
-    float height;
-    float posX;
-    float posY;
-    Rectangle rect;
+    // int maxSlots;
+    // int slotSize;
+    // int contentSize;
+    // float padding;
+    // float bottomMargin;
+    // float scale;
+    // float itemScale;
+    //
+    // // Calculated params
+    // float width;
+    // float height;
+    // float posX;
+    // float posY;
+    // Rectangle rect;
   };
 
   // --- Members ---
@@ -46,14 +46,13 @@ private:
   void LoadHighlightResourceGFX(rsrc::ID id);
 
   void LoadToolBarGFX();
-  void LoadItemSlotBG_GFX(Vector2 dst);
-
+  void LoadItemSlotBackgroundGFX(Vector2 dst);
+  void LoadItemSlotHighlightGFX(Vector2 dst);
   void LoadInventoryBackgroundGFX();
   void LoadItemSlotGFX(const ItemStack *item, Vector2 centerPos,
                        bool isSelected);
   void LoadInventoryItemsGFX();
   void LoadItemCountGFX(const ItemStack *item, Vector2 dst);
-
   void LoadItemIconGFX(tex::atlas::Coords taCoords, Vector2 dst);
 
 public:

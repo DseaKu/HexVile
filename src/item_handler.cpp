@@ -133,12 +133,12 @@ void ItemHandler::Init() {
   ItemStack dirt2 = {.itemID = item::SET_DIRT, .count = 24};
   ItemStack axe = {.itemID = item::AXE, .count = 1};
 
-  toolBar[0] = dirt;
+  toolBar[0] = axe;
   toolBar[1] = water;
-  // toolBar[2] = dirt2;
-  // toolBar[3] = grass;
-  // toolBar[4] = axe;
-  // toolBar[5] = grass;
+  toolBar[2] = dirt2;
+  toolBar[3] = grass;
+  toolBar[4] = dirt;
+  toolBar[5] = grass;
 
   inventory[0] = grass;
   inventory[2] = water;

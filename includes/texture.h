@@ -74,7 +74,7 @@ constexpr int RESOURCE_X_MAX = RESOURCE_X + 8;
 
 // --- UI ---
 constexpr Coords ITEM_SLOT_BACKGROUND = {56, 1};
-constexpr Coords ITEM_SLOT_BACKGROUND_HIGHLIGHTED = {57, 1};
+constexpr Coords ITEM_SLOT_HIGHLIGHTED = {57, 1};
 constexpr Coords TILE_HIGHLIGHTED = {58, 1};
 constexpr Coords INVENTORY = {52, 1, 4, 3};
 
@@ -132,9 +132,8 @@ namespace opts {
 constexpr Opts NUMBERS = {.scale = 0.4f, .origin = {0, 0}};
 
 // --- UI ---
-constexpr Opts ITEM_SLOT_BACKGROUND = {.scale = 2.0f * conf::UI_SCALE,
-                                       .origin{0.5, 0.5}};
-constexpr Opts ITEM_ICON = {.scale = 1.0f, .origin = {0.5, 0.5}};
+constexpr Opts ITEM_SLOT = {.scale = 2.0f * conf::UI_SCALE, .origin{0.5, 0.5}};
+constexpr Opts ITEM_ICON = {.scale = 1.9f, .origin = {0.5, 0.5}};
 
 // --- Invetory ---
 constexpr Opts IVENTORY = {.scale = 6.0f, .origin = {0.475, 0.5}};

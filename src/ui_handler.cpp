@@ -20,8 +20,7 @@ UI_Handler::UI_Handler() {
   toolBarLayout.padding = conf::TOOLBAR_PADDING;
 
   // Dynamic calculation based on texture options
-  float renderedSlotSize =
-      tex::opts::ITEM_SLOT_BACKGROUND.scale * tex::size::TILE;
+  float renderedSlotSize = tex::opts::ITEM_SLOT.scale * tex::size::TILE;
 
   // Calculate slot size including spacing
   // spacing is arbitrary, using padding as gap between slots
@@ -250,7 +249,7 @@ void UI_Handler::LoadInventoryBackgroundGFX() {
   int cols = conf::INVENTORY_CELL_COLS;
   int rows = conf::INVENTORY_SLOTS / cols;
 
-  tex::Opts opts = tex::opts::ITEM_SLOT_BACKGROUND;
+  tex::Opts opts = tex::opts::ITEM_SLOT;
   float slotSize = opts.scale * tex::size::TILE;
   float spacing = 10.0f * conf::UI_SCALE;
   float gridHeight = rows * slotSize + (rows - 1) * spacing;
@@ -310,7 +309,7 @@ void UI_Handler::LoadToolBarGFX() {
 
   // Calculate starting point. Texture is rendered at origin = {0,0}, therefore
   // we need just the half of a tile
-  float slotSize = tex::opts::ITEM_SLOT_BACKGROUND.scale * tex::size::TILE;
+  float slotSize = tex::opts::ITEM_SLOT.scale * tex::size::TILE;
   float totalWidth =
       (conf::TOOLBAR_N_ITEM_SLOTS * slotSize) +
       ((conf::TOOLBAR_N_ITEM_SLOTS - 1) * ui_layout::ITEM_SLOT_SPACING);
@@ -328,8 +327,15 @@ void UI_Handler::LoadToolBarGFX() {
     Vector2 dst = {xStart + xOffset, yStart};
 
     // Load  item slot background
-    this->LoadItemSlotBG_GFX(dst);
+    this->LoadItemSlotBackgroundGFX(dst);
 
+    if (i == frameContext->selToolBarSlot) {
+      this->LoadItemSlotHighlightGFX(dst);
+    }
+
+    if (item->itemID == item::NULL_ID) {
+      continue;
+    }
     // Load item icon
     this->LoadItemIconGFX(tex::lut::ITEM_TEXTURE_COORDS.at(item->itemID), dst);
 
@@ -338,11 +344,18 @@ void UI_Handler::LoadToolBarGFX() {
   }
 }
 
-void UI_Handler::LoadItemSlotBG_GFX(Vector2 dst) {
+void UI_Handler::LoadItemSlotHighlightGFX(Vector2 dst) {
 
-  graphicsManager->LoadTextureToBackbuffer(
-      drawMask::UI_1, tex::atlas::ITEM_SLOT_BACKGROUND, dst,
-      tex::opts::ITEM_SLOT_BACKGROUND);
+  graphicsManager->LoadTextureToBackbuffer(drawMask::UI_1,
+                                           tex::atlas::ITEM_SLOT_HIGHLIGHTED,
+                                           dst, tex::opts::ITEM_SLOT);
+}
+
+void UI_Handler::LoadItemSlotBackgroundGFX(Vector2 dst) {
+
+  graphicsManager->LoadTextureToBackbuffer(drawMask::UI_1,
+                                           tex::atlas::ITEM_SLOT_BACKGROUND,
+                                           dst, tex::opts::ITEM_SLOT);
 }
 
 void UI_Handler::LoadItemIconGFX(tex::atlas::Coords taCoords, Vector2 dst) {

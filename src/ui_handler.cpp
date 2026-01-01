@@ -195,8 +195,11 @@ void UI_Handler::LoadBackBuffer() {
   }
 
   if (isInventoryOpen) {
-    // LoadInventoryBackgroundGFX();
-    // LoadInventoryItemsGFX();
+    LoadInventoryBackgroundGFX();
+    float yStart = frameContext->screen.bot - tex::size::TILE -
+                   ui_layout::TOOL_BAR_BOT_MARGIN;
+
+    LoadItemGridGFX(itemHandler->GetInventoryPointer(), yStart);
   }
 }
 

@@ -5,6 +5,7 @@
 #include "font_handler.h"
 #include "frame_context.h"
 #include "hex_tile_grid.h"
+#include "item_handler.h"
 #include "raylib.h"
 #include "raymath.h"
 #include "resource.h"
@@ -321,7 +322,7 @@ void UI_Handler::LoadToolBarGFX() {
   for (int i = 0; i < conf::TOOLBAR_N_ITEM_SLOTS; i++) {
 
     // Get item
-    item::id itemId = itemHandler->GetToolBarItemType(i);
+    ItemStack *item = itemHandler->GetToolBarItemPointer(i);
 
     float xOffset = i * (slotSize + ui_layout::ITEM_SLOT_SPACING);
     Vector2 dst = {xStart + xOffset, yStart};
@@ -330,15 +331,13 @@ void UI_Handler::LoadToolBarGFX() {
     this->LoadItemSlotBG_GFX(dst);
 
     // Load item icon
-    this->LoadItemIconGFX(tex::lut::ITEM_TEXTURE_COORDS.at(itemId), dst);
+    this->LoadItemIconGFX(tex::lut::ITEM_TEXTURE_COORDS.at(item->itemID), dst);
 
     // Load item num
+    this->LoadItemCountGFX(item, dst);
   }
-
-  // for (int i = 0; i < toolBarLayout.maxSlots; i++) {
-  //   LoadToolBarSlot(i);
-  // }
 }
+
 void UI_Handler::LoadItemSlotBG_GFX(Vector2 dst) {
 
   graphicsManager->LoadTextureToBackbuffer(
@@ -346,88 +345,35 @@ void UI_Handler::LoadItemSlotBG_GFX(Vector2 dst) {
       tex::opts::ITEM_SLOT_BACKGROUND);
 }
 
-// void UI_Handler::LoadItemSlotGFX(const ItemStack *item, Vector2 centerPos,
-//                                  bool isSelected) {
-//   tex::Opts opts = tex::opts::ITEM_SLOT_BACKGROUND;
-//   float renderedSize = opts.scale * tex::size::TILE;
-//
-//   // Load Background
-//   graphicsManager->LoadTextureToBackbuffer(
-//       drawMask::UI_1, tex::atlas::ITEM_SLOT_BACKGROUND, centerPos, opts);
-//
-//   if (isSelected) {
-//     graphicsManager->LoadTextureToBackbuffer(
-//         drawMask::UI_1, tex::atlas::ITEM_SLOT_BACKGROUND_HIGHLIGHTED,
-//         centerPos, opts);
-//   }
-//
-//   //  Load Content
-//   if (item && item->itemID != item::NULL_ID) {
-//     // We still define slotRect as the bounding box for the content
-//     // centered at (centerX, centerY) with size (renderedSize, renderedSize)
-//     Rectangle slotRect = {centerPos.x - (renderedSize / 2.0f),
-//                           centerPos.y - (renderedSize / 2.0f), renderedSize,
-//                           renderedSize};
-//     LoadItemIconGFX(item, slotRect);
-//     LoadItemCountGFX(item, slotRect);
-//   }
-// }
-//
-// void UI_Handler::LoadItemIconGFX(tex::atlas::Coords taCoords, Vector2 dst) {
-//   item::id itemID = itemStack->itemID;
-//   tex::atlas::Coords taCoords = tex::atlas::ITEM_TEXTURE_COORDS.at(itemID);
-//
-//   // Calculate shrunk size for icon
-//   float iconSize = slotRect.width * toolBarLayout.itemScale;
-//
-//   // Center of the slot
-//   Vector2 dst = {slotRect.x + slotRect.width / 2.0f,
-//                  slotRect.y + slotRect.height / 2.0f};
-//
-//   tex::Opts opts = tex::opts::ITEM_ICON;
-//   float iconScale = (iconSize / tex::size::TILE) * opts.scale;
-//
-//   opts.scale = iconScale;
-//
-//   graphicsManager->LoadTextureToBackbuffer(drawMask::UI_2, taCoords, dst,
-//   opts);
-// }
-//
-// void UI_Handler::LoadItemCountGFX(const ItemStack *item, Rectangle slotRect)
-// {
-//
-//   // Re-calculate the icon rect to position numbers correctly relative to it?
-//   // Original code used the icon rect for numbers too.
-//
-//   float newWidth = slotRect.width * toolBarLayout.itemScale;
-//   float newHeight = slotRect.height * toolBarLayout.itemScale;
-//   float offsetX = (slotRect.width - newWidth) / 2.0f;
-//   float offsetY = (slotRect.height - newHeight) / 2.0f;
-//
-//   Rectangle iconRect = {slotRect.x + offsetX, slotRect.y + offsetY, newWidth,
-//                         newHeight};
-//
-//   // Draw Numbers (Right-aligned to bottom-right corner)
-//   std::string num_str = std::to_string(item->count);
-//   int digitIndex = 0;
-//
-//   // Iterate backwards to draw from right to left
-//   for (auto it = num_str.rbegin(); it != num_str.rend(); ++it) {
-//
-//     // Convert char -> int
-//     int digit = *it - '0';
-//     Vector2 dst = {iconRect.x + iconRect.width, iconRect.y +
-//     iconRect.height};
-//
-//     // Move left for each digit
-//     dst.x -= digitIndex * tex::opts::NUMBERS.scale * tex::size::TILE;
-//
-//     // Shift to correct number
-//     tex::atlas::Coords num = tex::atlas::NUMBER;
-//     num.x += digit;
-//
-//     graphicsManager->LoadTextureToBackbuffer(drawMask::UI_2, num, dst,
-//                                              tex::opts::NUMBERS);
-//     digitIndex++;
-//   }
-// }
+void UI_Handler::LoadItemIconGFX(tex::atlas::Coords taCoords, Vector2 dst) {
+  graphicsManager->LoadTextureToBackbuffer(drawMask::UI_2, taCoords, dst,
+                                           tex::opts::ITEM_ICON);
+}
+
+void UI_Handler::LoadItemCountGFX(const ItemStack *item, Vector2 dst) {
+
+  dst = {dst.x + ui_layout::ITEM_NUM_X_OFFSET,
+         dst.y + ui_layout::ITEM_NUM_Y_OFFSET};
+
+  // Draw Numbers (Right-aligned to bottom-right corner)
+  std::string num_str = std::to_string(item->count);
+  int digitIndex = 0;
+
+  // Iterate backwards to draw from right to left
+  for (auto it = num_str.rbegin(); it != num_str.rend(); ++it) {
+
+    // Convert char -> int
+    int digit = *it - '0';
+
+    // Move left for each digit
+    dst.x -= digitIndex * tex::opts::NUMBERS.scale * tex::size::TILE;
+
+    // Shift to correct number
+    tex::atlas::Coords num = tex::atlas::NUMBER;
+    num.x += digit;
+
+    graphicsManager->LoadTextureToBackbuffer(drawMask::UI_2, num, dst,
+                                             tex::opts::NUMBERS);
+    digitIndex++;
+  }
+}

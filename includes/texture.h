@@ -47,6 +47,7 @@ struct Coords {
   float width = 1;
   float height = 1;
 };
+constexpr Coords TEX_NULL = {63, 63};
 // --- y = 0 ---
 // --- Player ---
 constexpr int PLAYER_X = 0;
@@ -96,7 +97,6 @@ constexpr int PLAYER_WALK_MAX = 8;
 constexpr float TILES_ANIMATION_SPEED = 0.3f;
 
 // --- Items ---
-constexpr Coords ITEM_NULL = {0, 0};
 constexpr Coords ITEM_SET_GRASS = {ITEM_X + 0, ITEM_Y + 0};
 constexpr Coords ITEM_SET_WATER = {ITEM_X + 1, ITEM_Y + 0};
 constexpr Coords ITEM_SET_DIRT = {ITEM_X + 2, ITEM_Y + 0};
@@ -111,7 +111,7 @@ constexpr Coords ITEM_WOOD_LOG = {ITEM_X + 1, ITEM_Y + 1};
 namespace lut {
 
 inline const std::map<item::id, atlas::Coords> ITEM_TEXTURE_COORDS = {
-    {item::NULL_ID, atlas::ITEM_NULL},
+    {item::NULL_ID, atlas::TEX_NULL},
     {item::SET_GRASS, atlas::ITEM_SET_GRASS},
     {item::SET_WATER, atlas::ITEM_SET_WATER},
     {item::SET_DIRT, atlas::ITEM_SET_DIRT},
@@ -129,7 +129,7 @@ namespace opts {
 
 // --- Number ---
 // Don't go to low with the scale, it corruped the font. 0.5f good result.
-constexpr Opts NUMBERS = {.scale = 0.5f, .origin = {0, 0}};
+constexpr Opts NUMBERS = {.scale = 0.4f, .origin = {0, 0}};
 
 // --- UI ---
 constexpr Opts ITEM_SLOT_BACKGROUND = {.scale = 2.0f * conf::UI_SCALE,

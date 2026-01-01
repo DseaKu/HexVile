@@ -29,7 +29,6 @@ set(SOURCES
     src/ui_handler.cpp
     src/item_handler.cpp
     src/debugger.cpp
-    # src/input_handler.cpp
 )
 
 add_executable(game ${SOURCES})

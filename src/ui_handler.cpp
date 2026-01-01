@@ -191,7 +191,7 @@ void UI_Handler::LoadBackBuffer() {
     float yStart = frameContext->screen.bot - tex::size::TILE -
                    ui_layout::TOOL_BAR_BOT_MARGIN;
 
-    LoadItemGridGFX(2, yStart);
+    LoadItemGridGFX(nullptr, 2, yStart);
   }
 
   if (isInventoryOpen) {
@@ -316,31 +316,37 @@ void UI_Handler::LoadInventoryItemsGFX() {
   // }
 }
 
-void UI_Handler::LoadItemGridGFX(int row, float yPos) {
+void UI_Handler::LoadItemGridGFX(const std::vector<ItemStack> *itemData,
+                                 int rows, float yPos) {
+  for (int row = 0; row < rows; row++) {
 
-  for (int col = 0; col < conf::ITEM_GRID_COLS; col++) {
+    float yOffset = row * (this->slotSize + ui_layout::ITEM_SLOT_SPACING);
 
-    // Get item
-    ItemStack *item = itemHandler->GetToolBarItemPointer(col);
+    for (int col = 0; col < conf::ITEM_GRID_COLS; col++) {
 
-    float xOffset = col * (this->slotSize + ui_layout::ITEM_SLOT_SPACING);
-    Vector2 dst = {this->xStartPos + xOffset, yPos};
+      // Get item
+      ItemStack *item = itemHandler->GetToolBarItemPointer(col);
 
-    // Load  item slot background
-    this->LoadItemSlotBackgroundGFX(dst);
+      float xOffset = col * (this->slotSize + ui_layout::ITEM_SLOT_SPACING);
+      Vector2 dst = {this->xStartPos + xOffset, yPos - yOffset};
 
-    if (col == frameContext->selToolBarSlot) {
-      this->LoadItemSlotHighlightGFX(dst);
+      // Load  item slot background
+      this->LoadItemSlotBackgroundGFX(dst);
+
+      if (col == frameContext->selToolBarSlot) {
+        this->LoadItemSlotHighlightGFX(dst);
+      }
+
+      if (item->itemID == item::NULL_ID) {
+        continue;
+      }
+      // Load item icon
+      this->LoadItemIconGFX(tex::lut::ITEM_TEXTURE_COORDS.at(item->itemID),
+                            dst);
+
+      // Load item num
+      this->LoadItemCountGFX(item, dst);
     }
-
-    if (item->itemID == item::NULL_ID) {
-      continue;
-    }
-    // Load item icon
-    this->LoadItemIconGFX(tex::lut::ITEM_TEXTURE_COORDS.at(item->itemID), dst);
-
-    // Load item num
-    this->LoadItemCountGFX(item, dst);
   }
 }
 

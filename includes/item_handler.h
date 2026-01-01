@@ -3,30 +3,12 @@
 
 #include "enums.h"
 #include "frame_context.h"
-#include <string>
 #include <vector>
 
 // --- Structs ---
-struct ItemProperties {
-  std::string name;
-  int maxStack;
-  int value;
-  bool placeableTile;
-};
-
 struct ItemStack {
   item::id itemID;
   int count;
-};
-
-// --- Item Database ---
-class ItemDataBase {
-private:
-  std::vector<ItemProperties> properties;
-
-public:
-  ItemDataBase();
-  const ItemProperties &GetItemProperties(item::id itemID) const;
 };
 
 // --- Item Handler ---
@@ -35,7 +17,6 @@ private:
   // --- Members ---
   std::vector<ItemStack> inventory;
   std::vector<ItemStack> toolBar;
-  ItemDataBase itemDataBase;
   const frame::Context *frameContext;
 
   // --- Private Methods ---

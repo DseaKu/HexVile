@@ -1,24 +1,9 @@
 #include "item_handler.h"
 #include "defines.h"
 #include "enums.h"
+#include "item_db.h"
 
 // --- Constructors ---
-ItemDataBase::ItemDataBase() {
-  properties.resize(item::SIZE);
-  properties[item::NULL_ID] = {
-      .name = "Null", .maxStack = 0, .value = 0, .placeableTile = false};
-  properties[item::SET_GRASS] = {
-      .name = "Set Grass", .maxStack = 32, .value = 5, .placeableTile = true};
-  properties[item::SET_WATER] = {
-      .name = "Set Water", .maxStack = 32, .value = 8, .placeableTile = true};
-  properties[item::SET_DIRT] = {
-      .name = "Set Dirt", .maxStack = 32, .value = 8, .placeableTile = true};
-  properties[item::AXE] = {
-      .name = "Axe", .maxStack = 1, .value = 10, .placeableTile = false};
-  properties[item::WOOD] = {
-      .name = "Wood", .maxStack = 64, .value = 2, .placeableTile = false};
-}
-
 ItemHandler::ItemHandler() { Init(); }
 
 // --- Logic / Actions ---
@@ -37,8 +22,7 @@ bool ItemHandler::AddItem(item::id itemID, int count) {
   // Try to stack in toolbar first
   for (auto &stack : toolBar) {
     if (stack.itemID == itemID) {
-      if (stack.count + count <=
-          itemDataBase.GetItemProperties(itemID).maxStack) {
+      if (stack.count + count <= item_db::DB.at(itemID).maxStack) {
         stack.count += count;
         return true;
       }
@@ -57,8 +41,7 @@ bool ItemHandler::AddItem(item::id itemID, int count) {
   // Try to stack in inventory (not fully implemented in UI but data exists)
   for (auto &stack : inventory) {
     if (stack.itemID == itemID) {
-      if (stack.count + count <=
-          itemDataBase.GetItemProperties(itemID).maxStack) {
+      if (stack.count + count <= item_db::DB.at(itemID).maxStack) {
         stack.count += count;
         return true;
       }
@@ -82,10 +65,6 @@ void ItemHandler::SetFrameContext(const frame::Context *curFrameContext) {
 }
 
 // --- Getters ---
-const ItemProperties &ItemDataBase::GetItemProperties(item::id itemid) const {
-  return properties[itemid];
-}
-
 ItemStack *ItemHandler::GetInventoryItemPointer(int pos) {
   if (pos >= 0 && pos < inventory.size()) {
     return &inventory[pos];
@@ -105,7 +84,7 @@ const char *ItemHandler::GetSelectedItemType() const {
     slot = 0;
   }
   item::id id = toolBar[slot].itemID;
-  return itemDataBase.GetItemProperties(id).name.c_str();
+  return item_db::DB.at(id).name.c_str();
 }
 
 // --- Conversions / Helpers ---
@@ -145,5 +124,5 @@ void ItemHandler::Init() {
   inventory[6] = water;
   inventory[12] = grass;
   inventory[17] = grass;
-  inventory[18] = dirt;
+  inventory[15] = dirt;
 }

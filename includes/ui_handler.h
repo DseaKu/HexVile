@@ -50,7 +50,8 @@ private:
   void LoadHighlightTileGFX();
   void LoadHighlightResourceGFX(rsrc::ID id);
 
-  void LoadItemGridGFX(int row, float yPos);
+  void LoadItemGridGFX(const std::vector<ItemStack> *itemData, int rows,
+                       float yPos);
   void LoadItemSlotBackgroundGFX(Vector2 dst);
   void LoadItemSlotHighlightGFX(Vector2 dst);
   void LoadInventoryBackgroundGFX();

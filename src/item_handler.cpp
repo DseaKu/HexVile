@@ -87,6 +87,14 @@ const char *ItemHandler::GetSelectedItemType() const {
   return item_db::DB.at(id).name.c_str();
 }
 
+ItemContainer *ItemHandler::GetInventoryPointer() const {
+  return &this->inventory;
+};
+
+ItemContainer *ItemHandler::GetToolBarPointer() const {
+  return &this->toolBar;
+};
+
 // --- Conversions / Helpers ---
 item::id ItemHandler::ToolBarSelectionToItemID(int sel) const {
   return toolBar[sel].itemID;
@@ -103,8 +111,8 @@ tile::id ItemHandler::ConvertItemToTileID(item::id itemid) const {
 // --- Private Methods ---
 void ItemHandler::Init() {
   ItemStack itemNull = {.itemID = item::NULL_ID, .count = 0};
-  inventory.assign(conf::INVENTORY_SLOTS, itemNull);
-  toolBar.assign(conf::TOOLBAR_N_ITEM_SLOTS, itemNull);
+  inventory.assign(conf::ITEM_SLOT_PER_ROW * conf::INVENTORY_ROW, itemNull);
+  toolBar.assign(conf::ITEM_SLOT_PER_ROW, itemNull);
 
   ItemStack grass = {.itemID = item::SET_GRASS, .count = 32};
   ItemStack water = {.itemID = item::SET_WATER, .count = 51};

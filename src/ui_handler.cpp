@@ -16,7 +16,7 @@
 // --- Constructors ---
 UI_Handler::UI_Handler() {
   // Initialize Layout Configuration
-  toolBarLayout.maxSlots = conf::TOOLBAR_N_ITEM_SLOTS;
+  toolBarLayout.maxSlots = conf::ITEM_SLOT_PER_ROW;
   toolBarLayout.padding = conf::TOOLBAR_PADDING;
 
   // Dynamic calculation based on texture options
@@ -74,8 +74,8 @@ void UI_Handler::Update() {
   // Update item bar properties
   this->slotSize = tex::opts::ITEM_SLOT.scale * tex::size::TILE;
   this->itemBarWidth =
-      (conf::TOOLBAR_N_ITEM_SLOTS * this->slotSize) +
-      ((conf::TOOLBAR_N_ITEM_SLOTS - 1) * ui_layout::ITEM_SLOT_SPACING);
+      (conf::ITEM_SLOT_PER_ROW * this->slotSize) +
+      ((conf::ITEM_SLOT_PER_ROW - 1) * ui_layout::ITEM_SLOT_SPACING);
   this->xStartPos = frameContext->screen.center.x -
                     (this->itemBarWidth / 2.0f) + (this->slotSize / 2.0f);
 }
@@ -131,7 +131,7 @@ Rectangle UI_Handler::GetToolBarRect() { return toolBarLayout.rect; }
 
 int UI_Handler::GetToolBarSelection() {
   int curSelection = frameContext->selToolBarSlot;
-  if (curSelection < 0 || curSelection >= conf::TOOLBAR_N_ITEM_SLOTS) {
+  if (curSelection < 0 || curSelection >= conf::ITEM_SLOT_PER_ROW) {
     curSelection = 0;
   }
   frame::InputCommands keyPress = frameContext->inputs.commands;
@@ -159,7 +159,7 @@ int UI_Handler::GetToolBarSelection() {
     curSelection = 9;
 
   // Revert selection if the toolbar slot is out of range
-  if (curSelection >= conf::TOOLBAR_N_ITEM_SLOTS) {
+  if (curSelection >= conf::ITEM_SLOT_PER_ROW) {
     curSelection = toolBarSlotBuffer;
   }
 
@@ -258,7 +258,7 @@ void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
 void UI_Handler::LoadInventoryBackgroundGFX() {
   // Calculate inventory grid height to find center Y
   int cols = conf::INVENTORY_CELL_COLS;
-  int rows = conf::INVENTORY_SLOTS / cols;
+  int rows = conf::ITEM_SLOT_PER_ROW / cols;
 
   tex::Opts opts = tex::opts::ITEM_SLOT;
   float slotSize = opts.scale * tex::size::TILE;
@@ -316,13 +316,13 @@ void UI_Handler::LoadInventoryItemsGFX() {
   // }
 }
 
-void UI_Handler::LoadItemGridGFX(const std::vector<ItemStack> *itemData,
-                                 int rows, float yPos) {
+void UI_Handler::LoadItemGridGFX(const ItemContainer *itemContainer, int rows,
+                                 float yPos) {
   for (int row = 0; row < rows; row++) {
 
     float yOffset = row * (this->slotSize + ui_layout::ITEM_SLOT_SPACING);
 
-    for (int col = 0; col < conf::ITEM_GRID_COLS; col++) {
+    for (int col = 0; col < conf::ITEM_SLOT_PER_ROW; col++) {
 
       // Get item
       ItemStack *item = itemHandler->GetToolBarItemPointer(col);

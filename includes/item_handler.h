@@ -11,12 +11,14 @@ struct ItemStack {
   int count;
 };
 
+typedef std::vector<ItemStack> ItemContainer;
+
 // --- Item Handler ---
 class ItemHandler {
 private:
   // --- Members ---
-  std::vector<ItemStack> inventory;
-  std::vector<ItemStack> toolBar;
+  ItemContainer inventory;
+  ItemContainer toolBar;
   const frame::Context *frameContext;
 
   // --- Private Methods ---
@@ -38,6 +40,9 @@ public:
   ItemStack *GetToolBarItemPointer(int pos);
   item::id GetToolBarItemType(int pos) const;
   const char *GetSelectedItemType() const;
+
+  ItemContainer *GetInventoryPointer() const;
+  ItemContainer *GetToolBarPointer() const;
 
   // --- Conversions / Helpers ---
   item::id ToolBarSelectionToItemID(int sel) const;

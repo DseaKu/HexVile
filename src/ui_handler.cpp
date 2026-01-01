@@ -208,9 +208,6 @@ void UI_Handler::LoadHighlightGFX() {
   // Get to hightlithning object
   item::id itemID =
       itemHandler->GetToolBarItemType(frameContext->selToolBarSlot);
-  if (itemID == item::AXE) {
-    // LoadHighlightResourceGFX(rsrc::ID_TREE);
-  }
 
   if (itemID == item::SET_GRASS) {
     LoadHighlightTileGFX();
@@ -228,34 +225,6 @@ void UI_Handler::LoadHighlightTileGFX() {
     return;
   HexCoord coord = hexGrid->PointToHexCoord(frameContext->world.mousePos);
   hexGrid->DrawTile(coord, tex::atlas::TILE_HIGHLIGHTED, drawMask::GROUND1);
-}
-
-void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
-  if (!frameContext || !frameContext->world.hoveredTile)
-    return;
-
-  // Can be changed to indicate 'not in range'
-  Color col = WHITE;
-
-  // If player is in interact range change color indicator to yellow
-  Vector2 curMousePos = frameContext->world.mousePos;
-  if (Vector2Distance(curMousePos, frameContext->world.playerPos) <
-      conf::INTERACT_DISTANCE_PLAYER) {
-    col = YELLOW;
-  }
-
-  const rsrc::Object &rsrc = frameContext->world.hoveredTile->rsrc;
-  if (rsrc.id == id) {
-    // Get position of resource
-    Vector2 rsrcPos = rsrc.worldPos;
-
-    if (Vector2Distance(rsrcPos, curMousePos) < conf::INTERACT_DISTANCE_MOUSE) {
-      graphicsManager->LoadTextureToBackbuffer(
-          drawMask::ON_GROUND, tex::atlas::TREE, rsrcPos,
-          {.color = Fade(col, conf::HIGHLIGHT_ALPHA),
-           .srcHeight = tex::size::DOUBLE_TILE});
-    }
-  }
 }
 
 void UI_Handler::LoadInventoryBackgroundGFX() {
@@ -278,45 +247,6 @@ void UI_Handler::LoadInventoryBackgroundGFX() {
   graphicsManager->LoadTextureToBackbuffer(
       drawMask::UI_0, tex::atlas::INVENTORY, {centerX, centerY},
       tex::opts::IVENTORY);
-}
-
-void UI_Handler::LoadInventoryItemsGFX() {
-  // int cols = conf::INVENTORY_CELL_COLS;
-  // int rows = conf::INVENTORY_SLOTS / cols;
-  //
-  // // Use same scale as toolbar for consistency
-  // tex::Opts opts = tex::opts::ITEM_SLOT_BACKGROUND;
-  // float slotSize = opts.scale * tex::size::TILE;
-  // float spacing = 10.0f * conf::UI_SCALE;
-  //
-  // float gridWidth = cols * slotSize + (cols - 1) * spacing;
-  // float gridHeight = rows * slotSize + (rows - 1) * spacing;
-  //
-  // // Center X
-  // float startX = conf::SCREEN_CENTER.x - (gridWidth / 2.0f);
-  //
-  // // Y Position: Above Toolbar
-  // // toolbarRect.y is the top edge of the toolbar
-  // float startY =
-  //     toolBarLayout.rect.y - gridHeight - conf::TOOLBAR_INVENTORY_SPACE;
-  //
-  // // Shift to center of the first slot (since startX/Y is top-left edge)
-  // float firstSlotCenterX = startX + (slotSize / 2.0f);
-  // float firstSlotCenterY = startY + (slotSize / 2.0f);
-  //
-  // for (int i = 0; i < conf::INVENTORY_SLOTS; ++i) {
-  //   int col = i % cols;
-  //   int row = i / cols;
-  //
-  //   float centerX = firstSlotCenterX + col * (slotSize + spacing);
-  //   float centerY = firstSlotCenterY + row * (slotSize + spacing);
-  //
-  //   Vector2 pos = {centerX, centerY};
-  //
-  //   const ItemStack *item = itemHandler->GetInventoryItemPointer(i);
-  //
-  //   LoadItemSlotGFX(item, pos, false);
-  // }
 }
 
 void UI_Handler::LoadItemGridGFX(const ItemContainer *itemContainer,

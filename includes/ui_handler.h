@@ -48,15 +48,11 @@ private:
   // --- Private Methods ---
   void LoadHighlightGFX();
   void LoadHighlightTileGFX();
-  void LoadHighlightResourceGFX(rsrc::ID id);
 
   void LoadItemGridGFX(const ItemContainer *itemContainer, float yPos);
   void LoadItemSlotBackgroundGFX(Vector2 dst);
   void LoadItemSlotHighlightGFX(Vector2 dst);
   void LoadInventoryBackgroundGFX();
-  void LoadItemSlotGFX(const ItemStack *item, Vector2 centerPos,
-                       bool isSelected);
-  void LoadInventoryItemsGFX();
   void LoadItemCountGFX(const ItemStack *item, Vector2 dst);
   void LoadItemIconGFX(tex::atlas::Coords taCoords, Vector2 dst);
 

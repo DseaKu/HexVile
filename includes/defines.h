@@ -84,7 +84,7 @@ constexpr float DMG_STONE_AXE = 40.0f;
 // ==========================================
 //               UI
 // ==========================================
-constexpr float UI_SCALE = 1.2f;
+constexpr float UI_SCALE = 2.2f;
 constexpr float INVENTORY_CELL_SIZE = 128.0f;
 constexpr int INVENTORY_CELL_COLS = 6;
 constexpr float TOOLBAR_BOTTOM_MARGIN = 20.0f * UI_SCALE;

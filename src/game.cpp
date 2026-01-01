@@ -98,6 +98,7 @@ void Game::GameLoop() {
 
       gfxManager.RenderLayer(drawMask::UI_0);
       gfxManager.RenderLayer(drawMask::UI_1);
+      gfxManager.RenderLayer(drawMask::UI_2);
       gfxManager.RenderLayer(drawMask::DEBUG_OVERLAY);
 
       EndDrawing();

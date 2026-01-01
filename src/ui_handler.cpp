@@ -318,11 +318,11 @@ void UI_Handler::LoadItemSlotGFX(const ItemStack *item, Vector2 centerPos,
 
   // Load Background
   graphicsManager->LoadTextureToBackbuffer(
-      drawMask::UI_0, tex::atlas::ITEM_SLOT_BACKGROUND, centerPos, opts);
+      drawMask::UI_1, tex::atlas::ITEM_SLOT_BACKGROUND, centerPos, opts);
 
   if (isSelected) {
     graphicsManager->LoadTextureToBackbuffer(
-        drawMask::UI_0, tex::atlas::ITEM_SLOT_BACKGROUND_HIGHLIGHTED, centerPos,
+        drawMask::UI_1, tex::atlas::ITEM_SLOT_BACKGROUND_HIGHLIGHTED, centerPos,
         opts);
   }
 
@@ -372,7 +372,7 @@ void UI_Handler::LoadItemIconGFX(const ItemStack *itemStack,
 
   opts.scale = iconScale;
 
-  graphicsManager->LoadTextureToBackbuffer(drawMask::UI_1, taCoords, dst, opts);
+  graphicsManager->LoadTextureToBackbuffer(drawMask::UI_2, taCoords, dst, opts);
 }
 
 void UI_Handler::LoadItemCountGFX(const ItemStack *item, Rectangle slotRect) {
@@ -406,7 +406,7 @@ void UI_Handler::LoadItemCountGFX(const ItemStack *item, Rectangle slotRect) {
     tex::atlas::Coords num = tex::atlas::NUMBER;
     num.x += digit;
 
-    graphicsManager->LoadTextureToBackbuffer(drawMask::UI_1, num, dst,
+    graphicsManager->LoadTextureToBackbuffer(drawMask::UI_2, num, dst,
                                              tex::opts::NUMBERS);
     digitIndex++;
   }

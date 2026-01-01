@@ -6,7 +6,7 @@
 
 // --- Item Database ---
 namespace item_db {
-;
+
 struct ItemProperties {
   std::string name;
   int maxStack;

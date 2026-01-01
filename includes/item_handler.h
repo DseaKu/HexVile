@@ -41,8 +41,8 @@ public:
   item::id GetToolBarItemType(int pos) const;
   const char *GetSelectedItemType() const;
 
-  ItemContainer *GetInventoryPointer() const;
-  ItemContainer *GetToolBarPointer() const;
+  ItemContainer *GetInventoryPointer();
+  ItemContainer *GetToolBarPointer();
 
   // --- Conversions / Helpers ---
   item::id ToolBarSelectionToItemID(int sel) const;

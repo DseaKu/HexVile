@@ -191,7 +191,7 @@ void UI_Handler::LoadBackBuffer() {
     float yStart = frameContext->screen.bot - tex::size::TILE -
                    ui_layout::TOOL_BAR_BOT_MARGIN;
 
-    LoadItemGridGFX(nullptr, 2, yStart);
+    LoadItemGridGFX(itemHandler->GetToolBarPointer(), yStart);
   }
 
   if (isInventoryOpen) {
@@ -316,24 +316,27 @@ void UI_Handler::LoadInventoryItemsGFX() {
   // }
 }
 
-void UI_Handler::LoadItemGridGFX(const ItemContainer *itemContainer, int rows,
+void UI_Handler::LoadItemGridGFX(const ItemContainer *itemContainer,
                                  float yPos) {
-  for (int row = 0; row < rows; row++) {
 
-    float yOffset = row * (this->slotSize + ui_layout::ITEM_SLOT_SPACING);
+  int n_rows = itemContainer->size() / conf::ITEM_SLOT_PER_ROW;
+  for (int curRow = 0; curRow < n_rows; curRow++) {
 
-    for (int col = 0; col < conf::ITEM_SLOT_PER_ROW; col++) {
+    float yOffset = curRow * (this->slotSize + ui_layout::ITEM_SLOT_SPACING);
+
+    for (int curCol = 0; curCol < conf::ITEM_SLOT_PER_ROW; curCol++) {
 
       // Get item
-      ItemStack *item = itemHandler->GetToolBarItemPointer(col);
+      int itemIndex = curRow * conf::ITEM_SLOT_PER_ROW + curCol;
+      const ItemStack *item = &itemContainer->at(itemIndex);
 
-      float xOffset = col * (this->slotSize + ui_layout::ITEM_SLOT_SPACING);
+      float xOffset = curCol * (this->slotSize + ui_layout::ITEM_SLOT_SPACING);
       Vector2 dst = {this->xStartPos + xOffset, yPos - yOffset};
 
       // Load  item slot background
       this->LoadItemSlotBackgroundGFX(dst);
 
-      if (col == frameContext->selToolBarSlot) {
+      if (curCol == frameContext->selToolBarSlot) {
         this->LoadItemSlotHighlightGFX(dst);
       }
 

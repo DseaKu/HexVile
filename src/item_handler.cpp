@@ -87,13 +87,9 @@ const char *ItemHandler::GetSelectedItemType() const {
   return item_db::DB.at(id).name.c_str();
 }
 
-ItemContainer *ItemHandler::GetInventoryPointer() const {
-  return &this->inventory;
-};
+ItemContainer *ItemHandler::GetInventoryPointer() { return &this->inventory; };
 
-ItemContainer *ItemHandler::GetToolBarPointer() const {
-  return &this->toolBar;
-};
+ItemContainer *ItemHandler::GetToolBarPointer() { return &this->toolBar; };
 
 // --- Conversions / Helpers ---
 item::id ItemHandler::ToolBarSelectionToItemID(int sel) const {

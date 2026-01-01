@@ -9,6 +9,7 @@
 #include "raymath.h"
 #include "resource.h"
 #include "texture.h"
+#include "ui_layout.h"
 #include <string>
 
 // --- Constructors ---
@@ -306,6 +307,11 @@ void UI_Handler::LoadInventoryItemsGFX() {
 
 void UI_Handler::LoadToolBarGFX() {
 
+  // Get starting position (left -> right)
+  // origin = 0,0
+  // yStart = half tile + tool bar margin
+  // xsStart = tile* toolbar slots
+  float yStart = tex::size::HALF_TILE + ui_layout::TOOL_BAR_BOT_MARGIN;
   for (int i = 0; i < toolBarLayout.maxSlots; i++) {
     LoadToolBarSlot(i);
   }

@@ -39,31 +39,29 @@ struct Input {
   InputCommands commands;
 };
 
-struct WorldPos {
-  Vector2 player;
-  Vector2 mouse;
+struct World {
+  Vector2 playerPos;
+  Vector2 mousePos;
   Vector2 hoveredRsrcPoint;
   HexCoord hoveredTileHexCoords;
   Vector2 hoveredTilePoint;
   MapTile *hoveredTile;
 };
 
-struct ScreenPos {
-  Vector2 mouse;
+struct Screen {
+  Vector2 mousePos;
   Vector2 center;
   float bot;
+  float width;
+  float height;
 };
 
 struct Context {
-  WorldPos worldPos;
-  ScreenPos screenPos;
+  World world;
+  Screen screen;
   Input inputs;
   mouseMask::id mouseMask;
   int selToolBarSlot;
-
-  // Screen
-  float screenWidth;
-  float screenHeight;
 
   float deltaTime;
 };

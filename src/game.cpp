@@ -154,10 +154,10 @@ void Game::GetInputs() {
 
   frameContext.deltaTime = GetFrameTime();
 
-  frameContext.screenWidth = GetScreenWidth();
-  frameContext.screenHeight = GetScreenHeight();
+  frameContext.screen.width = GetScreenWidth();
+  frameContext.screen.height = GetScreenHeight();
 
-  frameContext.screenPos.mouse = GetMousePosition();
+  frameContext.screen.mousePos = GetMousePosition();
 
   // --- Mouse ---
   frameContext.inputs.mouseClick.left = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
@@ -194,19 +194,19 @@ void Game::RunLogic() {
   worldState.player.Update();
 
   // --- Update camera ---
-  worldState.camera.offset = Vector2{(float)frameContext.screenWidth / 2.0f,
-                                     (float)frameContext.screenHeight / 2.0f};
+  worldState.camera.offset = Vector2{(float)frameContext.screen.width / 2.0f,
+                                     (float)frameContext.screen.height / 2.0f};
   worldState.cameraTopLeft =
       GetScreenToWorld2D(Vector2{0, 0}, worldState.camera);
-  float camWidth = (float)frameContext.screenWidth / worldState.camera.zoom;
-  float camHeight = (float)frameContext.screenHeight / worldState.camera.zoom;
+  float camWidth = (float)frameContext.screen.width / worldState.camera.zoom;
+  float camHeight = (float)frameContext.screen.height / worldState.camera.zoom;
   worldState.cameraRect = {worldState.cameraTopLeft.x,
                            worldState.cameraTopLeft.y, camWidth, camHeight};
   worldState.camera.target = worldState.player.GetPosition();
 
   // --- Update UI Layout ---
-  uiHandler.UpdateScreenSize(frameContext.screenWidth,
-                             frameContext.screenHeight);
+  uiHandler.UpdateScreenSize(frameContext.screen.width,
+                             frameContext.screen.height);
 
   // --- Update Grid ---
   worldState.hexGrid.Update(worldState.camera, frameContext.deltaTime);
@@ -215,7 +215,7 @@ void Game::RunLogic() {
   // --- Process right click ---
   if (frameContext.inputs.mouseClick.right) {
     HexCoord clickedHex =
-        worldState.hexGrid.PointToHexCoord(frameContext.worldPos.mouse);
+        worldState.hexGrid.PointToHexCoord(frameContext.world.mousePos);
     worldState.hexGrid.SetTile(clickedHex, tile::NULL_ID);
   }
 
@@ -231,9 +231,9 @@ void Game::RunLogic() {
   rs.visCalcTime = worldState.hexGrid.GetVisCalcTime();
 
   rs.mouseTileCoord =
-      worldState.hexGrid.PointToHexCoord(frameContext.worldPos.mouse);
+      worldState.hexGrid.PointToHexCoord(frameContext.world.mousePos);
   rs.mouseTileType =
-      worldState.hexGrid.PointToType(frameContext.worldPos.mouse);
+      worldState.hexGrid.PointToType(frameContext.world.mousePos);
 
   rs.playerPos = worldState.player.GetPosition();
   rs.playerTileCoord = worldState.hexGrid.PointToHexCoord(rs.playerPos);
@@ -289,33 +289,32 @@ void Game::UpdateFrameContext() {
   worldState.timer += frameContext.deltaTime;
 
   // --- Update mouse ---
-  frameContext.worldPos.mouse =
-      GetScreenToWorld2D(frameContext.screenPos.mouse, worldState.camera);
+  frameContext.world.mousePos =
+      GetScreenToWorld2D(frameContext.screen.mousePos, worldState.camera);
   frameContext.mouseMask = uiHandler.UpdateMouseMask();
 
   // --- Update Selected Tool Bar Slot ---
   frameContext.selToolBarSlot = uiHandler.GetToolBarSelection();
 
   // --- Get position and tileof hovered tile ---
-  frameContext.worldPos.hoveredTile =
-      worldState.hexGrid.PointToTile(frameContext.worldPos.mouse);
-  frameContext.worldPos.hoveredTileHexCoords =
-      worldState.hexGrid.PointToHexCoord(frameContext.worldPos.mouse);
-  frameContext.worldPos.hoveredTilePoint = worldState.hexGrid.HexCoordToPoint(
-      frameContext.worldPos.hoveredTileHexCoords);
-  frameContext.worldPos.hoveredRsrcPoint =
-      frameContext.worldPos.hoveredTilePoint;
-  if (frameContext.worldPos.hoveredTile &&
-      frameContext.worldPos.hoveredTile->rsrc.id >= 0) {
-    frameContext.worldPos.hoveredRsrcPoint =
-        frameContext.worldPos.hoveredTile->rsrc.worldPos;
+  frameContext.world.hoveredTile =
+      worldState.hexGrid.PointToTile(frameContext.world.mousePos);
+  frameContext.world.hoveredTileHexCoords =
+      worldState.hexGrid.PointToHexCoord(frameContext.world.mousePos);
+  frameContext.world.hoveredTilePoint = worldState.hexGrid.HexCoordToPoint(
+      frameContext.world.hoveredTileHexCoords);
+  frameContext.world.hoveredRsrcPoint = frameContext.world.hoveredTilePoint;
+  if (frameContext.world.hoveredTile &&
+      frameContext.world.hoveredTile->rsrc.id >= 0) {
+    frameContext.world.hoveredRsrcPoint =
+        frameContext.world.hoveredTile->rsrc.worldPos;
   }
 
-  // Screen Center
-  frameContext.screenPos.center = {frameContext.screenWidth / 2,
-                                   frameContext.screenHeight / 2};
-  frameContext.screenPos.bot = (float)frameContext.screenHeight;
+  // Screen variables
+  frameContext.screen.center = {frameContext.screen.width / 2,
+                                frameContext.screen.height / 2};
+  frameContext.screen.bot = (float)frameContext.screen.height;
 
   // Player position
-  frameContext.worldPos.player = worldState.player.GetPosition();
+  frameContext.world.playerPos = worldState.player.GetPosition();
 }

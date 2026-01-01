@@ -104,12 +104,23 @@ constexpr Coords ITEM_SET_DIRT = {ITEM_X + 2, ITEM_Y + 0};
 constexpr Coords ITEM_AXE_STONE = {ITEM_X + 0, ITEM_Y + 1};
 constexpr Coords ITEM_WOOD_LOG = {ITEM_X + 1, ITEM_Y + 1};
 
-inline const std::map<item::id, Coords> ITEM_TEXTURE_COORDS = {
-    {item::NULL_ID, ITEM_NULL},        {item::SET_GRASS, ITEM_SET_GRASS},
-    {item::SET_WATER, ITEM_SET_WATER}, {item::SET_DIRT, ITEM_SET_DIRT},
-    {item::AXE, ITEM_AXE_STONE},       {item::WOOD, ITEM_WOOD_LOG},
-};
 } // namespace atlas
+// ==========================================
+//              Look Up Table
+// ==========================================
+namespace lut {
+
+inline const std::map<item::id, atlas::Coords> ITEM_TEXTURE_COORDS = {
+    {item::NULL_ID, atlas::ITEM_NULL},
+    {item::SET_GRASS, atlas::ITEM_SET_GRASS},
+    {item::SET_WATER, atlas::ITEM_SET_WATER},
+    {item::SET_DIRT, atlas::ITEM_SET_DIRT},
+    {item::AXE, atlas::ITEM_AXE_STONE},
+    {item::WOOD, atlas::ITEM_WOOD_LOG},
+};
+
+};
+
 // ==========================================
 //              Layout Options (destination)
 // ==========================================

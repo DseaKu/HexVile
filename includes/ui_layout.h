@@ -3,7 +3,8 @@
 
 namespace ui_layout {
 constexpr float TOOL_BAR_BOT_MARGIN = 20.0f;
+constexpr float ITEM_SLOT_SPACING = 5.0f;
 
-};
+}; // namespace ui_layout
 
 #endif // !UI_LAYOUT_H

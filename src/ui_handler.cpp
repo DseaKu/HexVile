@@ -88,7 +88,7 @@ void UI_Handler::UpdateScreenSize(int width, int height) {
 }
 
 mouseMask::id UI_Handler::UpdateMouseMask() {
-  if (isToolBarActive && CheckCollisionPointRec(frameContext->screenPos.mouse,
+  if (isToolBarActive && CheckCollisionPointRec(frameContext->screen.mousePos,
                                                 toolBarLayout.rect)) {
     return mouseMask::TOOL_BAR;
   } else {
@@ -161,7 +161,7 @@ int UI_Handler::GetToolBarSelection() {
 
     // Local coordinate in the toolbar
     // toolBarLayout.rect.x is the left edge of the toolbar
-    float localX = frameContext->screenPos.mouse.x - toolBarLayout.rect.x;
+    float localX = frameContext->screen.mousePos.x - toolBarLayout.rect.x;
 
     if (localX < 0)
       return 0;
@@ -212,25 +212,25 @@ void UI_Handler::LoadHighlightGFX() {
 void UI_Handler::LoadHighlightTileGFX() {
   if (!hexGrid)
     return;
-  HexCoord coord = hexGrid->PointToHexCoord(frameContext->worldPos.mouse);
+  HexCoord coord = hexGrid->PointToHexCoord(frameContext->world.mousePos);
   hexGrid->DrawTile(coord, tex::atlas::TILE_HIGHLIGHTED, drawMask::GROUND1);
 }
 
 void UI_Handler::LoadHighlightResourceGFX(rsrc::ID id) {
-  if (!frameContext || !frameContext->worldPos.hoveredTile)
+  if (!frameContext || !frameContext->world.hoveredTile)
     return;
 
   // Can be changed to indicate 'not in range'
   Color col = WHITE;
 
   // If player is in interact range change color indicator to yellow
-  Vector2 curMousePos = frameContext->worldPos.mouse;
-  if (Vector2Distance(curMousePos, frameContext->worldPos.player) <
+  Vector2 curMousePos = frameContext->world.mousePos;
+  if (Vector2Distance(curMousePos, frameContext->world.playerPos) <
       conf::INTERACT_DISTANCE_PLAYER) {
     col = YELLOW;
   }
 
-  const rsrc::Object &rsrc = frameContext->worldPos.hoveredTile->rsrc;
+  const rsrc::Object &rsrc = frameContext->world.hoveredTile->rsrc;
   if (rsrc.id == id) {
     // Get position of resource
     Vector2 rsrcPos = rsrc.worldPos;
@@ -307,26 +307,30 @@ void UI_Handler::LoadInventoryItemsGFX() {
 
 void UI_Handler::LoadToolBarGFX() {
 
-  // Get starting position (left -> right)
-  // origin = 0,0
-  // yStart = half tile + tool bar margin
-  // xsStart = tile* toolbar slots
-
   // Calculate starting point. Texture is rendered at origin = {0,0}, therefore
   // we need just the half of a tile
-  float y = frameContext->screenPos.bot - tex::size::TILE -
-            ui_layout::TOOL_BAR_BOT_MARGIN;
-  float x = frameContext->screenPos.center.x -
-            tex::size::TILE * conf::TOOLBAR_N_ITEM_SLOTS / 2;
+  float slotSize = tex::opts::ITEM_SLOT_BACKGROUND.scale * tex::size::TILE;
+  float totalWidth =
+      (conf::TOOLBAR_N_ITEM_SLOTS * slotSize) +
+      ((conf::TOOLBAR_N_ITEM_SLOTS - 1) * ui_layout::ITEM_SLOT_SPACING);
+  float yStart = frameContext->screen.bot - tex::size::TILE -
+                 ui_layout::TOOL_BAR_BOT_MARGIN;
+  float xStart =
+      frameContext->screen.center.x - (totalWidth / 2.0f) + (slotSize / 2.0f);
 
   for (int i = 0; i < conf::TOOLBAR_N_ITEM_SLOTS; i++) {
 
-    float xOffset = i * tex::size::TILE;
+    // Get item
+    item::id itemId = itemHandler->GetToolBarItemType(i);
+
+    float xOffset = i * (slotSize + ui_layout::ITEM_SLOT_SPACING);
+    Vector2 dst = {xStart + xOffset, yStart};
 
     // Load  item slot background
-    this->LoadItemSlotBG_GFX(Vector2{x + xOffset, y});
+    this->LoadItemSlotBG_GFX(dst);
 
     // Load item icon
+    this->LoadItemIconGFX(tex::lut::ITEM_TEXTURE_COORDS.at(itemId), dst);
 
     // Load item num
   }

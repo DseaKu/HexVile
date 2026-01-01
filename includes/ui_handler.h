@@ -11,21 +11,25 @@
 class UI_Handler {
 private:
   struct ToolBarLayout {
-    // int maxSlots;
-    // int slotSize;
-    // int contentSize;
-    // float padding;
-    // float bottomMargin;
-    // float scale;
-    // float itemScale;
-    //
-    // // Calculated params
-    // float width;
-    // float height;
-    // float posX;
-    // float posY;
-    // Rectangle rect;
+    int maxSlots;
+    int slotSize;
+    int contentSize;
+    float padding;
+    float bottomMargin;
+    float scale;
+    float itemScale;
+
+    // Calculated params
+    float width;
+    float height;
+    float posX;
+    float posY;
+    Rectangle rect;
   };
+
+  float slotSize;
+  float itemBarWidth;
+  float xStartPos;
 
   // --- Members ---
   ToolBarLayout toolBarLayout;

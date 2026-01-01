@@ -70,6 +70,13 @@ void UI_Handler::Update() {
   if (frameContext->inputs.commands.toggleInventory) {
     ToggleInventory();
   }
+
+  float slotSize = tex::opts::ITEM_SLOT.scale * tex::size::TILE;
+  float itemBarWidth =
+      (conf::TOOLBAR_N_ITEM_SLOTS * slotSize) +
+      ((conf::TOOLBAR_N_ITEM_SLOTS - 1) * ui_layout::ITEM_SLOT_SPACING);
+  float xStartPos =
+      frameContext->screen.center.x - (itemBarWidth / 2.0f) + (slotSize / 2.0f);
 }
 
 void UI_Handler::UpdateScreenSize(int width, int height) {
@@ -307,24 +314,16 @@ void UI_Handler::LoadInventoryItemsGFX() {
 
 void UI_Handler::LoadToolBarGFX() {
 
-  // Calculate starting point. Texture is rendered at origin = {0,0}, therefore
-  // we need just the half of a tile
-  float slotSize = tex::opts::ITEM_SLOT.scale * tex::size::TILE;
-  float totalWidth =
-      (conf::TOOLBAR_N_ITEM_SLOTS * slotSize) +
-      ((conf::TOOLBAR_N_ITEM_SLOTS - 1) * ui_layout::ITEM_SLOT_SPACING);
   float yStart = frameContext->screen.bot - tex::size::TILE -
                  ui_layout::TOOL_BAR_BOT_MARGIN;
-  float xStart =
-      frameContext->screen.center.x - (totalWidth / 2.0f) + (slotSize / 2.0f);
 
   for (int i = 0; i < conf::TOOLBAR_N_ITEM_SLOTS; i++) {
 
     // Get item
     ItemStack *item = itemHandler->GetToolBarItemPointer(i);
 
-    float xOffset = i * (slotSize + ui_layout::ITEM_SLOT_SPACING);
-    Vector2 dst = {xStart + xOffset, yStart};
+    float xOffset = i * (this->slotSize + ui_layout::ITEM_SLOT_SPACING);
+    Vector2 dst = {this->xStartPos + xOffset, yStart};
 
     // Load  item slot background
     this->LoadItemSlotBackgroundGFX(dst);

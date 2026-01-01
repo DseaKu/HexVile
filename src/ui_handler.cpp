@@ -191,7 +191,7 @@ void UI_Handler::LoadBackBuffer() {
     float yStart = frameContext->screen.bot - tex::size::TILE -
                    ui_layout::TOOL_BAR_BOT_MARGIN;
 
-    LoadItemGridGFX(1, yStart);
+    LoadItemGridGFX(2, yStart);
   }
 
   if (isInventoryOpen) {
@@ -318,18 +318,18 @@ void UI_Handler::LoadInventoryItemsGFX() {
 
 void UI_Handler::LoadItemGridGFX(int row, float yPos) {
 
-  for (int i = 0; i < conf::ITEM_GRID_COLS; i++) {
+  for (int col = 0; col < conf::ITEM_GRID_COLS; col++) {
 
     // Get item
-    ItemStack *item = itemHandler->GetToolBarItemPointer(i);
+    ItemStack *item = itemHandler->GetToolBarItemPointer(col);
 
-    float xOffset = i * (this->slotSize + ui_layout::ITEM_SLOT_SPACING);
+    float xOffset = col * (this->slotSize + ui_layout::ITEM_SLOT_SPACING);
     Vector2 dst = {this->xStartPos + xOffset, yPos};
 
     // Load  item slot background
     this->LoadItemSlotBackgroundGFX(dst);
 
-    if (i == frameContext->selToolBarSlot) {
+    if (col == frameContext->selToolBarSlot) {
       this->LoadItemSlotHighlightGFX(dst);
     }
 

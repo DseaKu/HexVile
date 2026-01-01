@@ -41,7 +41,7 @@ constexpr Vector2 SCREEN_CENTER = {(float)SCREEN_WIDTH / 2,
 // ==========================================
 //               Game
 // ==========================================
-constexpr int TOOLBAR_SLOTS = 8;
+constexpr int TOOLBAR_N_ITEM_SLOTS = 2;
 constexpr int INVENTORY_SLOTS = 18;
 constexpr const int TERRAIN_DETAILS_MAX = 2;
 constexpr const int TERRAIN_RESOURCE_MAX = 1;

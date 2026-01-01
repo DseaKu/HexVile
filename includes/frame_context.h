@@ -51,6 +51,7 @@ struct WorldPos {
 struct ScreenPos {
   Vector2 mouse;
   Vector2 center;
+  float bot;
 };
 
 struct Context {

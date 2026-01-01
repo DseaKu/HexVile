@@ -125,7 +125,7 @@ tile::id ItemHandler::ConvertItemToTileID(item::id itemid) const {
 void ItemHandler::Init() {
   ItemStack itemNull = {.itemID = item::NULL_ID, .count = 0};
   inventory.assign(conf::INVENTORY_SLOTS, itemNull);
-  toolBar.assign(conf::TOOLBAR_SLOTS, itemNull);
+  toolBar.assign(conf::TOOLBAR_N_ITEM_SLOTS, itemNull);
 
   ItemStack grass = {.itemID = item::SET_GRASS, .count = 32};
   ItemStack water = {.itemID = item::SET_WATER, .count = 51};

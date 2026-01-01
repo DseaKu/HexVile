@@ -314,6 +314,7 @@ void Game::UpdateFrameContext() {
   // Screen Center
   frameContext.screenPos.center = {frameContext.screenWidth / 2,
                                    frameContext.screenHeight / 2};
+  frameContext.screenPos.bot = (float)frameContext.screenHeight;
 
   // Player position
   frameContext.worldPos.player = worldState.player.GetPosition();

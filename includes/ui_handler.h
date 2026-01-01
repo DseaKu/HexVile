@@ -46,13 +46,14 @@ private:
   void LoadHighlightResourceGFX(rsrc::ID id);
 
   void LoadToolBarGFX();
+  void LoadItemSlotBG_GFX(Vector2 dst);
+  void LoadItemIconGFX(tex::atlas::Coords taCoords, Vector2 dst);
+
   void LoadInventoryBackgroundGFX();
   void LoadInventoryItemsGFX();
   void LoadItemSlotGFX(const ItemStack *item, Vector2 centerPos,
                        bool isSelected);
-  void LoadToolBarSlot(int slotIndex);
-  void LoadItemIconGFX(const ItemStack *item, Rectangle slotRect);
-  void LoadItemCountGFX(const ItemStack *item, Rectangle slotRect);
+  void LoadItemCountGFX(ItemStack *item, Rectangle slotRect);
 
 public:
   // --- Constructors ---

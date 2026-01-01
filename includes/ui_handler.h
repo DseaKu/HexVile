@@ -25,6 +25,8 @@ private:
     float posX;
     float posY;
     Rectangle rect;
+
+    // new
   };
 
   // --- Members ---
@@ -48,7 +50,7 @@ private:
   void LoadHighlightTileGFX();
   void LoadHighlightResourceGFX(rsrc::ID id);
 
-  void LoadItemGridGFX(int col, int row, float yPos);
+  void LoadItemGridGFX(int row, float yPos);
   void LoadItemSlotBackgroundGFX(Vector2 dst);
   void LoadItemSlotHighlightGFX(Vector2 dst);
   void LoadInventoryBackgroundGFX();

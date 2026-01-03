@@ -7,8 +7,6 @@
 #include "hex_tile_grid.h"
 #include "item_handler.h"
 #include "raylib.h"
-#include "raymath.h"
-#include "resource.h"
 #include "texture.h"
 #include "ui_layout.h"
 #include <string>
@@ -52,17 +50,11 @@ UI_Handler::UI_Handler() {
 
   toolBarLayout.rect = {rectX, rectY, rectWidth, rectHeight};
 
-  // State
-  isToolBarActive = false;
-  isInventoryOpen = false;
-
   // Dependencies
   graphicsManager = nullptr;
   itemHandler = nullptr;
   fontHandler = nullptr;
   hexGrid = nullptr;
-
-  ToolBarInventorySpace = conf::TOOLBAR_INVENTORY_SPACE;
 }
 
 // --- Core Lifecycle ---
@@ -71,6 +63,21 @@ void UI_Handler::Update() {
     ToggleInventory();
   }
 
+  if (curScreenHeigth != frameContext->screen.height ||
+      curScreenWidth != frameContext->screen.width ||
+      curUiScale != frameContext->screen.uiScale) {
+    UpdateLayout();
+  }
+}
+
+void UI_Handler::UpdateLayout() {
+
+  float newScreenHeigth = frameContext->screen.height;
+  float newScreenWidth = frameContext->screen.width;
+  float newUiScale = frameContext->screen.uiScale;
+  this->toolBarLayout = {};
+  this->inventoryLayout = {};
+
   // Update item bar properties
   this->slotSize = tex::opts::ITEM_SLOT.scale * tex::size::TILE;
   this->itemBarWidth =
@@ -78,6 +85,10 @@ void UI_Handler::Update() {
       ((conf::ITEM_SLOT_PER_ROW - 1) * ui_layout::ITEM_SLOT_SPACING);
   this->xStartPos = frameContext->screen.center.x -
                     (this->itemBarWidth / 2.0f) + (this->slotSize / 2.0f);
+
+  curScreenHeigth = newScreenHeigth;
+  curScreenWidth = newScreenWidth;
+  curUiScale = newUiScale;
 }
 
 void UI_Handler::UpdateScreenSize(int width, int height) {
@@ -203,7 +214,6 @@ void UI_Handler::LoadBackBuffer() {
   }
 }
 
-// --- Private Methods ---
 void UI_Handler::LoadHighlightGFX() {
   // Get to hightlithning object
   item::id itemID =
@@ -238,7 +248,7 @@ void UI_Handler::LoadInventoryBackgroundGFX() {
   float gridHeight = rows * slotSize + (rows - 1) * spacing;
 
   // Center X is screen center
-  float centerX = conf::SCREEN_CENTER.x;
+  float centerX = frameContext->screen.center.x;
 
   // Center Y is middle of the grid area above toolbar
   float centerY = toolBarLayout.rect.y - conf::TOOLBAR_INVENTORY_SPACE -

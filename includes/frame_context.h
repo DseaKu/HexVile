@@ -54,6 +54,7 @@ struct Screen {
   float bot;
   float width;
   float height;
+  float uiScale;
 };
 
 struct Context {

@@ -2,6 +2,7 @@
 #define UI_HANDLER_H
 
 #include "GFX_manager.h"
+#include "defines.h"
 #include "font_handler.h"
 #include "frame_context.h"
 #include "hex_tile_grid.h"
@@ -31,13 +32,18 @@ private:
 
   // --- Members ---
   ToolBarLayout toolBarLayout;
-  bool isToolBarActive;
-  bool isInventoryOpen;
-  float ToolBarInventorySpace;
+  Rectangle toolBarLayout0;
+  Rectangle inventoryLayout;
+  bool isToolBarActive = true;
+  bool isInventoryOpen = false;
+  float curUiScale = conf::UI_SCALE;
 
   float slotSize;
   float itemBarWidth;
   float xStartPos;
+  float curScreenWidth;
+  float curScreenHeigth;
+
   // --- Dependencies ---
   GFX_Manager *graphicsManager;
   ItemHandler *itemHandler;
@@ -46,6 +52,8 @@ private:
   const frame::Context *frameContext = nullptr;
 
   // --- Private Methods ---
+  void UpdateLayout();
+
   void LoadHighlightGFX();
   void LoadHighlightTileGFX();
 

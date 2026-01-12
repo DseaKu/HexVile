@@ -27,10 +27,11 @@ void FontHandler::LoadFonts() {
                    conf::HACK_REGULAR_GLYPH_COUNT, FONT_DEFAULT,
                    &fontHackRegular.glyphCount);
   Image atlas = GenImageFontAtlas(fontHackRegular.glyphs, &fontHackRegular.recs,
-                                  conf::HACK_REGULAR_GLYPH_COUNT,
+                                  this->fontHackRegular.glyphCount,
                                   this->fontHackRegular.baseSize, 0, 0);
   this->fontHackRegular.texture = LoadTextureFromImage(atlas);
   UnloadImage(atlas);
+  UnloadFileData(fileData);
 }
 
 void FontHandler::UnloadFonts() { UnloadFont(fontHackRegular); }

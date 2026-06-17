@@ -1,4 +1,6 @@
 # HexVile
+> [!IMPORTANT] **🚧 Under Development:** This project is currently in
+> development.
 
 A 2D hexagonal tile-based exploration and resource gathering game built with C++
 and [Raylib](https://www.raylib.com/).

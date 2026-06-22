@@ -4,22 +4,6 @@ and [Raylib](https://www.raylib.com/).
 
 ![HexVile Gameplay](demo.gif)
 
-## Features
-
-- **Hexagonal Grid System**: A robust hex-based world with smooth coordinate
-  translation and rendering.
-- **Resource Gathering**: Interactive environment features like tree chopping
-  for wood collection.
-- **Dynamic Player System**: State-based animations, directional facing, and
-  fluid movement.
-- **Inventory & Toolbar**: Simple item management and active slot selection.
-- **Multi-threaded Architecture**: Separation of game logic and rendering
-  threads for optimal performance.
-- **Custom Shaders**: Includes visual effects like hit-flashing for interactive
-  objects.
-- **Debug Overlay**: Real-time performance metrics (FPS, Logic/Render times, RAM
-  usage) and grid visualization.
-
 ## Controls
 
 - **W, A, S, D**: Move character.

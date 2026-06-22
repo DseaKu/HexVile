@@ -1,8 +1,5 @@
 # HexVile
-> [!IMPORTANT] **🚧 Under Development:** This project is currently in
-> development.
-
-A 2D hexagonal tile-based exploration and resource gathering game built with C++
+A 2D hexagonal tile-based game demo built with C++
 and [Raylib](https://www.raylib.com/).
 
 ![HexVile Gameplay](demo.gif)
@@ -71,12 +68,3 @@ To build and run HexVile, you need:
 _Note: Raylib is automatically fetched and compiled via CMake's `FetchContent`
 module during the first build._
 
-## Project Structure
-
-- `src/`: Core implementation files (`main`, `game`, `player`, `hex_tile_grid`,
-  etc.).
-- `includes/`: Header files and system defines.
-- `assets/`:
-  - `images/`: Texture atlases.
-  - `font/`: Game fonts.
-  - `shaders/`: GLSL shader files.

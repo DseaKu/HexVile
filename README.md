@@ -35,7 +35,7 @@ To build and run HexVile, you need:
    ```bash
    cmake -B build
    ```
-> The first run takes a bit longer, since CMake downloads Raylib via `FetchContent`.
+> The first run takes a bit longer, since CMake downloads & compiles Raylib automatically.
 
 3. **Configure and build**:
 

@@ -26,7 +26,7 @@ To build and run HexVile, you need:
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/yourusername/hex_vile_cpp.git
+   git clone https://github.com/hex_vile_cpp.git
    cd hex_vile_cpp
    ```
 

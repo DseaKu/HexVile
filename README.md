@@ -31,6 +31,8 @@ To build and run HexVile, you need:
    ```
 
 2. **Create a build directory**:
+_Note: Raylib is automatically fetched and compiled via CMake's `FetchContent`
+module during the first build._
 
    ```bash
    cmake -B build
@@ -49,6 +51,4 @@ To build and run HexVile, you need:
 
    ```
 
-_Note: Raylib is automatically fetched and compiled via CMake's `FetchContent`
-module during the first build._
 
